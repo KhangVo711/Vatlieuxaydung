@@ -29,6 +29,8 @@ function App() {
     </>
   ) : (
     <>
+      <ContextProvider>
+
       <div className="flex w-full justify-between h-screen">
         <div className="w-1/5">
           <SideBarAdmin />
@@ -38,6 +40,8 @@ function App() {
           <Outlet />
         </div>
       </div>
+      </ContextProvider>
+
     </>
   )
 }

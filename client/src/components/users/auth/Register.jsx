@@ -4,6 +4,8 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
+import {Button } from "@material-tailwind/react";
+
 export default function Register() {
 
     const [customerID, setCustomerID] = useState('');
@@ -213,7 +215,7 @@ export default function Register() {
                                     </button>
 
                                 </div>
-                                <button onClick={generateCustomerID} className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                                <Button type="submit" onClick={generateCustomerID} className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                                     <svg
                                         className="w-6 h-6 -ml-2"
                                         fill="none"
@@ -227,7 +229,7 @@ export default function Register() {
                                         <path d="M20 8v6M23 11h-6" />
                                     </svg>
                                     <span className="ml-3">Đăng kí</span>
-                                </button>
+                                </Button>
                                 <p className="mt-6 text-xs text-gray-600 text-center">
                                     Đồng ý một số điều khoản của cửa hàng{" "}
                                     <a href="#" className="border-b border-gray-500 border-dotted">

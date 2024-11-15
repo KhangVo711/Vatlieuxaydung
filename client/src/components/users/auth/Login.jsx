@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
+import {Button } from "@material-tailwind/react";
 
 export default function Login() {
 
@@ -175,10 +176,10 @@ export default function Login() {
                   </button>
                 </div>
 
-                <button className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-50 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                <Button type="submit" className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-50 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
 
                   <span className="ml-3">Đăng nhập</span>
-                </button>
+                </Button>
               </form>
             </div>
             <p className="mt-16 text-xs text-gray-600 text-center">Bạn chưa có tài khoản?</p>

@@ -6,7 +6,6 @@ export const Context = React.createContext();
 export const ContextProvider = ({ children }) => {
   const [isData, setIsData] = useState({});
   const token = Cookies.get('jwt');
-
   useEffect(() => {
     if (token) {
       const decodedToken = jwtDecode(token);
@@ -18,10 +17,13 @@ export const ContextProvider = ({ children }) => {
     
   }, [token]);
 
+  const [loadCategory, setLoadCategory] = useState(true);
+  const [loadProducer, setLoadProducer] = useState(true);
+  const [loadProduct, setLoadProduct] = useState(true);
   
 
   return (
-    <Context.Provider value= {{isData, setIsData}}>
+    <Context.Provider value= {{isData, setIsData, loadCategory, setLoadCategory, loadProducer, setLoadProducer, loadProduct, setLoadProduct}}>
       {children}
     </Context.Provider>
   )

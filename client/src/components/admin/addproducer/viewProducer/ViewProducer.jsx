@@ -1,4 +1,4 @@
-export default function ViewProducer({formRefView, viewedProducer}) {
+export default function ViewProducer({formRefView, selectedProducer}) {
     return(
         <div className="w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center">
                     <div ref={formRefView} className="w-5/12 mx-auto bg-gray-100 shadow-lg border rounded py-5 px-8 mt-16 ">
@@ -10,7 +10,7 @@ export default function ViewProducer({formRefView, viewedProducer}) {
                                     Mã nhà sản xuất
                                 </label>
                                 <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                                    {viewedProducer.code}
+                                    {selectedProducer.mansx}
                                 </p>
                             </div>
                             <div className="w-2/3 ml-1">
@@ -18,24 +18,17 @@ export default function ViewProducer({formRefView, viewedProducer}) {
                                     Tên nhà sản xuất
                                 </label>
                                 <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                                    {viewedProducer.name}
+                                    {selectedProducer.tennsx}
                                 </p>
                             </div>
                         </div>
-                        <div className="mb-3">
-                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Loại
-                            </label>
-                            <p className="shadow-sm w-1/3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                                {viewedProducer.category}
-                            </p>
-                        </div>
+                      
                         <div className="mb-3">
                             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Email
                             </label>
                             <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                                {viewedProducer.email}
+                                {selectedProducer.email}
                             </p>
                         </div>
                         <div className="mb-3">
@@ -43,7 +36,7 @@ export default function ViewProducer({formRefView, viewedProducer}) {
                                 Địa chỉ
                             </label>
                             <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                                {viewedProducer.address}
+                                {selectedProducer.diachi}
                             </p>
                         </div>
                     </div>

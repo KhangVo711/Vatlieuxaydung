@@ -1,28 +1,37 @@
-import { ChevronRightIcon} from '@heroicons/react/24/solid';
-import { useState, useEffect, useRef } from 'react';
+import { ChevronRightIcon } from '@heroicons/react/24/solid';
+import { useState, useEffect, useRef, useContext } from 'react';
 import FormEditCategory from './formEditCategory/FormEditCategory';
 import FormAddCategory from './formAddCategory/FormAddCategory';
 import TableCategory from './tableCategory/TableCategory';
+import axios from 'axios';
+import { Context } from '../../Context.jsx';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddCategory() {
-    const product = [
-        {
-            code: 'NS-001',
-            name: 'Nước sơn',
-        },
-        {
-            code: 'KD-001',
-            name: 'Keo dán',
-        },
-        {
-            code: 'GC-001',
-            name: 'Gạch',
-        },
-    ]
-    // ADD PRODUCT
+    const { loadCategory, setLoadCategory } = useContext(Context);
+    const [selectedCategory, setSelectedCategory] = useState({ maloai: '', tenloai: '' });
+    const [category, setCategory] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5001/getCategory`);
+                if (response.status === 200) {
+                    setCategory(response.data.category);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+        setLoadCategory(false);
+
+    }, [loadCategory]);
+
+    // ADD CATEGORY
     const [showForm, setShowForm] = useState(false);
     const formRef = useRef(null);
-    
+
     const handleAddProductClick = () => {
         setShowForm(!showForm);
     };
@@ -42,17 +51,18 @@ export default function AddCategory() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showForm]);
-    // END ADD PRODUCT
+    // END ADD CATEGORY
 
-    // EDIT PRODUCT
-    const [nameCategory, setNameCategory] = useState("Nước sơn");
+    // EDIT CATEGORY
 
     const [showFormEdit, setShowFormEdit] = useState(false);
     const formRefEdit = useRef(null);
-    
-    const handleEditProductClick = () => {
-        setShowFormEdit(!showFormEdit);
+
+    const handleEditProductClick = (num) => {
+        setSelectedCategory({ tenloai: category[num].tenloai, maloai: category[num].maloai });
+        setShowFormEdit(true);
     };
+    // console.log(selectedCategory);
     const handleClickOutsideEdit = (event) => {
         if (formRefEdit.current && !formRefEdit.current.contains(event.target)) {
             setShowFormEdit(false);
@@ -69,8 +79,54 @@ export default function AddCategory() {
             document.removeEventListener('mousedown', handleClickOutsideEdit);
         };
     }, [showFormEdit]);
-    // END EDIT PRODUCT
+    // END EDIT CATEGORY
+
+    // DELETE CATEGORY
+
+    const handleDeleteProductClick = async (num) => {
+        try {
+            const response = await axios.post(`http://localhost:5001/deleteCategory`, { maloai: category[num].maloai }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+            if (response.status === 200) {
+                setLoadCategory(true);
+                handleSuccess();
+            }
+        }
+        catch (error) {
+            handleError();
+        }
+    }
+    const handleSuccess = () => {
+        toast.success("Xóa thành công!", {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
+    const handleError = () => {
+        toast.error("Có lỗi xảy ra!", {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
+    // END DELETE CATEGORY
     return (
+        <>
+            <ToastContainer />
+
         <div id="home" className='px-8 pt-5'>
             {/* Nav*/}
             <div className='w-full flex items-center justify-between mb-6'>
@@ -88,19 +144,24 @@ export default function AddCategory() {
                 <button onClick={handleAddProductClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2.5 text-sm px-3 rounded transition duration-150 ease-in-out">Thêm loại</button>
             </div>
 
-           <TableCategory product={product} handleEditProductClick={handleEditProductClick}/>
+            <TableCategory category={category} handleEditProductClick={handleEditProductClick} setLoadCategory={setLoadCategory} handleDeleteProductClick={handleDeleteProductClick} />
 
             {showForm && (
-                <FormAddCategory formRef={formRef}/>
+                <FormAddCategory formRef={formRef} />
             )}
-            {showFormEdit && (
-                <FormEditCategory formRefEdit={formRefEdit} nameCategory={nameCategory} setNameCategory={setNameCategory}/>
+            {showFormEdit && selectedCategory && (
+                <FormEditCategory
+                    formRefEdit={formRefEdit}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    setLoadCategory={setLoadCategory}
+                />
             )}
 
-            
 
-            
+
+
         </div>
-
+</>
     )
 }

@@ -9,7 +9,8 @@ import Dashboard from '../components/admin/dashboard/DashBoard.jsx';
 import AddCategory from '../components/admin/addcategory/AddCategory.jsx';
 import AddProducer from '../components/admin/addproducer/AddProducer.jsx';
 import AddProduct from '../components/admin/addproduct/AddProduct.jsx';
-// import PrivateRoute from '../components/PrivateRoute.js';
+import LoginAdmin from '../components/admin/auth/LoginAdmin.jsx';
+import PrivateRouterAdmin from '../components/privateRouter/PrivateRouteAdmin.jsx';
 
 
 export const router = createBrowserRouter([
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
     element: <Login />
   },
   {
+    path: "/admin/login",
+    element: <LoginAdmin />
+  },
+  {
     path: "register",
     element: <Register />
   },
@@ -51,7 +56,9 @@ export const router = createBrowserRouter([
       {
         path: "dashboard",
         element:
+        <PrivateRouterAdmin>
           <Dashboard />
+        </PrivateRouterAdmin>
       },
       {
         path: "addcategory",
