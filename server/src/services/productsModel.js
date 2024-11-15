@@ -1,38 +1,38 @@
 import connectDB from "../configs/connectDB.js";
 // Loai
-const getAllProductType = async () => {
+const getCategory = async () => {
     const [rows, fields] = await connectDB.execute('SELECT `maloai`, `tenloai` FROM `loaisanpham`')
     return rows
 }
-const insertTProducts = async (maloaisp, tenloaisp) => {
-    await connectDB.execute("INSERT INTO `loaisanpham` VALUES (?, ?)", [maloaisp, tenloaisp]);
+const insertCategory = async (maloai, tenloai) => {
+    await connectDB.execute("INSERT INTO `loaisanpham` VALUES (?, ?)", [maloai, tenloai]);
 }
-const detailProductType= async (id) => {
-        const [rows, fields] = await connectDB.execute('SELECT * FROM `loaisanpham` WHERE maloai=?', [id])
+const detailCategory= async (maloai) => {
+        const [rows, fields] = await connectDB.execute('SELECT * FROM `loaisanpham` WHERE maloai=?', [maloai])
         return rows[0]
 }
-const editProductType = async (tenloaisp, maloaisp) => {
-    await connectDB.execute('UPDATE `loaisanpham` SET tenloai=? WHERE maloai =?',[tenloaisp, maloaisp])
+const editCategory = async (tenloai, maloai) => {
+    await connectDB.execute('UPDATE `loaisanpham` SET tenloai=? WHERE maloai =?',[tenloai, maloai])
 }
-const deleteType = async(maloaisp) => {
-    await connectDB.execute("DELETE FROM `loaisanpham` WHERE maloai=?", [maloaisp])
+const deleteCategory = async(maloai) => {
+    await connectDB.execute("DELETE FROM `loaisanpham` WHERE maloai=?", [maloai])
 }
 // Loai
 
 // NSX
 const getAllNSX = async () => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `nhasanxuat`')
+    const [rows, fields] = await connectDB.execute('SELECT `mansx`, `tennsx`, `email`, `diachi` FROM `nhasanxuat`')
     return rows
 }
-const insertNSX = async (mansx, tennsx, loaisp, emailnsx, diachinsx) => {
-    await connectDB.execute("INSERT INTO `nhasanxuat` VALUES (?, ?, ?, ?, ?)", [mansx, tennsx, loaisp, emailnsx, diachinsx]);
+const insertNSX = async (mansx, tennsx, email, diachi) => {
+    await connectDB.execute("INSERT INTO `nhasanxuat` VALUES (?, ?, ?, ?)", [mansx, tennsx, email, diachi]);
 }
-const detailNSX= async (id) => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `nhasanxuat` WHERE mansx=?', [id])
+const detailNSX= async (mansx) => {
+    const [rows, fields] = await connectDB.execute('SELECT * FROM `nhasanxuat` WHERE mansx=?', [mansx])
     return rows[0]
 }
-const editNSX = async (mansx, tennsx, loaisp, emailnsx, diachinsx) => {
-    await connectDB.execute('UPDATE `nhasanxuat` SET tennsx=?, loaisp =?, emailnsx=?, diachinsx=? WHERE mansx =?',[tennsx, loaisp, emailnsx, diachinsx, mansx])
+const editNSX = async (mansx, tennsx, email, diachi) => {
+    await connectDB.execute('UPDATE `nhasanxuat` SET tennsx=?, email=?, diachi=? WHERE mansx =?',[tennsx, email, diachi, mansx])
 }
 const deleteNSX = async(mansx) => {
     await connectDB.execute("DELETE FROM `nhasanxuat` WHERE mansx=?", [mansx])
@@ -45,26 +45,35 @@ const getAllProduct = async () => {
     return rows
 }
 
-const insertProducts = async (masp, tensp, thongtinchitiet, soluongsp, gia, hinhanh, maloai, mansx) => {
-    await connectDB.execute("INSERT INTO `sanpham` VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [masp, tensp, thongtinchitiet, soluongsp, gia, hinhanh, maloai, mansx]);
+const insertProducts = async (masp, tensp, maloai, ttct, soluongsp, hinhanh, gia, mansx) => {
+    await connectDB.execute("INSERT INTO `sanpham` VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [masp, tensp, maloai, ttct, soluongsp, hinhanh, gia, mansx]);
 }
-const detailProduct= async (id) => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` WHERE masp=?', [id])
+const detailProduct= async (masp) => {
+    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` WHERE masp=?', [masp])
     return rows[0]
 }
-const editProduct = async (id, tensp, thongtinchitiet, soluongsp, hinhanh, maloai, mansx) => {
-    let query = 'UPDATE `sanpham` SET tensp=?, thongtinchitiet=?, soluongsp=?, maloai=?, mansx=?';
-    let params = [tensp, thongtinchitiet, soluongsp, maloai, mansx];
+const editProduct = async (masp, tensp, ttct, soluongsp, gia, maloai, mansx, hinhanh) => {
+
+    let query = 'UPDATE `sanpham` SET tensp=?, ttct=?, soluongsp=?, gia=?, maloai=?, mansx=?';
+    let params = [tensp, ttct, soluongsp, gia, maloai, mansx];
+
     if (hinhanh) {
         query += ', hinhanh=?';
         params.push(hinhanh);
     }
 
     query += ' WHERE masp=?';
-    params.push(id);
+    params.push(masp);
 
-    await connectDB.execute(query, params);
-}
+    try {
+        await connectDB.execute(query, params);
+        console.log('Sản phẩm đã được cập nhật thành công.');
+    } catch (error) {
+        console.error('Lỗi khi cập nhật sản phẩm:', error.message);
+        throw error;
+    }
+};
+
 const deleteProduct = async(masp) => {
     await connectDB.execute("DELETE FROM `sanpham` WHERE masp=?", [masp])
 }
@@ -113,5 +122,5 @@ const updateQuantity = async (masp) => {
     await connectDB.execute('UPDATE sanpham,chitietdathang SET soluongsp=soluongsp-soluong WHERE sanpham.masp=chitietdathang.masp AND chitietdathang.masp=?', [masp])
 }
 
-export default {getAllProductType, updateQuantity, getCartAPI, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertTProducts, insertCart, insertDetailCart, editProductType, detailProductType, deleteType, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct}
+export default {getCategory, updateQuantity, getCartAPI, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct}
 

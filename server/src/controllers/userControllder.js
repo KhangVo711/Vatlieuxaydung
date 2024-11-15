@@ -14,13 +14,22 @@ const insertUser = async (req, res) => {
         if (!fullname || !password || (!phone && !email)) {
             return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
         }
-        const fullnameRegex = /^[a-zA-Z][a-zA-Z\s]*$/;
-        if (!fullnameRegex.test(fullname)) {
-            return res.status(400).json({ message: 'Tên không được chứa ký tự đặc biệt' });
+
+        const idPattern = /^[^\s].*$/;
+        if (!idPattern.test(fullname)) {
+            return res.status(400).json({ message: 'Tên không được chứa khoảng trắng ở đầu' });
         }
+        const fullnameRegex = /^[\p{L}\s]+$/u;
+        if (!fullnameRegex.test(fullname)) {
+            return res.status(400).json({ message: 'Tên không được chứa ký tự đặc biệt hoặc số' });
+        }
+
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (email && !emailRegex.test(email)) {
             return res.status(400).json({ message: 'Email không đúng định dạng' });
+        }
+        if (!idPattern.test(phone)) {
+            return res.status(400).json({ message: 'Số điện thoại không được chứa khoảng trắng ở đầu' });
         }
         const phoneRegex = /^\d{10,11}$/;
         if (phone && !phoneRegex.test(phone)) {
@@ -126,6 +135,32 @@ const updateInf = async (req, res) => {
         const { fullname, email, phone, address } = req.body;
         const acc = await userModel.getInf(id);
 
+        const idPattern = /^[^\s].*$/;
+        const fullnameRegex = /^[\p{L}\p{N}\s]+$/u;
+
+        if (!idPattern.test(fullname)) {
+            return res.status(400).json({ message: 'Tên không được chứa khoảng trắng ở đầu' });
+        }
+        if (!fullnameRegex.test(fullname)) {
+            return res.status(400).json({ message: 'Tên không được chứa ký tự đặc biệt.' });
+        }
+        if (!idPattern.test(address)) {
+            return res.status(400).json({ message: 'Địa chỉ không được chứa khoảng trắng ở đầu' });
+        }
+        if (!fullnameRegex.test(address)) {
+            return res.status(400).json({ message: 'Địa chỉ không được chứa ký tự đặc biệt.' });
+        }
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (email && !emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Email không đúng định dạng' });
+        }
+        if (!idPattern.test(phone)) {
+            return res.status(400).json({ message: 'Số điện thoại không được chứa khoảng trắng ở đầu' });
+        }
+        const phoneRegex = /^\d{10,11}$/;
+        if (phone && !phoneRegex.test(phone)) {
+            return res.status(400).json({ message: 'Số điện thoại phải là số có độ dài từ 10 đến 11 ký tự' });
+        }
         if (email === acc.email && phone !== acc.sdt) {
             const checkPhone = await userModel.getUserWithPhone(phone);
             if (checkPhone) {
@@ -150,11 +185,11 @@ const updateInf = async (req, res) => {
             if (checkEmail || checkPhone) {
                 return res.status(400).json({ message: 'Email hoặc số điện thoại đã tồn tại' });
             }
-            
+
             await userModel.updateInf(fullname, id, email, phone, address);
             return res.status(200).json({ message: 'Cập nhật thành công' });
         }
-       if (email === acc.email && phone === acc.sdt) {
+        if (email === acc.email && phone === acc.sdt) {
             await userModel.updateInf(fullname, id, email, phone, address);
             return res.status(200).json({ message: 'Cập nhật thành công' });
         }
@@ -167,7 +202,7 @@ const changePassword = async (req, res) => {
         let id = req.params.id;
         const { password, newpassword, renewpassword } = req.body;
         const acc = await userModel.getInf(id);
-        if(!password || !newpassword || !renewpassword){
+        if (!password || !newpassword || !renewpassword) {
             return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
         }
         const isPasswordMatch = await bcrypt.compare(password, acc.matkhau);
@@ -180,10 +215,10 @@ const changePassword = async (req, res) => {
         if (isNewPasswordMatch) {
             return res.status(401).json({ message: 'Mật khẩu mới phải khác mật khẩu cũ' });
         }
-        if(newpassword !== renewpassword){
+        if (newpassword !== renewpassword) {
             return res.status(400).json({ message: 'Mật khẩu không khớp' });
         }
-        if(newpassword.length < 6){
+        if (newpassword.length < 6) {
             return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 6 ký tự' });
         }
         const salt = await bcrypt.genSalt(10);
@@ -195,11 +230,38 @@ const changePassword = async (req, res) => {
         res.status(500).json({ message: 'Lỗi xảy ra bên server' });
     }
 }
-const logoutAPI = (req, res) => {
-    res.clearCookie('jwt');
-    res.status(200).json({ message: 'Đăng xuất thành công' })
-};
 
+const loginAdmin = async (req, res) => {
+    try {
+        const { phone, email, password } = req.body;
+        if (!phone || !email || !password) {
+            return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
+        }
+        const acc = await userModel.getAdmin(phone, email);
+        if (!acc) {
+            return res.status(400).json({ message: 'Sai Email hoặc số điện thoại' });
+        }
+        const isPasswordMatch = await bcrypt.compare(password, acc.matkhau);
 
+        if (!isPasswordMatch) {
+            return res.status(401).json({ message: 'Mật khẩu không đúng' });
+        }
+        const payload = {
+            id: acc.maql,
+            fullname: acc.tenql,
+            phone: acc.sdt,
+            email: acc.email,
+            address: acc.diachi,
+        }
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '2h' });
+        res.cookie("admin", token, { path: "/", httpOnly: false, secure: false, sameSite: 'Lax' });
 
-export default { getInf, insertUser, getUser, logoutAPI, updateInf, changePassword };
+        return res.status(200).json({ message: 'Đăng nhập thành công', token, admin: acc });
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Lỗi xảy ra bên server' });
+    }
+}
+
+export default { getInf, insertUser, getUser, updateInf, changePassword, loginAdmin };

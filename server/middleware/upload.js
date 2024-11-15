@@ -2,28 +2,24 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-
-// Thiết lập multer để lưu vào thư mục tạm thời
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Sử dụng một thư mục tạm thời như './tmp'
-    const tempPath = './uploads';
-    
-    cb(null, tempPath); // Upload file vào thư mục tạm thời
+    const uploadDir = './src/uploads';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    // Giữ tên file gốc
     cb(null, file.originalname);
-  }
+  },
 });
-// Thiết lập upload file với giới hạn dung lượng
+
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 } // Giới hạn kích thước file là 10MB
-}).single('hinhanh');
+  limits: { fileSize: 10 * 1024 * 1024 }, 
+});
 
+const uploadMiddleware = upload.single('hinhanh');
 
-
-
-
-export default {upload };
+export default uploadMiddleware;
