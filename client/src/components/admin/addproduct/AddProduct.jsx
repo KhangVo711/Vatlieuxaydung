@@ -52,7 +52,6 @@ export default function AddProduct() {
                 const response = await axios.get(`http://localhost:5001/getProduct`);
                 if (response.status === 200) {
                     setProduct(response.data.product);
-                    console.log(response.data);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);

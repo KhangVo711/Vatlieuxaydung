@@ -11,6 +11,7 @@ import AddProducer from '../components/admin/addproducer/AddProducer.jsx';
 import AddProduct from '../components/admin/addproduct/AddProduct.jsx';
 import LoginAdmin from '../components/admin/auth/LoginAdmin.jsx';
 import PrivateRouterAdmin from '../components/privateRouter/PrivateRouteAdmin.jsx';
+import ImportGoods from '../components/admin/importGoods/ImportGoods.jsx';
 
 
 export const router = createBrowserRouter([
@@ -74,6 +75,11 @@ export const router = createBrowserRouter([
         path: "addproduct",
         element:
           <AddProduct />
+      },
+      {
+        path: "importgoods",
+        element:
+          <ImportGoods />
       },
 
     ]

@@ -1,8 +1,8 @@
-import { ChevronRightIcon, EyeIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { EyeIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import {formatCurrency} from '../../../../utils/currency.jsx';
 import { useState} from 'react';
-
 import ReactPaginate from 'react-paginate';
+
 export default function TableProduct({product, handleEditProductClick, handleDeleteProductClick, handleViewProductClick}) {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6; 
@@ -33,9 +33,7 @@ export default function TableProduct({product, handleEditProductClick, handleDel
               <th scope="col" className="px-4 py-3">
                 Loại
               </th>
-              {/* <th scope="col" className="px-6 py-3">
-                Quality
-              </th> */}
+            
               <th scope="col" className="px-4 py-3">
                 Nhà sản xuất
               </th>
@@ -92,7 +90,7 @@ export default function TableProduct({product, handleEditProductClick, handleDel
     "text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
   }
   activeClassName={
-    "font-bold bg-gray-800 text-white px-3 py-1 rounded-md hover:bg-gray-800" 
+    "font-bold !bg-gray-800 text-white px-3 py-1 rounded-md " 
   }
 />
 

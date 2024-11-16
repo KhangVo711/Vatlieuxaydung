@@ -61,8 +61,8 @@ export default function AddProducer() {
     const [showFormEdit, setShowFormEdit] = useState(false);
     const formRefEdit = useRef(null);
 
-    const handleEditProductClick = (num) => {
-        setSelectedProducer({ mansx: producer[num].mansx, tennsx: producer[num].tennsx, email: producer[num].email, diachi: producer[num].diachi });
+    const handleEditProductClick = (item) => {
+        setSelectedProducer(item);
         setShowFormEdit(true);
     };
     const handleClickOutsideEdit = (event) => {
@@ -88,8 +88,8 @@ export default function AddProducer() {
     const [showFormView, setShowFormView] = useState(false);
     const formRefView = useRef(null);
 
-    const handleViewProductClick = (num) => {
-        setSelectedProducer({ mansx: producer[num].mansx, tennsx: producer[num].tennsx, email: producer[num].email, diachi: producer[num].diachi });
+    const handleViewProductClick = (item) => {
+        setSelectedProducer(item);
         setShowFormView(true);
     };
 
@@ -113,9 +113,9 @@ export default function AddProducer() {
 
     // DELETE PRODUCER
 
-    const handleDeleteProductClick = async (num) => {
+    const handleDeleteProductClick = async (item) => {
         try {
-            const response = await axios.post(`http://localhost:5001/deleteProducer`, { mansx: producer[num].mansx }, {
+            const response = await axios.post(`http://localhost:5001/deleteProducer`, { mansx: item.mansx }, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'

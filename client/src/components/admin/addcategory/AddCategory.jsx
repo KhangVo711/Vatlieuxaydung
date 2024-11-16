@@ -58,8 +58,8 @@ export default function AddCategory() {
     const [showFormEdit, setShowFormEdit] = useState(false);
     const formRefEdit = useRef(null);
 
-    const handleEditProductClick = (num) => {
-        setSelectedCategory({ tenloai: category[num].tenloai, maloai: category[num].maloai });
+    const handleEditProductClick = (item) => {
+        setSelectedCategory(item);
         setShowFormEdit(true);
     };
     // console.log(selectedCategory);
@@ -83,9 +83,9 @@ export default function AddCategory() {
 
     // DELETE CATEGORY
 
-    const handleDeleteProductClick = async (num) => {
+    const handleDeleteProductClick = async (item) => {
         try {
-            const response = await axios.post(`http://localhost:5001/deleteCategory`, { maloai: category[num].maloai }, {
+            const response = await axios.post(`http://localhost:5001/deleteCategory`, { maloai: item.maloai }, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
