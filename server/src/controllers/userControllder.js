@@ -247,11 +247,11 @@ const loginAdmin = async (req, res) => {
             return res.status(401).json({ message: 'Mật khẩu không đúng' });
         }
         const payload = {
-            id: acc.maql,
-            fullname: acc.tenql,
-            phone: acc.sdt,
+            maql: acc.maql,
+            tenql: acc.tenql,
+            sdt: acc.sdt,
             email: acc.email,
-            address: acc.diachi,
+            diachi: acc.diachi,
         }
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '2h' });
         res.cookie("admin", token, { path: "/", httpOnly: false, secure: false, sameSite: 'Lax' });

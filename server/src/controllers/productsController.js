@@ -257,6 +257,9 @@ const insertProducts = async (req, res) => {
         if (!checkNumber.test(gia)) {
             return res.status(400).json({ message: 'Giá sản phẩm không hợp lệ' });
         }
+        if(gia <= 0){
+            return res.status(400).json({ message: 'Giá sản phẩm phải lớn hơn 0' });
+        }
 
         await productsModel.insertProducts(masp, tensp, maloai, ttct, soluongsp, hinhanh, gia, mansx)
         res.status(200).send({ message: "Thêm sản phẩm thành công!" });
@@ -267,9 +270,9 @@ const insertProducts = async (req, res) => {
 
 }
 const detailProduct = async (req, res) => {
-    let id = req.params.id
-    let dataProduct = await productsModel.detailProduct(id)
-    res.render('home', { data: { title: 'Detail Product ', page: 'detailProduct', rows: dataProduct } })
+    let {masp} = req.body
+    let dataProduct = await productsModel.detailProduct(masp)
+    res.status(200).send({ message: "Lấy chi tiết sản phẩm thành công!", dataProduct: dataProduct });
 }
 
 const editProduct = async (req, res) => {
@@ -306,6 +309,9 @@ const editProduct = async (req, res) => {
         }
         if (!checkNumber.test(gia)) {
             return res.status(400).json({ message: 'Giá sản phẩm không hợp lệ' });
+        }
+        if(gia <= 0){
+            return res.status(400).json({ message: 'Giá sản phẩm phải lớn hơn 0' });
         }
         await productsModel.editProduct(masp, tensp, ttct, soluongsp, gia, maloai, mansx, hinhanh);
         res.status(200).send({ message: "Sửa sản phẩm thành công!" });

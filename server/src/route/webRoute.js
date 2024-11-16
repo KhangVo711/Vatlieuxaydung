@@ -1,6 +1,7 @@
 import express from "express";
 import user from '../controllers/userControllder.js'
 import product from '../controllers/productsController.js'
+import invoice from '../controllers/invoiceController.js'
 import uploadMiddleware from '../../middleware/upload.js'
 const router = express.Router()
 const initWebRoute = (app) => {
@@ -30,6 +31,10 @@ const initWebRoute = (app) => {
     router.post('/editProduct', uploadMiddleware, product.editProduct)
     router.post('/deleteProduct', product.deleteProduct)
 
+    router.post('/addInvoice', invoice.insertInvoice)
+    router.post('/addInvoiceDetail', invoice.insertDetailInvoice)
+    router.get('/getInvoice', invoice.showInvoice)
+    
     return app.use('/', router)
 }
 export default initWebRoute
