@@ -57,29 +57,41 @@ export const router = createBrowserRouter([
       {
         path: "dashboard",
         element:
-        <PrivateRouterAdmin>
-          <Dashboard />
-        </PrivateRouterAdmin>
+          <PrivateRouterAdmin>
+            <Dashboard />
+          </PrivateRouterAdmin>
       },
       {
         path: "addcategory",
         element:
-          <AddCategory />
+          <PrivateRouterAdmin>
+            <AddCategory />
+          </PrivateRouterAdmin>
+
       },
       {
         path: "addproducer",
         element:
-          <AddProducer />
+          <PrivateRouterAdmin>
+            <AddProducer />
+          </PrivateRouterAdmin>
+
       },
       {
         path: "addproduct",
         element:
-          <AddProduct />
+          <PrivateRouterAdmin>
+            <AddProduct />
+          </PrivateRouterAdmin>
+
       },
       {
         path: "importgoods",
         element:
-          <ImportGoods />
+          <PrivateRouterAdmin>
+            <ImportGoods />
+          </PrivateRouterAdmin>
+
       },
 
     ]

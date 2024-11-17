@@ -7,6 +7,8 @@ import ViewProduct from './viewProduct/ViewProduct'
 import { ToastContainer , toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Context } from '../../Context.jsx';
+import Cookies from 'js-cookie';
+
 import axios from 'axios';
 export default function AddProduct() {
 
@@ -149,8 +151,12 @@ export default function AddProduct() {
         const response = await axios.post(`http://localhost:5001/deleteProduct`, { masp: item.masp }, {
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${Cookies.get('admin')}`,
+
                 'Accept': 'application/json'
-            }
+            },
+            withCredentials: true
+
         });
         if (response.status === 200) {
             setLoadProduct(true);

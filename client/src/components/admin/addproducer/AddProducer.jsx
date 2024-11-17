@@ -8,6 +8,8 @@ import { ToastContainer , toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Context } from '../../Context.jsx';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+
 
 export default function AddProducer() {
     const { loadProducer, setLoadProducer } = useContext(Context);
@@ -118,8 +120,10 @@ export default function AddProducer() {
             const response = await axios.post(`http://localhost:5001/deleteProducer`, { mansx: item.mansx }, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('admin')}`,
                     'Accept': 'application/json'
-                }
+                },
+                withCredentials: true
             });
             if (response.status === 200) {
                 setLoadProducer(true);

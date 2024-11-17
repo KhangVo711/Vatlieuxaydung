@@ -29,13 +29,14 @@ const createJWT = (payload) => {
   };
   
   const authMiddleware = (req, res, next) => {
-    const token = req.cookies.jwt; 
-    if (!token) return res.status(401).json({ message: 'Không tìm thấy token' });
+    const token = req.cookies.admin; 
+    console.log('token', token);    
+    if (!token) return res.status(401).json({ message: 'Đăng nhập hết hạn' });
   
     try {
-        const decoded = verifyToken(token); // Xác minh token
-        req.user = decoded; // Lưu thông tin người dùng vào request
-        next(); // Tiếp tục đến middleware hoặc route tiếp theo
+        const decoded = verifyToken(token); 
+        req.user = decoded; 
+        next(); 
     } catch (error) {
         return res.status(401).json({ message: 'Token không hợp lệ' });
     }

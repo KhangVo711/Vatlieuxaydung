@@ -9,7 +9,7 @@ export default function ViewProducer({formRefView, selectedProducer}) {
                                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Mã nhà sản xuất
                                 </label>
-                                <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                                     {selectedProducer.mansx}
                                 </p>
                             </div>
@@ -17,7 +17,7 @@ export default function ViewProducer({formRefView, selectedProducer}) {
                                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Tên nhà sản xuất
                                 </label>
-                                <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                                     {selectedProducer.tennsx}
                                 </p>
                             </div>
@@ -27,7 +27,7 @@ export default function ViewProducer({formRefView, selectedProducer}) {
                             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Email
                             </label>
-                            <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                                 {selectedProducer.email}
                             </p>
                         </div>
@@ -35,7 +35,7 @@ export default function ViewProducer({formRefView, selectedProducer}) {
                             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Địa chỉ
                             </label>
-                            <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                                 {selectedProducer.diachi}
                             </p>
                         </div>

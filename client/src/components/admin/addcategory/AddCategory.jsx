@@ -7,6 +7,8 @@ import axios from 'axios';
 import { Context } from '../../Context.jsx';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
+
 
 export default function AddCategory() {
     const { loadCategory, setLoadCategory } = useContext(Context);
@@ -88,8 +90,11 @@ export default function AddCategory() {
             const response = await axios.post(`http://localhost:5001/deleteCategory`, { maloai: item.maloai }, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('admin')}`,
                     'Accept': 'application/json'
-                }
+                },
+                withCredentials: true
+    
             });
             if (response.status === 200) {
                 setLoadCategory(true);

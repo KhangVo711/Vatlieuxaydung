@@ -5,6 +5,7 @@ import Select from 'react-select';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Context } from '../../../Context.jsx';
+import Cookies from 'js-cookie';
 
 export default function FormAddInvoice({formAddRef}) {
   const { setLoadDataInvoice } = useContext(Context);
@@ -93,6 +94,7 @@ export default function FormAddInvoice({formAddRef}) {
             const response = await axios.post('http://localhost:5001/addInvoice', formInvoice, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('admin')}`,
                     'Accept': 'application/json',
                 },
                 withCredentials: true,
@@ -108,6 +110,7 @@ export default function FormAddInvoice({formAddRef}) {
                 const detailResponse = await axios.post('http://localhost:5001/addInvoiceDetail', invoiceDetail, {
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${Cookies.get('admin')}`,
                         'Accept': 'application/json',
                     },
                     withCredentials: true,
@@ -129,17 +132,14 @@ export default function FormAddInvoice({formAddRef}) {
                 setColorMsg('text-red-600');
                 setMessage(response.data.message);
                 handleError();
-
             }
-
-
-
         } catch (error) {
             if (error.response && error.response.data && error.response.data.error) {
                 setMessage(error.response.data.error);
                 handleError();
-
+                setColorMsg('text-red-600');
             } else {
+                setColorMsg('text-red-600');
                 setMessage("Đã xảy ra lỗi. Vui lòng thử lại.");
                 handleError();
 
@@ -266,7 +266,6 @@ export default function FormAddInvoice({formAddRef}) {
                     <PlusCircleIcon className="h-8 w-8 text-gray-700 hover:text-gray-500 transition ease-in-out duration-200" />
                 </button>
 
-                {/* Nút submit */}
                 <div className="flex items-center justify-center w-full">
                     <button
                         type="submit"

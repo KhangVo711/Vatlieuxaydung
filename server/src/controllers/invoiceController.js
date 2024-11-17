@@ -79,5 +79,19 @@ const showInvoice = async (req, res) => {
         res.status(500).send({ message: "Đã xảy ra lỗi khi lấy dữ liệu." });
     }
 };
+const showDetailInvoice = async (req, res) => {
+    const {mapn} = req.params;
+    try {
+        const detail = await invoiceModel.showDetailInvoice(mapn);
+        if (detail) {
+            res.status(200).json({ detail: detail });
+        } else {
+            res.status(404).send('Invoice not found');
+        }
 
-export default { insertInvoice, insertDetailInvoice, showInvoice };
+    } catch (error) {
+        res.status(500).send({ message: "Đã xảy ra lỗi khi lấy dữ liệu." });
+    }
+};
+
+export default { insertInvoice, insertDetailInvoice, showInvoice, showDetailInvoice };

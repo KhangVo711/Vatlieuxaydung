@@ -58,5 +58,45 @@ GROUP BY
     const [rows] = await connectDB.execute(query);
     return rows;
 };
+const showDetailInvoice = async (mapn) => {
+    const query = `
+       SELECT
+    pn.mapn,
+pn.tenpn,
+	pn.ngaylap,
+    sp.tensp AS ten_san_pham,
+    ql.tenql AS ten_quan_ly,
+    ct.soluong,
+    ct.dongia,
+    ct.tennsx,
+    (ct.soluong * ct.dongia) AS thanh_tien,
+    total.tong_gia
+FROM
+    chitietphieunhap ct
+JOIN
+    phieunhap pn ON ct.mapn = pn.mapn
+JOIN
+    sanpham sp ON ct.masp = sp.masp
+JOIN
+    quanly ql ON pn.maql = ql.maql
+JOIN
+    (
+        SELECT
+            mapn,
+            SUM(soluong * dongia) AS tong_gia
+        FROM
+            chitietphieunhap
+        GROUP BY
+            mapn
+    ) AS total ON pn.mapn = total.mapn
+WHERE
+    ct.mapn = ?
+GROUP BY
+    pn.mapn, sp.tensp, ql.tenql, ct.soluong, ct.dongia, total.tong_gia;
+    `;
+    const [rows] = await connectDB.execute(query, [mapn]);
+    return rows;
+};
 
-export default { insertInvoice, showInvoice, insertDetailInvoice, getNameProducer, getInvoice, updateQuantity };
+export default { insertInvoice, showInvoice, insertDetailInvoice, getNameProducer, getInvoice, updateQuantity, showDetailInvoice };
+

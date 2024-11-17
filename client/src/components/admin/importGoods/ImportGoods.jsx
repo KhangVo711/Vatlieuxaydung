@@ -1,16 +1,18 @@
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { useState, useEffect, useRef, useContext } from 'react';
-import { ToastContainer , toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FormAddInvoice from './addInvoice/FormAddInvoice';
 import TableInvoice from './tableInvoice/TableInvoice';
 import { Context } from '../../Context.jsx';
 import axios from 'axios';
+import ViewInvoice from './viewInvoice/ViewInvoice.jsx';
 export default function ImportGoods() {
   const { loadDataInvoice, setLoadDataInvoice } = useContext(Context);
 
     const formAddRef = useRef(null);
     const [dataInvoice, setDataInvoice] = useState([]);
+    const [selectDetailInvoice, setSelectDetailInvoice] = useState({mapn:'', tenpn:'', ngaylap:'', ten_san_pham: '', ten_quan_ly: '', soluong: '', dongia: '', thanh_tien:'', tong_gia: ''}); 
     const [showAddForm, setShowAddForm] = useState(false);
     const handleAddProductClick = () => {
         setShowAddForm(!showAddForm);
@@ -49,7 +51,51 @@ export default function ImportGoods() {
 
     }, [loadDataInvoice]);
 
+    
 
+  // VIEW DETAIL INVOICE
+  const formRefView = useRef(null);
+  const [showFormView, setShowFormView] = useState(false);
+    console.log('selectDetailInvoice', selectDetailInvoice);
+  const handleViewProductClick = async (item) => {
+    try {
+    setShowFormView(true);
+
+        const response = await axios.get(`http://localhost:5001/getInvoice/${item.mapn}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            withCredentials: true
+        });
+        if (response.status === 200) {
+            setSelectDetailInvoice(response.data.detail);
+
+          }
+    }
+    catch (error) {
+        console.error('Error fetching data:', error);
+      }
+}
+
+const handleClickOutsideView = (event) => {
+  if (formRefView.current && !formRefView.current.contains(event.target)) {
+      setShowFormView(false);
+      setSelectDetailInvoice({mapn:'', tenpn:'', ngaylap:'', ten_san_pham: '', ten_quan_ly: '', soluong: '', dongia: '', thanh_tien:'', tong_gia: ''})
+  }
+};
+
+
+useEffect(() => {
+  if (showFormView) {
+      document.addEventListener("mousedown", handleClickOutsideView);
+  } else {
+      document.removeEventListener("mousedown", handleClickOutsideView);
+  }
+  return () => {
+      document.removeEventListener("mousedown", handleClickOutsideView);
+  };
+}, [showFormView]);
     return (
 <>
     <ToastContainer/>
@@ -70,11 +116,13 @@ export default function ImportGoods() {
         <button onClick={handleAddProductClick} 
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2.5 text-sm px-3 rounded transition duration-150 ease-in-out">Thêm phiếu nhập</button>
       </div>
-        <TableInvoice dataInvoice = {dataInvoice}/>
+        <TableInvoice dataInvoice = {dataInvoice}  handleViewProductClick = { handleViewProductClick}/>
       {showAddForm && (
         <FormAddInvoice formAddRef={formAddRef}  />
       )}
-      
+      {showFormView && (
+        <ViewInvoice formRefView={formRefView}  selectDetailInvoice={selectDetailInvoice} />
+      )}
     </div>
     </>
     )

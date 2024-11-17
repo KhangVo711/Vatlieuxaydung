@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useContext } from 'react';
 import { Context } from '../../../Context.jsx';
+import Cookies from 'js-cookie';
+
 export default function FormAddProducer({formRef}) {
     const { setLoadProducer } = useContext(Context);
 
@@ -32,6 +34,7 @@ export default function FormAddProducer({formRef}) {
             const response = await axios.post(`http://localhost:5001/addProducer`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('admin')}`,
                     'Accept': 'application/json'
                 },
                 withCredentials: true
@@ -92,7 +95,7 @@ export default function FormAddProducer({formRef}) {
                         <div className="mb-3 flex">
                             <div className="w-1/3 mr-1">
                                 <label htmlFor="code" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mã NSX</label>
-                                <input type="text" id="code" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
+                                <input type="text" id="code" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
                                 name='mansx'
                                 placeholder='NS-001'
                                 value={formData.mansx}
@@ -101,7 +104,7 @@ export default function FormAddProducer({formRef}) {
                             </div>
                             <div className="w-2/3 ml-1">
                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên NSX</label>
-                                <input type="text" id="name" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
+                                <input type="text" id="name" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
                                 name='tennsx'
                                 placeholder='Tên nhà sản xuất'
                                 value={formData.tennsx}
@@ -111,7 +114,7 @@ export default function FormAddProducer({formRef}) {
                         </div>
                         <div className="mb-3">
                             <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                            <input type="text" id="email" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
+                            <input type="text" id="email" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
                            name='email'
                            placeholder='nsx@gmail.com'
                            value={formData.email}
@@ -120,7 +123,7 @@ export default function FormAddProducer({formRef}) {
                         </div>
                         <div className="mb-3">
                             <label htmlFor="adress" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ</label>
-                            <input type="text" id="adress" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
+                            <input type="text" id="adress" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" 
                            name='diachi'
                             placeholder='Địa chỉ'
                            value={formData.diachi}

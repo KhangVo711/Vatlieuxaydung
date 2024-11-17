@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
+
 export default function FormEditProducer({ formRefEdit, selectedProducer, setSelectedProducer, setLoadProducer }) {
     const [message, setMessage] = useState('');
     const [colorMessage, setColorMessage] = useState('');
@@ -13,8 +15,10 @@ export default function FormEditProducer({ formRefEdit, selectedProducer, setSel
             const response = await axios.post(`http://localhost:5001/editProducer`, selectedProducer, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${Cookies.get('admin')}`,
                     'Accept': 'application/json'
-                }
+                },
+                withCredentials: true
             });
             if (response.status === 200) {
                 setMessage(response.data.message);
@@ -68,11 +72,11 @@ export default function FormEditProducer({ formRefEdit, selectedProducer, setSel
                 <div className="mb-5 flex">
                     <div className="w-1/3 mr-1">
                         <label htmlFor="code" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mã nhà sản xuất</label>
-                        <p id="code" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">{selectedProducer?.mansx || ""}</p>
+                        <p id="code" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">{selectedProducer?.mansx || ""}</p>
                     </div>
                     <div className="w-2/3 ml-1">
                         <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên nhà sản xuất</label>
-                        <input type="text" id="name" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                        <input type="text" id="name" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             placeholder='Tên nhà sản xuất'
                             name='tennsx'
                             value={selectedProducer?.tennsx || ""}
@@ -83,7 +87,7 @@ export default function FormEditProducer({ formRefEdit, selectedProducer, setSel
 
                 <div className="mb-3">
                     <label htmlFor="code" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                    <input type="text" id="code" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                    <input type="text" id="code" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                         placeholder='Email'
                         name='email'
                         value={selectedProducer?.email || ""}
@@ -92,7 +96,7 @@ export default function FormEditProducer({ formRefEdit, selectedProducer, setSel
                 </div>
                 <div className="mb-3">
                     <label htmlFor="code" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ</label>
-                    <input type="text" id="code" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                    <input type="text" id="code" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                         placeholder='Địa chỉ'
                         name='diachi'
                         value={selectedProducer?.diachi || ""}
