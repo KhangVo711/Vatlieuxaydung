@@ -7,8 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Context } from '../../../Context.jsx';
 import Cookies from 'js-cookie';
 
-export default function FormAddInvoice({formAddRef}) {
-  const { setLoadDataInvoice } = useContext(Context);
+export default function FormAddInvoice({ formAddRef }) {
+    const { setLoadDataInvoice } = useContext(Context);
 
     const [product, setProduct] = useState([]);
     const options = product.map((item) => ({
@@ -41,7 +41,13 @@ export default function FormAddInvoice({formAddRef}) {
     };
     const [invoice, setInvoice] = useState([{ masp: '', soluong: '', dongia: '' }]);
 
-
+    const chunkArray = (array, size) => {
+        const result = [];
+        for (let i = 0; i < array.length; i += size) {
+            result.push(array.slice(i, i + size));
+        }
+        return result;
+    };
 
     const { isDataAdmin } = useContext(Context);
 
@@ -79,7 +85,7 @@ export default function FormAddInvoice({formAddRef}) {
         const duplicateMasp = maspList.filter((item, index) => maspList.indexOf(item) !== index);
         if (duplicateMasp.length > 0) {
             setColorMsg('text-red-600');
-            setMessage("Có mã sản phẩm bị trùng. Vui lòng kiểm tra lại.");
+            setMessage("Có sản phẩm bị trùng. Vui lòng kiểm tra lại.");
             return;
         }
         const invoiceId = generateInvoiceId()
@@ -121,7 +127,7 @@ export default function FormAddInvoice({formAddRef}) {
                     setInvoice([{ masp: '', soluong: '', dongia: '' }]);
                     e.target.tenpn.value = '';
                     handleSuccess();
-              setLoadDataInvoice(true);
+                    setLoadDataInvoice(true);
 
                     setTimeout(() => {
                         setMessage('');
@@ -170,10 +176,11 @@ export default function FormAddInvoice({formAddRef}) {
         });
     };
     return (
-        <div className="w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center">
-            <form ref={formAddRef}
+        <div className="w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 overflow-y-auto flex items-center">
+            <form
+                ref={formAddRef}
                 onSubmit={handleSubmit}
-                className="w-5/12 mx-auto bg-gray-100 shadow-lg border rounded py-5 px-8 mt-16"
+                className="mx-auto bg-gray-100 shadow-lg border rounded py-5 px-8 mt-16 max-w-7xl overflow-y-auto max-h-[80vh]"
             >
                 <h2 className="uppercase font-bold mb-2 tracking-wider text-lg text-center">
                     Phiếu nhập kho
@@ -181,95 +188,110 @@ export default function FormAddInvoice({formAddRef}) {
                 {message && <p className={`${colorMsg} text-center text-sm mb-3`}>{message}</p>}
 
                 {/* Input Tên phiếu nhập */}
-                <div className="mb-3 flex">
-                    <div className="w-full">
-                        <label
-                            htmlFor="name"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                            Tên phiếu nhập
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="tenpn"
-                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                            placeholder="Tên phiếu nhập"
-                        />
-                    </div>
+                <div className="mb-3">
+                    <label
+                        htmlFor="name"
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                        Tên phiếu nhập
+                    </label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="tenpn"
+                        className="w-full shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 pl-2.5 py-2"
+                        placeholder="Tên phiếu nhập"
+                    />
                 </div>
 
                 {/* Danh sách sản phẩm */}
-                {invoice.map((inv, index) => (
-                    <div key={index} className="mt-4">
-                        <div className="w-full relative mb-3">
-                            <div className='flex justify-between'>
-                                <Select
-                                    options={options}
-                                    onChange={(selectedOption) => handleInputChange(index, 'masp', selectedOption.value)}
-                                    placeholder="Chọn sản phẩm" className='w-11/12 text-sm rounded-lg '
-                                />
-                                {/* Nút xóa sản phẩm */}
-                                <button
-                                    type="button"
-                                    onClick={() => handleSubProduct(index)}
-                                    className="flex items-center"
-                                >
-                                    <MinusCircleIcon className="h-7 w-7 text-gray-700 hover:text-gray-500 transition ease-in-out duration-200" />
-                                </button>
-                            </div>
+                <div
+                    className="grid"
+                    style={{
+                        gridTemplateColumns: `repeat(${invoice.length >= 3 ? '2' : '1'}, 1fr)`, // Luôn có 2 cột
+                        gap: '1rem',
+                    }}
+                >
+                    {chunkArray(invoice, 3).map((group, groupIndex) => (
+                        <div key={groupIndex} className="space-y-4">
+                            {group.map((inv, index) => (
+                                <div key={groupIndex} className="space-y-4 max-h-[200px] ">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <Select
+                                            options={options}
+                                            onChange={(selectedOption) =>
+                                                handleInputChange(groupIndex * 3 + index, 'masp', selectedOption.value)
+                                            }
+                                            placeholder="Chọn sản phẩm"
+                                            className="w-11/12 text-sm rounded-lg"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleSubProduct(groupIndex * 3 + index)}
+                                            className="text-gray-700 hover:text-gray-500"
+                                        >
+                                            <MinusCircleIcon className="h-7 w-7" />
+                                        </button>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label
+                                                htmlFor={`soluong-${groupIndex}-${index}`}
+                                                className="block mb-1 text-sm font-medium text-gray-900"
+                                            >
+                                                Số lượng
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id={`soluong-${groupIndex}-${index}`}
+                                                value={inv.soluong}
+                                                onChange={(e) =>
+                                                    handleInputChange(groupIndex * 3 + index, 'soluong', e.target.value)
+                                                }
+                                                className="w-full shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 pl-2.5 py-2"
+                                                placeholder="100"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label
+                                                htmlFor={`dongia-${groupIndex}-${index}`}
+                                                className="block mb-1 text-sm font-medium text-gray-900"
+                                            >
+                                                Đơn giá
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id={`dongia-${groupIndex}-${index}`}
+                                                value={inv.dongia}
+                                                onChange={(e) =>
+                                                    handleInputChange(groupIndex * 3 + index, 'dongia', e.target.value)
+                                                }
+                                                className="w-full shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 pl-2.5 py-2"
+                                                placeholder="25000"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div className="mb-3 flex">
-                            <div className="w-1/2">
-                                <label
-                                    htmlFor={`soluong-${index}`}
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Số lượng
-                                </label>
-                                <input
-                                    type="text"
-                                    id={`soluong-${index}`}
-                                    value={inv.soluong}
-                                    onChange={(e) => handleInputChange(index, 'soluong', e.target.value)}
-                                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2"
-                                    placeholder="100"
-                                />
-                            </div>
-                            <div className="w-1/2 ml-1">
-                                <label
-                                    htmlFor={`dongia-${index}`}
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Đơn giá
-                                </label>
-                                <input
-                                    type="text"
-                                    id={`dongia-${index}`}
-                                    value={inv.dongia}
-                                    onChange={(e) => handleInputChange(index, 'dongia', e.target.value)}
-                                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2"
-                                    placeholder="25000"
-                                />
-                            </div>
-                        </div>
+                    ))}
+                </div>
 
-                    </div>
-                ))}
 
                 {/* Nút thêm sản phẩm */}
-                <button
-                    type="button"
-                    onClick={handleAddProduct}
-                    className="flex items-center text-blue-600 hover:text-blue-800 mb-4"
-                >
-                    <PlusCircleIcon className="h-8 w-8 text-gray-700 hover:text-gray-500 transition ease-in-out duration-200" />
-                </button>
-
-                <div className="flex items-center justify-center w-full">
+                <div className="mt-4 flex justify-center">
+                    <button
+                        type="button"
+                        onClick={handleAddProduct}
+                        className="text-blue-600 hover:text-blue-800"
+                    >
+                        <PlusCircleIcon className="h-8 w-8" />
+                    </button>
+                </div>
+                <div className="flex justify-center mt-6">
                     <button
                         type="submit"
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-3 py-2"
+                        className="px-6 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded shadow focus:outline-none focus:ring-4 focus:ring-blue-300"
                     >
                         Thêm
                     </button>
@@ -277,4 +299,5 @@ export default function FormAddInvoice({formAddRef}) {
             </form>
         </div>
     );
+
 }

@@ -245,7 +245,6 @@ const insertProducts = async (req, res) => {
         if (!idPattern.test(ttct)) {
             return res.status(400).json({ message: 'Thông tin chi tiết không được chứa khoảng trắng ở đầu' });
         }
-
         const nameProduct = /^[\p{L}\p{N}\s]+$/u;
         if (!nameProduct.test(tensp)) {
             return res.status(400).json({ message: 'Tên sản phẩm không được chứa ký tự đặc biệt.' });
@@ -260,7 +259,11 @@ const insertProducts = async (req, res) => {
         if(gia <= 0){
             return res.status(400).json({ message: 'Giá sản phẩm phải lớn hơn 0' });
         }
-
+        const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+        const fileExtension = hinhanh.substring(hinhanh.lastIndexOf('.')).toLowerCase();
+        if (!validExtensions.includes(fileExtension)) {
+            return res.status(400).send({ message: "Vui lòng upload hình ảnh" });
+        }
         await productsModel.insertProducts(masp, tensp, maloai, ttct, soluongsp, hinhanh, gia, mansx)
         res.status(200).send({ message: "Thêm sản phẩm thành công!" });
     }
