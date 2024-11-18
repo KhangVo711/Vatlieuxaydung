@@ -12,6 +12,8 @@ import AddProduct from '../components/admin/addproduct/AddProduct.jsx';
 import LoginAdmin from '../components/admin/auth/LoginAdmin.jsx';
 import PrivateRouterAdmin from '../components/privateRouter/PrivateRouteAdmin.jsx';
 import ImportGoods from '../components/admin/importGoods/ImportGoods.jsx';
+import Cart from '../components/users/cart/Cart.jsx';
+import OrderCart from '../components/admin/orderCart/orderCart.jsx';
 
 
 export const router = createBrowserRouter([
@@ -28,6 +30,11 @@ export const router = createBrowserRouter([
         path: "products",
         element:
           <Product />
+      },
+      {
+        path: "cart",
+        element:
+          <Cart />
       },
 
     ]
@@ -90,6 +97,13 @@ export const router = createBrowserRouter([
         element:
           <PrivateRouterAdmin>
             <ImportGoods />
+          </PrivateRouterAdmin>
+      },
+      {
+        path: "ordercart",
+        element:
+          <PrivateRouterAdmin>
+            <OrderCart />
           </PrivateRouterAdmin>
 
       },

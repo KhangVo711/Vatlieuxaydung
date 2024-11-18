@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Banner() {
     return (
         <div
@@ -10,11 +12,11 @@ export default function Banner() {
               <h3 className="mb-8 w-full sm:w-2/3 md:w-1/2 text-base sm:text-lg md:text-xl font-bold">
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s.
               </h3>
-              <button
+              <Link to="/products"
                 type="button"
-                className="inline-block rounded border-2 border-neutral-50 px-4 sm:px-6 pb-2 sm:pb-3 pt-2 sm:pt-3 text-xs sm:text-sm font-medium uppercase leading-normal text-neutral-50 transition duration-150 ease-in-out hover:border-neutral-300 hover:text-neutral-200 focus:border-neutral-300 focus:text-neutral-200 focus:outline-none focus:ring-0 active:border-neutral-300 active:text-neutral-200 dark:hover:bg-neutral-600 dark:focus:bg-neutral-600">
+                className="inline-block border-2 rounded-sm border-neutral-50 px-4 sm:px-6 pb-2 sm:pb-3 pt-2 sm:pt-3 text-xs sm:text-sm font-medium uppercase leading-normal text-neutral-50 transition duration-150 ease-in-out hover:border-neutral-300 hover:text-neutral-200 focus:border-neutral-300 focus:text-neutral-200 focus:outline-none focus:ring-0 active:border-neutral-300 active:text-neutral-200 dark:hover:bg-neutral-600 dark:focus:bg-neutral-600">
                 Mua ngay
-              </button>
+              </Link>
             </div>
           </div>
         </div>

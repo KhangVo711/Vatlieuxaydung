@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from "react";
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 
 const Context = createContext();
@@ -31,6 +31,52 @@ const ContextProvider = ({ children }) => {
   const [loadProducer, setLoadProducer] = useState(true);
   const [loadProduct, setLoadProduct] = useState(true);
   const [loadDataInvoice, setLoadDataInvoice] = useState(true);
+  const [loadStatus, setLoadStatus] = useState(true);
+
+
+
+  const [cartItems, setCartItems] = useState([]);
+
+
+  const onAddToCart = (product) => {
+    setCartItems((prevCart) => {
+      const existingProduct = prevCart.find((item) => item.masp === product.masp);
+      if (existingProduct) {
+        return prevCart.map((item) =>
+          item.masp === product.masp ? { ...item, soluong: item.soluong + 1 } : item
+        );
+      }
+      return [...prevCart, { ...product, soluong: 1 }];
+    });
+  };
+  const decreaseQuantity = (productId) => {
+    setCartItems((prevCart) =>
+      prevCart
+        .map((item) =>
+          item.masp === productId
+            ? { ...item, soluong: item.soluong - 1 }
+            : item
+        )
+        .filter((item) => item.soluong > 0)
+    );
+  };
+  const increaseQuantity = (productId) => {
+    setCartItems((prevCart) =>
+      prevCart
+        .map((item) =>
+          item.masp === productId
+            ? { ...item, soluong: item.soluong + 1}
+            : item
+        )
+        .filter((item) => item.soluong > 0)
+    );
+  };
+
+  const removeItem = (productId) => {
+    setCartItems((prevCart) => prevCart.filter((item) => item.masp !== productId));
+  };
+
+
   return (
     <Context.Provider
       value={{
@@ -44,8 +90,14 @@ const ContextProvider = ({ children }) => {
         setLoadProducer,
         loadProduct,
         setLoadProduct,
-        loadDataInvoice, 
-        setLoadDataInvoice
+        loadDataInvoice,
+        setLoadDataInvoice,
+        cartItems, setCartItems,
+        onAddToCart,
+        decreaseQuantity,
+        increaseQuantity,
+        removeItem,
+        loadStatus, setLoadStatus
       }}
     >
       {children}

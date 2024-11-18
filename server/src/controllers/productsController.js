@@ -218,6 +218,26 @@ const getAllProduct = async (req, res) => {
     }
 }
 
+const getProduct8 = async (req, res) => {
+    try {
+        const product = await productsModel.getProduct8()
+        res.status(200).send({ product: product });
+    }
+    catch (error) {
+        res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm" });
+    }
+}
+
+const getProduct12 = async (req, res) => {
+    try {
+        const product = await productsModel.getProduct12()
+        res.status(200).send({ product: product });
+    }
+    catch (error) {
+        res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm" });
+    }
+}
+
 const insertProducts = async (req, res) => {
     let { masp, tensp, maloai, ttct, soluongsp, gia, mansx } = req.body;
     let hinhanh = req.file.filename;
@@ -451,6 +471,7 @@ export default {
     getAllAPICart, getAllCart, insertCart,
     insertDetailCart, getAllDetailCart,
     insertCategory,
+    getProduct8, getProduct12,
     editCategory,
     getOneCategory,
     getNSX,

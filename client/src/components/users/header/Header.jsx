@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Context } from '../../Context.jsx';
 import { ArrowRightEndOnRectangleIcon, UserIcon, Cog6ToothIcon, DevicePhoneMobileIcon } from "@heroicons/react/24/solid";
+import { ArchiveBoxIcon } from "@heroicons/react/24/outline";
 import {
   Dialog,
   DialogPanel,
@@ -50,6 +51,7 @@ const callsToAction = [
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { isData, setIsData } = useContext(Context);
+  const {cartItems} = useContext(Context);
   console.log(isData);
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -377,9 +379,15 @@ export default function Header() {
             <div className="w-0.5 h-5 bg-gray-300 mr-2"></div>
             <MicrophoneIcon className="h-5 w-5 text-gray-700" />
           </div>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            <ShoppingCartIcon className="h-6 w-6 text-gray-700 hover:text-gray-900" />
-          </a>
+          <Link to='/cart' id='cart-icon' className="text-sm font-semibold leading-6 text-gray-900 relative">
+            <ShoppingCartIcon className="h-7 w-7 text-gray-700 hover:text-gray-900" />
+            <span className="absolute -top-0.5 -right-1 bg-red-500 text-white rounded-full text-xs w-3.5 h-3.5 flex items-center justify-center">
+                    {cartItems.length}
+                </span>
+          </Link>
+          <Link to='!#' className="text-sm font-semibold leading-6 text-gray-900 relative">
+          <ArchiveBoxIcon className="h-7 w-7 text-gray-600" />
+          </Link>
         </PopoverGroup>
 
         {isData && (isData.phone || isData.email) ? (

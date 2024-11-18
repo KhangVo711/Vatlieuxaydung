@@ -175,10 +175,10 @@ export default function Dashboard() {
           <p className="text-xl font-semibold mb-3">Giao dịch gần dây</p>
           <div className="w-full bg-white border rounded-lg p-3">
             {[
-              { name: 'Trent Murphy', product: 'Product 1', amount: '$25.00', color: 'green' },
-              { name: 'Joseph Brent', product: 'Product 34', amount: '$74.99', color: 'red' },
-              { name: 'Jacob Bator', product: 'Product 23', amount: '$14.95', color: 'green' },
-              { name: 'Alex Mason', product: 'Product 66', amount: '$44.99', color: 'green' },
+              { name: 'Nguyễn Trung Vinh', product: 'Số sản phẩm mua: 2', amount: '1.550.000đ', color: 'green' },
+              { name: 'Ngô Gia Hưng', product: 'Số sản phẩm mua: 4', amount: '3.270.000đ', color: 'red' },
+              { name: 'Đào Trung Kiên', product: 'Số sản phẩm mua: 3', amount: '1.725.000đ', color: 'green' },
+              { name: 'Lý Gia Minh', product: 'Số sản phẩm mua: 2', amount: '1.135.000đ', color: 'green' },
             ].map(({ name, product, amount, color }, index) => (
               <div key={index} className="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-3 py-1.5 mb-1">
                 <div>

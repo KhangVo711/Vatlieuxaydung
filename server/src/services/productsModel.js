@@ -45,6 +45,16 @@ const getAllProduct = async () => {
     return rows
 }
 
+const getProduct8 = async () => {
+    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` ORDER BY `create_at` DESC LIMIT 8')
+    return rows
+}
+
+const getProduct12 = async () => {
+    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` ORDER BY `create_at` DESC LIMIT 12')
+    return rows
+}
+
 const insertProducts = async (masp, tensp, maloai, ttct, soluongsp, hinhanh, gia, mansx) => {
     await connectDB.execute("INSERT INTO `sanpham` VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [masp, tensp, maloai, ttct, soluongsp, hinhanh, gia, mansx]);
 }
@@ -122,5 +132,5 @@ const updateQuantity = async (masp) => {
     await connectDB.execute('UPDATE sanpham,chitietdathang SET soluongsp=soluongsp-soluong WHERE sanpham.masp=chitietdathang.masp AND chitietdathang.masp=?', [masp])
 }
 
-export default {getCategory, updateQuantity, getCartAPI, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct}
+export default {getCategory, getProduct8, getProduct12, updateQuantity, getCartAPI, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct}
 
