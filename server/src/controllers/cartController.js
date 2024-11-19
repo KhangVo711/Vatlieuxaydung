@@ -121,5 +121,16 @@ const detailProductInOrder = async (req, res) => {
     }
 }
 
+const detailOrderOfUser = async (req, res) => {
+    const { makh } = req.params;
+    try {
+        const orderProduct = await cartModel.detailOrderOfUser(makh);
+        res.status(200).send({ detailOrder: orderProduct });
+    } catch (error) {
+        console.error("Error getting order details:", error);
+        res.status(500).send({ message: "Lỗi khi lấy thông tin đơn hàng." });
+    }
+}
 
-export default { insertCart, insertDetailCart, getCart, updateStatus, detailProductInOrder };
+
+export default { insertCart, insertDetailCart, getCart, updateStatus, detailProductInOrder, detailOrderOfUser };

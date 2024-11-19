@@ -296,6 +296,14 @@ export default function Header() {
       handleError();
     }
   }
+
+  const { setSearchQuery } = useContext(Context);
+
+    const handleSearch = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+
   return (
     <header className="bg-white sticky top-0 z-10 shadow-md">
       <ToastContainer />
@@ -375,6 +383,7 @@ export default function Header() {
               type="text"
               placeholder="Tìm kiếm"
               className="ml-2 outline-none w-full text-sm"
+              onChange={handleSearch}
             />
             <div className="w-0.5 h-5 bg-gray-300 mr-2"></div>
             <MicrophoneIcon className="h-5 w-5 text-gray-700" />
@@ -385,7 +394,7 @@ export default function Header() {
                     {cartItems.length}
                 </span>
           </Link>
-          <Link to='!#' className="text-sm font-semibold leading-6 text-gray-900 relative">
+          <Link to='ordered' className="text-sm font-semibold leading-6 text-gray-900 relative">
           <ArchiveBoxIcon className="h-7 w-7 text-gray-600" />
           </Link>
         </PopoverGroup>

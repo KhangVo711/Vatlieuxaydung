@@ -72,5 +72,44 @@ const detailProductInOrder = async (madh) => {
     return rows;
 };
 
+const detailOrderOfUser = async (makh) => {
+    const [rows] = await connectDB.execute(`
+    SELECT 
+    dh.madh,
+    dh.makh,
+    kh.tenkh,
+    dh.ngaydat,
+    dh.trangthai,
+    dh.tonggia,
+    dv.tendvvc,
+    GROUP_CONCAT(
+        CONCAT(
+            sp.tensp, 
+            ' - ', ct.soluongsanpham, 
+            ' - ', ct.dongia, 'đ'
+        ) SEPARATOR '; '
+    ) AS sanpham_chitiet
+FROM
+    donhang dh
+JOIN
+    chitietdonhang ct ON dh.madh = ct.madh
+JOIN
+    khachhang kh ON dh.makh = kh.makh
+JOIN
+    donvivanchuyen dv ON dh.madvvc = dv.madvvc
+JOIN
+    sanpham sp ON ct.masp = sp.masp
+WHERE
+    kh.makh = ?
+GROUP BY
+    dh.madh, dh.makh, kh.tenkh, dh.ngaydat, dh.trangthai, dh.tonggia, dv.tendvvc;
 
-export default { insertCart, insertDetailCart, getCart, updateStatus, getDetailCart, updateQuantity, detailProductInOrder };
+
+
+    `, [makh]);
+
+    return rows;
+};
+
+
+export default { insertCart, insertDetailCart, getCart, updateStatus, getDetailCart, updateQuantity, detailProductInOrder, detailOrderOfUser };

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function Banner() {
     return (
         <div
-        className="relative h-[350px] sm:h-[380px] md:h-[480px] lg:h-[600px] overflow-hidden bg-[url('http://econaur.com/wp-content/uploads/2021/05/Building-Materials.jpg')] bg-cover bg-center bg-no-repeat">
+        className="relative h-[350px] sm:h-[380px] md:h-[480px] lg:h-[600px] overflow-hidden !bg-[url('http://econaur.com/wp-content/uploads/2021/05/Building-Materials.jpg')] bg-cover bg-center bg-no-repeat">
         <div
           className="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-black/60 bg-fixed">
           <div className="flex h-full items-center justify-center">

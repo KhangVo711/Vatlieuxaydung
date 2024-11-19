@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Cart() {
+    
     const generateOrderId = () => `OD${Date.now()}${Math.floor(Math.random() * 10)}`;
     const getCurrentDate = () => {
         const now = new Date();
@@ -28,7 +29,7 @@ export default function Cart() {
     if(isSuccess === true){
         setTimeout(() => {
             setIsSuccess(false);
-        }, 3000);
+        }, 3500);
     } 
     console.log(ship);
     useEffect(() => {
@@ -82,15 +83,15 @@ export default function Cart() {
                 });
 
                 if (detailResponse.status === 200) {
-                    setCartItems([]);
-                    if(res.status === 200){
-                        setMessage(detailResponse.data.message);
-                    }
-
+                    setMessage(detailResponse.data.message);
+                
+                    // Giữ trạng thái đang xử lý trong 3 giây, sau đó chuyển thành công
                     setTimeout(() => {
                         setIsProcessing(false); // Dừng xử lý đơn hàng
                         setIsSuccess(true); // Đặt hàng thành công
-                    }, 3000); // Sau 3 giây hiển thị thành công
+                    setCartItems([]);
+
+                    }, 3000);
                 } else {
                     console.error("Failed to submit order details");
                     setIsProcessing(false); // Dừng xử lý nếu lỗi

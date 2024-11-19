@@ -14,6 +14,7 @@ import PrivateRouterAdmin from '../components/privateRouter/PrivateRouteAdmin.js
 import ImportGoods from '../components/admin/importGoods/ImportGoods.jsx';
 import Cart from '../components/users/cart/Cart.jsx';
 import OrderCart from '../components/admin/orderCart/orderCart.jsx';
+import Order from '../components/users/order/Order.jsx';
 
 
 export const router = createBrowserRouter([
@@ -35,6 +36,11 @@ export const router = createBrowserRouter([
         path: "cart",
         element:
           <Cart />
+      },
+      {
+        path: "ordered",
+        element:
+          <Order />
       },
 
     ]

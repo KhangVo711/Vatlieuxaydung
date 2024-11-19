@@ -36,7 +36,7 @@ const ContextProvider = ({ children }) => {
 
 
   const [cartItems, setCartItems] = useState([]);
-
+  const [searchQuery, setSearchQuery] = useState('');
 
   const onAddToCart = (product) => {
     setCartItems((prevCart) => {
@@ -97,7 +97,8 @@ const ContextProvider = ({ children }) => {
         decreaseQuantity,
         increaseQuantity,
         removeItem,
-        loadStatus, setLoadStatus
+        loadStatus, setLoadStatus,
+        searchQuery, setSearchQuery
       }}
     >
       {children}

@@ -3,13 +3,26 @@ import { EyeIcon, PencilSquareIcon } from '@heroicons/react/24/solid';
 import {formatCurrency} from '../../../../utils/currency.jsx';
 import {formatDateTime} from '../../../../utils/dateTime.jsx';
 import axios from 'axios'
+import ReactPaginate from 'react-paginate';
+
 import { Context } from '../../../Context.jsx';
 
 export default function TableOrder({handleEditClick, handleViewClick}) {
+  const { loadStatus, setLoadStatus } = useContext(Context);
+  const [dataOrder, setDataOrder] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 6;
 
-    const { loadStatus, setLoadStatus } = useContext(Context);
-    console.log(loadStatus);
-    const [dataOrder, setDataOrder] = useState([]);
+
+  const offset = currentPage * itemsPerPage;
+  const currentOrder = dataOrder.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(dataOrder.length / itemsPerPage);
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+    
     useEffect(() => {
         axios.get('http://localhost:5001/getOrder')
             .then((response) => {
@@ -53,7 +66,7 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
             </tr>
           </thead>
           <tbody>
-            {dataOrder.map((item, index) => (
+            {currentOrder.map((item, index) => (
               <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <th scope="row" className="px-4 py-4" >
                   {item.madh}
@@ -84,6 +97,27 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
           </tbody>
         </table>
       </div>
+      <ReactPaginate
+        previousLabel={"← Trước"}
+        nextLabel={"Sau →"}
+        pageCount={pageCount}
+        onPageChange={handlePageChange}
+        containerClassName={
+          "flex justify-center mt-4 space-x-2 fixed bottom-5 left-1/2 p-2 rounded-md"
+        }
+        pageClassName={
+          "mx-1 px-3 py-1 rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
+        }
+        previousClassName={
+          "text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
+        }
+        nextClassName={
+          "text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
+        }
+        activeClassName={
+          "font-bold !bg-gray-800 text-white px-3 py-1 rounded-md "
+        }
+      />
       </>
     )
 }
