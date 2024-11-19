@@ -55,7 +55,6 @@ const detailProductInOrder = async (madh) => {
             sp.hinhanh,
             sp.gia,
             sp.mansx,
-            sp.create_at,
             ct.soluongsanpham,
             ct.dongia
         FROM

@@ -46,11 +46,12 @@ export default function NewProduct() {
             >
                 {products.map((product) => (
                     <SwiperSlide className="p-4" key={product.masp}>
-                        <div className="bg-white shadow-md rounded-lg p-8 h-[350px] md:h-[360px] lg:h-[380px]">
+                        <div className="bg-white shadow-md rounded-lg p-8 h-[350px] md:h-[360px] lg:h-[420px]">
                             <img src={`http://localhost:5001/uploads/${product.hinhanh}`} alt={product.tensp} className="lg:w-1/2 h-48 object-cover sm:h-40 w-1/2 md:h-48 lg:h-56 mx-auto" />
                             <h3 className="text-md tracking-tighter font-semibold mt-2 sm:text-sm md:text-md lg:text-lg">
                                 {product.tensp}
                             </h3>
+                            <p>{product.ttct}</p>
                             <div className="flex justify-between mt-4">
                                 <button className="bg-orange-500 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md">
                                     Đặt hàng

@@ -25,12 +25,12 @@ export default function HomeProduct() {
             <div className="container mx-auto grid md:grid-cols-3 xl:grid-cols-4 grid-cols-2 gap-5 pt-4 pb-12 ">
                 {products.map(product => (
                     <article key={product.masp} className=" w-full lg:h-[350px] h-[250px] flex p-2 flex-col items-center rounded-md">
-                        <a href="#">
+                        <div>
 
                             <img className="mb-2.5 hover:grow hover:scale-105 w-full lg:h-[250px] h-[150px] rounded-sm transition duration-300 ease-in-out" src={`http://localhost:5001/uploads/${product.hinhanh}`} alt={product.name} />
                             
                             
-                        </a>
+                        </div>
                         <div className="pt-4 px-4 w-full flex items-center justify-between">
                                 <p className=""><strong>{product.tensp}</strong></p>
                                 <PlusCircleIcon className="h-7 w-7 text-gray-600 hover:scale-105 cursor-pointer" />

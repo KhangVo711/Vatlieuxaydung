@@ -46,12 +46,14 @@ const getAllProduct = async () => {
 }
 
 const getProduct8 = async () => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` ORDER BY `create_at` DESC LIMIT 8')
+    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` LIMIT 8')
+    // const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` ORDER BY `create_at` DESC LIMIT 8')
     return rows
 }
 
 const getProduct12 = async () => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` ORDER BY `create_at` DESC LIMIT 12')
+    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` LIMIT 12')
+    // const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` ORDER BY `create_at` DESC LIMIT 12')
     return rows
 }
 
