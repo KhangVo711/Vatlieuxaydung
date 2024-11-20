@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
 import Cookie from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -49,6 +49,8 @@ const callsToAction = [
 ]
 
 export default function Header() {
+  const location = useLocation()
+  
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { isData, setIsData } = useContext(Context);
   const {cartItems} = useContext(Context);
@@ -81,6 +83,8 @@ export default function Header() {
     setMessage('');
 
   };
+
+
 
   Modal.setAppElement('#root');
 
@@ -200,6 +204,9 @@ export default function Header() {
             address: response.data.infomation.diachi,
           }
           );
+          if(!response.data.infomation.email || !response.data.infomation.sdt || !response.data.infomation.diachi){
+            setModalIsOpen(true)
+          }
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -325,8 +332,9 @@ export default function Header() {
           </button>
         </div>
         <PopoverGroup className="hidden items-center lg:flex xl:gap-x-12 lg:gap-x-7">
-          <Link to="/products" className="text-sm font-semibold leading-6 xl:text-md text-gray-900">
+          <Link to="/products" className="text-sm flex flex-col items-center font-semibold leading-6 xl:text-md text-gray-900">
             Sản phẩm
+            {location.pathname === '/products' ? <hr className='bg-black h-0.5 w-1/2' /> : ''}
           </Link>
           <Popover className="relative">
             <PopoverButton className="flex outline-none items-center gap-x-1 text-sm xl:text-md font-semibold leading-6 text-gray-900">
@@ -388,14 +396,14 @@ export default function Header() {
             <div className="w-0.5 h-5 bg-gray-300 mr-2"></div>
             <MicrophoneIcon className="h-5 w-5 text-gray-700" />
           </div>
-          <Link to='/cart' id='cart-icon' className="text-sm font-semibold leading-6 text-gray-900 relative">
-            <ShoppingCartIcon className="h-7 w-7 text-gray-700 hover:text-gray-900" />
+          <Link to='/cart' id='cart-icon' className="text-sm font-semibold leading-6  relative">
+            <ShoppingCartIcon className={`h-7 w-7 ${location.pathname === '/cart' ? 'text-gray-900' : 'text-gray-500'}  `} />
             <span className="absolute -top-0.5 -right-1 bg-red-500 text-white rounded-full text-xs w-3.5 h-3.5 flex items-center justify-center">
                     {cartItems.length}
                 </span>
           </Link>
-          <Link to='ordered' className="text-sm font-semibold leading-6 text-gray-900 relative">
-          <ArchiveBoxIcon className="h-7 w-7 text-gray-600" />
+          <Link to='ordered' className="text-sm font-semibold leading-6 relative">
+          <ArchiveBoxIcon className={`h-7 w-7 ${location.pathname === '/ordered' ? 'text-gray-900' : 'text-gray-500'} hover:text-gray-900 `} />
           </Link>
         </PopoverGroup>
 

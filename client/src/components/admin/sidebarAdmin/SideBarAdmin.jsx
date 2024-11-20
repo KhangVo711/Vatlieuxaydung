@@ -15,16 +15,27 @@ export default function SideBarAdmin() {
   const { loadStatus, setLoadStatus } = useContext(Context);
   const [dataOrder, setDataOrder] = useState([]);
 
+      
   useEffect(() => {
-    axios.get('http://localhost:5001/getOrder')
-        .then((response) => {
-            setDataOrder(response.data.order);
-            setLoadStatus(false);
-        })
-        .catch((error) => {
-            console.error('Lỗi:', error);
-        });
-}, [loadStatus]);
+    const fetchOrderData = () => {
+        axios.get('http://localhost:5001/getOrder')
+            .then((response) => {
+                setDataOrder(response.data.order);
+                setLoadStatus(false);
+            })
+            .catch((error) => {
+                console.error('Lỗi:', error);
+            });
+    };
+
+    fetchOrderData();
+
+    // Đặt interval để gọi lại API
+    const interval = setInterval(fetchOrderData, 3000); 
+
+    // Dọn dẹp interval khi component unmount
+    return () => clearInterval(interval);
+}, []);
 
   return (
     <div

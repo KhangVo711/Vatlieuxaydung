@@ -28,9 +28,6 @@ const insertUser = async (req, res) => {
         if (email && !emailRegex.test(email)) {
             return res.status(400).json({ message: 'Email không đúng định dạng' });
         }
-        if (!idPattern.test(phone)) {
-            return res.status(400).json({ message: 'Số điện thoại không được chứa khoảng trắng ở đầu' });
-        }
         const phoneRegex = /^\d{10,11}$/;
         if (phone && !phoneRegex.test(phone)) {
             return res.status(400).json({ message: 'Số điện thoại phải là số có độ dài từ 10 đến 11 ký tự' });

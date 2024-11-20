@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
+
 import { Context } from '../../Context';
 import { formatCurrency } from '../../../utils/currency';
 import axios from 'axios';
@@ -6,7 +7,6 @@ import axios from 'axios';
 export default function Order() {
     const { loadStatus, setLoadStatus } = useContext(Context);
     const {isData} = useContext(Context)
-    console.log(isData.id)
     const [dataOrder, setDataOrder] = useState([]);
     console.log(dataOrder)
     useEffect(() => {

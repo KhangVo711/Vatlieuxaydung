@@ -9,7 +9,7 @@ const insertDetailCart = async (madh, masp, soluongsanpham, dongia ) => {
 }
 
 const getCart = async () => {
-    const [rows] = await connectDB.execute("SELECT * FROM donhang, donvivanchuyen WHERE donhang.madvvc = donvivanchuyen.madvvc");
+    const [rows] = await connectDB.execute("SELECT * FROM donhang, donvivanchuyen WHERE donhang.madvvc = donvivanchuyen.madvvc ORDER BY ngaydat DESC");
     return rows;
 }
 const getDetailCart = async (madh) => {

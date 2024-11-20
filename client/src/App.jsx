@@ -24,7 +24,8 @@ function App() {
       <ContextProvider>
         <Header />
         <Outlet />
-        <Footer />
+        {(location.pathname !== '/cart' && location.pathname !== '/ordered') ? <Footer /> : null}
+        
       </ContextProvider>
     </>
   ) : (

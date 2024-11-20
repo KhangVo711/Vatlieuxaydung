@@ -5,8 +5,12 @@ import { Context } from '../../Context';
 import { formatCurrency } from '../../../utils/currency';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
+
 
 export default function Cart() {
+    const navigate = useNavigate()
     
     const generateOrderId = () => `OD${Date.now()}${Math.floor(Math.random() * 10)}`;
     const getCurrentDate = () => {
@@ -29,6 +33,8 @@ export default function Cart() {
     if(isSuccess === true){
         setTimeout(() => {
             setIsSuccess(false);
+            setCartItems([]);
+            navigate('/ordered')
         }, 3500);
     } 
     console.log(ship);
@@ -89,7 +95,6 @@ export default function Cart() {
                     setTimeout(() => {
                         setIsProcessing(false); // Dừng xử lý đơn hàng
                         setIsSuccess(true); // Đặt hàng thành công
-                    setCartItems([]);
 
                     }, 3000);
                 } else {

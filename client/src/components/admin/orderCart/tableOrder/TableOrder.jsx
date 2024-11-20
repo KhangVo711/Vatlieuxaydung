@@ -23,7 +23,8 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
   };
 
     
-    useEffect(() => {
+  useEffect(() => {
+    const fetchOrderData = () => {
         axios.get('http://localhost:5001/getOrder')
             .then((response) => {
                 setDataOrder(response.data.order);
@@ -32,7 +33,16 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
             .catch((error) => {
                 console.error('Lỗi:', error);
             });
-    }, [loadStatus]);
+    };
+
+    fetchOrderData();
+
+    // Đặt interval để gọi lại API
+    const interval = setInterval(fetchOrderData, 3000);
+
+    // Dọn dẹp interval khi component unmount
+    return () => clearInterval(interval);
+}, []); 
 
     return (
         <>
@@ -82,7 +92,7 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
                 </td>
             
                 <td className="px-4 py-3 text-right">
-                  {formatCurrency(item.tonggia)}
+                  {formatCurrency(item.tonggia+item.phivanchuyen)}
                 </td>
                 <td className="px-4 py-3 text-right">
                   {item.trangthai}
