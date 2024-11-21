@@ -4,6 +4,7 @@ import { FunnelIcon, BarsArrowDownIcon, BarsArrowUpIcon, PlusCircleIcon } from "
 import { gsap } from 'gsap';
 import { formatCurrency } from '../../../../utils/currency';
 import { Context } from '../../../../components/Context';
+import ReactModal from 'react-modal';
 import {
     Popover,
     PopoverButton,
@@ -12,13 +13,15 @@ import {
 export default function AllProduct() {
 
     const [products, setProducts] = useState([]);
+    const [category, setCategory] = useState([]);
+    const [producer, setProducer] = useState([]);
     const { searchQuery } = useContext(Context);
     const { onAddToCart } = useContext(Context);
 
     const filteredProducts = products.filter(product =>
         product.tensp.toLowerCase().includes(searchQuery.toLowerCase())
     );
-        
+
     useEffect(() => {
         axios.get('http://localhost:5001/getProduct')
             .then((response) => {
@@ -28,14 +31,34 @@ export default function AllProduct() {
                 console.error('Lỗi:', error);
             });
     }, []);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleViewProductClick = async (product) => {
+        setSelectedProduct(product);
+        setIsModalOpen(true);
+
+        const response = await axios.get(`http://localhost:5001/getCategory/${selectedProduct.maloai}`);
+        if (response.status === 200) {
+            setCategory(response.data.listCategory);
+        }
+
+        const responser = await axios.get(`http://localhost:5001/getProducer/${selectedProduct.mansx}`);
+        if (response.status === 200) {
+            setProducer(responser.data.listNSX);
+        }
+
+    };
+
+
 
     const handleAddToCart = (product, e) => {
         const imgElement = e.target.closest('article').querySelector('img');
         const cartElement = document.querySelector('#cart-icon');
-       
+
 
         if (!imgElement || !cartElement) return;
-    
+
         const imgRect = imgElement.getBoundingClientRect();
         const cartRect = cartElement.getBoundingClientRect();
         console.log(cartRect);
@@ -43,7 +66,7 @@ export default function AllProduct() {
         // Clone hình ảnh
         const cloneImg = imgElement.cloneNode(true);
         document.body.appendChild(cloneImg);
-    
+
         // Đặt style ban đầu cho hình ảnh clone
         Object.assign(cloneImg.style, {
             position: 'absolute',
@@ -54,7 +77,7 @@ export default function AllProduct() {
             zIndex: 2,
             pointerEvents: 'none',
         });
-    
+
         // Animation bằng GSAP
         gsap.to(cloneImg, {
             duration: 0.5,
@@ -71,47 +94,108 @@ export default function AllProduct() {
         });
     };
 
-    return (
-        <div className='flex flex-col'> 
-        <Popover className="w-full xl:px-48 mb-5 md:px-5 lg:px-8 px-2.5 pt-12 xl:pb-8 pb-3 flex justify-between items-center relative">
-        <h2 className="w-full text-center lg:text-3xl text-xl tracking-wide font-bold uppercase">Sản phẩm</h2>
-        <PopoverButton className="flex items-end justify-end group outline-none 2xl:mr-44 mr-3 text-gray-600 hover:text-gray-800 absolute right-6 bottom-0 text-xs md:text-sm lg:text-md transition duration-150 ease-in-out">
-            <FunnelIcon className="h-7 w-7 group-hover:text-gray-900 text-gray-600 mr-0.5 " />Lọc
-        </PopoverButton>
-        <PopoverPanel
-            transition
-            className="absolute flex justify-between right-24 bottom-0 z-10 mt-3 w-screen max-w-20 overflow-hidden  transition data-[closed]:translate-x-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
-        >
-            <BarsArrowDownIcon className="h-7 w-7 text-gray-600 hover:text-gray-900 cursor-pointer" />
-            <BarsArrowUpIcon className="h-7 w-7 text-gray-600 hover:text-gray-900 cursor-pointer" />
 
-        </PopoverPanel>
-    </Popover>
-        <div className="container mx-auto grid md:grid-cols-3 xl:grid-cols-4 grid-cols-2 gap-5 pt-4 pb-12 ">
-    
+    return (
+        <div className='flex flex-col'>
+            <Popover className="w-full xl:px-48 mb-5 md:px-5 lg:px-8 px-2.5 pt-12 xl:pb-8 pb-3 flex justify-between items-center relative">
+                <h2 className="w-full text-center lg:text-3xl text-xl tracking-wide font-bold uppercase">Sản phẩm</h2>
+                <PopoverButton className="flex items-end justify-end group outline-none 2xl:mr-44 mr-3 text-gray-600 hover:text-gray-800 absolute right-6 bottom-0 text-xs md:text-sm lg:text-md transition duration-150 ease-in-out">
+                    <FunnelIcon className="h-7 w-7 group-hover:text-gray-900 text-gray-600 mr-0.5 " />Lọc
+                </PopoverButton>
+                <PopoverPanel
+                    transition
+                    className="absolute flex justify-between right-24 bottom-0 z-10 mt-3 w-screen max-w-20 overflow-hidden  transition data-[closed]:translate-x-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
+                >
+                    <BarsArrowDownIcon className="h-7 w-7 text-gray-600 hover:text-gray-900 cursor-pointer" />
+                    <BarsArrowUpIcon className="h-7 w-7 text-gray-600 hover:text-gray-900 cursor-pointer" />
+
+                </PopoverPanel>
+            </Popover>
+            <div className="container mx-auto grid md:grid-cols-3 xl:grid-cols-4 grid-cols-2 gap-5 pt-4 pb-12 ">
+
                 {filteredProducts.map(product => (
                     <article key={product.masp} className=" w-full lg:h-[350px] h-[250px] flex p-2 flex-col items-center rounded-md">
                         <div>
 
-                            <img className="mb-2.5 hover:grow hover:scale-105 w-full lg:h-[250px] h-[150px] rounded-sm transition duration-300 ease-in-out" src={`http://localhost:5001/uploads/${product.hinhanh}`} alt={product.name} />
-                            
-                            
+                            <img onClick={() => handleViewProductClick(product)} className="mb-2.5 hover:grow hover:scale-105 w-full lg:h-[250px] h-[150px] rounded-sm transition duration-300 ease-in-out" src={`http://localhost:5001/uploads/${product.hinhanh}`} alt={product.name} />
+
+
                         </div>
                         <div className="pt-4 px-4 w-full flex items-center justify-between">
-                                <p className=""><strong>{product.tensp}</strong></p>
-                                <button
+                            <p className=""><strong>{product.tensp}</strong></p>
+                            <button
                                 type="button"
                                 onClick={(e) => handleAddToCart(product, e)}
                             >
                                 <PlusCircleIcon className="h-7 w-7 text-gray-600 hover:scale-105 cursor-pointer" />
                             </button>
-                            </div>
-                            <div className="flex w-full px-4 justify-start items-center">
+                        </div>
+                        <div className="flex w-full px-4 justify-start items-center">
                             <p>{formatCurrency(product.gia)}</p>
-                            </div>
+                        </div>
                     </article>
                 ))}
             </div>
-            </div>
+            {selectedProduct && (
+                <ReactModal
+                isOpen={isModalOpen}
+                onRequestClose={() => setIsModalOpen(false)}
+                contentLabel="Chi tiết sản phẩm"
+                className="relative bg-white rounded-lg shadow-2xl mx-auto mt-24 max-w-xl w-full h-auto p-6"
+                overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+            >
+                <div className="p-4 flex items-center gap-6">
+                    {/* Hình ảnh sản phẩm */}
+                    <div className="w-1/2 ">
+                        <div className="relative flex items-center justify-center w-full h-64 rounded">
+                            <img
+                                className="w-2/3 h-full object-cover"
+                                src={`http://localhost:5001/uploads/${selectedProduct.hinhanh}`}
+                                alt={selectedProduct.name}
+                            />
+                        </div>
+                    </div>
+            
+                    {/* Thông tin sản phẩm */}
+                    <div className="w-1/2 flex flex-col justify-between">
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-800 mb-2">{selectedProduct.tensp}</h2>
+                           
+                            <div className="mb-4">
+                                <span className="font-bold">Loại:</span> {category.tenloai}
+                            </div>
+                            <div className="mb-4">
+                                <span className="font-bold">Nhà sản xuất:</span> {producer.tennsx}
+                            </div>
+                            <p className="text-md font-semibold text-gray-800 mb-4">
+                                <span className='font-bold'>Giá:</span> {formatCurrency(selectedProduct.gia)}
+                            </p>
+                            <p className="text-gray-600">{selectedProduct.ttct}</p>
+                        </div>
+            
+                        {/* Nút hành động */}
+                        <div className="mt-6 flex justify-center space-x-4">
+                            <button
+                                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                                onClick={() => setIsModalOpen(false)}
+                            >
+                                Đóng
+                            </button>
+                            <button
+                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                onClick={() => {
+                                    onAddToCart(selectedProduct);
+                                    setIsModalOpen(false);
+                                }}
+                            >
+                                Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </ReactModal>
+            
+            )}
+        </div>
     );
 }
