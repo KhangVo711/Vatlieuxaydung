@@ -122,7 +122,7 @@ export default function ImageSlider() {
     className="transition-all w-full h-full object-cover duration-500 ease-in-out cursor-pointer"
   />
   <div className="absolute inset-0 bg-black opacity-40 pointer-events-none "></div>
-        <div className="absolute top-1/4 text-white w-[40%] pl-36">
+        <div className="absolute top-1/4 text-white w-1/2 pl-36">
           <h2 ref={titleRef} className="uppercase text-4xl drop-shadow-2xl mb-4 font-semibold">
             {contents[currentIndex].title}
           </h2>

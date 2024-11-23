@@ -144,9 +144,9 @@ const updateInf = async (req, res) => {
         if (!idPattern.test(address)) {
             return res.status(400).json({ message: 'Địa chỉ không được chứa khoảng trắng ở đầu' });
         }
-        if (!fullnameRegex.test(address)) {
-            return res.status(400).json({ message: 'Địa chỉ không được chứa ký tự đặc biệt.' });
-        }
+        // if (!fullnameRegex.test(address)) {
+        //     return res.status(400).json({ message: 'Địa chỉ không được chứa ký tự đặc biệt.' });
+        // }
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (email && !emailRegex.test(email)) {
             return res.status(400).json({ message: 'Email không đúng định dạng' });
