@@ -1,5 +1,6 @@
 import express from "express";
 import user from '../controllers/userControllder.js'
+import staff from '../controllers/staffController.js'
 import product from '../controllers/productsController.js'
 import invoice from '../controllers/invoiceController.js'
 import ship from '../controllers/shipController.js'
@@ -50,7 +51,11 @@ const initWebRoute = (app) => {
 
     router.get('/getShip', ship.getShip)
     
-
+    router.post('/addStaff', staff.addStaff)
+    router.post('/loginStaff', staff.loginStaff)
+    router.get('/getStaff', staff.getAllStaff)
+    router.post('/editStaff', staff.editStaff)
+    router.post('/deleteStaff', staff.deleteStaff)
 
     return app.use('/', router)
 }

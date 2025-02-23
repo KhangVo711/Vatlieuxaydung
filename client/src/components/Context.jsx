@@ -76,6 +76,8 @@ const ContextProvider = ({ children }) => {
     setCartItems((prevCart) => prevCart.filter((item) => item.masp !== productId));
   };
 
+  const [loadStaff, setLoadStaff] = useState(true);
+
 
   return (
     <Context.Provider
@@ -98,7 +100,8 @@ const ContextProvider = ({ children }) => {
         increaseQuantity,
         removeItem,
         loadStatus, setLoadStatus,
-        searchQuery, setSearchQuery
+        searchQuery, setSearchQuery,
+        loadStaff, setLoadStaff
       }}
     >
       {children}

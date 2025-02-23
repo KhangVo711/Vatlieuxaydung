@@ -108,7 +108,7 @@ export default function Register() {
             <div className="max-w-screen-xl m-0 sm:m-6 bg-white shadow sm:rounded-lg flex justify-center flex-1">
                 <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
                     <div className="w-full">
-                        <img src="https://png.pngtree.com/png-vector/20220726/ourmid/pngtree-construction-logo-png-image_6066962.png" alt="LOGO" className="h-16 w-auto mx-auto" />
+                        <img src="https://png.pngtree.com/png-vector/20220812/ourmid/pngtree-butterfly-logo-template-infinity-template-logotype-vector-png-image_38578402.png" alt="LOGO" className="h-16 w-auto mx-auto" />
                     </div>
                     <ToastContainer />
                     <div className="mt-2 flex flex-col items-center">

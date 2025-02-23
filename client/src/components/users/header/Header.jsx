@@ -19,12 +19,13 @@ import {
   PopoverPanel,
 } from '@headlessui/react'
 import {
-  ArrowPathIcon,
+  FaceSmileIcon,
   Bars3Icon,
   ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
+  SparklesIcon,
+  TagIcon,
+  HeartIcon,
+  FireIcon,
   XMarkIcon,
   MagnifyingGlassIcon,
   MicrophoneIcon,
@@ -36,12 +37,12 @@ import axios from 'axios';
 
 
 const products = [
-  { name: 'Nước sơn', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
-  { name: 'Phụ gia chống thấm', description: 'Connect with third-party tools', href: '#', icon: SquaresPlusIcon },
-  { name: 'Thạch cao', description: 'Speak directly to your customers', href: '#', icon: CursorArrowRaysIcon },
-  { name: 'Xi măng', description: 'Your customers’ data will be safe and secure', href: '#', icon: FingerPrintIcon },
-  { name: 'Gạch', description: 'Build strategic funnels that will convert', href: '#', icon: ArrowPathIcon },
-  { name: 'Gỗ', description: 'Build strategic funnels that will convert', href: '#', icon: ArrowPathIcon },
+  { name: 'Chăm sóc da mặt', description: 'Sản phẩm chăm sóc da mặt giúp làn da khỏe mạnh và rạng rỡ', href: '#', icon: FaceSmileIcon },
+  { name: 'Chăm sóc cơ thể', description: 'Sản phẩm chăm sóc cơ thể giúp nuôi dưỡng và bảo vệ làn da', href: '#', icon: ChartPieIcon },
+  { name: 'Trang điểm', description: 'Sản phẩm trang điểm chất lượng cao giúp bạn thêm xinh đẹp', href: '#', icon: SparklesIcon },
+  { name: 'Phụ kiện', description: 'Phụ kiện thời trang giúp bạn hoàn thiện phong cách', href: '#', icon: TagIcon },
+  { name: 'Thực phẩm chức năng', description: 'Thực phẩm bổ sung giúp hỗ trợ sức khỏe và tăng cường thể chất', href: '#', icon: HeartIcon },
+  { name: 'Bán chạy', description: 'Những sản phẩm bán chạy nhất, được khách hàng yêu thích', href: '#', icon: FireIcon },
 ]
 const callsToAction = [
   { name: 'Xem chi tiết', href: '#', icon: PlayCircleIcon },
@@ -312,13 +313,13 @@ export default function Header() {
 
 
   return (
-    <header className="bg-white sticky top-0 z-10 shadow-md">
+    <header className="bg-pink-200 sticky top-0 z-10 shadow-md">
       <ToastContainer />
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-8">
         <div className="flex lg:flex-1">
           <Link to="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img src="https://png.pngtree.com/png-vector/20220726/ourmid/pngtree-construction-logo-png-image_6066962.png" alt="LOGO" className="h-16 w-auto" />
+            <img src="https://png.pngtree.com/png-vector/20220812/ourmid/pngtree-butterfly-logo-template-infinity-template-logotype-vector-png-image_38578402.png" alt="LOGO" className="h-16 w-auto" />
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -343,33 +344,33 @@ export default function Header() {
             </PopoverButton>
             <PopoverPanel
               transition
-              className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
+              className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-pink-100 shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
             >
               <div className="p-4">
                 {products.map((item) => (
                   <div
                     key={item.name}
-                    className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
+                    className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-pink-50"
                   >
-                    <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                      <item.icon aria-hidden="true" className="h-6 w-6 text-gray-600 group-hover:text-indigo-600" />
+                    <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-pink-50 group-hover:bg-pink-100">
+                      <item.icon aria-hidden="true" className="h-6 w-6 text-gray-600 group-hover:text-indigo-500" />
                     </div>
                     <div className="flex-auto">
                       <a href={item.href} className="block font-semibold text-gray-900">
                         {item.name}
                         <span className="absolute inset-0" />
                       </a>
-                      <p className="mt-1 text-gray-600">{item.description}</p>
+                      <p className="mt-1 text-xs text-gray-600">{item.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
+              <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-pink-50">
                 {callsToAction.map((item) => (
                   <a
                     key={item.name}
                     href={item.href}
-                    className="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-100"
+                    className="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
                   >
                     <item.icon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
                     {item.name}
@@ -397,13 +398,13 @@ export default function Header() {
             <MicrophoneIcon className="h-5 w-5 text-gray-700" />
           </div>
           <Link to='/cart' id='cart-icon' className="text-sm font-semibold leading-6  relative">
-            <ShoppingCartIcon className={`h-7 w-7 ${location.pathname === '/cart' ? 'text-gray-900' : 'text-gray-500'}  `} />
+            <ShoppingCartIcon className={`h-7 w-7 ${location.pathname === '/cart' ? 'text-gray-900' : 'text-gray-500'} hover:text-gray-900 transition duration-150 `} />
             <span className="absolute -top-0.5 -right-1 bg-red-500 text-white rounded-full text-xs w-3.5 h-3.5 flex items-center justify-center">
                     {cartItems.length}
                 </span>
           </Link>
           <Link to='ordered' className="text-sm font-semibold leading-6 relative">
-          <ArchiveBoxIcon className={`h-7 w-7 ${location.pathname === '/ordered' ? 'text-gray-900' : 'text-gray-500'} hover:text-gray-900 `} />
+          <ArchiveBoxIcon className={`h-7 w-7 ${location.pathname === '/ordered' ? 'text-gray-900' : 'text-gray-500'} hover:text-gray-900 transition duration-150 `} />
           </Link>
         </PopoverGroup>
 
@@ -437,7 +438,7 @@ export default function Header() {
           </>
         ) : (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link to="/login" className="text-sm xl:text-md font-semibold leading-6 text-gray-900 border rounded-2xl border-white hover:border hover:rounded-2xl hover:border-black px-2 py-1 transition duration-300 ease-in-out">
+            <Link to="/login" className="text-sm xl:text-md font-semibold leading-6 text-gray-900 border rounded-2xl border-gray-400 opacity-80 hover:opacity-100  hover:border hover:rounded-2xl hover:border-black px-2 py-1 transition duration-300 ease-in-out">
               Đăng nhập
             </Link>
           </div>
