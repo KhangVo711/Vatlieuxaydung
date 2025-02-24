@@ -49,12 +49,12 @@ export default function FormEditProduct({ formRefEdit, selectedProduct, setSelec
       data.append('hinhanh', imageFile);
       setImgChanage(imageFile.name)
     }
-
+const token = Cookies.get('admin') || Cookies.get('staff');
     try {
       const response = await axios.post('http://localhost:5001/editProduct', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${Cookies.get('admin')}`,
+          'Authorization': `Bearer ${token}`,
           'Accept': 'application/json'
         },
         withCredentials: true,
@@ -108,13 +108,13 @@ export default function FormEditProduct({ formRefEdit, selectedProduct, setSelec
   return (
     <div className='w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center'>
 
-      <form onSubmit={handleSubmit} ref={formRefEdit} className="2xl:w-1/2 w-3/4 mx-auto bg-gray-100 shadow-lg border flex rounded py-5 px-8 mt-16 ">
+      <form onSubmit={handleSubmit} ref={formRefEdit} className="2xl:w-1/2 w-2/3 mx-auto bg-gray-100 shadow-lg border flex rounded py-5 px-8 mt-16 ">
 
         <div className='flex items-center justify-center pt-10 z-10'>
           <img src={`http://localhost:5001/uploads/${imgChange ? imgChange : selectedProduct.hinhanh}`} alt="" className='w-64' />
 
         </div>
-        <div className='mx-auto'>
+        <div className='mx-auto w-1/2'>
           <h2 className='mb-4 uppercase font-bold tracking-wider text-lg text-center'>Sửa sản phẩm</h2>
           {message && <p className={`${colorMsg} text-center text-sm`}>{message}</p>}
 

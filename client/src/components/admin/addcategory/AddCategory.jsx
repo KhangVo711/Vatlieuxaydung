@@ -86,11 +86,13 @@ export default function AddCategory() {
     // DELETE CATEGORY
 
     const handleDeleteProductClick = async (item) => {
+        const token = Cookies.get('admin') || Cookies.get('staff');
+        
         try {
             const response = await axios.post(`http://localhost:5001/deleteCategory`, { maloai: item.maloai }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${Cookies.get('admin')}`,
+                    'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json'
                 },
                 withCredentials: true

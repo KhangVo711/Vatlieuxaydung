@@ -3,9 +3,9 @@ import invoiceModel from "../services/invoiceModel.js"
 import productsModel from "../services/productsModel.js";
 const insertInvoice = async (req, res) => {
     try {
-        const { mapn, ngaylap, tenpn, maql } = req.body;
-
-        if (!mapn || !ngaylap || !tenpn || !maql) {
+        const { mapn, ngaylap, tenpn, maql, manv } = req.body;
+        console.log(maql);
+        if (!mapn || !ngaylap || !tenpn || (!maql && !manv)) {
             return res.status(400).send({ message: "Thiếu thông tin." });
         }
         const nameInvoice = /^[\p{L}\p{N}\s]+$/u;
@@ -16,7 +16,7 @@ const insertInvoice = async (req, res) => {
         if (!nameInvoice.test(tenpn)) {
             return res.status(400).send({ message: "Tên phiếu nhập không hợp lệ." });
         }
-        await invoiceModel.insertInvoice(mapn, tenpn, ngaylap, maql);
+        await invoiceModel.insertInvoice(mapn, tenpn, ngaylap, maql, manv);
         res.status(200).send({ message: "Phiếu nhập thêm thành công!" });
     } catch (error) {
         res.status(500).send({ message: "Đã xảy ra lỗi khi thêm phiếu nhập." });

@@ -61,12 +61,12 @@ export default function FormAddProduct({ formRef, category, producer }) {
     if (imageFile) {
       data.append('hinhanh', imageFile);
     }
-    console.log(data);
+    const token = Cookies.get('admin') || Cookies.get('staff');
     try {
       const response = await axios.post('http://localhost:5001/addProduct', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${Cookies.get('admin')}`,
+          'Authorization': `Bearer ${token}`,
           'Accept': 'application/json'
         },
         withCredentials: true
@@ -200,7 +200,7 @@ export default function FormAddProduct({ formRef, category, producer }) {
 </div>
         <div className='mb-3'>
           <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thông tin chi tiết</label>
-          <textarea id="message" rows={3} className="block pl-2.5 py-1.5 w-full text-sm text-gray-900 bg-gray-50 rounded-sm border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."
+          <textarea id="message" rows={3} className="block pl-2.5 py-1.5 w-full text-sm text-gray-900 bg-gray-50 rounded-sm border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Thông tin chi tiết của sản phẩm"
             name='ttct'
             value={formData.ttct}
             onChange={handleChange}

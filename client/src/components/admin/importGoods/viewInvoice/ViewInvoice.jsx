@@ -20,7 +20,7 @@ export default function ViewInvoice({ formRefView, selectDetailInvoice }) {
       <h1 className='text-center text-xl font-bold text-gray-800 mb-5'>Chi tiết phiếu nhập</h1>
         <div className='mb-1'>
           <div className='flex justify-between items-start flex-col w-full mb-3 bg-slate-300 px-4 rounded-sm py-2'>
-          <h2><span className='font-bold text-gray-800 mr-3.5'>Tên quản lý:</span> {invoiceData.ten_quan_ly}</h2>
+          <h2><span className='font-bold text-gray-800 mr-6'>Người lập:</span> {invoiceData.nguoi_phu_trach}</h2>
 
             <h2 className='text-center'>
               <span className='font-bold text-gray-800 w-16 mr-7'>Mã phiếu:</span> {invoiceData.mapn}

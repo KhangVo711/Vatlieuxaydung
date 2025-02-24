@@ -12,12 +12,14 @@ export default function FormEditCategory({ formRefEdit, selectedCategory, setSel
 
     const handleSubmitEdit = async (e) => {
         e.preventDefault();
+                const token = Cookies.get('admin') || Cookies.get('staff');
+        
         try {
             
         const response = await axios.post(`http://localhost:5001/editCategory`, selectedCategory, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${Cookies.get('admin')}`,
+                'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json'
             },
             withCredentials: true

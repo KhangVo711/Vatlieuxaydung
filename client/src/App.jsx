@@ -10,16 +10,24 @@ function App() {
 
   const location = useLocation()
   const isLocation = /^\/admin\/.*/.test(location.pathname);
+  const isLocationStaff = /^\/staff\/.*/.test(location.pathname);
   if (location.pathname === '/admin' || location.pathname === '/admin/') {
     return <Navigate to="/admin/dashboard" replace />
   }
+  if (location.pathname === '/staff' || location.pathname === '/staff/') {
+    return <Navigate to="/staff/dashboard" replace />
+  }
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isStaff, setIsStaff] = useState(false);
 
   useEffect(() => {
     setIsAdmin(isLocation);
   }, [isLocation])
+  useEffect(() => {
+    setIsStaff(isLocationStaff);
+  }, [isLocationStaff])
 
-  return !isAdmin ? (
+  return !isAdmin && !isStaff ? (
     <>
       <ContextProvider>
         <Header />

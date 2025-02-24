@@ -29,7 +29,7 @@ const createJWT = (payload) => {
   };
   
   const authMiddleware = (req, res, next) => {
-    const token = req.cookies.admin; 
+    const token = req.cookies.admin || req.cookies.staff; 
     console.log('token', token);    
     if (!token) return res.status(401).json({ message: 'Đăng nhập hết hạn' });
   

@@ -30,10 +30,11 @@ const addStaff = async (req, res) => {
 const loginStaff = async (req, res) => {
     try {
         const { manv } = req.body;
-        if (manv) {
+        
+        if (!manv) {
             return res.status(400).json({ message: 'Vui lòng nhập mã nhân viên' });
         }
-        const acc = await userModel.getStaff(manv);
+        const acc = await staffModel.getStaff(manv);
         if (!manv) {
             return res.status(400).json({ message: 'Mã nhân viên không tồn tại' });
         }
@@ -45,8 +46,9 @@ const loginStaff = async (req, res) => {
             emailnv: acc.emailnv,
             diachinv: acc.diachinv,
             chucvunv: acc.chucvunv,
+            tongluong: acc.tongluong
         }
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '2h' });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
         res.cookie("staff", token, { path: "/", httpOnly: false, secure: false, sameSite: 'Lax' });
 
         return res.status(200).json({ message: 'Đăng nhập thành công', token, staff: acc });

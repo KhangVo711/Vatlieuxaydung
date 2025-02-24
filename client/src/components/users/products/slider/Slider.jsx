@@ -8,31 +8,31 @@ import {Link} from "react-router-dom";
 // Image data array
 const images= [
   {
-    src: 'https://cdn.pixabay.com/photo/2016/05/08/22/44/graffiti-1380108_1280.jpg',
+    src: 'https://topprint.vn/wp-content/uploads/2021/07/banner-my-pham-dep-9.jpg',
   },
   {
-    src: 'https://cdn.pixabay.com/photo/2015/09/09/18/03/bullion-932218_640.jpg',
+    src: 'https://hali.vn/wp-content/uploads/2020/07/thiet-ke-banner-my-pham34-e1594687755631.jpg',
   },
   {
-    src: 'https://cdn.pixabay.com/photo/2014/01/18/10/14/vaulted-cellar-247391_640.jpg',
+    src: 'https://cdn.brvn.vn/editor_news/2020/07/20676_Cocoonmyphamthuanchay_2_1595824804.jpeg',
   },
 ];
 
 // Content data array
 const contents= [
   { 
-    title: 'Sản phẩm nước sơn', 
-    content: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia aut eveniet eligendi reprehenderit dicta minima molestiae aspernatur sunt deserunt rem, ea fuga modi doloribus, hic accusantium ad nostrum corrupti quia nemo quaerat voluptas animi repellendus voluptatibus. Quisquam perferendis perspiciatis voluptates eum beatae sequi, quas voluptatum, eius eos amet sunt porro, deserunt doloremque voluptate nulla necessitatibus. Veritatis sint eius incidunt esse.',
+    title: 'Sản phẩm chăm sóc da cao cấp', 
+    content: 'Khám phá bộ sưu tập mỹ phẩm thiên nhiên giúp nuôi dưỡng làn da khỏe đẹp, rạng rỡ. Sản phẩm được chọn lọc kỹ lưỡng, an toàn và phù hợp cho mọi loại da. Tận hưởng trải nghiệm chăm sóc da chuyên sâu với công thức dịu nhẹ nhưng hiệu quả. Để vẻ đẹp tự nhiên của bạn tỏa sáng, hãy bắt đầu hành trình chăm sóc da hoàn hảo ngay hôm nay.',
     link: '#' 
   },
   { 
-    title: 'Nhiều người mua nhất', 
-    content: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia aut eveniet eligendi reprehenderit dicta minima molestiae aspernatur sunt deserunt rem, ea fuga modi doloribus, hic accusantium ad nostrum corrupti quia nemo quaerat voluptas animi repellendus voluptatibus. Quisquam perferendis perspiciatis voluptates eum beatae sequi, quas voluptatum, eius eos amet sunt porro, deserunt doloremque voluptate nulla necessitatibus. Veritatis sint eius incidunt esse.',
+    title: 'Sản phẩm được yêu thích nhất', 
+    content: 'Khám phá dòng kem dưỡng ẩm cao cấp giúp làn da mềm mại, căng mịn và tràn đầy sức sống. Với chiết xuất thiên nhiên và công thức độc quyền, sản phẩm giúp dưỡng ẩm sâu và bảo vệ da suốt cả ngày. Cảm nhận sự thay đổi rõ rệt chỉ sau vài lần sử dụng. Hãy để làn da bạn luôn rạng rỡ và cuốn hút. Sản phẩm phù hợp với mọi loại da, an toàn và không gây kích ứng.',
     link: '#' 
   },
   { 
-    title: 'Sản phẩm mới về', 
-    content: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia aut eveniet eligendi reprehenderit dicta minima molestiae aspernatur sunt deserunt rem, ea fuga modi doloribus, hic accusantium ad nostrum corrupti quia nemo quaerat voluptas animi repellendus voluptatibus. Quisquam perferendis perspiciatis voluptates eum beatae sequi, quas voluptatum, eius eos amet sunt porro, deserunt doloremque voluptate nulla necessitatibus. Veritatis sint eius incidunt esse.',
+    title: 'Bộ sưu tập chăm sóc tóc thiên nhiên', 
+    content: 'Trải nghiệm dòng sản phẩm dưỡng tóc chiết xuất từ thiên nhiên, giúp nuôi dưỡng và phục hồi mái tóc một cách tối ưu. Từ tinh chất bưởi, dưa leo và các thành phần hữu cơ, sản phẩm giúp cấp ẩm, giảm gãy rụng và kích thích mọc tóc hiệu quả. Không chỉ mang lại mái tóc mềm mượt và chắc khỏe, mà còn an toàn, lành tính cho da đầu. Cảm nhận sự suôn mượt và sức sống rạng ngời sau mỗi lần sử dụng. Hãy để mái tóc bạn được yêu thương và chăm sóc trọn vẹn mỗi ngày.',
     link: '#' 
   },
 ];

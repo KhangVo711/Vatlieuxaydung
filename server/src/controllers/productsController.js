@@ -14,6 +14,7 @@ const getCategory = async (req, res) => {
 const insertCategory = async (req, res) => {
     try {
         let { maloai, tenloai } = req.body
+        console.log(req.body);
         if (!maloai || !tenloai) {
             return res.status(400).send({ message: "Thiếu thông tin loại sản phẩm." });
         }
@@ -241,7 +242,8 @@ const getProduct12 = async (req, res) => {
 const insertProducts = async (req, res) => {
     let { masp, tensp, maloai, ttct, soluongsp, gia, mansx } = req.body;
     let hinhanh = req.file.filename;
-
+    console.log(req.body);
+    console.log(req.file);
     try {
         if (maloai === 'Loại sản phẩm') {
             return res.status(400).send({ message: "Chưa chọn loại sản phẩm" });

@@ -34,7 +34,7 @@ export default function TableInvoice({ dataInvoice, handleViewProductClick }) {
                 </h2>
                 <div className="p-1">
                   <p className="font-normal text-gray-700 dark:text-gray-400">
-                    <span className="font-bold text-gray-800 ml-1.5">Tên quản lý:</span> {invoice.tenql}
+                    <span className="font-bold text-gray-800 ml-1.5">Người lập:</span> {invoice.nguoi_phu_trach}
                   </p>
                   <h2 className="mb-1">
                     <span className="font-bold text-gray-800 ml-1.5">Tên phiếu:</span> {invoice.tenpn}

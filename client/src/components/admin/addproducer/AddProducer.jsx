@@ -13,10 +13,10 @@ import Cookies from 'js-cookie';
 
 export default function AddProducer() {
     const { loadProducer, setLoadProducer } = useContext(Context);
-    console.log(loadProducer);
+    
     const [selectedProducer, setSelectedProducer] = useState({ mansx: '', tennsx: '', email: '', diachi: '' });
     const [producer, setProducer] = useState([]);
-    console.log(producer);
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -116,11 +116,12 @@ export default function AddProducer() {
     // DELETE PRODUCER
 
     const handleDeleteProductClick = async (item) => {
+        const token = Cookies.get('admin') || Cookies.get('staff');
         try {
             const response = await axios.post(`http://localhost:5001/deleteProducer`, { mansx: item.mansx }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${Cookies.get('admin')}`,
+                    'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json'
                 },
                 withCredentials: true

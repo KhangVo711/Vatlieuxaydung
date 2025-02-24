@@ -49,7 +49,7 @@ export default function FormAddInvoice({ formAddRef }) {
         return result;
     };
 
-    const { isDataAdmin } = useContext(Context);
+    const { isDataAdmin, isDataStaff } = useContext(Context);
 
     // Hàm xử lý thêm sản phẩm mới
     const handleAddProduct = () => {
@@ -69,6 +69,7 @@ export default function FormAddInvoice({ formAddRef }) {
     // Hàm xử lý submit
     const handleSubmit = async (e) => {
         e.preventDefault();
+const token = Cookies.get('admin') || Cookies.get('staff');
 
         const nameInvoice = e.target.tenpn.value;
         if (!nameInvoice.trim()) {
@@ -89,18 +90,21 @@ export default function FormAddInvoice({ formAddRef }) {
             return;
         }
         const invoiceId = generateInvoiceId()
+        const maql = isDataAdmin.maql || null
+        const manv = isDataStaff.manv || null
         const formInvoice = {
             mapn: invoiceId,
-            maql: isDataAdmin.maql,
+            maql: maql,
+            manv: manv,
             ngaylap: getCurrentDate(),
             tenpn: nameInvoice,
         };
-
+        console.log(isDataStaff.manv)
         try {
             const response = await axios.post('http://localhost:5001/addInvoice', formInvoice, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${Cookies.get('admin')}`,
+                    'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json',
                 },
                 withCredentials: true,
@@ -116,7 +120,7 @@ export default function FormAddInvoice({ formAddRef }) {
                 const detailResponse = await axios.post('http://localhost:5001/addInvoiceDetail', invoiceDetail, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${Cookies.get('admin')}`,
+                        'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json',
                     },
                     withCredentials: true,

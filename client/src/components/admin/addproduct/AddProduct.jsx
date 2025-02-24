@@ -147,11 +147,12 @@ export default function AddProduct() {
   // DELETE PRODUCER
 
   const handleDeleteProductClick = async (item) => {
+    const token = Cookies.get('admin') || Cookies.get('staff');
     try {
         const response = await axios.post(`http://localhost:5001/deleteProduct`, { masp: item.masp }, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${Cookies.get('admin')}`,
+                'Authorization': `Bearer ${token}`,
 
                 'Accept': 'application/json'
             },

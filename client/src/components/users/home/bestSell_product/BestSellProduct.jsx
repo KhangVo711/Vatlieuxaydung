@@ -8,15 +8,15 @@ export default function BestSellProduct() {
     const products = [
         {
             id: 1,
-            name: 'Sơn Dulux EasyClean',
-            image: 'https://buildmart.vn/image/cache/catalog/son-dulux/easy-clean/son-dulux-easyclean-chong-bam-ban-mo-300x300.jpg',
+            name: 'Kem Dưỡng Da Hỗ Trợ Giảm Mụn',
+            image: 'https://product.hstatic.net/200000868185/product/3701129805367_895fe4b889574369a36f18f90f7ec48b_96fc29025bef41bb970a2c71b2f387c2_master.jpg',
             cta1: 'ĐẶT HÀNG',
             cta2: 'TƯ VẤN',
         },
         {
             id: 2,
-            name: 'Bột trét tường cao cấp',
-            image: 'https://buildmart.vn/image/cache/catalog/son-dulux/bot-tret-tuong-noi-that-dulux-01-300x300.jpg',
+            name: 'Kem Chống Nắng Che Khuyết Điểm',
+            image: 'https://product.hstatic.net/200000868185/product/1089566365249960_149246432374919086_n_73c072463bd742e4a00793baeb7c0e2e_c87315103e2d4420ae7bf684824af338_master.jpg',
             cta1: 'ĐẶT HÀNG',
             cta2: 'TƯ VẤN',
         },

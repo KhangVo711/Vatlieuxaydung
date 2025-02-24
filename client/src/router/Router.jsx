@@ -16,7 +16,8 @@ import Cart from '../components/users/cart/Cart.jsx';
 import OrderCart from '../components/admin/orderCart/orderCart.jsx';
 import Order from '../components/users/order/Order.jsx';
 import AddStaff from '../components/admin/addstaff/AddStaff.jsx';
-
+import LoginStaff from '../components/staff/LoginStaff.jsx';
+import PrivateRouterStaff from '../components/staff/privateRouter/PrivateRouteStaff.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
   {
     path: "/admin/login",
     element: <LoginAdmin />
+  },
+  {
+    path: "/staff/login",
+    element: <LoginStaff />
   },
   {
     path: "register",
@@ -122,6 +127,60 @@ export const router = createBrowserRouter([
           </PrivateRouterAdmin>
 
       },
+
+    ]
+  },
+  {
+    path: "/staff",
+    element: <App />,
+    children: [
+      {
+        path: "dashboard",
+        element:
+          <PrivateRouterStaff>
+            <Dashboard />
+          </PrivateRouterStaff>
+      },
+      {
+        path: "addcategory",
+        element:
+          <PrivateRouterStaff>
+            <AddCategory />
+          </PrivateRouterStaff>
+
+      },
+      {
+        path: "addproducer",
+        element:
+          <PrivateRouterStaff>
+            <AddProducer />
+          </PrivateRouterStaff>
+
+      },
+      {
+        path: "addproduct",
+        element:
+          <PrivateRouterStaff>
+            <AddProduct />
+          </PrivateRouterStaff>
+
+      },
+      {
+        path: "importgoods",
+        element:
+          <PrivateRouterStaff>
+            <ImportGoods />
+          </PrivateRouterStaff>
+      },
+      {
+        path: "ordercart",
+        element:
+          <PrivateRouterStaff>
+            <OrderCart />
+          </PrivateRouterStaff>
+
+      },
+  
 
     ]
   },

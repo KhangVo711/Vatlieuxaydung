@@ -18,6 +18,8 @@ const ContextProvider = ({ children }) => {
 
   const [isDataAdmin, setIsDataAdmin] = useState({});
   const tokenAdmin = Cookies.get('admin');
+  const [isDataStaff, setIsDataStaff] = useState({});
+  const tokenStaff = Cookies.get('staff');
   useEffect(() => {
     if (tokenAdmin) {
       const decodedToken = jwtDecode(tokenAdmin);
@@ -26,6 +28,15 @@ const ContextProvider = ({ children }) => {
       setIsDataAdmin({});
     }
   }, [tokenAdmin]);
+
+  useEffect(() => {
+    if (tokenStaff) {
+      const decodedToken = jwtDecode(tokenStaff);
+      setIsDataStaff(decodedToken);
+    } else {
+      setIsDataStaff({});
+    }
+  }, [tokenStaff]);
 
   const [loadCategory, setLoadCategory] = useState(true);
   const [loadProducer, setLoadProducer] = useState(true);
@@ -86,6 +97,8 @@ const ContextProvider = ({ children }) => {
         setIsData,
         isDataAdmin,
         setIsDataAdmin,
+        isDataStaff,
+        setIsDataStaff,
         loadCategory,
         setLoadCategory,
         loadProducer,
