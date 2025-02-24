@@ -215,7 +215,7 @@ export default function Register() {
                                     </button>
 
                                 </div>
-                                <Button type="submit" onClick={generateCustomerID} className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                                <Button type="submit" onClick={generateCustomerID} className="mt-5 tracking-wide font-semibold bg-pink-400 text-gray-100 w-full py-4 rounded-lg hover:bg-pink-500 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                                     <svg
                                         className="w-6 h-6 -ml-2"
                                         fill="none"
@@ -243,7 +243,7 @@ export default function Register() {
                             </form>
                         </div>
                         <p className="mt-4 text-xs text-gray-600 text-center">Bạn đã có tài khoản</p>
-                        <Link className="text-sm text-indigo-600 border-b border-indigo-300" to="/login">Login</Link>
+                        <Link className="text-sm text-indigo-600 border-b border-indigo-300" to="/login">Đăng nhập</Link>
 
                     </div>
                 </div>

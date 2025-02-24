@@ -37,7 +37,7 @@ export default function FormEditProduct({ formRefView, selectedProduct}) {
   return (
     <div className='w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center'>
       
-      <div ref={formRefView} className="2xl:w-1/2 w-3/4 mx-auto bg-gray-100 shadow-lg border flex rounded py-5 px-8 mt-16 ">
+      <div ref={formRefView} className="2xl:w-1/2 w-3/4 mx-auto bg-white shadow-lg border flex rounded py-5 px-8 mt-16 ">
       
       <div className='flex items-center justify-center pt-10 z-10'>
         <img src={`http://localhost:5001/uploads/${selectedProduct.hinhanh}`} alt="" className='w-64'/>

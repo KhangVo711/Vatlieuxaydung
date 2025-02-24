@@ -14,12 +14,12 @@ export default function Footer() {
                     <div className="w-full lg:w-6/12 px-4">
                         <h4 className="text-3xl font-semibold">Kết nối với chúng tôi!</h4>
                         <h5 className="text-sm text-justify mt-1 mb-4 opacity-80">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus ipsum eius molestias a optio temporibus, ducimus totam suscipit aliquid voluptatem, consequatur, excepturi nobis perspiciatis! Quam itaque voluptate ratione a cupiditate?
+                        Chúng tôi luôn sẵn sàng lắng nghe và đồng hành cùng bạn. Hãy liên hệ ngay để được tư vấn, giải đáp thắc mắc hoặc chia sẻ những ý kiến quý báu. Cùng nhau, chúng ta sẽ tạo nên những trải nghiệm tuyệt vời!
                         </h5>
                         <div className=" text-gray-600 w-full md:w-5/6 lg:w-5/6 xl:w-5/6 mb-4">
-                            <p className='mb-2.5'><PhoneIcon className="h-5 w-5 inline-block text-gray-600 mr-2" /><strong>Số điện thoại:</strong> 470-601-1911</p>
-                            <p className='mb-2.5'><EnvelopeIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Email:</strong> Pagedone1234@gmail.com</p>
-                            <p className='mb-2.5'><MapIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Địa chỉ:</strong> 789 Oak Lane, Lakeside, TX 54321</p>
+                            <p className='mb-2.5'><PhoneIcon className="h-5 w-5 inline-block text-gray-600 mr-2" /><strong>Số điện thoại:</strong> 0875698741</p>
+                            <p className='mb-2.5'><EnvelopeIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Email:</strong> MyPhamHTCT@gmail.com</p>
+                            <p className='mb-2.5'><MapIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Địa chỉ:</strong> 789 Nguyễn Trãi, Ninh Kiều, Cần Thơ</p>
                         </div>
                         <div className="mt-3 lg:mb-0 mb-6 flex">
                             <button className="bg-white shadow-lg rounded-full h-10 w-10 flex items-center justify-center outline-none focus:outline-none mr-2" type="button">

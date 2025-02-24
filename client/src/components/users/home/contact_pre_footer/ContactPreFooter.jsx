@@ -48,7 +48,7 @@ const ContactForm = () => {
             onChange={handleChange}
             placeholder='Họ và tên'
             required
-            className="mt-1 block w-full px-4 text-sm py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+            className="mt-1 block w-full px-4 text-sm py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-pink-500 focus:border-pink-500"
           />
         </div>
         <div>
@@ -61,7 +61,7 @@ const ContactForm = () => {
             onChange={handleChange}
             placeholder='Email'
             required
-            className="mt-1 block w-full px-4 py-2 text-sm  border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+            className="mt-1 block w-full px-4 py-2 text-sm  border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-pink-500 focus:border-pink-500"
           />
         </div>
         <div>
@@ -74,7 +74,7 @@ const ContactForm = () => {
             onChange={handleChange}
             placeholder='Số điện thoại'
             required
-            className="mt-1 block w-full px-4 py-2 text-sm  border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+            className="mt-1 block w-full px-4 py-2 text-sm  border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-pink-500 focus:border-pink-500"
           />
         </div>
         <div>
@@ -84,13 +84,13 @@ const ContactForm = () => {
             id="description"
             value={formData.description}
             onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 text-sm  border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
+            className="mt-1 block w-full px-4 py-2 text-sm  border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-pink-500 focus:border-pink-500"
           />
         </div>
         <div className="text-center">
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50"
+            className="w-full bg-pink-400 text-white py-2 px-4 rounded-md hover:bg-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-150 focus:ring-opacity-50"
           >
             Gửi
           </button>
@@ -98,9 +98,9 @@ const ContactForm = () => {
       </form>
     <div className='ml-6 items-center flex-col h-full hidden xl:flex lg:flex'>
       <div className=" text-gray-600 w-5/6 mb-20">
-        <p className='mb-2.5'><PhoneIcon className="h-5 w-5 inline-block text-gray-600 mr-2" /><strong>Số điện thoại:</strong> 470-601-1911</p>
-        <p className='mb-2.5'><EnvelopeIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Email:</strong> Pagedone1234@gmail.com</p>
-        <p className='mb-2.5'><MapIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Địa chỉ:</strong> 789 Oak Lane, Lakeside, TX 54321</p>
+        <p className='mb-2.5'><PhoneIcon className="h-5 w-5 inline-block text-gray-600 mr-2" /><strong>Số điện thoại:</strong> 0875698741</p>
+        <p className='mb-2.5'><EnvelopeIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Email:</strong> MyPhamHTCT@gmail.com</p>
+        <p className='mb-2.5'><MapIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Địa chỉ:</strong> 789 Nguyễn Trãi, Ninh Kiều, Cần Thơ</p>
       </div>
       <div className='w-10/12 h-1/3'>
  

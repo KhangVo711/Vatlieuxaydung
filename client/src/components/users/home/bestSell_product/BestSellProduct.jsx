@@ -22,38 +22,38 @@ export default function BestSellProduct() {
         },
         {
             id: 3,
-            name: 'Ngói gốm Prime Milano',
-            image: 'https://buildmart.vn/image/cache/catalog/vat-lieu/PRIME/08.15.110%20ngoi%20gom%20prime%20milano%20vatlieugiasi-300x300.jpg',
+            name: 'Bột Uống Collagen',
+            image: 'https://product.hstatic.net/200000868185/product/1840_308c1c135d6b8197bbed9e718484631a_3c2352d32687449cb43dd6d268e4efdf_64c6d7009d1045849d29a569d6b15e71_master.jpg',
             cta1: 'ĐẶT HÀNG',
             cta2: 'TƯ VẤN',
         }, {
             id: 4,
-            name: 'Ngói Prime Hai Sóng',
-            image: 'https://buildmart.vn/image/cache/catalog/vat-lieu/PRIME/0804108%20ngoi%20prime%20ghi%20xam%20vatlieugiasi-300x300.jpg',
+            name: 'Trà Giảm cân Genpi Tea',
+            image: 'https://product.hstatic.net/200000868185/product/orihiro_genpi_tea_f2da0396b9c3442898c167bce280d950_8475a0681ecf4cd1b168ecddce81ef61_master.jpeg',
             cta1: 'ĐẶT HÀNG',
             cta2: 'TƯ VẤN',
         }, {
             id: 5,
-            name: 'Xi măng Vicem Hà Tiên',
-            image: 'https://cdn.hoasenhome.vn/catalog/product/x/i/xi-mang-vicem-ha-tien-da-dung-50kg.jpg',
+            name: 'Gel Dưỡng Vùng Mắt',
+            image: 'https://product.hstatic.net/200000868185/product/6955416224486__62__25154db06bdc45799536988ba228def6_c21b189dd73943e9bae399daa9e07d67_master.jpg',
             cta1: 'ĐẶT HÀNG',
             cta2: 'TƯ VẤN',
         }, {
             id: 6,
-            name: 'Đá 4x6 trắng',
-            image: 'https://vlxdcantho.com/wp-content/uploads/2022/02/da-4x6-trang.jpg',
+            name: 'Phấn Mắt 4 Ô',
+            image: 'https://product.hstatic.net/200000868185/product/a36457ffe4556be368b3-removebg-preview_a3ebaca15270466ca320dc683b1fa1c6_9027e92bd08843baa5c8ae9471a223a6_master.png',
             cta1: 'ĐẶT HÀNG',
             cta2: 'TƯ VẤN',
         }, {
             id: 7,
-            name: 'Gạch ống 4 lỗ',
-            image: 'https://group4n.com/wp-content/uploads/2023/02/ff4536274dc78799ded6.webp',
+            name: 'Kem Tắm Trắng Da',
+            image: 'https://product.hstatic.net/200000868185/product/snow_f2757ad35d8840c2885472dcbf1aa34d_f4e9f278de304492941b10c4a5d585df_master.jpg',
             cta1: 'ĐẶT HÀNG',
             cta2: 'TƯ VẤN',
         }, {
             id: 8,
-            name: 'Tấm ốp tường chống nóng',
-            image: 'https://vatlieuanvinh.com/wp-content/uploads/2022/12/tam-op-tuong-ngoai-troi-chong-nong-11.jpg',
+            name: 'Miếng Dán Mụn',
+            image: 'https://product.hstatic.net/200000868185/product/5067-represent_33bec1847fdb4e8ca3d93c2d536225cb_dbf5b19afaaf4d239ab35470a4613a97_master.jpg',
             cta1: 'ĐẶT HÀNG',
             cta2: 'TƯ VẤN',
         },
@@ -92,10 +92,10 @@ export default function BestSellProduct() {
                                 {product.name}
                             </h3>
                             <div className="flex justify-between mt-4">
-                                <button className="bg-orange-500 text-white px-4 py-2 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md">
+                                <button className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md">
                                     {product.cta1}
                                 </button>
-                                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md">
+                                <button className="bg-blue-400 text-white px-4 py-2 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md">
                                     {product.cta2}
                                 </button>
                             </div>

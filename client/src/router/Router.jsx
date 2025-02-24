@@ -18,11 +18,17 @@ import Order from '../components/users/order/Order.jsx';
 import AddStaff from '../components/admin/addstaff/AddStaff.jsx';
 import LoginStaff from '../components/staff/LoginStaff.jsx';
 import PrivateRouterStaff from '../components/staff/privateRouter/PrivateRouteStaff.jsx';
+import ScrollToTop from '../components/ScrollToTop.jsx';
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+    <>
+      <ScrollToTop />
+      <App />
+      </>
+  ),
     children: [
       {
         path: "",

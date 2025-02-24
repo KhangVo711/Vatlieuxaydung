@@ -2,6 +2,7 @@ import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import {formatCurrency} from '../../../../utils/currency';
+import { Link } from 'react-router-dom';
 export default function HomeProduct() {
     const [products, setProducts] = useState([]);
 
@@ -19,7 +20,7 @@ export default function HomeProduct() {
         <div>
             <div className="w-full px-2.5 pt-12 xl:pb-8 pb-3 flex justify-between items-center relative">
                 <h2 className="w-full text-center lg:text-3xl text-xl tracking-wide font-bold uppercase">Sản phẩm</h2>
-                <button className="absolute right-28 bottom-0 bg-yellow-500 w-20 xl:w-24 border border-yellow-bg-yellow-500 hover:bg-yellow-400 rounded-md text-white text-xs md:text-sm lg:text-md px-0.5 py-2 transition duration-150 ease-in-out lg:w-20 md:w-16">Xem tất cả</button>
+                <Link to="/products" className="absolute right-28 bottom-0 text-center bg-blue-400 w-20 xl:w-24 border border-blue-bg-blue-500 hover:bg-blue-500 hover:border-blue-bg-blue-600 rounded-md text-white text-xs md:text-sm lg:text-md px-0.5 py-2 transition duration-150 ease-in-out lg:w-20 md:w-16">Xem tất cả</Link>
             </div>
             
             <div className="container mx-auto grid md:grid-cols-3 xl:grid-cols-4 grid-cols-2 gap-5 pt-4 pb-12 ">

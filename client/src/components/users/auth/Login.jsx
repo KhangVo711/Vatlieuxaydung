@@ -176,7 +176,7 @@ export default function Login() {
                   </button>
                 </div>
 
-                <Button type="submit" className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-50 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                <Button type="submit" className="mt-5 tracking-wide font-semibold bg-pink-400 text-gray-50 w-full py-4 rounded-lg hover:bg-pink-500 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
 
                   <span className="ml-3">Đăng nhập</span>
                 </Button>
