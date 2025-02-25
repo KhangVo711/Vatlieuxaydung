@@ -15,19 +15,56 @@ const getCart = async (req, res) => {
 
 const insertCart = async (req, res) => {
     try {
-        const { madh, makh, ngaydat, trangthai, tonggia, madvvc } = req.body;
-
-        if (!madh || !makh || !ngaydat || !trangthai || !tonggia || !madvvc) {
+        const { madh, makh, ngaydat, trangthai, tonggia, madvvc, maform } = req.body;
+console.log(makh);
+        if (!madh || (!makh && !maform) || !ngaydat || !trangthai || !tonggia || !madvvc) {
             return res.status(400).send({ message: "Thiếu thông tin đặt hàng." });
         }
-        await cartModel.insertCart(madh, makh, ngaydat, trangthai, tonggia, madvvc);
+        await cartModel.insertCart(madh, makh, ngaydat, trangthai, tonggia, madvvc, maform);
         res.status(200).send({ message: "Đơn hàng đã được đặt thành công!" });
     } catch (error) {
         console.error("Error saving order:", error);
         res.status(500).send({ message: "Đặt hàng không thành công." });
     }
 };
+const insertFormOD = async (req, res) => {
+    try {
+        const { maform, fullname, phone, address, email } = req.body;
+        const idPattern = /^[^\s].*$/;
+        const fullnameRegex = /^[\p{L}\p{N}\s]+$/u;
 
+        if (!idPattern.test(fullname)) {
+            return res.status(400).json({ message: 'Tên không được chứa khoảng trắng ở đầu' });
+        }
+        if (!fullnameRegex.test(fullname)) {
+            return res.status(400).json({ message: 'Tên không được chứa ký tự đặc biệt.' });
+        }
+        if (!idPattern.test(address)) {
+            return res.status(400).json({ message: 'Địa chỉ không được chứa khoảng trắng ở đầu' });
+        }
+ 
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (email && !emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Email không đúng định dạng' });
+        }
+        if (!idPattern.test(phone)) {
+            return res.status(400).json({ message: 'Số điện thoại không được chứa khoảng trắng ở đầu' });
+        }
+        const phoneRegex = /^\d{10,11}$/;
+        if (phone && !phoneRegex.test(phone)) {
+            return res.status(400).json({ message: 'Số điện thoại phải là số có độ dài từ 10 đến 11 ký tự' });
+        }
+        const tenkh = fullname;
+        const sdt = phone;
+        const diachi = address;
+      
+        await cartModel.insertFormOD(maform, tenkh, sdt, diachi, email);
+        return res.status(200).json({ message: 'Cập nhật thành công' });
+        
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi xảy ra bên server' });
+    }
+};
 const insertDetailCart = async (req, res) => {
     const orderDetails = req.body;
     console.log("Order details received:", orderDetails);
@@ -133,4 +170,4 @@ const detailOrderOfUser = async (req, res) => {
 }
 
 
-export default { insertCart, insertDetailCart, getCart, updateStatus, detailProductInOrder, detailOrderOfUser };
+export default { insertCart, insertDetailCart, getCart, updateStatus, detailProductInOrder, detailOrderOfUser, insertFormOD };

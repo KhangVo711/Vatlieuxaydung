@@ -25,6 +25,10 @@ export default function ViewDetailOrder({ formRefView, selected }) {
                 <span className='font-bold text-gray-800 w-16 mr-0.5'>Mã phiếu:</span> {invoiceData.madh}
               </h2>
               <h2><span className='font-bold text-gray-800 mr-0.5'>Mã khách hàng:</span> {invoiceData.makh}</h2>
+              <h2><span className='font-bold text-gray-800 mr-0.5'>Tên khách hàng:</span> {invoiceData.tenkh}</h2>
+              <h2><span className='font-bold text-gray-800 mr-0.5'>Số điện thoại:</span> {invoiceData.sdt}</h2>
+              <h2><span className='font-bold text-gray-800 mr-0.5'>Địa chỉ:</span> {invoiceData.diachi}</h2>
+
 
              
             </div>

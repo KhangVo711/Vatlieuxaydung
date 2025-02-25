@@ -1,13 +1,15 @@
 import connectDB from "../configs/connectDB.js";
 
 // CART
-const insertCart = async (madh, makh, ngaydat, trangthai, tonggia, madvvc) => {
-    await connectDB.execute("INSERT INTO `donhang` VALUES (?, ?, ?, ?, ?, ?)", [madh, makh, ngaydat, trangthai, tonggia, madvvc]);
+const insertCart = async (madh, makh, ngaydat, trangthai, tonggia, madvvc, maform) => {
+    await connectDB.execute("INSERT INTO `donhang` VALUES (?, ?, ?, ?, ?, ?, ?)", [madh, makh, ngaydat, trangthai, tonggia, madvvc, maform]);
 }
 const insertDetailCart = async (madh, masp, soluongsanpham, dongia ) => {
     await connectDB.execute("INSERT INTO `chitietdonhang` VALUES (?, ?, ?, ?)", [madh, masp, soluongsanpham, dongia ]);
 }
-
+const insertFormOD = async (maform, tenkh, sdt, diachi, email) => {
+    await connectDB.execute("INSERT INTO `formdathang` VALUES (?, ?, ?, ?, ?)", [maform, tenkh, sdt, diachi, email]);
+}
 const getCart = async () => {
     const [rows] = await connectDB.execute("SELECT * FROM donhang, donvivanchuyen WHERE donhang.madvvc = donvivanchuyen.madvvc ORDER BY ngaydat DESC");
     return rows;
@@ -41,6 +43,9 @@ const detailProductInOrder = async (madh) => {
         SELECT
             dh.madh,
             dh.makh,
+            kh.tenkh,
+            kh.diachi,
+            kh.sdt,
             dh.ngaydat,
             dh.trangthai,
             dh.tonggia,
@@ -59,6 +64,8 @@ const detailProductInOrder = async (madh) => {
             ct.dongia
         FROM
             donhang dh
+        JOIN
+            khachhang kh ON dh.makh = kh.makh
         JOIN
             chitietdonhang ct ON dh.madh = ct.madh
         JOIN
@@ -112,4 +119,4 @@ GROUP BY
 };
 
 
-export default { insertCart, insertDetailCart, getCart, updateStatus, getDetailCart, updateQuantity, detailProductInOrder, detailOrderOfUser };
+export default { insertCart, insertDetailCart, getCart, updateStatus, getDetailCart, updateQuantity, detailProductInOrder, detailOrderOfUser, insertFormOD };

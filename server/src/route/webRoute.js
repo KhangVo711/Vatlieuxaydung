@@ -48,6 +48,7 @@ const initWebRoute = (app) => {
     router.post('/updateStatus', cart.updateStatus)
     router.get('/getDetailOrder/:madh', cart.detailProductInOrder)
     router.get('/getOrderOfUser/:makh', cart.detailOrderOfUser)
+    router.post('/insertFormOD', cart.insertFormOD)
 
     router.get('/getShip', ship.getShip)
     

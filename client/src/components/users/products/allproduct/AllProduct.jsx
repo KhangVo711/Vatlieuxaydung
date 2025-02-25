@@ -176,13 +176,13 @@ export default function AllProduct() {
                         {/* Nút hành động */}
                         <div className="mt-6 flex justify-center space-x-4">
                             <button
-                                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-150"
                                 onClick={() => setIsModalOpen(false)}
                             >
                                 Đóng
                             </button>
                             <button
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                className="px-4 py-2 bg-pink-400 text-white rounded hover:bg-pink-500 trasiton duration-150"
                                 onClick={() => {
                                     onAddToCart(selectedProduct);
                                     setIsModalOpen(false);

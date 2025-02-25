@@ -85,7 +85,18 @@ export default function Header() {
 
   };
 
+  useEffect(() => {
+    if (modalIsOpen) {
+        document.body.style.overflow = 'hidden'; // Disable scrolling
+    } else {
+        document.body.style.overflow = 'auto'; // Enable scrolling
+    }
 
+    // Cleanup when component unmounts
+    return () => {
+        document.body.style.overflow = 'auto';
+    };
+}, [modalIsOpen]);
 
   Modal.setAppElement('#root');
 
@@ -397,15 +408,17 @@ export default function Header() {
             <div className="w-0.5 h-5 bg-gray-300 mr-2"></div>
             <MicrophoneIcon className="h-5 w-5 text-gray-700" />
           </div>
-          <Link to='/cart' id='cart-icon' className="text-sm font-semibold leading-6  relative">
+          <Link to='cart' id='cart-icon' className="text-sm font-semibold leading-6  relative">
             <ShoppingCartIcon className={`h-7 w-7 ${location.pathname === '/cart' ? 'text-gray-900' : 'text-gray-500'} hover:text-gray-900 transition duration-150 `} />
             <span className="absolute -top-0.5 -right-1 bg-red-500 text-white rounded-full text-xs w-3.5 h-3.5 flex items-center justify-center">
                     {cartItems.length}
                 </span>
           </Link>
+          {isData && isData.id ? (
           <Link to='ordered' className="text-sm font-semibold leading-6 relative">
           <ArchiveBoxIcon className={`h-7 w-7 ${location.pathname === '/ordered' ? 'text-gray-900' : 'text-gray-500'} hover:text-gray-900 transition duration-150 `} />
           </Link>
+          ) : null}
         </PopoverGroup>
 
         {isData && (isData.phone || isData.email) ? (

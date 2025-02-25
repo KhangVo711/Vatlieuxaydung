@@ -11,15 +11,31 @@ import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
     const navigate = useNavigate()
-    
+
+  const handleChange = (e) => {
+    setMessage('');
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
     const generateOrderId = () => `OD${Date.now()}${Math.floor(Math.random() * 10)}`;
+    const generateFormId = () => `OD${Date.now()}${Math.floor(Math.random() * 10)}`;
     const getCurrentDate = () => {
         const now = new Date();
         return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     };
 
     const { isData } = useContext(Context);
-    console.log(isData.id);
+    const [formData, setFormData] = useState({
+        maform: generateFormId(),
+        fullname: '',
+        email: '',
+        phone: '',
+        address: '',
+      });
+
     const { cartItems, setCartItems } = useContext(Context);
     const listCX = cartItems.map((cartItem) => (
         <CartItem key={cartItem.masp} cartItem={cartItem} />
@@ -30,14 +46,18 @@ export default function Cart() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [message, setMessage] = useState('');
-    if(isSuccess === true){
+    if (isSuccess === true) {
         setTimeout(() => {
             setIsSuccess(false);
             setCartItems([]);
-            navigate('/ordered')
+            if(isData && isData.id){
+                navigate('/ordered')
+            }
+            else{
+                navigate('/products')
+            }
         }, 3500);
-    } 
-    console.log(ship);
+    }
     useEffect(() => {
         axios.get('http://localhost:5001/getShip')
             .then((response) => {
@@ -54,63 +74,132 @@ export default function Cart() {
 
         const orderId = generateOrderId(); // Tạo mã đơn hàng duy nhất
         const totalAmount = total + ship.phivanchuyen
+        const makhachhang = isData?.id ?? null;
+        
+        const maformid = (makhachhang === null)
+            ? formData.maform
+            : null;
         const orderData = {
             madh: orderId,
-            makh: isData.id,
+            makh: makhachhang,
             ngaydat: getCurrentDate(),
             trangthai: "Chờ xác nhận",
             tonggia: totalAmount,
             madvvc: ship.madvvc,
+            maform: maformid
         };
-
+        console.log(formData);
         try {
-            const cartResponse = await axios.post('http://localhost:5001/createCart', orderData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                withCredentials: true
-            });
-
-            if (cartResponse.status === 200) {
-                const orderDetails = cartItems.map(item => ({
-                    madh: orderId,
-                    masp: item.masp,
-                    dongia: item.gia,
-                    soluongsanpham: item.soluong
-                }));
-
-                const detailResponse = await axios.post('http://localhost:5001/createCartDetail', orderDetails, {
+            if(isData){
+                const formODResponse = await axios.post('http://localhost:5001/insertFormOD', formData, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
                     },
                     withCredentials: true
                 });
-
-                if (detailResponse.status === 200) {
-                    setMessage(detailResponse.data.message);
-                
-                    // Giữ trạng thái đang xử lý trong 3 giây, sau đó chuyển thành công
-                    setTimeout(() => {
-                        setIsProcessing(false); // Dừng xử lý đơn hàng
-                        setIsSuccess(true); // Đặt hàng thành công
-
-                    }, 3000);
+                if (formODResponse.status === 200) {
+                    const cartResponse = await axios.post('http://localhost:5001/createCart', orderData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        },
+                        withCredentials: true
+                    });
+        
+                    if (cartResponse.status === 200) {
+                        const orderDetails = cartItems.map(item => ({
+                            madh: orderId,
+                            masp: item.masp,
+                            dongia: item.gia,
+                            soluongsanpham: item.soluong
+                        }));
+        
+                        const detailResponse = await axios.post('http://localhost:5001/createCartDetail', orderDetails, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                            },
+                            withCredentials: true
+                        });
+        
+                        if (detailResponse.status === 200) {
+                            setMessage(detailResponse.data.message);
+        
+                            // Giữ trạng thái đang xử lý trong 3 giây, sau đó chuyển thành công
+                            setTimeout(() => {
+                                setIsProcessing(false); // Dừng xử lý đơn hàng
+                                setIsSuccess(true); // Đặt hàng thành công
+        
+                            }, 3000);
+                        } else {
+                            setIsProcessing(false); // Dừng xử lý nếu lỗi
+                        }
+                    } else {
+                        setIsProcessing(false); // Dừng xử lý nếu lỗi
+                    }
                 } else {
-                    console.error("Failed to submit order details");
-                    setIsProcessing(false); // Dừng xử lý nếu lỗi
+                    const cartResponse = await axios.post('http://localhost:5001/createCart', orderData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        },
+                        withCredentials: true
+                    });
+        
+                    if (cartResponse.status === 200) {
+                        const orderDetails = cartItems.map(item => ({
+                            madh: orderId,
+                            masp: item.masp,
+                            dongia: item.gia,
+                            soluongsanpham: item.soluong
+                        }));
+        
+                        const detailResponse = await axios.post('http://localhost:5001/createCartDetail', orderDetails, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                            },
+                            withCredentials: true
+                        });
+        
+                        if (detailResponse.status === 200) {
+                            setMessage(detailResponse.data.message);
+        
+                            // Giữ trạng thái đang xử lý trong 3 giây, sau đó chuyển thành công
+                            setTimeout(() => {
+                                setIsProcessing(false); // Dừng xử lý đơn hàng
+                                setIsSuccess(true); // Đặt hàng thành công
+        
+                            }, 3000);
+                        } else {
+                            setIsProcessing(false); // Dừng xử lý nếu lỗi
+                        }
+                    } else {
+                        setIsProcessing(false); // Dừng xử lý nếu lỗi
+                    }
                 }
-            } else {
-                console.error("Failed to submit cart");
-                setIsProcessing(false); // Dừng xử lý nếu lỗi
             }
+
+
+            
         } catch (error) {
             console.error("There was an error submitting the form!", error);
             setIsProcessing(false); // Dừng xử lý nếu lỗi
         }
     };
-
+    useEffect(() => {
+        if (isProcessing || isSuccess) {
+            document.body.style.overflow = 'hidden'; // Disable scrolling
+        } else {
+            document.body.style.overflow = 'auto'; // Enable scrolling
+        }
+    
+        // Cleanup when component unmounts
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isProcessing, isSuccess]);
     return (
         <>
             {cartItems && cartItems.length > 0 ? (
@@ -128,6 +217,76 @@ export default function Cart() {
                         </div>
                     </div>
                     {listCX}
+                    {cartItems.length > 0 && isData ? (
+                        <div className='w-full flex flex-col items-center justify-center'>
+                            <h2 className="text-xl font-semibold mb-2 uppercase mt-5">Thông tin đặt hàng</h2>
+                            <div className='w-full flex justify-center items-center'>
+                                <div className='w-1/3 flex flex-col justify-center'>
+                                    <label htmlFor='fullname_inf' className="block text-sm mb-1 font-medium text-gray-700">Họ và tên</label>
+                                    <input
+                                        type="text"
+                                        id="fullname_inf"
+                                        name='fullname'
+                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder='Họ và tên'
+                                        value={formData.fullname}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                            </div>
+                            <div className='w-full flex justify-center items-center'>
+                                <div className='w-1/3 flex flex-col justify-center'>
+                                    <label htmlFor='email_inf' className="block mb-1 text-sm font-medium text-gray-700">Email</label>
+                                    <input
+                                        type="text"
+                                        id='email_inf'
+                                        name='email'
+                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder='Email'
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                    />
+
+
+                                </div>
+                            </div>
+                            <div className='w-full flex justify-center items-center'>
+                                <div className='w-1/3 flex flex-col justify-center'>
+                                    <label htmlFor='phone_inf' className="block text-sm mb-1 font-medium text-gray-700">Số điện thoại</label>
+                                    <input
+                                        type="text"
+                                        id='phone_inf'
+                                        name='phone'
+                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder='Số điện thoại'
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                    />
+
+                                </div>
+                            </div>
+                            <div className='w-full flex justify-center items-center mb-10'>
+                                <div className='w-1/3 flex flex-col justify-center'>
+                                    <label htmlFor='address_inf' className={`block text-sm mb-1 font-medium text-gray-700`}>Địa chỉ</label>
+                                    <input
+                                        type="text"
+                                        id='address_inf'
+                                        name='address'
+                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder='Địa chỉ'
+                                        value={formData.address}
+                                        onChange={handleChange}
+                                    />
+
+
+                                </div>
+                            </div>
+                        </div>
+                    ) :
+                     null
+                     }
+
                     <div className="p-4 bg-gray-50 border-t">
                         <div className="flex justify-between items-center my-1">
                             <p className="text-sm text-gray-800">Đơn vị vận chuyển: <span className='font-bold'>{ship.tendvvc}</span></p>
@@ -140,7 +299,7 @@ export default function Cart() {
                             <p className="text-lg font-bold text-red-500">{formatCurrency(total + ship.phivanchuyen)}</p>
                         </div>
                         <form onSubmit={handleSubmit} className='w-full flex items-center justify-center'>
-                            <button className=" mt-4 bg-orange-500 text-white py-2 px-8 rounded-md hover:bg-orange-400 text-md">
+                            <button className=" mt-4 bg-pink-400 text-white py-2 px-8 rounded-md hover:bg-pink-500 text-md">
                                 Đặt hàng
                             </button>
                         </form>
@@ -149,24 +308,24 @@ export default function Cart() {
             ) : (
                 <div className="max-w-6xl mx-auto mt-10 bg-white rounded-lg p-6 flex justify-center items-center flex-col shadow">
                     <h1 className="text-xl font-bold">Bạn chưa mặt hàng nào trong giỏ hàng!</h1>
-                    <Link to='/products' className="text-white mt-6 bg-gray-700 px-6 py-2 rounded-sm hover:bg-gray-600">Mua ngay</Link>
+                    <Link to='/products' className="text-white mt-6 bg-pink-400 px-6 py-2 rounded-sm transition duration-150 hover:bg-pink-500">Mua ngay</Link>
                 </div>
             )}
             {isProcessing && (
-                <div className='h-screen w-screen bg-black bg-opacity-10 absolute top-0 z-50'>
-                <div className='flex justify-center items-center h-full'>
-                    <div className='bg-white p-6 rounded-md flex items-center flex-col'>
-                        <div className='p-1 mb-5 rounded-full w-12 h-12 border flex items-center justify-center border-gray-600'>
-                        <EllipsisHorizontalIcon className="h-6 w-6 text-gray-600" />
+                <div className='fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50'>
+                    <div className='flex justify-center items-center h-full'>
+                        <div className='bg-white p-6 rounded-md flex items-center flex-col'>
+                            <div className='p-1 mb-5 rounded-full w-12 h-12 border flex items-center justify-center border-gray-600'>
+                                <EllipsisHorizontalIcon className="h-6 w-6 text-gray-600" />
 
+                            </div>
+                            <h1 className='text-lg font-bold'>Đang xử lý đơn hàng...</h1>
                         </div>
-                        <h1 className='text-lg font-bold'>Đang xử lý đơn hàng...</h1>
                     </div>
                 </div>
-            </div>
             )}
             {isSuccess && (
-                <div className='h-screen w-screen bg-black bg-opacity-10 absolute top-0 z-50'>
+                <div className='fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50'>
                     <div className='flex justify-center items-center h-full'>
                         <div className='bg-white p-6 rounded-md flex items-center flex-col'>
                             <div className='p-1 mb-5 rounded-full w-12 h-12 border flex items-center justify-center border-green-500'>
