@@ -87,7 +87,6 @@ export default function AddDelivery() {
 
     const handleDeleteProductClick = async (item) => {
         const token = Cookies.get('admin') || Cookies.get('staff');
-        console.log(item.madvvc);
         try {
             const response = await axios.post(`http://localhost:5001/deleteDelivery`, { madvvc: item.madvvc }, {
                 headers: {

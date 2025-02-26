@@ -40,7 +40,7 @@ const editShip = async (req, res) => {
     }
 }
 const deleteShip = async (req, res) => {
-    const madvvc = req.body;
+    const madvvc = req.body.madvvc;
     console.log(madvvc);
     try {
         const ship = await shipModel.deleteShip(madvvc);
