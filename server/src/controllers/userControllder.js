@@ -261,4 +261,13 @@ const loginAdmin = async (req, res) => {
     }
 }
 
-export default { getInf, insertUser, getUser, updateInf, changePassword, loginAdmin };
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await userModel.getAllUsers();
+        res.status(200).json({ users });
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi server', error: error.message });
+    }
+}
+
+export default { getInf, insertUser, getUser, updateInf, changePassword, loginAdmin, getAllUsers };

@@ -21,7 +21,7 @@ export default function Cart() {
     });
   };
     const generateOrderId = () => `OD${Date.now()}${Math.floor(Math.random() * 10)}`;
-    const generateFormId = () => `OD${Date.now()}${Math.floor(Math.random() * 10)}`;
+    const generateFormId = () => `FO${Date.now()}${Math.floor(Math.random() * 10)}`;
     const getCurrentDate = () => {
         const now = new Date();
         return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;

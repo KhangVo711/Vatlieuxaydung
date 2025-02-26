@@ -17,6 +17,7 @@ const initWebRoute = (app) => {
     router.get('/getInf/:id', user.getInf)
     router.post('/register/:id', user.insertUser)
     router.post('/changePassword/:id', user.changePassword)
+    router.get('/getAllUsers', user.getAllUsers)
 
     router.post('/addCategory', auth.authMiddleware, product.insertCategory)
     router.get('/getCategory', product.getCategory)
@@ -50,13 +51,18 @@ const initWebRoute = (app) => {
     router.get('/getOrderOfUser/:makh', cart.detailOrderOfUser)
     router.post('/insertFormOD', cart.insertFormOD)
 
-    router.get('/getShip', ship.getShip)
     
     router.post('/addStaff', staff.addStaff)
     router.post('/loginStaff', staff.loginStaff)
     router.get('/getStaff', staff.getAllStaff)
     router.post('/editStaff', staff.editStaff)
     router.post('/deleteStaff', staff.deleteStaff)
+
+    router.post('/addDelivery', auth.authMiddleware, ship.addShip)
+    router.get('/getDelivery', ship.getAllShip)
+    router.get('/getDelivery/:maloai', ship.getOneShip)
+    router.post('/editDelivery', auth.authMiddleware, ship.editShip)
+    router.post('/deleteDelivery', auth.authMiddleware, ship.deleteShip)
 
     return app.use('/', router)
 }

@@ -54,7 +54,7 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
                 Mã đơn hàng
               </th>
               <th scope="col" className="px-8 py-3">
-                Mã khách hàng
+                Mã khách hàng / Mã form
               </th>
               <th scope="col" className="px-4 py-3">
                 Đơn vị vận chuyển
@@ -82,9 +82,9 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
                   {item.madh}
                 </th>
                 <td className="px-8 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {item.makh}
+                  {item.makh ? item.makh : item.maform}
                 </td>
-                <td className="px-4 py-3 font-medium whitespace-nowrap dark:text-white">
+                <td className="px-10 py-3 font-medium whitespace-nowrap dark:text-white">
                   {item.tendvvc}
                 </td>
                 <td className="px-4 py-3">
@@ -94,7 +94,7 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
                 <td className="px-4 py-3 text-right">
                   {formatCurrency(item.tonggia+item.phivanchuyen)}
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-2.5 py-3 text-right">
                   {item.trangthai}
                 </td>
             

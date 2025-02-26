@@ -75,5 +75,18 @@ const getAdmin = async (phone, email) => {
     return rows[0];
 }
 
-export default {getUser, insertUser, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdmin};
+const getAllUsers = async () => {
+    const [rows, fields] = await connectDB.execute(
+        `SELECT kh.makh, kh.tenkh, kh.email, kh.sdt, kh.diachi, 
+                COUNT(dh.madh) AS so_lan_mua, 
+                SUM(dh.tonggia) AS tong_chi_tieu
+         FROM khachhang kh
+         JOIN donhang dh ON kh.makh = dh.makh
+         GROUP BY kh.makh, kh.tenkh, kh.email, kh.sdt, kh.diachi;`
+    );
+    return rows;
+}
+
+
+export default {getUser, insertUser, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdmin, getAllUsers};
 

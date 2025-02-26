@@ -42,10 +42,23 @@ const detailProductInOrder = async (madh) => {
     const [rows] = await connectDB.execute(`
         SELECT
             dh.madh,
-            dh.makh,
-            kh.tenkh,
-            kh.diachi,
-            kh.sdt,
+            CASE
+                WHEN dh.makh IS NOT NULL THEN dh.makh
+                ELSE dh.maform
+            END AS makh_or_form,
+            CASE
+                WHEN dh.makh IS NOT NULL THEN kh.tenkh
+                ELSE fd.tenkh
+            END AS tenkh_or_form,
+            CASE
+                WHEN dh.makh IS NOT NULL THEN kh.diachi
+                ELSE fd.diachi
+            END AS diachi_or_form,
+            CASE
+                WHEN dh.makh IS NOT NULL THEN kh.sdt
+                ELSE fd.sdt
+            END AS sdt_or_form,
+            fd.email AS email_or_form,
             dh.ngaydat,
             dh.trangthai,
             dh.tonggia,
@@ -64,8 +77,10 @@ const detailProductInOrder = async (madh) => {
             ct.dongia
         FROM
             donhang dh
-        JOIN
+        LEFT JOIN
             khachhang kh ON dh.makh = kh.makh
+        LEFT JOIN
+            formdathang fd ON dh.maform = fd.maform
         JOIN
             chitietdonhang ct ON dh.madh = ct.madh
         JOIN
@@ -78,6 +93,7 @@ const detailProductInOrder = async (madh) => {
 
     return rows;
 };
+
 
 const detailOrderOfUser = async (makh) => {
     const [rows] = await connectDB.execute(`

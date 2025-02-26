@@ -19,6 +19,8 @@ import AddStaff from '../components/admin/addstaff/AddStaff.jsx';
 import LoginStaff from '../components/staff/LoginStaff.jsx';
 import PrivateRouterStaff from '../components/staff/privateRouter/PrivateRouteStaff.jsx';
 import ScrollToTop from '../components/ScrollToTop.jsx';
+import ViewUsers from '../components/admin/viewUser/ViewUser.jsx';
+import AddDelivery from '../components/admin/adddelivery/AddDelivery.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -50,7 +52,7 @@ export const router = createBrowserRouter([
         element:
           <Order />
       },
-
+      
     ]
   },
   {
@@ -133,6 +135,16 @@ export const router = createBrowserRouter([
           </PrivateRouterAdmin>
 
       },
+      {
+        path: "viewUsers",
+        element:
+          <ViewUsers />
+      },
+      {
+        path: "delivery",
+        element:
+          <AddDelivery />
+      },
 
     ]
   },
@@ -186,7 +198,16 @@ export const router = createBrowserRouter([
           </PrivateRouterStaff>
 
       },
-  
+      {
+        path: "viewUsers",
+        element:
+          <ViewUsers />
+      },
+      {
+        path: "delivery",
+        element:
+          <AddDelivery />
+      },
 
     ]
   },
