@@ -39,7 +39,9 @@ export default function ViewDetailOrder({ formRefView, selected }) {
               <h2>
                 <span className='font-bold text-gray-800 mr-0.5'>Ngày giờ lập:</span> {formatDateTime(invoiceData.ngaydat)}
               </h2>
-           
+              <h2 className='text-left'>
+                <span className='font-bold text-gray-800 '>Trạng thái:</span> {invoiceData.trangthai}
+              </h2>
             </div>
 
           </div>
@@ -50,7 +52,7 @@ export default function ViewDetailOrder({ formRefView, selected }) {
           <thead className="bg-gray-300">
             <tr>
               <th className="py-3 px-4 text-left font-bold text-gray-800">Sản phẩm</th>
-              <th className="py-3 px-4 text-left font-bold text-gray-800">Giảm giá</th>
+              <th className="py-3 px-4 text-center font-bold text-gray-800">Khuyến mãi</th>
               <th className="py-3 px-4 text-center font-bold text-gray-800">Số lượng</th>
               <th className="py-3 px-4 text-right font-bold text-gray-800">Đơn giá</th>
               <th className="py-3 px-4 text-right font-bold text-gray-800">Thành tiền</th>
@@ -60,7 +62,7 @@ export default function ViewDetailOrder({ formRefView, selected }) {
             {selected.map((detail, index) => (
               <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
                 <td className="py-3 px-4 text-left font-medium text-gray-600">{detail.tensp}</td>
-                <td className="py-3 px-4 text-left font-medium text-gray-600">0</td>
+                <td className="py-3 px-4 text-center font-medium text-gray-600">{detail.km}%</td>
                 <td className="py-3 px-4 text-center">{detail.soluongsanpham}</td>
                 <td className="py-3 px-4 text-right">{formatCurrency(detail.dongia)}</td>
                 <td className="py-3 px-4 text-right">{formatCurrency(detail.dongia * detail.soluongsanpham)}</td>
@@ -69,7 +71,7 @@ export default function ViewDetailOrder({ formRefView, selected }) {
           </tbody>
         </table>
         <h2 className='text-right mt-3 px-4'><span className='font-bold'>Phí vận chuyển:</span> {formatCurrency(invoiceData.phivanchuyen)}</h2>
-        <h2 className='text-center mt-3'><span className='font-bold'>Tổng giá:</span> {formatCurrency(invoiceData.tonggia+invoiceData.phivanchuyen)}</h2>
+        <h2 className='text-center mt-3'><span className='font-bold'>Tổng giá:</span> {formatCurrency(invoiceData.tonggia)}</h2>
       </div>
     </div>
   );

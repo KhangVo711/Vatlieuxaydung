@@ -9,16 +9,16 @@ const getAllShip = async () => {
     const [rows, fields] = await connectDB.execute(`SELECT * FROM donvivanchuyen`);
     return rows;
 }
-const addShip = async (madvvc, tendvvc, phivanchuyen) => {
+const addShip = async (madvvc, tendvvc, phivanchuyen, songayvanchuyen) => {
     const [rows, fields] = await connectDB.execute(
-        `INSERT INTO donvivanchuyen (madvvc, tendvvc, phivanchuyen) VALUES (?, ?, ?)`,
-        [madvvc, tendvvc, phivanchuyen]);
+        `INSERT INTO donvivanchuyen (madvvc, tendvvc, phivanchuyen, songayvanchuyen) VALUES (?, ?, ?, ?)`,
+        [madvvc, tendvvc, phivanchuyen, songayvanchuyen]);
     return rows;
 }
-const editShip = async (madvvc, tendvvc, phivanchuyen) => {
+const editShip = async (madvvc, tendvvc, phivanchuyen, songayvanchuyen) => {
     const [rows, fields] = await connectDB.execute(
-        `UPDATE donvivanchuyen SET tendvvc = ?, phivanchuyen = ? WHERE madvvc = ?`,
-        [tendvvc, phivanchuyen, madvvc]);
+        `UPDATE donvivanchuyen SET tendvvc = ?, phivanchuyen = ?, songayvanchuyen = ? WHERE madvvc = ?`,
+        [tendvvc, phivanchuyen, songayvanchuyen, madvvc]);
     return rows;
 }
 const deleteShip = async (madvvc) => {

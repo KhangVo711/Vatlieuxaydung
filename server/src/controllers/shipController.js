@@ -20,9 +20,9 @@ const getAllShip = async (req, res) => {
     }
 }
 const addShip = async (req, res) => {
-    const { madvvc, tendvvc, phivanchuyen } = req.body;
+    const { madvvc, tendvvc, phivanchuyen, songayvanchuyen } = req.body;
     try {
-        const ship = await shipModel.addShip(madvvc, tendvvc, phivanchuyen);
+        const ship = await shipModel.addShip(madvvc, tendvvc, phivanchuyen, songayvanchuyen);
         res.status(200).send({ message: "Thêm thành công" });
     }
     catch (error) {
@@ -30,9 +30,9 @@ const addShip = async (req, res) => {
     }
 }
 const editShip = async (req, res) => {
-    const { madvvc, tendvvc, phivanchuyen } = req.body;
+    const { madvvc, tendvvc, phivanchuyen, songayvanchuyen } = req.body;
     try {
-        const ship = await shipModel.editShip(madvvc, tendvvc, phivanchuyen);
+        const ship = await shipModel.editShip(madvvc, tendvvc, phivanchuyen, songayvanchuyen);
         res.status(200).send({ message: "Sửa thành công" });
     }
     catch (error) {

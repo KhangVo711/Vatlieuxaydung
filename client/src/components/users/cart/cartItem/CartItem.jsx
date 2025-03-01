@@ -9,7 +9,7 @@ export default function CartItem({ cartItem }) {
   return (
     <div className="grid grid-cols-4 sm:grid-cols-12 items-center p-4 border-b gap-4">
       {/* Hình ảnh và tên sản phẩm */}
-      <div className="col-span-4 sm:col-span-5 pl-5 flex items-center gap-4">
+      <div className="col-span-4 sm:col-span-3 pl-5 flex items-center gap-4">
         <img
           src={`http://localhost:5001/uploads/${cartItem.hinhanh}`}
           alt={cartItem.tensp}
@@ -17,10 +17,14 @@ export default function CartItem({ cartItem }) {
         />
         <h2 className="text-sm font-medium text-gray-700">{cartItem.tensp}</h2>
       </div>
-
+     
       {/* Đơn giá */}
-      <p className="hidden sm:block col-span-1 text-right text-red-500 font-bold">
+      <p className="hidden sm:block col-span-1 text-right text-gray-800 font-bold">
         {formatCurrency(cartItem.gia)}
+      </p>
+ {/* Khuyến mãi */}
+ <p className="hidden sm:block col-span-2 text-center font-bold">
+        {cartItem?.km ? cartItem.km : 0}%
       </p>
 
       {/* Số lượng */}
@@ -33,14 +37,14 @@ export default function CartItem({ cartItem }) {
 
       {/* Thành tiền */}
       <p className="hidden sm:block col-span-1 gap-4 text-right text-red-500 font-bold">
-        {formatCurrency(cartItem.gia * cartItem.soluong)}
+        {cartItem?.km ? formatCurrency(cartItem.gia * cartItem.soluong * (1 - cartItem.km / 100)) : formatCurrency(cartItem.gia * cartItem.soluong)}
       </p>
 
       {/* Thao tác */}
       <div className="col-span-2 sm:col-span-2 text-center flex justify-center flex-col">
-        <button className="text-sm text-gray-500 hover:underline">
+        {/* <button className="text-sm text-gray-500 hover:underline">
           Khuyến mãi
-        </button>
+        </button> */}
         <button onClick={()=>removeItem(cartItem.masp)} className="text-sm text-red-600 hover:underline">
           Xóa
         </button>

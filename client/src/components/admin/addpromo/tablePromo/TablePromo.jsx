@@ -1,17 +1,17 @@
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { useState} from 'react';
 import ReactPaginate from 'react-paginate';
-import {formatCurrency} from '../../../../utils/currency.jsx';
+import {formatDateTime} from '../../../../utils/dateTime.jsx';
 
-export default function TableDelivery({ delivery, handleEditProductClick, handleDeleteProductClick }) {
+export default function TablePromo({ promo, handleEditProductClick, handleDeleteProductClick }) {
 
     const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6; 
 
   
   const offset = currentPage * itemsPerPage;
-  const currentDelivery = delivery.slice(offset, offset + itemsPerPage);
-  const pageCount = Math.ceil(delivery.length / itemsPerPage);
+  const currentPromo = promo.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(promo.length / itemsPerPage);
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
@@ -23,16 +23,22 @@ export default function TableDelivery({ delivery, handleEditProductClick, handle
                 <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" className="px-4 py-3">
-                            Mã đơn vị vận chuyển
+                            Mã khuyến mãi
+                        </th>
+                        <th scope="col" className="px-4 py-3">
+                            Mã sản phẩm
                         </th>
                         <th scope="col" className="px-25 py-3">
-                            Tên đơn vị vận chuyển
+                            Tiêu đề khuyến mãi
+                        </th>
+                        <th scope="col" className="px-4 py-3">
+                            Khuyến mãi (%)
                         </th>
                         <th scope="col" className="px-25 py-3">
-                            Số ngày vận chuyển
+                            Bắt đầu
                         </th>
                         <th scope="col" className="px-15 py-3">
-                            Phí vận chuyển
+                            Kết thúc
                         </th>
                         <th scope="col" className="px-1 py-3 ">
                             Hành động
@@ -40,19 +46,25 @@ export default function TableDelivery({ delivery, handleEditProductClick, handle
                     </tr>
                 </thead>
                 <tbody>
-                    {currentDelivery.map((item, index) => (
+                    {currentPromo.map((item, index) => (
                         <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" className="px-4 py-4">
-                                {item.madvvc}
+                                {item.makm}
+                            </th>
+                            <th scope="row" className="px-4 py-4">
+                                {item.masp}
                             </th>
                             <td className="px-25 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {item.tendvvc}
+                                {item.tenkm}
+                            </td>
+                            <td className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {item.km}%
                             </td>
                             <td className="px-25 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {item.songayvanchuyen}
+                                {formatDateTime(item.thoigianbatdaukm)}
                             </td>
-                            <td className="px-15 py-3">
-                  {formatCurrency(item.phivanchuyen)}
+                            <td className="px-15 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  {formatDateTime(item.thoigianketthuckm)}
                 </td>
 
                             <td className="px-1 py-4 flex">

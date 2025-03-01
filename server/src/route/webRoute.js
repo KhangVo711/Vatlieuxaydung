@@ -4,6 +4,7 @@ import staff from '../controllers/staffController.js'
 import product from '../controllers/productsController.js'
 import invoice from '../controllers/invoiceController.js'
 import ship from '../controllers/shipController.js'
+import promo from '../controllers/promoController.js'
 import cart from '../controllers/cartController.js'
 import uploadMiddleware from '../../middleware/upload.js'
 import auth from '../../middleware/jwt.js'
@@ -63,6 +64,12 @@ const initWebRoute = (app) => {
     router.get('/getDelivery/:maloai', ship.getOneShip)
     router.post('/editDelivery', auth.authMiddleware, ship.editShip)
     router.post('/deleteDelivery', auth.authMiddleware, ship.deleteShip)
+    
+    router.post('/addPromo', auth.authMiddleware, promo.addPromo)
+    router.get('/getPromo', promo.getAllPromo)
+    router.get('/getPromo/:makm', promo.getOnePromo)
+    router.post('/editPromo', auth.authMiddleware, promo.editPromo)
+    router.post('/deletePromo', auth.authMiddleware, promo.deletePromo)
 
     return app.use('/', router)
 }

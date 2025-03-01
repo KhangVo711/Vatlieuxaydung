@@ -11,7 +11,8 @@ export default function FormAddDelivery({ formRef }) {
     const [formData, setFormData] = useState({
         madvvc: '',
         tendvvc: '',
-        phivanchuyen: ''
+        phivanchuyen: '',
+        songayvanchuyen: ''
     });
     // console.log(formData);
     const [message, setMessage] = useState('');
@@ -44,7 +45,7 @@ export default function FormAddDelivery({ formRef }) {
                 setMessage(response.data.message);
                 handleSuccess();
                 setFormData({madvvc: '',
-                    tendvvc: '', phivanchuyen: ''})
+                    tendvvc: '', phivanchuyen: '', songayvanchuyen: ''});
                 setLoadDelivery(true);
                 setTimeout(() => {
                     setMessage('');
@@ -106,6 +107,15 @@ export default function FormAddDelivery({ formRef }) {
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             placeholder='DVVC'
                             value={formData.tendvvc}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số ngày vận chuyển</label>
+                        <input type="text" id="name" name='songayvanchuyen'
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                            placeholder='1 - 3 ngày'
+                            value={formData.songayvanchuyen}
                             onChange={handleChange}
                         />
                     </div>

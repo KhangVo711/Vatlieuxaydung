@@ -16,7 +16,6 @@ const getCart = async (req, res) => {
 const insertCart = async (req, res) => {
     try {
         const { madh, makh, ngaydat, trangthai, tonggia, madvvc, maform } = req.body;
-console.log(makh);
         if (!madh || (!makh && !maform) || !ngaydat || !trangthai || !tonggia || !madvvc) {
             return res.status(400).send({ message: "Thiếu thông tin đặt hàng." });
         }
@@ -67,8 +66,7 @@ const insertFormOD = async (req, res) => {
 };
 const insertDetailCart = async (req, res) => {
     const orderDetails = req.body;
-    console.log("Order details received:", orderDetails);
-
+    console.log(orderDetails);  
     try {
   
         if (!Array.isArray(orderDetails) || orderDetails.length === 0) {
@@ -76,11 +74,11 @@ const insertDetailCart = async (req, res) => {
         }
         await Promise.all(
             orderDetails.map(detail => {
-                const { madh, masp, dongia, soluongsanpham } = detail;
-                if (!madh || !masp || !dongia || !soluongsanpham) {
+                const { madh, masp, dongia, km, soluongsanpham } = detail;
+                if (!madh || !masp || !dongia || !km || !soluongsanpham) {
                     throw new Error("Thông tin chi tiết đơn hàng không đầy đủ.");
                 }
-                return cartModel.insertDetailCart(madh, masp, soluongsanpham, dongia );
+                return cartModel.insertDetailCart(madh, masp, soluongsanpham, km, dongia );
             })
         );
 
@@ -148,7 +146,6 @@ const updateStatus = async (req, res) => {
 
 const detailProductInOrder = async (req, res) => {
     const { madh } = req.params;
-    console.log("Order ID received:", madh);
     try {
         const orderProduct = await cartModel.detailProductInOrder(madh);
         res.status(200).send({ detail: orderProduct });

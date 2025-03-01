@@ -84,7 +84,7 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
                 <td className="px-8 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   {item.makh ? item.makh : item.maform}
                 </td>
-                <td className="px-10 py-3 font-medium whitespace-nowrap dark:text-white">
+                <td className="px-4 py-3 font-medium whitespace-nowrap dark:text-white">
                   {item.tendvvc}
                 </td>
                 <td className="px-4 py-3">
@@ -92,7 +92,7 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
                 </td>
             
                 <td className="px-4 py-3 text-right">
-                  {formatCurrency(item.tonggia+item.phivanchuyen)}
+                  {formatCurrency(item.tonggia)}
                 </td>
                 <td className="px-2.5 py-3 text-right">
                   {item.trangthai}

@@ -17,7 +17,7 @@ export default function AllProduct() {
     const [producer, setProducer] = useState([]);
     const { searchQuery } = useContext(Context);
     const { onAddToCart } = useContext(Context);
-
+    console.log(products)
     const filteredProducts = products.filter(product =>
         product.tensp.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -114,7 +114,12 @@ export default function AllProduct() {
             <div className="container mx-auto grid md:grid-cols-3 xl:grid-cols-4 grid-cols-2 gap-5 pt-4 pb-12 ">
 
                 {filteredProducts.map(product => (
-                    <article key={product.masp} className=" w-full lg:h-[350px] h-[250px] flex p-2 flex-col items-center rounded-md">
+                    <article key={product.masp} className=" w-full relative shadow-md lg:h-[350px] h-[250px] flex p-2 flex-col items-center rounded-md">
+{product.tenkm && product.km ? (
+                        <div className='absolute top-0 right-0 bg-red-700/80 w-24 z-50 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md'>
+                            {product.tenkm}
+                        </div>
+): null}
                         <div>
 
                             <img onClick={() => handleViewProductClick(product)} className="mb-2.5 hover:grow hover:scale-105 w-full lg:h-[250px] h-[150px] rounded-sm transition duration-300 ease-in-out" src={`http://localhost:5001/uploads/${product.hinhanh}`} alt={product.name} />
@@ -130,8 +135,12 @@ export default function AllProduct() {
                                 <PlusCircleIcon className="h-7 w-7 text-gray-600 hover:scale-105 cursor-pointer" />
                             </button>
                         </div>
-                        <div className="flex w-full px-4 justify-start items-center">
-                            <p>{formatCurrency(product.gia)}</p>
+                        <div className={`flex w-full px-4 justify-start items-center`}>
+                            <p className={`${product.tenkm ? 'line-through' : null} mr-5`}>{formatCurrency(product.gia)}</p>
+                            {product.km ? (
+                                 <p className='text-red-600 font-semibold'>{formatCurrency(product.gia - (product.gia * (product.km / 100)))}</p>
+                            ) : null}
+                           
                         </div>
                     </article>
                 ))}
@@ -167,7 +176,7 @@ export default function AllProduct() {
                             <div className="mb-4">
                                 <span className="font-bold">Nhà sản xuất:</span> {producer.tennsx}
                             </div>
-                            <p className="text-md font-semibold text-gray-800 mb-4">
+                            <p className="text-md font-semibold text-gray-800 mb-4 ">
                                 <span className='font-bold'>Giá:</span> {formatCurrency(selectedProduct.gia)}
                             </p>
                             <p className="text-gray-600">{selectedProduct.ttct}</p>

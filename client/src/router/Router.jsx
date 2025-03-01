@@ -21,16 +21,17 @@ import PrivateRouterStaff from '../components/staff/privateRouter/PrivateRouteSt
 import ScrollToTop from '../components/ScrollToTop.jsx';
 import ViewUsers from '../components/admin/viewUser/ViewUser.jsx';
 import AddDelivery from '../components/admin/adddelivery/AddDelivery.jsx';
+import AddPromo from '../components/admin/addpromo/AddPromo.jsx';
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: (
-    <>
-      <ScrollToTop />
-      <App />
+      <>
+        <ScrollToTop />
+        <App />
       </>
-  ),
+    ),
     children: [
       {
         path: "",
@@ -52,7 +53,7 @@ export const router = createBrowserRouter([
         element:
           <Order />
       },
-      
+
     ]
   },
   {
@@ -143,7 +144,16 @@ export const router = createBrowserRouter([
       {
         path: "delivery",
         element:
-          <AddDelivery />
+          <PrivateRouterAdmin>
+            <AddDelivery />
+          </PrivateRouterAdmin>
+      },
+      {
+        path: "promo",
+        element:
+          <PrivateRouterAdmin>
+            <AddPromo />
+          </PrivateRouterAdmin>
       },
 
     ]
@@ -206,7 +216,11 @@ export const router = createBrowserRouter([
       {
         path: "delivery",
         element:
-          <AddDelivery />
+          <PrivateRouterStaff>
+
+            <AddDelivery />
+          </PrivateRouterStaff>
+
       },
 
     ]

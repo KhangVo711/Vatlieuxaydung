@@ -41,9 +41,17 @@ const deleteNSX = async(mansx) => {
 
 // SP
 const getAllProduct = async () => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham`, `loaisanpham`, `nhasanxuat` WHERE `sanpham`.maloai = `loaisanpham`.maloai AND `sanpham`.mansx = `nhasanxuat`.mansx')
-    return rows
-}
+    const query = `
+        SELECT sp.*, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km
+        FROM sanpham sp
+        LEFT JOIN khuyenmai km ON sp.masp = km.masp
+    `;
+    
+    const [rows, fields] = await connectDB.execute(query);
+    return rows;
+};
+
+
 
 const getProduct8 = async () => {
     const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` LIMIT 8')

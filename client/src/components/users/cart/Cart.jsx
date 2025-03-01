@@ -31,7 +31,7 @@ export default function Cart() {
 
     const [delivery, setDelivery] = useState([]);
     const [selectedDelivery, setSelectedDelivery] = useState(null);
-    console.log(selectedDelivery);
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -47,10 +47,15 @@ export default function Cart() {
         setLoadDelivery(false);
 
     }, [loadDelivery]);
+ 
+    useEffect(() => {
+        if (delivery.length > 0 && !selectedDelivery) {
+            handleDeliveryChange(delivery[0]);
+        }
+    }, [delivery]);
     const handleDeliveryChange = (option) => {
         setSelectedDelivery(option);
     };
-
     const [formData, setFormData] = useState({
         maform: generateFormId(),
         fullname: '',
@@ -63,7 +68,10 @@ export default function Cart() {
     const listCX = cartItems.map((cartItem) => (
         <CartItem key={cartItem.masp} cartItem={cartItem} />
     ));
-    const total = cartItems.reduce((acc, item) => acc + item.gia * item.soluong, 0);
+    const total = cartItems.reduce((acc, item) => {
+        const price = item.km ? item.gia * (1 - item.km / 100) : item.gia;
+        return acc + price * item.soluong;
+      }, 0);
 
     const [ship, setShip] = useState([]);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -111,10 +119,16 @@ export default function Cart() {
             madvvc: selectedDelivery.madvvc,
             maform: maformid
         };
-        console.log(formData);
-        console.log(orderData);
+ 
         try {
             if (!isData?.id) {
+                if(formData.fullname === '' || formData.email === '' || formData.phone === '' || formData.address === '') {
+                    setIsProcessing(false);
+                    setMessage('Vui lòng nhập đầy đủ thông tin');
+                    return;
+                }
+
+
                 const formODResponse = await axios.post('http://localhost:5001/insertFormOD', formData, {
                     headers: {
                         'Content-Type': 'application/json',
@@ -135,7 +149,8 @@ export default function Cart() {
                         const orderDetails = cartItems.map(item => ({
                             madh: orderId,
                             masp: item.masp,
-                            dongia: item.gia,
+                            dongia: item.km ? item.gia * (1 - item.km/100) : item.gia,
+                            km: item.km ? item.km : '0',
                             soluongsanpham: item.soluong
                         }));
 
@@ -148,7 +163,7 @@ export default function Cart() {
                         });
 
                         if (detailResponse.status === 200) {
-                            setMessage(detailResponse.data.message);
+                            // setMessage(detailResponse.data.message);
 
                             // Giữ trạng thái đang xử lý trong 3 giây, sau đó chuyển thành công
                             setTimeout(() => {
@@ -177,7 +192,8 @@ export default function Cart() {
                     const orderDetails = cartItems.map(item => ({
                         madh: orderId,
                         masp: item.masp,
-                        dongia: item.gia,
+                        dongia: item.km ? item.gia * (1 - item.km/100) : item.gia,
+                        km: item.km ? item.km : 0,
                         soluongsanpham: item.soluong
                     }));
 
@@ -190,7 +206,7 @@ export default function Cart() {
                     });
 
                     if (detailResponse.status === 200) {
-                        setMessage(detailResponse.data.message);
+                        // setMessage(detailResponse.data.message);
 
                         // Giữ trạng thái đang xử lý trong 3 giây, sau đó chuyển thành công
                         setTimeout(() => {
@@ -234,8 +250,9 @@ export default function Cart() {
                     </div>
                     <div className="p-4 border-b bg-gray-100">
                         <div className="grid grid-cols-4 sm:grid-cols-12 gap-4 text-sm font-medium text-gray-600">
-                            <p className="col-span-4 sm:col-span-5 pl-5">Sản phẩm</p>
+                            <p className="col-span-4 sm:col-span-3 pl-5">Sản phẩm</p>
                             <p className="hidden sm:block col-span-1 text-center">Đơn giá</p>
+                            <p className="hidden sm:block col-span-2 text-center">Khuyến mãi</p>
                             <p className="hidden sm:block col-span-3 text-center">Số lượng</p>
                             <p className="hidden sm:block col-span-1 text-center">Thành tiền</p>
                             <p className="hidden sm:block col-span-2 text-center">Thao tác</p>
@@ -245,6 +262,7 @@ export default function Cart() {
                     {cartItems.length > 0 && !isData?.id ? (
                         <div className='w-full flex flex-col items-center justify-center'>
                             <h2 className="text-xl font-semibold mb-2 uppercase mt-5">Thông tin đặt hàng</h2>
+                            {message && <p className="text-red-500 text-sm">{message}</p>}
                             <div className='w-full flex justify-center items-center'>
                                 <div className='w-1/3 flex flex-col justify-center'>
                                     <label htmlFor='fullname_inf' className="block text-sm mb-1 font-medium text-gray-700">Họ và tên</label>
@@ -316,7 +334,7 @@ export default function Cart() {
                         <p className="text-sm text-gray-800 font-medium">Chọn đơn vị vận chuyển:</p>
                         <div className='w-full flex justify-center items-center'>
                         <RadioGroup
-                            value={selectedDelivery?.madvvc}
+                            value={selectedDelivery?.madvvc }
                             onValueChange={(value) => {
                                 const ship = delivery.find((d) => d.madvvc === value);
                                 handleDeliveryChange(ship);
@@ -328,9 +346,9 @@ export default function Cart() {
                                     key={ship.madvvc}
                                     className={`flex items-center gap-3 px-3 rounded-2xl border ${selectedDelivery?.madvvc === ship.madvvc ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}`}
                                 >
-                                    <RadioGroupItem value={ship.madvvc} id={ship.madvvc} className="h-5 w-5" />
-                                    <label htmlFor={ship.madvvc} className="text-sm w-full h-full py-3 text-gray-800 cursor-pointer">
-                                        <span className="font-semibold">{ship.tendvvc}</span> - <span className="font-semibold">Phí vận chuyển: {formatCurrency(ship.phivanchuyen)}</span>
+                                    <RadioGroupItem value={ship.madvvc} id={ship.madvvc} className="h-0.5 w-0.5" />
+                                    <label htmlFor={ship.madvvc} className="text-sm w-full h-full flex justify-between py-3 text-gray-800 cursor-pointer">
+                                        <span className="font-semibold">{ship.tendvvc}</span> - <span className="font-semibold">{ship.songayvanchuyen}</span> - <span className="font-semibold mr-2.5">Phí vận chuyển: {formatCurrency(ship.phivanchuyen)}</span>
                                     </label>
                                 </div>
                             ))}

@@ -89,6 +89,7 @@ const ContextProvider = ({ children }) => {
 
   const [loadStaff, setLoadStaff] = useState(true);
   const [loadDelivery, setLoadDelivery] = useState(true);
+  const [loadPromo, setLoadPromo] = useState(true);
 
   return (
     <Context.Provider
@@ -115,7 +116,8 @@ const ContextProvider = ({ children }) => {
         loadStatus, setLoadStatus,
         searchQuery, setSearchQuery,
         loadStaff, setLoadStaff,
-        loadDelivery, setLoadDelivery
+        loadDelivery, setLoadDelivery,
+        loadPromo, setLoadPromo
       }}
     >
       {children}
