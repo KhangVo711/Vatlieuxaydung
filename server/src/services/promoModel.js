@@ -25,4 +25,17 @@ const deletePromo = async (makm) => {
     const [rows, fields] = await connectDB.execute(`DELETE FROM khuyenmai WHERE makm = ?`, [makm]);
     return rows;
 }
-export default { getOnePromo, getAllPromo, addPromo, editPromo, deletePromo };
+const getActivePromos = async () => {
+    const [rows, fields] = await connectDB.execute(
+        'SELECT * FROM khuyenmai WHERE thoigianketthuckm > NOW()'
+    );
+    return rows;
+};
+const cleanupExpiredPromos = async () => {
+    const [rows, fields] = await connectDB.execute(
+        'DELETE FROM khuyenmai WHERE thoigianketthuckm <= NOW()'
+    );
+    return rows;
+};
+
+export default { getOnePromo, getAllPromo, addPromo, editPromo, deletePromo, cleanupExpiredPromos, getActivePromos };

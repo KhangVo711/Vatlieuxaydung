@@ -324,7 +324,7 @@ export default function Header() {
 
 
   return (
-    <header className="bg-pink-200 sticky top-0 z-10 shadow-md">
+    <header className="bg-pink-200 sticky top-0 z-20 shadow-md">
       <ToastContainer />
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-8">
         <div className="flex lg:flex-1">

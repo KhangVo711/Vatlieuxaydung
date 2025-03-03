@@ -6,6 +6,7 @@ import invoice from '../controllers/invoiceController.js'
 import ship from '../controllers/shipController.js'
 import promo from '../controllers/promoController.js'
 import cart from '../controllers/cartController.js'
+import repo from '../controllers/repoController.js'
 import uploadMiddleware from '../../middleware/upload.js'
 import auth from '../../middleware/jwt.js'
 const router = express.Router()
@@ -66,10 +67,14 @@ const initWebRoute = (app) => {
     router.post('/deleteDelivery', auth.authMiddleware, ship.deleteShip)
     
     router.post('/addPromo', auth.authMiddleware, promo.addPromo)
-    router.get('/getPromo', promo.getAllPromo)
+    // router.get('/getPromo', promo.getAllPromo)
     router.get('/getPromo/:makm', promo.getOnePromo)
     router.post('/editPromo', auth.authMiddleware, promo.editPromo)
     router.post('/deletePromo', auth.authMiddleware, promo.deletePromo)
+    router.get('/getPromotions', promo.getActivePromos)
+
+    // router.get('/getRepoMonthCurrent', repo.getRepoMonthCurrent)
+    router.get('/getRepoSumAllMonth', repo.getRepoSumAllMonth)
 
     return app.use('/', router)
 }

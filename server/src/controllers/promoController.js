@@ -1,5 +1,7 @@
 import express from "express";
 import promoModel from "../services/promoModel.js";
+
+
 const getOnePromo = async (req, res) => {
     const makm = req.body;
     try {
@@ -49,11 +51,21 @@ const deletePromo = async (req, res) => {
         res.status(500).send({ message: "Đã xảy ra lỗi khi xóa khuyến mãi" });
     }
 }
+const getActivePromos = async (req, res) => {
+    try {
+        const promotions = await promoModel.getActivePromos(); // Hàm này lấy các KM chưa hết hạn
+        res.status(200).send({promotions: promotions });
+    } catch (error) {
+        console.error('Error fetching promotions:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 export default {
     getOnePromo,
     getAllPromo,
     addPromo,
     editPromo,
-    deletePromo
+    deletePromo, 
+    getActivePromos
 };

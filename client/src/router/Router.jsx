@@ -22,7 +22,8 @@ import ScrollToTop from '../components/ScrollToTop.jsx';
 import ViewUsers from '../components/admin/viewUser/ViewUser.jsx';
 import AddDelivery from '../components/admin/adddelivery/AddDelivery.jsx';
 import AddPromo from '../components/admin/addpromo/AddPromo.jsx';
-
+import Repo from '../components/admin/repoProduct/Repo.jsx';
+import Calendar from '../components/admin/calendar/tableCalender/Calendar.jsx';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -155,6 +156,20 @@ export const router = createBrowserRouter([
             <AddPromo />
           </PrivateRouterAdmin>
       },
+      {
+        path: "warehouse",
+        element:
+          <PrivateRouterAdmin>
+            <Repo />
+          </PrivateRouterAdmin>
+      },
+      {
+        path: "calendar",
+        element:
+          <PrivateRouterAdmin>
+            <Calendar />
+          </PrivateRouterAdmin>
+      },
 
     ]
   },
@@ -222,7 +237,13 @@ export const router = createBrowserRouter([
           </PrivateRouterStaff>
 
       },
-
+      {
+        path: "warehouse",
+        element:
+          <PrivateRouterStaff>
+            <Repo />
+          </PrivateRouterStaff>
+      },
     ]
   },
 ]);

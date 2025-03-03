@@ -6,7 +6,9 @@ import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
+import './controllers/promoCleanup.js';
 
+console.log('promoCleanup.js loaded');
 
 // Lấy đường dẫn của tệp hiện tại
 const __filename = fileURLToPath(import.meta.url);

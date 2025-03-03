@@ -42,8 +42,10 @@ const deleteNSX = async(mansx) => {
 // SP
 const getAllProduct = async () => {
     const query = `
-        SELECT sp.*, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km
+        SELECT sp.*, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, lsp.tenloai, nsx.tennsx
         FROM sanpham sp
+        JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+        JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
         LEFT JOIN khuyenmai km ON sp.masp = km.masp
     `;
     

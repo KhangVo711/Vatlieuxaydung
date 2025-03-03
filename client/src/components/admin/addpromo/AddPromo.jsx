@@ -17,18 +17,22 @@ export default function AddPromo() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5001/getPromo`);
+                const response = await axios.get(`http://localhost:5001/getPromotions`);
                 if (response.status === 200) {
-                    setPromo(response.data.promo);
+                    setPromo(response.data.promotions);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-        fetchData();
-        setLoadPromo(false);
-
+    
+        fetchData(); // Gọi ngay khi component mount
+    
+        const interval = setInterval(fetchData, 60000); // Gọi lại mỗi phút
+    
+        return () => clearInterval(interval); // Cleanup để tránh memory leak
     }, [loadPromo]);
+    
 
     // ADD Promo
     const [showForm, setShowForm] = useState(false);

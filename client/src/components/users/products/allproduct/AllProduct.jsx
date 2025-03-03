@@ -23,14 +23,22 @@ export default function AllProduct() {
     );
 
     useEffect(() => {
-        axios.get('http://localhost:5001/getProduct')
-            .then((response) => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:5001/getProduct');
                 setProducts(response.data.product);
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error('Lỗi:', error);
-            });
+            }
+        };
+    
+        fetchData(); // Gọi lần đầu ngay khi component mount
+    
+        const interval = setInterval(fetchData, 60000); // Gọi lại mỗi phút
+    
+        return () => clearInterval(interval); // Cleanup interval khi component unmount
     }, []);
+    
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -93,7 +101,19 @@ export default function AllProduct() {
             },
         });
     };
+    useEffect(() => {
+        if (selectedProduct) {
+            document.body.style.overflow = 'hidden'; // Disable scrolling
+        } else {
+            document.body.style.overflow = 'auto'; // Enable scrolling
+        }
 
+        // Cleanup when component unmounts
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [selectedProduct]);
+    
 
     return (
         <div className='flex flex-col'>
@@ -116,7 +136,7 @@ export default function AllProduct() {
                 {filteredProducts.map(product => (
                     <article key={product.masp} className=" w-full relative shadow-md lg:h-[350px] h-[250px] flex p-2 flex-col items-center rounded-md">
 {product.tenkm && product.km ? (
-                        <div className='absolute top-0 right-0 bg-red-700/80 w-24 z-50 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md'>
+                        <div className='absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md'>
                             {product.tenkm}
                         </div>
 ): null}
@@ -148,10 +168,10 @@ export default function AllProduct() {
             {selectedProduct && (
                 <ReactModal
                 isOpen={isModalOpen}
-                onRequestClose={() => setIsModalOpen(false)}
+                onRequestClose={() => {setIsModalOpen(false), setSelectedProduct(null)}}
                 contentLabel="Chi tiết sản phẩm"
                 className="relative bg-white rounded-lg shadow-2xl mx-auto mt-24 max-w-xl w-full h-auto p-6"
-                overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+                overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center"
             >
                 <div className="p-4 flex items-center gap-6">
                     {/* Hình ảnh sản phẩm */}
@@ -166,7 +186,7 @@ export default function AllProduct() {
                     </div>
             
                     {/* Thông tin sản phẩm */}
-                    <div className="w-1/2 flex flex-col justify-between">
+                    <div className="w-1/2 flex flex-col  justify-between">
                         <div>
                             <h2 className="text-xl font-bold text-gray-800 mb-2">{selectedProduct.tensp}</h2>
                            
@@ -186,7 +206,7 @@ export default function AllProduct() {
                         <div className="mt-6 flex justify-center space-x-4">
                             <button
                                 className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-150"
-                                onClick={() => setIsModalOpen(false)}
+                                onClick={() => {setIsModalOpen(false), setSelectedProduct(null)}}
                             >
                                 Đóng
                             </button>
