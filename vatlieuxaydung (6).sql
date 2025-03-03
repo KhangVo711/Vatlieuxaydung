@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2025 at 05:24 PM
+-- Generation Time: Mar 03, 2025 at 09:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,8 +49,18 @@ CREATE TABLE `chitietdonhang` (
   `madh` varchar(50) NOT NULL,
   `masp` varchar(50) NOT NULL,
   `soluongsanpham` int(11) NOT NULL,
+  `km` float NOT NULL,
   `dongia` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chitietdonhang`
+--
+
+INSERT INTO `chitietdonhang` (`madh`, `masp`, `soluongsanpham`, `km`, `dongia`) VALUES
+('OD17408416990540', 'KC-642', 1, 35, 276250),
+('OD17408416990540', 'KD-422', 2, 10, 35100),
+('OD17408416990540', 'MM-841', 2, 0, 45000);
 
 -- --------------------------------------------------------
 
@@ -101,12 +111,20 @@ INSERT INTO `chitietphieunhap` (`mapn`, `masp`, `soluong`, `dongia`, `tennsx`) V
 
 CREATE TABLE `donhang` (
   `madh` varchar(50) NOT NULL,
-  `makh` varchar(50) NOT NULL,
+  `makh` varchar(50) DEFAULT NULL,
   `ngaydat` datetime NOT NULL,
   `trangthai` varchar(50) NOT NULL,
   `tonggia` int(11) NOT NULL,
-  `madvvc` varchar(50) NOT NULL
+  `madvvc` varchar(50) NOT NULL,
+  `maform` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `donhang`
+--
+
+INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `trangthai`, `tonggia`, `madvvc`, `maform`) VALUES
+('OD17408416990540', NULL, '2025-03-01 22:08:00', 'Đã xác nhận', 466450, 'GT-8523', 'FO17408416902185');
 
 -- --------------------------------------------------------
 
@@ -117,15 +135,57 @@ CREATE TABLE `donhang` (
 CREATE TABLE `donvivanchuyen` (
   `madvvc` varchar(50) NOT NULL,
   `tendvvc` varchar(255) NOT NULL,
-  `phivanchuyen` float NOT NULL
+  `phivanchuyen` float NOT NULL,
+  `songayvanchuyen` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `donvivanchuyen`
 --
 
-INSERT INTO `donvivanchuyen` (`madvvc`, `tendvvc`, `phivanchuyen`) VALUES
-('EX-9712', 'EXPRESS', 50000);
+INSERT INTO `donvivanchuyen` (`madvvc`, `tendvvc`, `phivanchuyen`, `songayvanchuyen`) VALUES
+('EX-9561', 'EXPRESS', 50000, '6 - 8 ngày'),
+('GN-6523', 'GHPNRS', 70000, '3 - 5 ngày'),
+('GT-8523', 'GHTKNS', 30000, '8 - 9 ngày');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `formdathang`
+--
+
+CREATE TABLE `formdathang` (
+  `maform` varchar(50) NOT NULL,
+  `tenkh` varchar(50) NOT NULL,
+  `sdt` varchar(50) NOT NULL,
+  `diachi` varchar(255) NOT NULL,
+  `email` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `formdathang`
+--
+
+INSERT INTO `formdathang` (`maform`, `tenkh`, `sdt`, `diachi`, `email`) VALUES
+('FO17405874676804', 'Trss', '0556998741', 'Can Tho', 'ttes2@gmail.com'),
+('FO17405881296038', 'yyy', '0223654120', 'Can tho', 'yyy@gmail.com'),
+('FO17408387370059', 'Khang 124', '0123456789', 'can tho', 'vokhangssdd123@gmail.com'),
+('FO17408397739693', 'khangVõ134', '0123456789', 'can tho', 'vokhang123@gmail.com'),
+('FO17408401670105', 'khangVõ134s', '0983251652', 'can tho', 'vokhang123@gmail.com'),
+('FO17408402303711', 'Vo Khang', '9876543210', 'CTHO', 'khang@gmail.com'),
+('FO17408409796204', 'Khnag', '0123456789', 'Can Tho', 'kadh@gmail.com'),
+('FO17408410952104', 'khangVõs', '0983251652', 'can tho', 'admins@gmail.com'),
+('FO17408411869044', 'khangVõ134da', '0123456789', 'can tho', 'vokhang12as3@gmail.com'),
+('FO17408412376948', 'khangVõsadasd', '0123456789', 'can tho', 'vokhang123sssd@gmail.com'),
+('FO17408413422228', 'khangVõ', '0123456789', 'can tho', 'vokhang123@gmail.com'),
+('FO17408414244619', 'khangVõ', '0123456789', 'can tho', 'admin@gmail.com'),
+('FO17408414735567', 'khangVõ', '0123456789', 'can tho', 'vokhang123@gmail.com'),
+('FO17408416185567', 'khangVõ', '0123456789', 'can tho', 'vokhang123@gmail.com'),
+('FO17408416902185', 'khangVõ', '0123456789', 'can tho', 'vokhang123@gmail.com'),
+('OD17404787660637', 'vv', '0123412389', 'can tho', 'vokhangasbs123@gmail.com'),
+('OD17404790173444', 'jj', '0125556789', 'can tho', 'jh@gmail.com'),
+('OD17404791912562', 'Test', '0983564712', 'can tho', 'tesst@gmail.com'),
+('OD17404795347966', 'TTest', '0120236789', 'can tho2', 'khanga3q@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -181,8 +241,10 @@ INSERT INTO `khachhang` (`tenkh`, `makh`, `email`, `sdt`, `diachi`, `matkhau`) V
 ('To Huynh Huyen Tran', 'KH92JJYAJG', 'tran1@gmail.com', '03344455555', 'quản trọng hoàng, ninh kiều, cần thơ', '$2b$10$BaEPc62grJDUSPIlEVS1L.UGoXGbUZSHaYdcu6qJv804YxobGS4Ce'),
 ('Huyen Tran', 'KHD3UO56G4', NULL, '0334445566', NULL, '$2b$10$5hOJqbligU.VOIb7G/dN4OnFkXAInqEzEhqb5NmumQmyefQqYvB86'),
 ('Trang', 'KHF9OMM1RZ', 'trang@gmail.com', '0123456888', 'Ninh Kiều, Cần Thơ', '$2b$10$QnUTY9GYAk96mmv8T.3SWe.2hEA0PffhPZHIWCCpNyAreUedasque'),
+('khangVOs', 'KHFZQUTQL2', 'vovvkhang123@gmail.com', '9876543210', 'CTHO', '$2b$10$bMaOUH9h4suDMew35uNoPOs1ychbs/h2k0vl8Lx5kCHOLDUTOQA3a'),
 ('tran', 'KHMCKG10KJ', 'tran11@gmail.com', '0123456788', 'Ninh Kieu, Cần Thơ', '$2b$10$FODeUCGwdJCwFndH/5M5v.IV79fwWqD2Asl9zNYBrHZMr88VBc38W'),
 ('gb', 'KHQYG6DL0M', NULL, '0123453289', NULL, '$2b$10$.DnoP4yZALr4L7XJ1UatuOlIPE8ywCprE2ursg20LYVlW0mku.8CS'),
+('Vo Khang', 'KHR7ZC7H5X', 'vokhang12356@gmail.com', '0123456789', 'can tho', '$2b$10$GDHxdkA763tM3uX3PdI8ru.rvm7d54BV1QObx4CponD47iIhZxphC'),
 ('Vo Huynh Minh Khang', 'KHSXMOPJMO', 'khang123@gmail.com', '0983251652', 'Cần Thơ', '$2b$10$.VwH.2nLsy1nDBYVrFlwNuHcldcdDudVj26oAatUYWpBUBChwD2EC'),
 ('Nga', 'KHW21ZS5LK', NULL, '0123456123', NULL, '$2b$10$pVf6rqQsgsrZQ7PFlabB3OPQx07a/sa7Kff6H5/lLE94zwdjpn1.i'),
 ('Ngan', 'KHWRILEYIW', 'ngan@gmail.com', '0918747999', 'Soc Trang', '$2b$10$mNCks3J/z/SU4n8BrlghTe9xGFipM0oupgNVefG04ecrOsdeDulz.'),
@@ -211,10 +273,20 @@ CREATE TABLE `khohang` (
 CREATE TABLE `khuyenmai` (
   `makm` varchar(550) NOT NULL,
   `tenkm` varchar(50) NOT NULL,
-  `thoigiankm` datetime NOT NULL,
-  `makh` varchar(50) NOT NULL,
+  `km` float NOT NULL,
+  `thoigianbatdaukm` datetime NOT NULL,
+  `thoigianketthuckm` datetime NOT NULL,
   `masp` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `khuyenmai`
+--
+
+INSERT INTO `khuyenmai` (`makm`, `tenkm`, `km`, `thoigianbatdaukm`, `thoigianketthuckm`, `masp`) VALUES
+('KM-128', 'Giảm 15%', 15, '2025-03-01 20:18:00', '2025-03-05 20:19:00', 'SC-501'),
+('KM-316', 'Giảm 20%', 20, '2025-03-01 05:20:00', '2025-03-05 21:42:00', 'BZ-954'),
+('KM-412', 'Giảm 35%', 35, '2025-03-02 04:21:00', '2025-03-05 04:21:00', 'KC-642');
 
 -- --------------------------------------------------------
 
@@ -353,10 +425,10 @@ CREATE TABLE `sanpham` (
 
 INSERT INTO `sanpham` (`masp`, `tensp`, `maloai`, `ttct`, `soluongsp`, `hinhanh`, `gia`, `mansx`) VALUES
 ('BZ-954', 'Bột uống Collagen', 'SK-642', 'Bột Uống Collagen chứa collagen và elastin sẽ giúp tăng độ đàn hồi cho làn da', 25, 'Botuongcolagen.png', 399000, 'JP-985'),
-('KC-642', 'Kem chống nắng', 'SK-642', 'Bảo vệ da khỏi tác hại của tia UVA và UVB từ ánh nắng mặt trời, cung cấp độ ẩm', 16, 'Kemtamtrangda.png', 425000, 'JP-985'),
+('KC-642', 'Kem chống nắng', 'SK-642', 'Bảo vệ da khỏi tác hại của tia UVA và UVB từ ánh nắng mặt trời, cung cấp độ ẩm', 13, 'Kemtamtrangda.png', 425000, 'JP-985'),
 ('KD-137', 'Kem dưỡng giảm mụn', 'SK-642', 'Giúp giảm tình trạng mụn viêm, hiện nay có rất nhiều các sản phẩm trị mụn', 36, 'Kemduonggiammun.png', 517000, 'KK-035'),
-('KD-422', 'Khăn đa năng', 'TT-942', 'Sản phẩm khăn khô đa năng, dùng một lần được làm từ sợi Viscose cực bền nhưng mềm mại và an toàn cho da', 54, 'Khandanang.png', 39000, 'JP-985'),
-('MM-841', 'Miếng dán mụn', 'MD-451', 'Tác dụng điều trị mụn hiệu quả nhanh chóng làm giảm mụn với lớp màng siêu mỏng', 120, 'Miengdanmun.png', 45000, 'PS-784'),
+('KD-422', 'Khăn đa năng', 'TT-942', 'Sản phẩm khăn khô đa năng, dùng một lần được làm từ sợi Viscose cực bền nhưng mềm mại và an toàn cho da', 52, 'Khandanang.png', 39000, 'JP-985'),
+('MM-841', 'Miếng dán mụn', 'MD-451', 'Tác dụng điều trị mụn hiệu quả nhanh chóng làm giảm mụn với lớp màng siêu mỏng', 118, 'Miengdanmun.png', 45000, 'PS-784'),
 ('SC-501', 'Son 3Ce', 'SS-036', 'Son kem lì có độ bám cực cao và khả năng lên màu cực chuẩn, son mỏng nhẹ', 60, 'Son3CE.png', 249000, 'NS-567'),
 ('SC-745', 'Son kem lì', 'SS-036', 'Một loại son bền màu, đa dạng màu sắc, không gây khô môi hay nứt nẻ', 20, 'Sonkemli.png', 169000, 'NS-567'),
 ('TE-256', 'Tẩy trang', 'SK-642', 'Giúp se khít lỗ chân lông, ngăn ngừa mụn và cải thiện tình trạng da sần sùi', 35, 'Taytrang.png', 312500, 'PS-784');
@@ -414,13 +486,20 @@ ALTER TABLE `chitietphieunhap`
 ALTER TABLE `donhang`
   ADD PRIMARY KEY (`madh`),
   ADD KEY `makh` (`makh`),
-  ADD KEY `madvvc` (`madvvc`);
+  ADD KEY `madvvc` (`madvvc`),
+  ADD KEY `maform` (`maform`);
 
 --
 -- Indexes for table `donvivanchuyen`
 --
 ALTER TABLE `donvivanchuyen`
   ADD PRIMARY KEY (`madvvc`);
+
+--
+-- Indexes for table `formdathang`
+--
+ALTER TABLE `formdathang`
+  ADD PRIMARY KEY (`maform`);
 
 --
 -- Indexes for table `giaonhanca`
@@ -459,7 +538,6 @@ ALTER TABLE `khohang`
 --
 ALTER TABLE `khuyenmai`
   ADD PRIMARY KEY (`makm`),
-  ADD KEY `makh` (`makh`),
   ADD KEY `masp` (`masp`);
 
 --
@@ -538,7 +616,8 @@ ALTER TABLE `chitietphieunhap`
 --
 ALTER TABLE `donhang`
   ADD CONSTRAINT `donhang_ibfk_1` FOREIGN KEY (`makh`) REFERENCES `khachhang` (`makh`),
-  ADD CONSTRAINT `donhang_ibfk_3` FOREIGN KEY (`madvvc`) REFERENCES `donvivanchuyen` (`madvvc`);
+  ADD CONSTRAINT `donhang_ibfk_3` FOREIGN KEY (`madvvc`) REFERENCES `donvivanchuyen` (`madvvc`),
+  ADD CONSTRAINT `donhang_ibfk_4` FOREIGN KEY (`maform`) REFERENCES `formdathang` (`maform`);
 
 --
 -- Constraints for table `giaonhanca`
@@ -560,7 +639,6 @@ ALTER TABLE `hoadon`
 -- Constraints for table `khuyenmai`
 --
 ALTER TABLE `khuyenmai`
-  ADD CONSTRAINT `khuyenmai_ibfk_1` FOREIGN KEY (`makh`) REFERENCES `khachhang` (`makh`),
   ADD CONSTRAINT `khuyenmai_ibfk_2` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
 
 --
