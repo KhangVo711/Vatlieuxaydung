@@ -29,7 +29,7 @@ export default function TableDelivery({ delivery, handleEditProductClick, handle
                             Tên đơn vị vận chuyển
                         </th>
                         <th scope="col" className="px-25 py-3">
-                            Số ngày vận chuyển
+                            Tốc độ vận chuyển
                         </th>
                         <th scope="col" className="px-15 py-3">
                             Phí vận chuyển

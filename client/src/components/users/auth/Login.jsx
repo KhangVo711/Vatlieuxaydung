@@ -193,7 +193,7 @@ export default function Login() {
             className="w-full bg-cover bg-center bg-no-repeat rounded-r-lg"
             style={{
               backgroundImage:
-                "url('https://cdn.pixabay.com/photo/2012/02/26/11/07/brick-17165_1280.jpg')",
+                "url('https://hali.vn/wp-content/uploads/2020/07/thiet-ke-banner-my-pham34-e1594687755631.jpg')",
             }}
           ></div>
         </div>

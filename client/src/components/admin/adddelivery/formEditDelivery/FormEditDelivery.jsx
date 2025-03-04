@@ -92,7 +92,7 @@ export default function FormEditDelivery({ formRefEdit, selectedDelivery, setSel
                     />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên đơn vị vận chuyển</label>
+                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tốc độ vận chuyển</label>
                     <input
                         type="text"
                         id="name"

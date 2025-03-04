@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
+import DeliveryMap from './deliveryMap/DeliveryMap';
 
 
 export default function Cart() {
@@ -104,7 +105,7 @@ export default function Cart() {
         setIsProcessing(true); // Bắt đầu xử lý đơn hàng
 
         const orderId = generateOrderId(); // Tạo mã đơn hàng duy nhất
-        const totalAmount = total + selectedDelivery.phivanchuyen
+        const totalAmount = total + feeShip
         const makhachhang = isData?.id ?? null;
 
         const maformid = (makhachhang === null)
@@ -241,6 +242,9 @@ export default function Cart() {
             document.body.style.overflow = 'auto';
         };
     }, [isProcessing, isSuccess]);
+
+    const [feeShip, setFeeShip] = useState(0);
+
     return (
         <>
             {cartItems && cartItems.length > 0 ? (
@@ -330,6 +334,7 @@ export default function Cart() {
                         null
                     }
 
+                
                     <div className="p-4 bg-gray-50 border-t">
                         <p className="text-sm text-gray-800 font-medium">Chọn đơn vị vận chuyển:</p>
                         <div className='w-full flex justify-center items-center'>
@@ -348,17 +353,21 @@ export default function Cart() {
                                 >
                                     <RadioGroupItem value={ship.madvvc} id={ship.madvvc} className="h-0.5 w-0.5" />
                                     <label htmlFor={ship.madvvc} className="text-sm w-full h-full flex justify-between py-3 text-gray-800 cursor-pointer">
-                                        <span className="font-semibold">{ship.tendvvc}</span> - <span className="font-semibold">{ship.songayvanchuyen}</span> - <span className="font-semibold mr-2.5">Phí vận chuyển: {formatCurrency(ship.phivanchuyen)}</span>
+                                        <span className="font-semibold">{ship.tendvvc}</span> - <span className="font-semibold">{ship.songayvanchuyen}</span> - <span className="font-semibold mr-2.5">Phí vận chuyển: {formatCurrency(ship.phivanchuyen)}/km</span>
                                     </label>
                                 </div>
                             ))}
                         </RadioGroup>
                         </div>
                     </div>
+                    
+
+                    <DeliveryMap selectedDelivery = {selectedDelivery} setFeeShip = {setFeeShip} formData ={formData}/>
+
                     <div className="p-4 border-t">
                         <div className="flex justify-between items-center">
                             <p className="text-sm font-medium">Tổng thanh toán ({cartItems.length} sản phẩm):</p>
-                            <p className="text-lg font-bold text-red-500">{formatCurrency(total + (selectedDelivery?.phivanchuyen || 0))}</p>
+                            <p className="text-lg font-bold text-red-500">{formatCurrency(total +(feeShip || 0))}</p>
                         </div>
                         <form onSubmit={handleSubmit} className='w-full flex items-center justify-center'>
                             <button className=" mt-4 bg-pink-400 text-white py-2 px-8 rounded-md hover:bg-pink-500 text-md">

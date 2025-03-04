@@ -253,7 +253,7 @@ export default function Register() {
                         className="w-full bg-cover bg-center bg-no-repeat rounded-r-lg"
                         style={{
                             backgroundImage:
-                                "url('https://cdn.pixabay.com/photo/2018/04/09/17/43/site-3304815_1280.jpg')",
+                                "url('https://intphcm.com/data/upload/banner-my-pham-01.jpg')",
                         }}
                     ></div>
                 </div>

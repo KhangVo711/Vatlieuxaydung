@@ -191,13 +191,16 @@ export default function AllProduct() {
                             <h2 className="text-xl font-bold text-gray-800 mb-2">{selectedProduct.tensp}</h2>
                            
                             <div className="mb-4">
-                                <span className="font-bold">Loại:</span> {category.tenloai}
+                                <span className="font-bold">Loại:</span> {selectedProduct.tenloai}
                             </div>
                             <div className="mb-4">
-                                <span className="font-bold">Nhà sản xuất:</span> {producer.tennsx}
+                                <span className="font-bold">Nhà sản xuất:</span> {selectedProduct.tennsx}
                             </div>
-                            <p className="text-md font-semibold text-gray-800 mb-4 ">
-                                <span className='font-bold'>Giá:</span> {formatCurrency(selectedProduct.gia)}
+                            <p className="text-md font-semibold flex text-gray-800 mb-4 ">
+                                <span className='font-bold mr-2'>Giá:</span><p className={`${selectedProduct.tenkm ? 'line-through' : null} mr-3`}>{formatCurrency(selectedProduct.gia)}</p>
+                            {selectedProduct.km ? (
+                                    <p className='text-red-600 font-semibold'>{formatCurrency(selectedProduct.gia - (selectedProduct.gia * (selectedProduct.km / 100)))}</p>
+                            ) : null}
                             </p>
                             <p className="text-gray-600">{selectedProduct.ttct}</p>
                         </div>
