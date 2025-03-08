@@ -32,6 +32,7 @@ const initWebRoute = (app) => {
     router.get('/getProducer/:mansx', product.getNSX)
     router.post('/editProducer', auth.authMiddleware, product.editNSX)
     router.post('/deleteProducer', auth.authMiddleware, product.deleteNSX)
+   
 
     router.post('/addProduct', auth.authMiddleware, uploadMiddleware, product.insertProducts)
     router.get('/getProduct', product.getAllProduct)
@@ -39,6 +40,8 @@ const initWebRoute = (app) => {
     router.get('/getProduct12', product.getProduct12)
     router.post('/editProduct', auth.authMiddleware, uploadMiddleware, product.editProduct)
     router.post('/deleteProduct', auth.authMiddleware, product.deleteProduct)
+    router.post('/detailProduct', product.detailProduct)
+    router.get('/productImages/:masp', product.getProductImages)
 
     router.post('/addInvoice', invoice.insertInvoice)
     router.post('/addInvoiceDetail', invoice.insertDetailInvoice)

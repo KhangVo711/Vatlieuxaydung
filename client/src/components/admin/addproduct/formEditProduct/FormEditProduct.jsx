@@ -1,61 +1,89 @@
-import { ChevronDownIcon } from '@heroicons/react/24/solid';
-import React, { useState, useRef } from 'react';
+// components/FormEditProduct.jsx
 import axios from 'axios';
-import Select from 'react-select';
-import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import Select from 'react-select';
+import Cookies from 'js-cookie';
+import { useDropzone } from 'react-dropzone';
+
 export default function FormEditProduct({ formRefEdit, selectedProduct, setSelectedProduct, setLoadProduct, category, producer }) {
+  const [initialProduct] = useState(selectedProduct);
+  const [imageFile, setImageFile] = useState(null); // Chỉ lưu 1 file ảnh thay thế
+  const [currentImages, setCurrentImages] = useState([]); // Ảnh hiện tại từ DB
+  const [selectedImageToReplace, setSelectedImageToReplace] = useState(''); // Ảnh được chọn để thay thế
+  const [message, setMessage] = useState('');
+  const [colorMsg, setColorMsg] = useState('');
+  const fileInputRef = useRef(null);
+  console.log('img', currentImages);
+  // Lấy danh sách ảnh hiện tại
+  useEffect(() => {
+    const fetchImages = async () => {
+      const token = Cookies.get('admin') || Cookies.get('staff');
+      const response = await axios.get(`http://localhost:5001/productImages/${selectedProduct.masp}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCurrentImages(response.data.images);
+    };
+    fetchImages();
+  }, [selectedProduct.masp]);
 
-  const [initialProduct, setInitialProduct] = useState(selectedProduct);
-
+  // Chuyển đổi dữ liệu cho Select (giữ nguyên)
+  const optionsCategory = category.map((item) => ({
+    value: item.maloai,
+    label: item.tenloai,
+  }));
   const optionsProducer = producer.map((item) => ({
     value: item.mansx,
     label: item.tennsx,
   }));
 
-  const optionsCategory = category.map((item) => ({
-    value: item.maloai,
-    label: item.tenloai,
-  }));
-  const [imgChange, setImgChanage] = useState("")
+  // Xử lý thay đổi file ảnh
+  const handleFileChange = useCallback((acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      setImageFile(acceptedFiles[0]); // Chỉ lấy file đầu tiên
+    }
+  }, []);
 
-  const fileInputRef = useRef(null);
-  const [imageFile, setImageFile] = useState(null);
-  const [message, setMessage] = useState('');
-  const [colorMsg, setColorMsg] = useState('');
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: handleFileChange,
+    accept: {
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/gif': ['.gif'],
+    },
+    maxSize: 100 * 1024 * 1024,
+    multiple: false, // Chỉ cho phép chọn 1 file
+  });
 
-  const handleFileChange = (e) => {
-    setImageFile(e.target.files[0]);
-  };
-
+  // Xử lý submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const hasChanges = JSON.stringify(selectedProduct) !== JSON.stringify(initialProduct) || imageFile;
     if (!hasChanges) {
-      
+      setMessage('Không có thay đổi nào để cập nhật');
+      setColorMsg('text-yellow-600');
       return;
     }
+
     const data = new FormData();
-
     for (const key in selectedProduct) {
-      if (key !== 'hinhanh') {
-        data.append(key, selectedProduct[key]);
-      }
+      if (key !== 'hinhanh') data.append(key, selectedProduct[key]);
     }
 
-    if (imageFile) {
+    if (imageFile && selectedImageToReplace) {
       data.append('hinhanh', imageFile);
-      setImgChanage(imageFile.name)
+      data.append('updatedImages', JSON.stringify([{ oldImage: selectedImageToReplace, newImage: imageFile.name }]));
     }
-const token = Cookies.get('admin') || Cookies.get('staff');
+
+    const token = Cookies.get('admin') || Cookies.get('staff');
     try {
       const response = await axios.post('http://localhost:5001/editProduct', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json'
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
         },
         withCredentials: true,
       });
@@ -65,136 +93,138 @@ const token = Cookies.get('admin') || Cookies.get('staff');
         setMessage(response.data.message);
         handleSuccess();
         setImageFile(null);
-        fileInputRef.current.value = '';
+        setSelectedImageToReplace('');
+        if (fileInputRef.current) fileInputRef.current.value = '';
         setLoadProduct(true);
-        setInitialProduct(selectedProduct);
-        setTimeout(() => {
-          setMessage('');
-        }, 2000);
-      } else if (response.status === 400) {
-        setColorMsg('text-red-600');
-        setMessage(response.data.message);
+        setTimeout(() => setMessage(''), 2000);
       }
     } catch (error) {
       setColorMsg('text-red-600');
-      setMessage(error.response ? error.response.data.message : 'Đã xảy ra lỗi');
+      setMessage(error.response?.data.message || 'Đã xảy ra lỗi');
       handleError();
     }
   };
 
-  const handleSuccess = () => {
-    toast.success('Cập nhật thành công!', {
-      position: 'top-right',
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
+  const handleSuccess = () => toast.success('Cập nhật thành công!', { position: 'top-right', autoClose: 1500 });
+  const handleError = () => toast.error('Có lỗi xảy ra!', { position: 'top-right', autoClose: 1500 });
 
-  const handleError = () => {
-    toast.error('Có lỗi xảy ra!', {
-      position: 'top-right',
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
   return (
-    <div className='w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center'>
+    <div className="w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center">
+      <form onSubmit={handleSubmit} ref={formRefEdit} className="2xl:w-1/2 w-2/3 mx-auto bg-white shadow-lg border flex flex-col rounded py-5 px-8 mt-16">
+        <h2 className="mb-4 uppercase font-bold tracking-wider text-lg text-center">Sửa sản phẩm</h2>
+        {message && <p className={`${colorMsg} text-center text-sm`}>{message}</p>}
 
-      <form onSubmit={handleSubmit} ref={formRefEdit} className="2xl:w-1/2 w-2/3 mx-auto bg-white shadow-lg border flex rounded py-5 px-8 mt-16 ">
-
-        <div className='flex items-center justify-center pt-10 z-10'>
-          <img src={`http://localhost:5001/uploads/${imgChange ? imgChange : selectedProduct.hinhanh}`} alt="" className='w-64' />
-
+        <div className="mb-3 flex gap-2">
+          <div className="w-1/3">
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mã sản phẩm</label>
+            <p className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50">{selectedProduct.masp}</p>
+          </div>
+          <div className="w-2/3">
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên sản phẩm</label>
+            <input
+              type="text"
+              name="tensp"
+              value={selectedProduct.tensp}
+              onChange={(e) => setSelectedProduct({ ...selectedProduct, tensp: e.target.value })}
+              placeholder="Kem chống nắng"
+              className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
         </div>
-        <div className='mx-auto w-1/2'>
-          <h2 className='mb-4 uppercase font-bold tracking-wider text-lg text-center'>Sửa sản phẩm</h2>
-          {message && <p className={`${colorMsg} text-center text-sm`}>{message}</p>}
 
-          <div className="mb-3 flex">
-            <div className="w-1/3 mr-1">
-              <label htmlFor="code" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mã sản phẩm</label>
-              <p id="code" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">{selectedProduct.masp}</p>
+        <div className="mb-3">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giá bán</label>
+          <input
+            type="text"
+            name="gia"
+            value={selectedProduct.gia}
+            onChange={(e) => setSelectedProduct({ ...selectedProduct, gia: e.target.value })}
+            placeholder="25000"
+            className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <div className="mb-3 flex gap-2">
+          <div className="w-1/2">
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại sản phẩm</label>
+            <Select
+              options={optionsCategory}
+              value={optionsCategory.find((option) => option.value === selectedProduct.maloai)}
+              onChange={(option) => setSelectedProduct({ ...selectedProduct, maloai: option?.value || '' })}
+              placeholder="Chọn loại sản phẩm"
+              className="text-sm"
+            />
+          </div>
+          <div className="w-1/2">
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nhà sản xuất</label>
+            <Select
+              options={optionsProducer}
+              value={optionsProducer.find((option) => option.value === selectedProduct.mansx)}
+              onChange={(option) => setSelectedProduct({ ...selectedProduct, mansx: option?.value || '' })}
+              placeholder="Chọn nhà sản xuất"
+              className="text-sm"
+            />
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thông tin chi tiết</label>
+          <textarea
+            name="ttct"
+            value={selectedProduct.ttct}
+            onChange={(e) => setSelectedProduct({ ...selectedProduct, ttct: e.target.value })}
+            rows={3}
+            placeholder="Thông tin chi tiết của sản phẩm"
+            className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Thêm phần chọn ảnh để thay thế */}
+        <div className="mb-3">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chọn ảnh muốn thay thế</label>
+          <select
+            value={selectedImageToReplace}
+            onChange={(e) => setSelectedImageToReplace(e.target.value)}
+            className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Không thay thế ảnh</option>
+            {currentImages.map((image, index) => (
+              <option key={index} value={image}>
+                Ảnh {index + 1}: {image}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Upload ảnh thay thế */}
+        {selectedImageToReplace && (
+          <div className="mb-3">
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Upload ảnh mới</label>
+            <div
+              {...getRootProps()}
+              className={`p-4 text-center border-2 border-dashed rounded-sm cursor-pointer h-20 flex items-center justify-center bg-gray-50 ${
+                isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+              }`}
+            >
+              <input {...getInputProps()} ref={fileInputRef} />
+              {isDragActive ? (
+                <p className="text-sm text-blue-500">Thả ảnh vào đây...</p>
+              ) : (
+                <p className="text-sm text-gray-900">
+                  {imageFile ? imageFile.name : 'Kéo và thả hoặc chọn ảnh thay thế'}
+                </p>
+              )}
             </div>
-            <div className="w-2/3 ml-1">
-              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên sản phẩm</label>
-              <input type="text" id="name" name='tensp' className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                placeholder='Tên sản phẩm'
-                value={selectedProduct.tensp}
-                onChange={(e) => setSelectedProduct({ ...selectedProduct, tensp: e.target.value })}
-              />
-            </div>
+            <p className="mt-1 text-xs text-gray-500">PNG, JPG hoặc GIF (tối đa 100MB).</p>
           </div>
-          <div className="mb-3 flex">
-            <div className="w-full">
-              <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Giá bán</label>
-              <input type="text" id="price" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                placeholder='25000'
-                name='gia'
-                value={selectedProduct.gia}
-                onChange={(e) => setSelectedProduct({ ...selectedProduct, gia: e.target.value })}
-              />
-            </div>
+        )}
 
-          </div>
-          <div className='mb-3 flex justify-between'>
-            {/* Dropdown Nhà sản xuất */}
-            <div className="w-1/2 relative mr-2">
-              <label htmlFor="producer" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nhà sản xuất</label>
-              <Select
-                options={optionsProducer}
-                value={optionsProducer.find(option => option.value === selectedProduct.mansx)} // Khớp giá trị đã chọn với options
-                onChange={(selectedOption) => {
-                  setSelectedProduct({ ...selectedProduct, mansx: selectedOption.value }); // Cập nhật `mansx` trong state
-                }}
-                placeholder="Chọn nhà sản xuất"
-                className="w-full text-sm rounded shadow"
-              />
-            </div>
-
-            {/* Dropdown Loại sản phẩm */}
-            <div className="w-1/2 relative">
-              <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại sản phẩm</label>
-              <Select
-                options={optionsCategory}
-                value={optionsCategory.find(option => option.value === selectedProduct.maloai)} // Khớp giá trị đã chọn với options
-                onChange={(selectedOption) => {
-                  setSelectedProduct({ ...selectedProduct, maloai: selectedOption.value }); // Cập nhật `maloai` trong state
-                }}
-                placeholder="Chọn loại sản phẩm"
-                className="w-full text-sm rounded shadow"
-              />
-            </div>
-          </div>
-          
-          <div className='mb-3'>
-            <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thông tin chi tiết</label>
-            <textarea id="message" rows={3} className="block pl-2.5 py-2 w-full text-sm text-gray-900 bg-gray-50 rounded-sm border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."
-              value={selectedProduct.ttct}
-              onChange={(e) => setSelectedProduct({ ...selectedProduct, ttct: e.target.value })}
-
-            ></textarea>
-          </div>
-          <div className='mb-3'>
-
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">Sửa ảnh</label>
-            <input onChange={handleFileChange} ref={fileInputRef} className="block w-full text-sm text-gray-900 border border-gray-300 rounded-sm cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" />
-            <p className="mt-1 text-gray-500 dark:text-gray-300 text-xs" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
-
-          </div>
-          <div className='flex items-center justify-center w-full'>
-            <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm px-3 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Đồng ý</button>
-          </div>
+        <div className="flex justify-center">
+          <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-md hover:bg-blue-800 focus:ring-4 focus:ring-blue-300">
+            Đồng ý
+          </button>
         </div>
       </form>
-
     </div>
-  )
+  );
 }

@@ -61,7 +61,7 @@ export default function DeliveryMap({ selectedDelivery, setFeeShip, formData }) 
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`,
           {
             headers: {
-              'User-Agent': 'DeliveryMap/1.0 (your.email@example.com)', // Thay bằng email hoặc tên ứng dụng của bạn
+              'User-Agent': 'DeliveryMap/1.0 (MyPhamHT)', // Thay bằng email hoặc tên ứng dụng của bạn
             },
           }
         );

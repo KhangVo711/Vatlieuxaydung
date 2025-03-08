@@ -57,7 +57,7 @@ const ContextProvider = ({ children }) => {
           item.masp === product.masp ? { ...item, soluong: item.soluong + 1 } : item
         );
       }
-      return [...prevCart, { ...product, soluong: 1 }];
+      return [...prevCart, product]; // Truyền toàn bộ product vào cart
     });
   };
   const decreaseQuantity = (productId) => {
@@ -90,7 +90,6 @@ const ContextProvider = ({ children }) => {
   const [loadStaff, setLoadStaff] = useState(true);
   const [loadDelivery, setLoadDelivery] = useState(true);
   const [loadPromo, setLoadPromo] = useState(true);
-
   return (
     <Context.Provider
       value={{

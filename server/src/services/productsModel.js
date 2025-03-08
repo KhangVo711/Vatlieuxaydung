@@ -42,62 +42,108 @@ const deleteNSX = async(mansx) => {
 // SP
 const getAllProduct = async () => {
     const query = `
-        SELECT sp.*, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, lsp.tenloai, nsx.tennsx
-        FROM sanpham sp
-        JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
-        JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
-        LEFT JOIN khuyenmai km ON sp.masp = km.masp
+      SELECT sp.*, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, lsp.tenloai, nsx.tennsx,
+             (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh
+      FROM sanpham sp
+      JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+      JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+      LEFT JOIN khuyenmai km ON sp.masp = km.masp
     `;
-    
-    const [rows, fields] = await connectDB.execute(query);
+    const [rows] = await connectDB.execute(query);
     return rows;
+  };
+  const getProductById = async (masp) => {
+    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` WHERE masp=?', [masp]);
+    return rows[0];
+    };  
+  const getProduct8 = async () => {
+    const [rows] = await connectDB.execute('SELECT * FROM `sanpham` LIMIT 8');
+    return rows;
+  };
+  
+  const getProduct12 = async () => {
+    const [rows] = await connectDB.execute('SELECT * FROM `sanpham` LIMIT 12');
+    return rows;
+  };
+  
+  const detailProduct = async (masp) => {
+    const query = `
+      SELECT sp.*, lsp.tenloai, nsx.tennsx
+      FROM sanpham sp
+      JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+      JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+      WHERE sp.masp = ?
+    `;
+    const [rows] = await connectDB.execute(query, [masp]);
+    return rows[0];
+  };
+  
+
+const insertProducts = async (masp, tensp, maloai, ttct, soluongsp, gia, mansx) => {
+    await connectDB.execute(
+        "INSERT INTO `sanpham` (masp, tensp, maloai, ttct, soluongsp, gia, mansx) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [masp, tensp, maloai, ttct, soluongsp, gia, mansx]
+    );
 };
 
-
-
-const getProduct8 = async () => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` LIMIT 8')
-    // const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` ORDER BY `create_at` DESC LIMIT 8')
-    return rows
-}
-
-const getProduct12 = async () => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` LIMIT 12')
-    // const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` ORDER BY `create_at` DESC LIMIT 12')
-    return rows
-}
-
-const insertProducts = async (masp, tensp, maloai, ttct, soluongsp, hinhanh, gia, mansx) => {
-    await connectDB.execute("INSERT INTO `sanpham` VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [masp, tensp, maloai, ttct, soluongsp, hinhanh, gia, mansx]);
-}
-const detailProduct= async (masp) => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` WHERE masp=?', [masp])
-    return rows[0]
-}
-const editProduct = async (masp, tensp, ttct, soluongsp, gia, maloai, mansx, hinhanh) => {
-
-    let query = 'UPDATE `sanpham` SET tensp=?, ttct=?, soluongsp=?, gia=?, maloai=?, mansx=?';
-    let params = [tensp, ttct, soluongsp, gia, maloai, mansx];
-
-    if (hinhanh) {
-        query += ', hinhanh=?';
-        params.push(hinhanh);
+const insertProductImages = async (masp, images) => {
+    for (const image of images) {
+        await connectDB.execute(
+            "INSERT INTO `hinhanhsanpham` (masp, hinhanh) VALUES (?, ?)",
+            [masp, image]
+        );
     }
+};
 
-    query += ' WHERE masp=?';
-    params.push(masp);
+const editProduct = async (masp, tensp, ttct, soluongsp, gia, maloai, mansx) => {
+    await connectDB.execute('UPDATE `sanpham` SET tensp=?, ttct=?, soluongsp=?, gia=?, maloai=?, mansx=? WHERE masp=?',[tensp, ttct, soluongsp, gia, maloai, mansx, masp])
+}
 
+// models/productsModel.js
+const updateProductImages = async (masp, updatedImages) => {
+  try {
+    if (updatedImages && updatedImages.length > 0) {
+      for (const { oldImage, newImage } of updatedImages) {
+        if (oldImage && newImage) {
+          const updateQuery = 'UPDATE `hinhanhsanpham` SET hinhanh = ? WHERE masp = ? AND hinhanh = ?';
+          await connectDB.execute(updateQuery, [newImage, masp, oldImage]);
+          console.log(`Đã cập nhật ảnh từ ${oldImage} thành ${newImage}`);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Lỗi khi cập nhật hình ảnh sản phẩm:', error.message);
+    throw error;
+  }
+};
+
+const getProductImages = async (masp) => {
+  const [rows] = await connectDB.execute('SELECT hinhanh FROM `hinhanhsanpham` WHERE masp = ?', [masp]);
+  return rows.map(row => row.hinhanh);
+};
+  const checkProducerExists = async (mansx) => {
     try {
-        await connectDB.execute(query, params);
-        console.log('Sản phẩm đã được cập nhật thành công.');
+      const [rows] = await connectDB.execute('SELECT 1 FROM nhasanxuat WHERE mansx = ?', [mansx]);
+      return rows.length > 0;
     } catch (error) {
-        console.error('Lỗi khi cập nhật sản phẩm:', error.message);
-        throw error;
+      console.error('Error checking producer:', error);
+      return false;
     }
-};
-
+  };
+  const checkCategoryExists = async (maloai) => {
+    try {
+      const [rows] = await connectDB.execute('SELECT 1 FROM loaisanpham WHERE maloai = ?', [maloai]);
+      return rows.length > 0;
+    } catch (error) {
+      console.error('Error checking category:', error);
+      return false;
+    }
+  };
 const deleteProduct = async(masp) => {
     await connectDB.execute("DELETE FROM `sanpham` WHERE masp=?", [masp])
+}
+const deleteImgProduct = async(masp) => {
+    await connectDB.execute("DELETE FROM `hinhanhsanpham` WHERE masp=?", [masp])
 }
 // SP
 
@@ -144,5 +190,5 @@ const updateQuantity = async (masp) => {
     await connectDB.execute('UPDATE sanpham,chitietdathang SET soluongsp=soluongsp-soluong WHERE sanpham.masp=chitietdathang.masp AND chitietdathang.masp=?', [masp])
 }
 
-export default {getCategory, getProduct8, getProduct12, updateQuantity, getCartAPI, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct}
+export default {getCategory, insertProductImages, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
 

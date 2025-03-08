@@ -5,13 +5,13 @@ import { Context } from '../.../../../../Context';
 
 export default function CartItem({ cartItem }) {
   const { decreaseQuantity,increaseQuantity,removeItem } = useContext(Context);
-
+  console.log(cartItem);
   return (
     <div className="grid grid-cols-4 sm:grid-cols-12 items-center p-4 border-b gap-4">
       {/* Hình ảnh và tên sản phẩm */}
       <div className="col-span-4 sm:col-span-3 pl-5 flex items-center gap-4">
         <img
-          src={`http://localhost:5001/uploads/${cartItem.hinhanh}`}
+          src={`http://localhost:5001/uploads/${cartItem.masp}/${cartItem.hinhanh}`}
           alt={cartItem.tensp}
           className="w-16 h-16 object-cover rounded-lg"
         />

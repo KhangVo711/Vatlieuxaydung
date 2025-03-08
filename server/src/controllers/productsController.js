@@ -1,6 +1,11 @@
 import express from "express";
 import productsModel from "../services/productsModel.js"
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // Loai
 const getCategory = async (req, res) => {
     try {
@@ -125,9 +130,7 @@ const insertNSX = async (req, res) => {
         if (!nameProducer.test(tennsx)) {
             return res.status(400).json({ message: 'Tên nhà sản xuất không được chứa ký tự đặc biệt.' });
         }
-        if (!nameProducer.test(diachi)) {
-            return res.status(400).json({ message: 'Tên nhà sản xuất không được chứa ký tự đặc biệt.' });
-        }
+       
         const emailProducer = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailProducer.test(email)) {
             return res.status(400).json({ message: 'Email không hợp lệ.' });
@@ -211,147 +214,230 @@ const deleteNSX = async (req, res) => {
 // SanPham
 const getAllProduct = async (req, res) => {
     try {
-        const product = await productsModel.getAllProduct()
-        res.status(200).send({ product: product });
-
+      const product = await productsModel.getAllProduct();
+      res.status(200).send({ product });
     } catch (error) {
-        res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách nhà sản xuất" });
+      res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách nhà sản xuất" });
     }
-}
-
-const getProduct8 = async (req, res) => {
+  };
+  
+  const getProduct8 = async (req, res) => {
     try {
-        const product = await productsModel.getProduct8()
-        res.status(200).send({ product: product });
+      const product = await productsModel.getProduct8();
+      res.status(200).send({ product });
+    } catch (error) {
+      res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm" });
     }
-    catch (error) {
-        res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm" });
-    }
-}
-
-const getProduct12 = async (req, res) => {
+  };
+  
+  const getProduct12 = async (req, res) => {
     try {
-        const product = await productsModel.getProduct12()
-        res.status(200).send({ product: product });
+      const product = await productsModel.getProduct12();
+      res.status(200).send({ product });
+    } catch (error) {
+      res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm" });
     }
-    catch (error) {
-        res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm" });
+  };
+  
+  const detailProduct = async (req, res) => {
+    const { masp, mansx, maloai } = req.body;
+    try {
+      const dataProduct = await productsModel.detailProduct(masp, mansx, maloai); // Lấy thông tin sản phẩm
+      const images = await productsModel.getProductImages(masp); // Lấy danh sách ảnh
+    
+      res.status(200).send({
+        message: "Lấy chi tiết sản phẩm thành công!",
+        dataProduct,
+        images, // Trả về danh sách ảnh
+      });
+    } catch (error) {
+      res.status(500).send({ message: "Đã xảy ra lỗi khi lấy chi tiết sản phẩm" });
     }
-}
+  };
+  
+
 
 const insertProducts = async (req, res) => {
     let { masp, tensp, maloai, ttct, soluongsp, gia, mansx } = req.body;
-    let hinhanh = req.file.filename;
-    console.log(req.body);
-    console.log(req.file);
+    const images = req.files; // Nhận nhiều file từ multer
+  
     try {
-        if (maloai === 'Loại sản phẩm') {
-            return res.status(400).send({ message: "Chưa chọn loại sản phẩm" });
-        }
-        if (mansx === 'Nhà sản xuất') {
-            return res.status(400).send({ message: "Chưa chọn nhà sản xuất" });
-        }
-        if (!masp || !tensp || !maloai || !ttct || !soluongsp || !gia || !mansx) {
-            return res.status(400).send({ message: "Thiếu thông tin sản phẩm" });
-        }
-        const idPattern = /^[^\s].*$/;
-        if (!idPattern.test(masp)) {
-            return res.status(400).json({ message: 'Mã sản phẩm không được chứa khoảng trắng ở đầu' });
-        }
-        if (!idPattern.test(tensp)) {
-            return res.status(400).json({ message: 'Tên sản phẩm không được chứa khoảng trắng ở đầu' });
-        }
-        if (!idPattern.test(gia)) {
-            return res.status(400).json({ message: 'Giá không được chứa khoảng trắng ở đầu' });
-        }
-        if (!idPattern.test(ttct)) {
-            return res.status(400).json({ message: 'Thông tin chi tiết không được chứa khoảng trắng ở đầu' });
-        }
-        const nameProduct = /^[\p{L}\p{N}\s]+$/u;
-        if (!nameProduct.test(tensp)) {
-            return res.status(400).json({ message: 'Tên sản phẩm không được chứa ký tự đặc biệt.' });
-        }
-        const checkNumber = /^[0-9]*$/;
-        if (!checkNumber.test(soluongsp)) {
-            return res.status(400).json({ message: 'Số lượng sản phẩm không hợp lệ' });
-        }
-        if (!checkNumber.test(gia)) {
-            return res.status(400).json({ message: 'Giá sản phẩm không hợp lệ' });
-        }
-        if(gia <= 0){
-            return res.status(400).json({ message: 'Giá sản phẩm phải lớn hơn 0' });
-        }
-        const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
-        const fileExtension = hinhanh.substring(hinhanh.lastIndexOf('.')).toLowerCase();
+      // Validation for product type and producer
+      if (maloai === 'Loại sản phẩm') {
+        return res.status(400).send({ message: "Chưa chọn loại sản phẩm" });
+      }
+      if (mansx === 'Nhà sản xuất') {
+        return res.status(400).send({ message: "Chưa chọn nhà sản xuất" });
+      }
+  
+      // Check for required fields
+      if (!masp || !tensp || !maloai || !ttct || !soluongsp || !gia || !mansx) {
+        return res.status(400).send({ message: "Thiếu thông tin sản phẩm" });
+      }
+  
+      // Validation for spaces at the beginning
+      const idPattern = /^[^\s].*$/;
+      if (!idPattern.test(masp)) {
+        return res.status(400).json({ message: 'Mã sản phẩm không được chứa khoảng trắng ở đầu' });
+      }
+      if (!idPattern.test(tensp)) {
+        return res.status(400).json({ message: 'Tên sản phẩm không được chứa khoảng trắng ở đầu' });
+      }
+      if (!idPattern.test(gia)) {
+        return res.status(400).json({ message: 'Giá không được chứa khoảng trắng ở đầu' });
+      }
+      if (!idPattern.test(ttct)) {
+        return res.status(400).json({ message: 'Thông tin chi tiết không được chứa khoảng trắng ở đầu' });
+      }
+  
+      // Validation for product name (no special characters)
+      const nameProduct = /^[\p{L}\p{N}\s]+$/u;
+      if (!nameProduct.test(tensp)) {
+        return res.status(400).json({ message: 'Tên sản phẩm không được chứa ký tự đặc biệt.' });
+      }
+  
+      // Validation for numbers (quantity and price)
+      const checkNumber = /^[0-9]*$/;
+      if (!checkNumber.test(soluongsp)) {
+        return res.status(400).json({ message: 'Số lượng sản phẩm không hợp lệ' });
+      }
+      if (!checkNumber.test(gia)) {
+        return res.status(400).json({ message: 'Giá sản phẩm không hợp lệ' });
+      }
+      if (gia <= 0) {
+        return res.status(400).json({ message: 'Giá sản phẩm phải lớn hơn 0' });
+      }
+  
+      // Check if at least one image is uploaded
+      if (!images || images.length === 0) {
+        return res.status(400).send({ message: "Vui lòng upload ít nhất một hình ảnh" });
+      }
+  
+      // Validate image file extensions
+      const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+      const imageNames = images.map(file => file.originalname); // Lấy tên file gốc
+      for (const image of images) {
+        const fileExtension = path.extname(image.originalname).toLowerCase();
         if (!validExtensions.includes(fileExtension)) {
-            return res.status(400).send({ message: "Vui lòng upload hình ảnh" });
+          return res.status(400).send({ message: "Vui lòng upload hình ảnh (JPG, JPEG, PNG, GIF)" });
         }
-        await productsModel.insertProducts(masp, tensp, maloai, ttct, soluongsp, hinhanh, gia, mansx)
-        res.status(200).send({ message: "Thêm sản phẩm thành công!" });
+      }
+  
+      // Insert product into sanpham table
+      await productsModel.insertProducts(masp, tensp, maloai, ttct, soluongsp, gia, mansx);
+  
+      // Insert images into hinhanh_sanpham table with original filenames
+      await productsModel.insertProductImages(masp, imageNames);
+  
+      res.status(200).send({ message: "Thêm sản phẩm thành công!" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: "Đã xảy ra lỗi khi thêm sản phẩm" });
     }
-    catch (error) {
-        res.status(500).send({ message: "Đã xảy ra lỗi khi thêm sản phẩm" });
+  };
+  const editProduct = async (req, res) => {
+  let { masp, tensp, maloai, ttct, soluongsp, gia, mansx, updatedImages } = req.body; // updatedImages là JSON string
+  const images = req.files;
+
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const uploadDir = path.join(__dirname, `../uploads/${masp}`);
+
+  try {
+    // Validation logic (giữ nguyên)
+    if (!maloai || maloai === 'Loại sản phẩm') {
+      return res.status(400).send({ message: "Chưa chọn loại sản phẩm" });
+    }
+    if (!mansx || mansx === 'Nhà sản xuất') {
+      return res.status(400).send({ message: "Chưa chọn nhà sản xuất" });
+    }
+    // ... (các validation khác giữ nguyên)
+
+    const existingProduct = await productsModel.getProductById(masp);
+    if (!existingProduct) {
+      return res.status(404).send({ message: "Sản phẩm không tồn tại" });
     }
 
-}
-const detailProduct = async (req, res) => {
-    let {masp} = req.body
-    let dataProduct = await productsModel.detailProduct(masp)
-    res.status(200).send({ message: "Lấy chi tiết sản phẩm thành công!", dataProduct: dataProduct });
-}
+    // Xử lý ảnh
+    let imageUpdates = [];
+    if (images && images.length > 0) {
+      const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+      const parsedUpdatedImages = updatedImages ? JSON.parse(updatedImages) : [];
 
-const editProduct = async (req, res) => {
-    let { masp, tensp, maloai, ttct, soluongsp, gia, mansx } = req.body;
-    let hinhanh = req.file ? req.file.filename : null;
+      for (const image of images) {
+        const fileExtension = path.extname(image.originalname).toLowerCase();
+        if (!validExtensions.includes(fileExtension)) {
+          for (const img of images) {
+            const filePath = path.join(uploadDir, img.originalname);
+            if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+          }
+          return res.status(400).send({ message: "Vui lòng upload hình ảnh (JPG, JPEG, PNG, GIF)" });
+        }
+      }
 
-    console.log(req.body);
-    console.log(req.file);   
-    console.log(masp, tensp, maloai, ttct, soluongsp, hinhanh, gia, mansx)
+      // Tạo danh sách cập nhật ảnh
+      parsedUpdatedImages.forEach((update) => {
+        if (update.oldImage && images.length > 0) {
+          imageUpdates.push({
+            oldImage: update.oldImage,
+            newImage: images[0].originalname, // Chỉ xử lý 1 ảnh thay thế
+          });
+          const oldImagePath = path.join(uploadDir, update.oldImage);
+          if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
+        }
+      });
+    }
+
+    // Cập nhật thông tin sản phẩm
+    await productsModel.editProduct(masp, tensp, ttct, soluongsp, gia, maloai, mansx);
+
+    // Cập nhật ảnh nếu có
+    if (imageUpdates.length > 0) {
+      await productsModel.updateProductImages(masp, imageUpdates);
+    }
+
+    res.status(200).send({ message: "Sửa sản phẩm thành công!" });
+  } catch (error) {
+    console.error(error);
+    if (images && images.length > 0) {
+      for (const img of images) {
+        const filePath = path.join(uploadDir, img.originalname);
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      }
+    }
+    res.status(500).send({ message: "Đã xảy ra lỗi khi sửa sản phẩm" });
+  }
+};
+const getProductImages = async (req, res) => {
     try {
-        if (!masp || !tensp || !ttct || !soluongsp || !gia || !maloai || !mansx) {
-            return res.status(400).send({ message: "Thiếu thông tin sản phẩm" });
-        }
-        const idPattern = /^[^\s].*$/;
-        if (!idPattern.test(tensp)) {
-            return res.status(400).json({ message: 'Tên sản phẩm không được chứa khoảng trắng ở đầu' });
-        }
-        if (!idPattern.test(ttct)) {
-            return res.status(400).json({ message: 'Thông tin chi tiết không được chứa khoảng trắng ở đầu' });
-        }
-        if (!idPattern.test(soluongsp)) {
-            return res.status(400).json({ message: 'Số lượng sản phẩm không được chứa khoảng trắng ở đầu' });
-        }
-        if (!idPattern.test(gia)) {
-            return res.status(400).json({ message: 'Giá sản phẩm không được chứa khoảng trắng ở đầu' });
-        }
-        const nameProduct = /^[\p{L}\p{N}\s]+$/u;
-        if (!nameProduct.test(tensp)) {
-            return res.status(400).json({ message: 'Tên sản phẩm không được chứa ký tự đặc biệt.' });
-        }
-        const checkNumber = /^[0-9]*$/;
-        if (!checkNumber.test(soluongsp)) {
-            return res.status(400).json({ message: 'Số lượng sản phẩm không hợp lệ' });
-        }
-        if (!checkNumber.test(gia)) {
-            return res.status(400).json({ message: 'Giá sản phẩm không hợp lệ' });
-        }
-        if(gia <= 0){
-            return res.status(400).json({ message: 'Giá sản phẩm phải lớn hơn 0' });
-        }
-        await productsModel.editProduct(masp, tensp, ttct, soluongsp, gia, maloai, mansx, hinhanh);
-        res.status(200).send({ message: "Sửa sản phẩm thành công!" });
-
+      const images = await productsModel.getProductImages(req.params.masp);
+      res.status(200).json({ images });
+    } catch (error) {
+      res.status(500).json({ message: 'Lỗi khi lấy danh sách ảnh' });
     }
+  }
 
-    catch (error) {
-        res.status(500).send({ message: "Đã xảy ra lỗi khi sửa sản phẩm" });
-    }
-}
+
 const deleteProduct = async (req, res) => {
-    let {masp} = req.body
-    await productsModel.deleteProduct(masp)
-    res.status(200).send({ message: "Xóa nhà sản xuất thành công!" });
-}
+    try {
+        const { masp } = req.body;
+        const uploadDir = `./src/uploads/${masp}`;
+
+        // Check if the folder exists and delete it (sync version)
+        if (fs.existsSync(uploadDir)) {
+            fs.rmSync(uploadDir, { recursive: true, force: true }); // Deletes the folder and all its contents
+        }
+
+        // Delete from database
+        await productsModel.deleteImgProduct(masp);
+        await productsModel.deleteProduct(masp);
+
+        res.status(200).send({ message: "Xóa nhà sản xuất thành công!" });
+    } catch (error) {
+        console.error("Error deleting product:", error);
+        res.status(500).send({ message: "Có lỗi xảy ra khi xóa sản phẩm!" });
+    }
+};
 
 // CartAdmin
 const getAllCart = async (req, res) => {
@@ -481,5 +567,6 @@ export default {
     insertNSX, editNSX, getAllNSX,
     detailNSX, deleteNSX, insertProducts,
     getAllProduct, editProduct,
-    detailProduct, deleteProduct
+    detailProduct, deleteProduct,
+    getProductImages
 }
