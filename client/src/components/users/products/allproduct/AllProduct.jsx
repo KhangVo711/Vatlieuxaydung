@@ -147,7 +147,6 @@ export default function AllProduct() {
             document.body.style.overflow = 'auto';
         };
     }, [isModalOpen]);
-
     return (
         <div className="flex flex-col">
             <Popover className="w-full xl:px-48 mb-5 md:px-5 lg:px-8 px-2.5 pt-12 xl:pb-8 pb-3 flex justify-between items-center relative">
@@ -215,7 +214,7 @@ export default function AllProduct() {
                                     productImages.map((image, index) => (
                                         <SwiperSlide key={index}>
                                             <img
-                                                className="w-10/12 ml-8 h-full object-cover rounded"
+                                                className="w-9/12 ml-11 h-full object-cover rounded"
                                                 src={`http://localhost:5001/uploads/${selectedProduct.masp}/${image}`}
                                                 alt={`${selectedProduct.tensp} - ${index}`}
                                             />
@@ -247,8 +246,8 @@ export default function AllProduct() {
                                     <div>
                                         <p className="text-md font-semibold flex text-gray-800 mb-2">
                                             <span className="font-bold mr-2">Tình trạng:</span>
-                                            {selectedProduct.soluong > 0 ? (
-                                                <p className="text-gray-600 font-semibold">Còn hàng</p>
+                                            {selectedProduct.soluongsp > 0 ? (
+                                                <p className="text-gray-700 font-semibold">Còn hàng</p>
                                             ) : <p className="text-red-600 font-semibold">Hết hàng</p>}
                                         </p>
                                     </div>

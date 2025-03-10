@@ -80,7 +80,7 @@ const editCategory = async (req, res) => {
         }
         const nameCategory = /^[\p{L}\p{N}\s]+$/u;
         if (!nameCategory.test(tenloai)) {
-            return res.status(400).json({ message: 'Tên loại không được chứa ký tự đặc biệt.' });
+            return res.status(400).json({ message: 'Tên loại không được chứa ký tự đặc biệt' });
         }
         await productsModel.editCategory(tenloai, maloai)
         res.status(200).send({ message: "Sửa loại sản phẩm thành công!" });
@@ -186,11 +186,11 @@ const editNSX = async (req, res) => {
         }
         const nameProducer = /^[\p{L}\p{N}\s]+$/u;
         if (!nameProducer.test(tennsx)) {
-            return res.status(400).json({ message: 'Tên nhà sản xuất không được chứa ký tự đặc biệt.' });
+            return res.status(400).json({ message: 'Tên nhà sản xuất không được chứa ký tự đặc biệt' });
         }
-        if (!nameProducer.test(diachi)) {
-            return res.status(400).json({ message: 'Tên nhà sản xuất không được chứa ký tự đặc biệt.' });
-        }
+        // if (!nameProducer.test(diachi)) {
+        //     return res.status(400).json({ message: 'Địa chỉ nhà sản xuất không được chứa ký tự đặc biệt' });
+        // }
         const emailProducer = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailProducer.test(email)) {
             return res.status(400).json({ message: 'Email không hợp lệ.' });

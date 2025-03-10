@@ -16,7 +16,6 @@ export default function NewProduct() {
                 console.error('Lỗi:', error);
             });
     }, []);
-
     
     return (
         <div>
@@ -46,8 +45,8 @@ export default function NewProduct() {
             >
                 {products.map((product) => (
                     <SwiperSlide className="p-4" key={product.masp}>
-                        <div className="bg-white shadow-md rounded-lg p-8 h-[350px] md:h-[360px] lg:h-[420px]">
-                            <img src={`http://localhost:5001/uploads/${product.hinhanh}`} alt={product.tensp} className="lg:w-1/2 h-48 object-cover sm:h-40 w-1/2 md:h-48 lg:h-56 mx-auto" />
+                        <div className="bg-white shadow-md rounded-lg p-8 h-fit">
+                            <img src={`http://localhost:5001/uploads/${product.masp}/${product.hinhanh}`} alt={product.tensp} className="lg:w-1/2 h-48 object-cover sm:h-40 w-1/2 md:h-48 lg:h-56 mx-auto" />
                             <h3 className="text-md tracking-tighter font-semibold mt-2 sm:text-sm md:text-md lg:text-lg">
                                 {product.tensp}
                             </h3>

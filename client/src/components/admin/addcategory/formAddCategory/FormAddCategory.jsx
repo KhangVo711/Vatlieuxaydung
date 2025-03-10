@@ -94,7 +94,7 @@ export default function FormAddCategory({ formRef }) {
                         <label htmlFor="code" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mã loại</label>
                         <input type="text" id="code" name='maloai'
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                            placeholder='LS-001'
+                            placeholder='LS08477412'
                             value={formData.maloai}
                             onChange={handleChange}
                         />
@@ -103,7 +103,7 @@ export default function FormAddCategory({ formRef }) {
                         <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên loại</label>
                         <input type="text" id="name" name='tenloai'
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                            placeholder='Son'
+                            placeholder='Chăm sóc da'
                             value={formData.tenloai}
                             onChange={handleChange}
                         />

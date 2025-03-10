@@ -70,7 +70,7 @@ export default function TableStaff({staff, handleEditStaffClick, handleDeleteSta
                 <td className=" px-4 py-3">
                   {item.chucvunv}
                 </td>
-                <td className="px-10  py-3 text-right">
+                <td className="px-10  py-3 text-center">
                   {formatCurrency(item.tongluong)}
                 </td>
                 <td className="items-center justify-center px-6 py-4 flex">

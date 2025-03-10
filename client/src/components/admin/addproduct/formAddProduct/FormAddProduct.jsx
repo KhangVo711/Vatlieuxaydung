@@ -154,7 +154,7 @@ export default function FormAddProduct({ formRef, category, producer }) {
               name="masp"
               value={formData.masp}
               onChange={handleChange}
-              placeholder="SP-001"
+              placeholder="SP00189413"
               className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>

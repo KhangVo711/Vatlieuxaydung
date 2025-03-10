@@ -56,22 +56,43 @@ const getAllProduct = async () => {
     const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` WHERE masp=?', [masp]);
     return rows[0];
     };  
-  const getProduct8 = async () => {
-    const [rows] = await connectDB.execute('SELECT * FROM `sanpham` LIMIT 8');
-    return rows;
+    const getProduct8 = async () => {
+      const [rows] = await connectDB.execute(`
+          SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh
+          FROM sanpham s
+          LEFT JOIN (
+              SELECT masp, hinhanh,
+                     ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
+              FROM hinhanhsanpham
+          ) h ON s.masp = h.masp AND h.rn = 1
+          ORDER BY s.masp
+          LIMIT 8
+      `);
+      return rows;
   };
   
   const getProduct12 = async () => {
-    const [rows] = await connectDB.execute('SELECT * FROM `sanpham` LIMIT 12');
-    return rows;
+      const [rows] = await connectDB.execute(`
+          SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh
+          FROM sanpham s
+          LEFT JOIN (
+              SELECT masp, hinhanh,
+                     ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
+              FROM hinhanhsanpham
+          ) h ON s.masp = h.masp AND h.rn = 1
+          ORDER BY s.masp
+          LIMIT 12
+      `);
+      return rows;
   };
   
   const detailProduct = async (masp) => {
     const query = `
-      SELECT sp.*, lsp.tenloai, nsx.tennsx
+      SELECT sp.*, lsp.tenloai, nsx.tennsx, km.tenkm, km.km
       FROM sanpham sp
       JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
       JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+      LEFT JOIN khuyenmai km ON sp.masp = km.masp
       WHERE sp.masp = ?
     `;
     const [rows] = await connectDB.execute(query, [masp]);

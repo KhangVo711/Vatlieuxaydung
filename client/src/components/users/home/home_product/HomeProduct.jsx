@@ -15,7 +15,6 @@ export default function HomeProduct() {
                 console.error('Lỗi:', error);
             });
     }, []);
-    
     return (
         <div>
             <div className="w-full px-2.5 pt-12 xl:pb-8 pb-3 flex justify-between items-center relative">
@@ -28,7 +27,7 @@ export default function HomeProduct() {
                     <article key={product.masp} className=" w-full lg:h-[350px] h-[250px] flex p-2 flex-col items-center rounded-md">
                         <div>
 
-                            <img className="mb-2.5 hover:grow hover:scale-105 w-full lg:h-[250px] h-[150px] rounded-sm transition duration-300 ease-in-out" src={`http://localhost:5001/uploads/${product.hinhanh}`} alt={product.name} />
+                            <img className="mb-2.5 hover:grow hover:scale-105 w-full lg:h-[250px] h-[150px] rounded-sm transition duration-300 ease-in-out" src={`http://localhost:5001/uploads/${product.masp}/${product.hinhanh}`} alt={product.name} />
                             
                             
                         </div>

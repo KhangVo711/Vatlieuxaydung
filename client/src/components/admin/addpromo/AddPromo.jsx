@@ -12,6 +12,7 @@ import Cookies from 'js-cookie';
 
 export default function AddPromo() {
     const { loadPromo, setLoadPromo } = useContext(Context);
+    console.log(loadPromo);
     const [selectedPromo, setSelectedPromo] = useState({ makm: '', tenkm: '', km: '',thoigianbatdaukm: '', thoigianketthuckm: '', masp: '' });
     const [promo, setPromo] = useState([]);
     useEffect(() => {
@@ -27,7 +28,8 @@ export default function AddPromo() {
         };
     
         fetchData(); // Gọi ngay khi component mount
-    
+        setLoadPromo(false);
+        
         const interval = setInterval(fetchData, 60000); // Gọi lại mỗi phút
     
         return () => clearInterval(interval); // Cleanup để tránh memory leak
