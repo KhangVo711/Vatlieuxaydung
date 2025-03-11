@@ -41,6 +41,7 @@ const initWebRoute = (app) => {
     router.post('/editProduct', auth.authMiddleware, uploadMiddleware, product.editProduct)
     router.post('/deleteProduct', auth.authMiddleware, product.deleteProduct)
     router.post('/detailProduct', product.detailProduct)
+    router.get('/recommendations', product.getRecommendations);
     router.get('/productImages/:masp', product.getProductImages)
 
     router.post('/addInvoice', invoice.insertInvoice)
@@ -75,6 +76,7 @@ const initWebRoute = (app) => {
     router.post('/editPromo', auth.authMiddleware, promo.editPromo)
     router.post('/deletePromo', auth.authMiddleware, promo.deletePromo)
     router.get('/getPromotions', promo.getActivePromos)
+
 
     // router.get('/getRepoMonthCurrent', repo.getRepoMonthCurrent)
     router.get('/getRepoSumAllMonth', repo.getRepoSumAllMonth)

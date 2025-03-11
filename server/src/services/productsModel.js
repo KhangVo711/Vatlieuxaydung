@@ -211,5 +211,31 @@ const updateQuantity = async (masp) => {
     await connectDB.execute('UPDATE sanpham,chitietdathang SET soluongsp=soluongsp-soluong WHERE sanpham.masp=chitietdathang.masp AND chitietdathang.masp=?', [masp])
 }
 
-export default {getCategory, insertProductImages, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
+// RecommendProducts
+const getRecommendedProducts = async (maloai) => {
+  try {
+      const query = `
+          SELECT
+              sp.masp, sp.tensp, sp.gia, lsp.tenloai, nsx.tennsx,
+              hinhanh.hinhanh
+          FROM sanpham sp
+          LEFT JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+          LEFT JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+          LEFT JOIN (
+              SELECT masp, MIN(hinhanh) AS hinhanh
+              FROM hinhanhsanpham
+              GROUP BY masp
+          ) hinhanh ON sp.masp = hinhanh.masp
+          WHERE 1=1
+          AND sp.maloai = ? LIMIT 6
+      `;
+      const [rows] = await connectDB.query(query, [maloai]);
+      return rows;
+  } catch (error) {
+      throw new Error('Error fetching recommended products from database: ' + error.message);
+  }
+};
+
+
+export default {getRecommendedProducts, getCategory, insertProductImages, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
 

@@ -10,6 +10,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import PreFooter from '../prefooter/PreFooter';
 
 // Bind modal to app element (required for accessibility)
 ReactModal.setAppElement('#root');
@@ -148,6 +149,7 @@ export default function AllProduct() {
         };
     }, [isModalOpen]);
     return (
+        <>
         <div className="flex flex-col">
             <Popover className="w-full xl:px-48 mb-5 md:px-5 lg:px-8 px-2.5 pt-12 xl:pb-8 pb-3 flex justify-between items-center relative">
                 <h2 className="w-full text-center lg:text-3xl text-xl tracking-wide font-bold uppercase">Sản phẩm</h2>
@@ -285,5 +287,7 @@ export default function AllProduct() {
                 )}
             </ReactModal>
         </div>
+        <PreFooter selectedProduct = {selectedProduct}/>
+        </>
     );
 }

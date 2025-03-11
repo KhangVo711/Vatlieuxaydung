@@ -255,6 +255,32 @@ const getAllProduct = async (req, res) => {
     }
   };
   
+  const getRecommendations = async (req, res) => {
+    try {
+        console.log('Full query:', req.query); // Log toàn bộ req.query
+        const { maloai } = req.query;
+
+        console.log('Received parameter:', { maloai });
+
+        if (!maloai) {
+            return res.status(400).json({ 
+                error: 'Mã loại là bắt buộc' 
+            });
+        }
+
+        const recommendedProducts = await productsModel.getRecommendedProducts(maloai);
+
+        if (!recommendedProducts || recommendedProducts.length === 0) {
+            return res.status(404).json({ error: 'Không tìm thấy sản phẩm nào' });
+        }
+
+        return res.status(200).json(recommendedProducts);
+    } catch (error) {
+        console.error('Error in getRecommendations:', error.message);
+        return res.status(500).json({ error: 'Lỗi server nội bộ: ' + error.message });
+    }
+};
+  
 
 
 const insertProducts = async (req, res) => {
@@ -568,5 +594,6 @@ export default {
     detailNSX, deleteNSX, insertProducts,
     getAllProduct, editProduct,
     detailProduct, deleteProduct,
-    getProductImages
+    getProductImages,
+    getRecommendations
 }
