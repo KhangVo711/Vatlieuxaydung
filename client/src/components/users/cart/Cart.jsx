@@ -383,7 +383,7 @@ export default function Cart() {
                 </div>
             )}
             {isProcessing && (
-                <div className='fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50'>
+                <div className='fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-[9999]'>
                     <div className='flex justify-center items-center h-full'>
                         <div className='bg-white p-6 rounded-md flex items-center flex-col'>
                             <div className='p-1 mb-5 rounded-full w-12 h-12 border flex items-center justify-center border-gray-600'>
@@ -396,7 +396,7 @@ export default function Cart() {
                 </div>
             )}
             {isSuccess && (
-                <div className='fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50'>
+                <div className='fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-[9999]'>
                     <div className='flex justify-center items-center h-full'>
                         <div className='bg-white p-6 rounded-md flex items-center flex-col'>
                             <div className='p-1 mb-5 rounded-full w-12 h-12 border flex items-center justify-center border-green-500'>

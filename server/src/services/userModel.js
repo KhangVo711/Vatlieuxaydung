@@ -81,7 +81,7 @@ const getAllUsers = async () => {
                 COUNT(dh.madh) AS so_lan_mua, 
                 SUM(dh.tonggia) AS tong_chi_tieu
          FROM khachhang kh
-         JOIN donhang dh ON kh.makh = dh.makh
+         LEFT JOIN donhang dh ON kh.makh = dh.makh
          GROUP BY kh.makh, kh.tenkh, kh.email, kh.sdt, kh.diachi;`
     );
     return rows;

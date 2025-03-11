@@ -75,7 +75,7 @@ const insertDetailCart = async (req, res) => {
         await Promise.all(
             orderDetails.map(detail => {
                 const { madh, masp, dongia, km, soluongsanpham } = detail;
-                if (!madh || !masp || !dongia || !km || !soluongsanpham) {
+                if (!madh || !masp || !dongia || !soluongsanpham) {
                     throw new Error("Thông tin chi tiết đơn hàng không đầy đủ.");
                 }
                 return cartModel.insertDetailCart(madh, masp, soluongsanpham, km, dongia );
