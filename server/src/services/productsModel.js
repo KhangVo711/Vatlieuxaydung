@@ -60,11 +60,13 @@ const getAllProduct = async () => {
       const [rows] = await connectDB.execute(`
           SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh
           FROM sanpham s
+          LEFT JOIN khuyenmai k ON s.masp = k.masp
           LEFT JOIN (
               SELECT masp, hinhanh,
                      ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
               FROM hinhanhsanpham
           ) h ON s.masp = h.masp AND h.rn = 1
+          WHERE k.masp IS NULL
           ORDER BY s.masp
           LIMIT 8
       `);

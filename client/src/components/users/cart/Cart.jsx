@@ -254,7 +254,7 @@ export default function Cart() {
                     </div>
                     <div className="p-4 border-b bg-gray-100">
                         <div className="grid grid-cols-4 sm:grid-cols-12 gap-4 text-sm font-medium text-gray-600">
-                            <p className="col-span-4 sm:col-span-3 pl-5">Sản phẩm</p>
+                            <p className="col-span-4 sm:col-span-3 pl-5 text-center">Sản phẩm</p>
                             <p className="hidden sm:block col-span-1 text-center">Đơn giá</p>
                             <p className="hidden sm:block col-span-2 text-center">Khuyến mãi</p>
                             <p className="hidden sm:block col-span-3 text-center">Số lượng</p>
@@ -274,7 +274,7 @@ export default function Cart() {
                                         type="text"
                                         id="fullname_inf"
                                         name='fullname'
-                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
                                         placeholder='Họ và tên'
                                         value={formData.fullname}
                                         onChange={handleChange}
@@ -289,7 +289,7 @@ export default function Cart() {
                                         type="text"
                                         id='email_inf'
                                         name='email'
-                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
                                         placeholder='Email'
                                         value={formData.email}
                                         onChange={handleChange}
@@ -305,7 +305,7 @@ export default function Cart() {
                                         type="text"
                                         id='phone_inf'
                                         name='phone'
-                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
                                         placeholder='Số điện thoại'
                                         value={formData.phone}
                                         onChange={handleChange}
@@ -320,7 +320,7 @@ export default function Cart() {
                                         type="text"
                                         id='address_inf'
                                         name='address'
-                                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
                                         placeholder='Địa chỉ'
                                         value={formData.address}
                                         onChange={handleChange}
@@ -349,7 +349,7 @@ export default function Cart() {
                             {delivery.map((ship) => (
                                 <div
                                     key={ship.madvvc}
-                                    className={`flex items-center gap-3 px-3 rounded-2xl border ${selectedDelivery?.madvvc === ship.madvvc ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}`}
+                                    className={`flex items-center gap-3 px-3 rounded-2xl border ${selectedDelivery?.madvvc === ship.madvvc ? 'border-pink-500 bg-pink-50' : 'border-gray-300'}`}
                                 >
                                     <RadioGroupItem value={ship.madvvc} id={ship.madvvc} className="h-0.5 w-0.5" />
                                     <label htmlFor={ship.madvvc} className="text-sm w-full h-full flex justify-between py-3 text-gray-800 cursor-pointer">

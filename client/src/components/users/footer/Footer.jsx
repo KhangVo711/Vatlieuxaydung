@@ -17,7 +17,7 @@ export default function Footer() {
                         Chúng tôi luôn sẵn sàng lắng nghe và đồng hành cùng bạn. Hãy liên hệ ngay để được tư vấn, giải đáp thắc mắc hoặc chia sẻ những ý kiến quý báu. Cùng nhau, chúng ta sẽ tạo nên những trải nghiệm tuyệt vời!
                         </h5>
                         <div className=" text-gray-600 w-full md:w-5/6 lg:w-5/6 xl:w-5/6 mb-4">
-                            <p className='mb-2.5'><PhoneIcon className="h-5 w-5 inline-block text-gray-600 mr-2" /><strong>Số điện thoại:</strong> 0875698741</p>
+                            <p className='mb-2.5'><PhoneIcon className="h-5 w-5 inline-block text-gray-600 mr-2" /><strong>Số điện thoại:</strong> 1900 1234 567</p>
                             <p className='mb-2.5'><EnvelopeIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Email:</strong> MyPhamHTCT@gmail.com</p>
                             <p className='mb-2.5'><MapIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Địa chỉ:</strong> 789 Nguyễn Trãi, Ninh Kiều, Cần Thơ</p>
                         </div>

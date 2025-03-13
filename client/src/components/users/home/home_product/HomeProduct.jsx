@@ -147,6 +147,29 @@ export default function HomeProduct() {
             document.body.style.overflow = 'auto';
         };
     }, [isModalOpen]);
+    const handleAddCartSelect = (product) => {
+        const fullProduct = products.find((p) => p.masp === product.masp) || product;
+        const productToAdd = {
+          masp: fullProduct.masp,
+          tensp: fullProduct.tensp,
+          gia: fullProduct.gia,
+          hinhanh: fullProduct.hinhanh,
+          maloai: fullProduct.maloai,
+          mansx: fullProduct.mansx,
+          soluong: 1,
+          soluongsp: fullProduct.soluongsp,
+          tenloai: fullProduct.tenloai,
+          tennsx: fullProduct.tennsx,
+          ttct: fullProduct.ttct,
+          km: fullProduct.km,
+          makm: fullProduct.makm,
+          tenkm: fullProduct.tenkm,
+          thoigianbatdaukm: fullProduct.thoigianbatdaukm,
+          thoigianketthuckm: fullProduct.thoigianketthuckm,
+        };
+        onAddToCart(productToAdd);
+        closeModal();
+        };
     return (
         <>
         <div className="flex flex-col">
@@ -260,22 +283,20 @@ export default function HomeProduct() {
                                 </div>
                             </div>
                             <p className="text-gray-600 text-sm">{selectedProduct.ttct}</p>
-                            <div className="mt-16 flex justify-center space-x-4">
+                            <div className="mt-16 flex justify-center space-x-8">
                                 <button
                                     className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-150"
                                     onClick={closeModal}
                                 >
                                     Đóng
                                 </button>
-                                {/* <button
-                                    className="px-4 py-2 bg-pink-400 text-white rounded hover:bg-pink-500 transition duration-150"
-                                    onClick={() => {
-                                        onAddToCart(selectedProduct);
-                                        closeModal();
-                                    }}
-                                >
-                                    Thêm vào giỏ
-                                </button> */}
+                                <button
+                  onClick={() => handleAddCartSelect(selectedProduct)}
+                  className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
+                  aria-label={`Add ${selectedProduct.tensp} to cart`}
+                >
+                  Mua ngay
+                </button>
                             </div>
                         </div>
                     </div>

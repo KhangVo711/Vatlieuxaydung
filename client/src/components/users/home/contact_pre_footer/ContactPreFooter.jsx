@@ -98,7 +98,7 @@ const ContactForm = () => {
       </form>
     <div className='ml-6 items-center flex-col h-full hidden xl:flex lg:flex'>
       <div className=" text-gray-600 w-5/6 mb-20">
-        <p className='mb-2.5'><PhoneIcon className="h-5 w-5 inline-block text-gray-600 mr-2" /><strong>Số điện thoại:</strong> 0875698741</p>
+        <p className='mb-2.5'><PhoneIcon className="h-5 w-5 inline-block text-gray-600 mr-2" /><strong>Số điện thoại:</strong> 1900 1234 567</p>
         <p className='mb-2.5'><EnvelopeIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Email:</strong> MyPhamHTCT@gmail.com</p>
         <p className='mb-2.5'><MapIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Địa chỉ:</strong> 789 Nguyễn Trãi, Ninh Kiều, Cần Thơ</p>
       </div>
