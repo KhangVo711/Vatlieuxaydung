@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+
 import axios from 'axios';
 export default function NewProduct() {
     const [products, setProducts] = useState([]);
@@ -53,10 +54,10 @@ export default function NewProduct() {
                             <p>{product.ttct}</p>
                             <div className="flex justify-between mt-4">
                                 <button className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md">
-                                    Đặt hàng
+                                    Mua ngay
                                 </button>
                                 <button className="bg-blue-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md">
-                                    Tư vấn
+                                    Xem ngay
                                 </button>
                             </div>
                         </div>

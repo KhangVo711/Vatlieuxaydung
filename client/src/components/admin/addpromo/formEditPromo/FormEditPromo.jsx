@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
+import {formatDateTime} from '../../../../utils/dateTime.jsx';
 
 export default function FormEditPromo({ formRefEdit, selectedPromo, setSelectedPromo, setLoadPromo }) {
 
@@ -25,11 +26,11 @@ export default function FormEditPromo({ formRefEdit, selectedPromo, setSelectedP
                 const startDay = new Date(startDate.setHours(0, 0, 0, 0));
                 const endDay = new Date(endDate.setHours(0, 0, 0, 0));
             
-                if (startDay < today) {
-                    setColorMessage('text-red-600');
-                    setMessage('Thời gian bắt đầu khuyến mãi phải từ ngày hiện tại trở đi.');
-                    return;
-                }
+                // if (startDay < today) {
+                //     setColorMessage('text-red-600');
+                //     setMessage('Thời gian bắt đầu khuyến mãi phải từ ngày hiện tại trở đi.');
+                //     return;
+                // }
             
                 if (endDay < today) {
                     setColorMessage('text-red-600');
@@ -140,13 +141,14 @@ export default function FormEditPromo({ formRefEdit, selectedPromo, setSelectedP
                 <div className="mb-3">
                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thời gian bắt đầu</label>
                     <input
-                        type="datetime-local"
+                        type="hidden"
                         id="name"
                         name="thoigianbatdaukm"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                         value={formatDateTimeLocal(selectedPromo?.thoigianbatdaukm) || ""}
                         onChange={(e) => setSelectedPromo({ ...selectedPromo, thoigianbatdaukm: e.target.value })}
                     />
+                    <p className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">{formatDateTime(selectedPromo?.thoigianbatdaukm)}</p>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thời gian kết thúc</label>

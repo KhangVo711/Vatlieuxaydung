@@ -37,6 +37,7 @@ const initWebRoute = (app) => {
     router.post('/addProduct', auth.authMiddleware, uploadMiddleware, product.insertProducts)
     router.get('/getProduct', product.getAllProduct)
     router.get('/getProduct8', product.getProduct8)
+    router.get('/getProduct5', product.getProduct5)
     router.get('/getProduct12', product.getProduct12)
     router.post('/editProduct', auth.authMiddleware, uploadMiddleware, product.editProduct)
     router.post('/deleteProduct', auth.authMiddleware, product.deleteProduct)

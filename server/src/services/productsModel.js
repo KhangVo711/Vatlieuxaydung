@@ -72,19 +72,36 @@ const getAllProduct = async () => {
   };
   
   const getProduct12 = async () => {
-      const [rows] = await connectDB.execute(`
-          SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh
-          FROM sanpham s
-          LEFT JOIN (
-              SELECT masp, hinhanh,
-                     ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
-              FROM hinhanhsanpham
-          ) h ON s.masp = h.masp AND h.rn = 1
-          ORDER BY s.masp
-          LIMIT 12
-      `);
-      return rows;
-  };
+    const [rows] = await connectDB.execute(`
+        SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh
+        FROM sanpham s
+        LEFT JOIN khuyenmai k ON s.masp = k.masp
+        LEFT JOIN (
+            SELECT masp, hinhanh,
+                   ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
+            FROM hinhanhsanpham
+        ) h ON s.masp = h.masp AND h.rn = 1
+        WHERE k.masp IS NULL
+        ORDER BY s.masp
+        LIMIT 12
+    `);
+    return rows;
+};
+  const getProduct5 = async () => {
+    const [rows] = await connectDB.execute(`
+        SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh, k.tenkm, k.km, s.ttct
+        FROM sanpham s
+        INNER JOIN khuyenmai k ON s.masp = k.masp
+        LEFT JOIN (
+            SELECT masp, hinhanh,
+                   ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
+            FROM hinhanhsanpham
+        ) h ON s.masp = h.masp AND h.rn = 1
+        ORDER BY s.masp
+        LIMIT 5
+    `);
+    return rows;
+};
   
   const detailProduct = async (masp) => {
     const query = `
@@ -237,5 +254,5 @@ const getRecommendedProducts = async (maloai) => {
 };
 
 
-export default {getRecommendedProducts, getCategory, insertProductImages, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
+export default {getRecommendedProducts, getCategory, insertProductImages, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
 

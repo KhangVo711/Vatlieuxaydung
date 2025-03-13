@@ -229,6 +229,14 @@ const getAllProduct = async (req, res) => {
       res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm" });
     }
   };
+  const getProduct5 = async (req, res) => {
+    try {
+      const product = await productsModel.getProduct5();
+      res.status(200).send({ product });
+    } catch (error) {
+      res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm" });
+    }
+  };
   
   const getProduct12 = async (req, res) => {
     try {
@@ -585,7 +593,7 @@ export default {
     getAllAPICart, getAllCart, insertCart,
     insertDetailCart, getAllDetailCart,
     insertCategory,
-    getProduct8, getProduct12,
+    getProduct8, getProduct12, getProduct5,
     editCategory,
     getOneCategory,
     getNSX,
