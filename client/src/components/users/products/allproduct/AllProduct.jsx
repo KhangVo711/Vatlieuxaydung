@@ -11,6 +11,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import PreFooter from '../prefooter/PreFooter';
+import CosmeticsProductCard from '../cosmeticsproductcard/CosmeticsProductCard';
+import { useLocation } from 'react-router-dom';
 
 // Bind modal to app element (required for accessibility)
 ReactModal.setAppElement('#root');
@@ -25,32 +27,40 @@ export default function AllProduct() {
     const filteredProducts = products.filter(product =>
         product.tensp.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    console.log(productImages);
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost:5001/getProduct');
-                setProducts(response.data.product);
-            } catch (error) {
-                console.error('Lỗi:', error);
-            }
-        };
+    
+    const location = useLocation();
+const isProductCategory = /^\/products\/.*/.test(location.pathname);
+const category = location.pathname.split('/')[2];
 
-        fetchData();
-        const interval = setInterval(fetchData, 60000);
-        return () => clearInterval(interval);
-    }, []);
+useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const endpoint = isProductCategory 
+                ? `http://localhost:5001/getProductOfCategory/${category}`
+                : 'http://localhost:5001/getProduct';
+            
+            const response = await axios.get(endpoint);
+            setProducts(response.data.product);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 60000);
+    
+    return () => clearInterval(interval);
+}, [category, isProductCategory]); 
+
 
     const handleViewProductClick = useCallback(async (product) => {
-        // Close the modal if it's already open to prevent conflicts
         if (isModalOpen) {
             setIsModalOpen(false);
             setSelectedProduct(null);
             setProductImages([]);
-            // Wait for the modal to fully close before opening it again
             setTimeout(() => {
                 fetchProductDetails(product);
-            }, 300); // Adjust the delay if needed
+            }, 300); 
         } else {
             fetchProductDetails(product);
         }
@@ -176,9 +186,9 @@ export default function AllProduct() {
         <div className="flex flex-col">
             <Popover className="w-full xl:px-48 mb-5 md:px-5 lg:px-8 px-2.5 pt-12 xl:pb-8 pb-3 flex justify-between items-center relative">
                 <h2 className="w-full text-center lg:text-3xl text-xl tracking-wide font-bold uppercase">Sản phẩm</h2>
-                <PopoverButton className="flex items-end justify-end group outline-none 2xl:mr-44 mr-3 text-gray-600 hover:text-gray-800 absolute right-6 bottom-0 text-xs md:text-sm lg:text-md transition duration-150 ease-in-out">
+                {/* <PopoverButton className="flex items-end justify-end group outline-none 2xl:mr-44 mr-3 text-gray-600 hover:text-gray-800 absolute right-6 bottom-0 text-xs md:text-sm lg:text-md transition duration-150 ease-in-out">
                     <FunnelIcon className="h-7 w-7 group-hover:text-gray-900 text-gray-600 mr-0.5" />Lọc
-                </PopoverButton>
+                </PopoverButton> */}
                 <PopoverPanel
                     transition
                     className="absolute flex justify-between right-24 bottom-0 z-10 mt-3 w-screen max-w-20 overflow-hidden transition data-[closed]:translate-x-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
@@ -311,6 +321,7 @@ export default function AllProduct() {
                 )}
             </ReactModal>
         </div>
+        <CosmeticsProductCard/>
         <PreFooter selectedProduct = {selectedProduct}/>
         </>
     );

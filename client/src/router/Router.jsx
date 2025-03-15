@@ -24,6 +24,8 @@ import AddDelivery from '../components/admin/adddelivery/AddDelivery.jsx';
 import AddPromo from '../components/admin/addpromo/AddPromo.jsx';
 import Repo from '../components/admin/repoProduct/Repo.jsx';
 import Calendar from '../components/admin/calendar/tableCalender/Calendar.jsx';
+import Contact from '../components/users/contact/Contact.jsx';
+import About from '../components/users/about/About.jsx';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -40,7 +42,7 @@ export const router = createBrowserRouter([
           <Home />
       },
       {
-        path: "products",
+        path: "products/*",
         element:
           <Product />
       },
@@ -54,7 +56,16 @@ export const router = createBrowserRouter([
         element:
           <Order />
       },
-
+      {
+        path: "contact",
+        element:
+          <Contact />
+      },
+      {
+        path: "about",
+        element:
+          <About />
+      },
     ]
   },
   {

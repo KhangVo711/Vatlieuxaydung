@@ -131,7 +131,7 @@ const PreFooter = ({ selectedProduct}) => {
   ];
 
   return (
-    <div className="py-12 mt-4">
+    <div className="py-12 mt-3">
     {recommendedProducts.length > 0 ? (
 
       <div className="container mx-auto px-4">

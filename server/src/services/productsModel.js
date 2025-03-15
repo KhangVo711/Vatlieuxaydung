@@ -104,6 +104,18 @@ const getAllProduct = async () => {
     `);
     return rows;
 };
+const getProductOfCategory = async (maloai) => {
+  const [rows] = await connectDB.execute(`
+      SELECT sp.*, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, lsp.tenloai, nsx.tennsx,
+             (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh
+      FROM sanpham sp
+      JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+      JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+      LEFT JOIN khuyenmai km ON sp.masp = km.masp
+      WHERE sp.maloai = ?
+  `, [maloai]); 
+  return rows;
+};
   
   const detailProduct = async (masp) => {
     const query = `
@@ -256,5 +268,5 @@ const getRecommendedProducts = async (maloai) => {
 };
 
 
-export default {getRecommendedProducts, getCategory, insertProductImages, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
+export default {getProductOfCategory, getRecommendedProducts, getCategory, insertProductImages, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
 

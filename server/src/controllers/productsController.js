@@ -220,7 +220,17 @@ const getAllProduct = async (req, res) => {
       res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách nhà sản xuất" });
     }
   };
-  
+  const getProductOfCategory = async (req, res) => {
+    const maloai = req.params.maloai;
+    console.log(maloai);
+    try {
+      const product = await productsModel.getProductOfCategory(maloai);
+      res.status(200).send({ product });
+    } catch (error) {
+      res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách nhà sản xuất" });
+    }
+
+  };
   const getProduct8 = async (req, res) => {
     try {
       const product = await productsModel.getProduct8();
@@ -603,5 +613,6 @@ export default {
     getAllProduct, editProduct,
     detailProduct, deleteProduct,
     getProductImages,
-    getRecommendations
+    getRecommendations,
+    getProductOfCategory
 }

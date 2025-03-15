@@ -36,18 +36,13 @@ import { Link } from 'react-router-dom'
 import axios from 'axios';
 
 
-const products = [
-  { name: 'Chăm sóc da mặt', description: 'Sản phẩm chăm sóc da mặt giúp làn da khỏe mạnh và rạng rỡ', href: '#', icon: FaceSmileIcon },
-  { name: 'Chăm sóc cơ thể', description: 'Sản phẩm chăm sóc cơ thể giúp nuôi dưỡng và bảo vệ làn da', href: '#', icon: ChartPieIcon },
-  { name: 'Trang điểm', description: 'Sản phẩm trang điểm chất lượng cao giúp bạn thêm xinh đẹp', href: '#', icon: SparklesIcon },
-  { name: 'Phụ kiện', description: 'Phụ kiện thời trang giúp bạn hoàn thiện phong cách', href: '#', icon: TagIcon },
-  { name: 'Thực phẩm chức năng', description: 'Thực phẩm bổ sung giúp hỗ trợ sức khỏe và tăng cường thể chất', href: '#', icon: HeartIcon },
-  { name: 'Bán chạy', description: 'Những sản phẩm bán chạy nhất, được khách hàng yêu thích', href: '#', icon: FireIcon },
-]
+
 const callsToAction = [
   { name: 'Xem chi tiết', href: '#', icon: PlayCircleIcon },
   { name: 'Liên hệ mua hàng', href: '#', icon: PhoneIcon },
 ]
+
+
 
 export default function Header() {
   const location = useLocation()
@@ -84,6 +79,65 @@ export default function Header() {
     setMessage('');
 
   };
+  const [category, setCategory] = useState([]); 
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5001/getCategory`);
+      if (response.status === 200) {
+        setCategory(response.data.category); 
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  fetchData();
+}, []);
+
+const products = [
+  { 
+    maloai: category[0]?.maloai || '', 
+    name: category[0]?.tenloai || 'Chăm sóc da mặt', 
+    description: 'Sản phẩm chăm sóc da mặt giúp làn da khỏe mạnh và rạng rỡ', 
+    href: '#', 
+    icon: FaceSmileIcon 
+  },
+  { 
+    maloai: category[1]?.maloai || '', 
+    name: category[1]?.tenloai || 'Chăm sóc cơ thể', 
+    description: 'Sản phẩm chăm sóc cơ thể giúp nuôi dưỡng và bảo vệ làn da', 
+    href: '#', 
+    icon: ChartPieIcon 
+  },
+  { 
+    maloai: category[2]?.maloai || '', 
+    name: category[2]?.tenloai || 'Phụ kiện', 
+    description: 'Phụ kiện thời trang giúp bạn hoàn thiện phong cách', 
+    href: '#', 
+    icon: TagIcon 
+  },
+  { 
+    maloai: category[3]?.maloai || '', 
+    name: category[3]?.tenloai || 'Trang điểm', 
+    description: 'Sản phẩm trang điểm chất lượng cao giúp bạn thêm xinh đẹp', 
+    href: '#', 
+    icon: SparklesIcon 
+  },
+  { 
+    maloai: category[4]?.maloai || '', 
+    name: category[4]?.tenloai || 'Thực phẩm bổ sung', 
+    description: 'Thực phẩm bổ sung giúp hỗ trợ sức khỏe và tăng cường thể chất', 
+    href: '#', 
+    icon: HeartIcon 
+  },
+  { 
+    name: 'Bán chạy', 
+    description: 'Những sản phẩm bán chạy nhất, được khách hàng yêu thích', 
+    href: '#', 
+    icon: FireIcon 
+  },
+];
 
   useEffect(() => {
     if (modalIsOpen) {
@@ -322,7 +376,18 @@ export default function Header() {
         setSearchQuery(e.target.value);
     };
 
+    const scrollPosition = useRef(0); // Lưu vị trí cuộn trước khi điều hướng
 
+    // Lưu vị trí cuộn trước khi điều hướng
+    const handleLinkClick = () => {
+      scrollPosition.current = window.scrollY; // Lưu vị trí cuộn hiện tại
+    };
+  
+    // Khôi phục vị trí cuộn sau khi điều hướng
+    useEffect(() => {
+      window.scrollTo(0, scrollPosition.current); // Khôi phục vị trí cuộn
+    }, [location.pathname]); // Chạy lại khi đường dẫn thay đổi
+    
   return (
     <header className="bg-pink-200 sticky top-0 z-20 shadow-md">
       <ToastContainer />
@@ -349,53 +414,68 @@ export default function Header() {
             {location.pathname === '/products' ? <hr className='bg-black h-0.5 w-1/2' /> : ''}
           </Link>
           <Popover className="relative">
-            <PopoverButton className="flex outline-none items-center gap-x-1 text-sm xl:text-md font-semibold leading-6 text-gray-900">
-              Loại sản phẩm
-              <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
-            </PopoverButton>
-            <PopoverPanel
-              transition
-              className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-pink-100 shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
-            >
-              <div className="p-4">
-                {products.map((item) => (
-                  <div
-                    key={item.name}
-                    className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-pink-50"
-                  >
-                    <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-pink-50 group-hover:bg-pink-100">
-                      <item.icon aria-hidden="true" className="h-6 w-6 text-gray-600 group-hover:text-indigo-500" />
-                    </div>
-                    <div className="flex-auto">
-                      <a href={item.href} className="block font-semibold text-gray-900">
-                        {item.name}
-                        <span className="absolute inset-0" />
-                      </a>
-                      <p className="mt-1 text-xs text-gray-600">{item.description}</p>
-                    </div>
+      {({ close }) => (
+        <>
+          <PopoverButton className="flex outline-none items-center gap-x-1 text-sm xl:text-md font-semibold leading-6 text-gray-900">
+            Loại sản phẩm
+            <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
+          </PopoverButton>
+          <PopoverPanel
+            transition
+            className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-pink-100 shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
+          >
+            <div className="p-4">
+              {products.map((item) => (
+                <div
+                  key={item.name}
+                  className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-pink-50"
+                >
+                  <div className="flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-pink-50 group-hover:bg-pink-100">
+                    <item.icon aria-hidden="true" className="h-6 w-6 text-gray-600 group-hover:text-indigo-500" />
                   </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-pink-50">
-                {callsToAction.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
-                  >
-                    <item.icon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
-                    {item.name}
-                  </a>
-                ))}
-              </div>
-            </PopoverPanel>
-          </Popover>
-          <a href="#" className="text-sm font-semibold leading-6 xl:text-md text-gray-900">
-            Đang giảm
-          </a>
-          <a href="#" className="text-sm font-semibold leading-6 xl:text-md text-gray-900">
+                  <div className="flex-auto">
+                    <Link
+                      to={`/products/${item.maloai}`}
+                      className="block font-semibold text-gray-900"
+                      onClick={() => {
+                        handleLinkClick(); // Lưu vị trí cuộn
+                        close(); // Đóng Popover
+                      }}
+                    >
+                      {item.name}
+                      <span className="absolute inset-0" />
+                    </Link>
+                    <p className="mt-1 text-xs text-gray-600">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-pink-50">
+              {callsToAction.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href} // Thay <a> bằng <Link> để đồng nhất với react-router-dom
+                  className="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
+                  onClick={() => {
+                    handleLinkClick(); // Lưu vị trí cuộn
+                    close(); // Đóng Popover
+                  }}
+                >
+                  <item.icon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          </PopoverPanel>
+        </>
+      )}
+    </Popover>
+          <Link to="about" className="text-sm font-semibold leading-6 xl:text-md text-gray-900">
+            Thông tin
+          </Link>
+          <Link to="contact" className="text-sm font-semibold leading-6 xl:text-md text-gray-900">
             Liên hệ
-          </a>
+          </Link>
 
           <div className="flex items-center border border-gray-300 rounded-full p-2 xl:w-80 lg:w-64 bg-white shadow-sm">
             <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
