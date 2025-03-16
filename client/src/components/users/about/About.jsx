@@ -1,6 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'
+import axios from 'axios';
 
 export default function About() {
+    const [category, setCategory] = useState([]); 
+    
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`http://localhost:5001/getCategory`);
+          if (response.status === 200) {
+            setCategory(response.data.category); 
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      fetchData();
+    }, []);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const review = {
+          name: formData.get('name'),
+          rating: formData.get('rating'),
+          comment: formData.get('comment'),
+        };
+        try {
+          const response = await axios.post('http://localhost:5001/submitReview', review);
+          if (response.status === 200) {
+            alert('Đánh giá của bạn đã được gửi thành công!');
+            e.target.reset();
+          }
+        } catch (error) {
+          console.error('Lỗi khi gửi đánh giá:', error);
+          alert('Có lỗi xảy ra, vui lòng thử lại!');
+        }
+      };
     return (
         <div className="min-h-screen bg-pink-50">
             {/* Banner */}
@@ -47,44 +83,44 @@ export default function About() {
                         <div className='flex flex-col'>
   <div className="w-full mb-6">
     <img 
-      src="https://hali.vn/wp-content/uploads/2020/07/thiet-ke-banner-my-pham37.jpg" 
-      alt="Về BeautyShop" 
+      src="https://gcoads.vn/wp-content/uploads/2019/07/my-pham-1.jpg" 
+      alt="Về MyPhamHTCT" 
       className="rounded-lg shadow-lg" 
     />
   </div>
   <div className='mt-6 flex justify-between gap-4'>
     {/* Thay thế 5 div với thiết kế mới */}
-    <div className='h-20 w-28 flex flex-col items-center justify-center bg-pink-100 rounded-xl shadow-md p-3 text-center text-xs text-gray-800 transition-transform hover:scale-105'>
+    <div className='h-20 w-28 flex flex-col items-center justify-center bg-pink-100 rounded-xl shadow-md p-3 text-center text-xs text-gray-800 transition-transform'>
       <span className='font-bold text-[13px]'>Chính hãng</span>
       <span className='text-[11px] mt-1'>100%</span>
     </div>
-    <div className='h-20 w-28 flex flex-col items-center justify-center bg-pink-100 rounded-xl shadow-md p-3 text-center text-xs text-gray-800 transition-transform hover:scale-105'>
+    <div className='h-20 w-28 flex flex-col items-center justify-center bg-pink-100 rounded-xl shadow-md p-3 text-center text-xs text-gray-800 transition-transform'>
       <span className='font-bold text-[13px]'>Chất lượng</span>
       <span className='text-[11px] mt-1'>Đảm bảo cao cấp</span>
     </div>
    
-    <div className='h-20 w-28 flex flex-col items-center justify-center bg-pink-100 rounded-xl shadow-md p-3 text-center text-xs text-gray-800 transition-transform hover:scale-105'>
+    <div className='h-20 w-28 flex flex-col items-center justify-center bg-pink-100 rounded-xl shadow-md p-3 text-center text-xs text-gray-800 transition-transform'>
       <span className='font-bold text-[13px]'>Uy tín</span>
       <span className='text-[11px] mt-1'>Được tin dùng</span>
     </div>
-    <div className='h-20 w-28 flex flex-col items-center justify-center bg-pink-100 rounded-xl shadow-md p-3 text-center text-xs text-gray-800 transition-transform hover:scale-105'>
+    <div className='h-20 w-28 flex flex-col items-center justify-center bg-pink-100 rounded-xl shadow-md p-3 text-center text-xs text-gray-800 transition-transform'>
       <span className='font-bold text-[13px]'>Hỗ trợ</span>
-      <span className='text-[11px] mt-1'>24/7 tận tâm</span>
+      <span className='text-[11px] mt-1'>24/7</span>
     </div>
   </div>
 </div>
                             <div className="md:w-2/3">
-    <p className="text-gray-600 mb-4">
-        BeautyShop được thành lập vào năm 2022 với sứ mệnh mang đến những sản phẩm mỹ phẩm chất lượng cao, an toàn và phù hợp cho người tiêu dùng Việt Nam. Chúng tôi hiểu rằng mỗi làn da đều có câu chuyện riêng, và hành trình làm đẹp không chỉ là việc làm đẹp bề ngoài, mà còn là cách để phụ nữ Việt tự tin tỏa sáng từ bên trong.
+    <p className="text-gray-600 mb-4 text-justify">
+        MyPhamHTCT được thành lập vào năm 2022 với sứ mệnh mang đến những sản phẩm mỹ phẩm chất lượng cao, an toàn và phù hợp cho người tiêu dùng Việt Nam. Chúng tôi hiểu rằng mỗi làn da đều có câu chuyện riêng, và hành trình làm đẹp không chỉ là việc làm đẹp bề ngoài, mà còn là cách để phụ nữ Việt tự tin tỏa sáng từ bên trong.
     </p>
-    <p className="text-gray-600 mb-4">
+    <p className="text-gray-600 mb-4 text-justify">
         Chúng tôi cam kết chỉ cung cấp những sản phẩm đã được kiểm nghiệm nghiêm ngặt, đạt tiêu chuẩn chất lượng quốc tế và được thiết kế đặc biệt để phù hợp với làn da người Việt. Mỗi sản phẩm đều trải qua quy trình nghiên cứu kỹ lưỡng, từ việc lựa chọn nguyên liệu tự nhiên an toàn đến công nghệ sản xuất tiên tiến, đảm bảo hiệu quả tối ưu mà vẫn dịu nhẹ với làn da.
     </p>
-    <p className="text-gray-600 mb-4">
-        Với đội ngũ chuyên gia về da liễu và mỹ phẩm giàu kinh nghiệm, BeautyShop không chỉ là nơi cung cấp sản phẩm, mà còn là người bạn đồng hành đáng tin cậy. Chúng tôi luôn sẵn sàng lắng nghe, tư vấn và hỗ trợ bạn tìm ra những sản phẩm phù hợp nhất với nhu cầu cá nhân, từ chăm sóc da cơ bản đến các giải pháp chuyên sâu.
+    <p className="text-gray-600 mb-4 text-justify">
+        Với đội ngũ chuyên gia về da liễu và mỹ phẩm giàu kinh nghiệm, MyPhamHTCT không chỉ là nơi cung cấp sản phẩm, mà còn là người bạn đồng hành đáng tin cậy. Chúng tôi luôn sẵn sàng lắng nghe, tư vấn và hỗ trợ bạn tìm ra những sản phẩm phù hợp nhất với nhu cầu cá nhân, từ chăm sóc da cơ bản đến các giải pháp chuyên sâu.
     </p>
-    <p className="text-gray-600">
-        Hơn thế nữa, BeautyShop không ngừng đổi mới để đáp ứng nhu cầu đa dạng của khách hàng, kết hợp xu hướng làm đẹp hiện đại với giá trị truyền thống của người Việt. Từ các sản phẩm dưỡng da dịu nhẹ, makeup tự nhiên đến giải pháp chăm sóc chuyên biệt, chúng tôi nỗ lực trở thành người bạn đồng hành không thể thiếu trong hành trình làm đẹp của bạn.
+    <p className="text-gray-600 text-justify">
+        Hơn thế nữa, MyPhamHTCT không ngừng đổi mới để đáp ứng nhu cầu đa dạng của khách hàng, kết hợp xu hướng làm đẹp hiện đại với giá trị truyền thống của người Việt. Từ các sản phẩm dưỡng da dịu nhẹ, makeup tự nhiên đến giải pháp chăm sóc chuyên biệt, chúng tôi nỗ lực trở thành người bạn đồng hành không thể thiếu trong hành trình làm đẹp của bạn.
     </p>
 </div>
                         </div>
@@ -94,7 +130,7 @@ export default function About() {
 
             {/* Values Section */}
             <section className="py-16 bg-pink-50">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto px-4 pb-10">
                     <h2 className="text-3xl font-bold text-center mb-16 text-gray-800">Giá trị cốt lõi</h2>
                     <div className="grid md:grid-cols-3 gap-8">
                         <div className="bg-white p-6 rounded-lg shadow text-center">
@@ -130,24 +166,43 @@ export default function About() {
 
             {/* Products Section */}
             <section className="py-16 bg-white">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto px-4 mb-5">
                     <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">Danh mục sản phẩm</h2>
-                    <div className="grid md:grid-cols-4 gap-6">
-                        <div className="bg-pink-50 p-6 rounded-lg text-center hover:shadow-lg transition">
-                            <img src="/api/placeholder/200/200" alt="Chăm sóc da" className="mx-auto mb-4 rounded-full" />
-                            <h3 className="text-lg font-semibold text-gray-800">Chăm sóc da</h3>
+                    <div className="grid md:grid-cols-5 gap-6">
+                        <div className="bg-pink-50 p-6 rounded-lg text-center shadow-md transition">
+                            <img src="https://miraicare.vn/storage/images/cac-buoc-cham-soc-da-mat.png" alt="Chăm sóc da mặt" className="mx-auto border h-36 w-52 border-gray-200 mb-1 rounded-xl" />
+                            <h3 className="text-lg font-semibold text-gray-800">Chăm sóc da mặt</h3>
+                            <Link to={`/products/${category[0]?.maloai}`} className="text-sm font-semibold leading-6 xl:text-md text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out mt-2 block">
+                                        Xem ngay
+                                      </Link>
                         </div>
-                        <div className="bg-pink-50 p-6 rounded-lg text-center hover:shadow-lg transition">
-                            <img src="/api/placeholder/200/200" alt="Trang điểm" className="mx-auto mb-4 rounded-full" />
+                        <div className="bg-pink-50 p-6 rounded-lg text-center shadow-md transition">
+                            <img src="https://tse3.mm.bing.net/th?id=OIP.SO4IZY8Y_CQINcaaBZ_U5QHaE8&pid=Api&P=0&h=220" alt="Chăm sóc cơ thể" className="mx-auto border h-36 w-52 border-gray-200 mb-1 rounded-xl" />
+                            <h3 className="text-lg font-semibold text-gray-800">Chăm sóc cơ thể</h3>
+                            <Link to={`/products/${category[1]?.maloai}`} className="text-sm font-semibold leading-6 xl:text-md text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out mt-2 block">
+                                        Xem ngay
+                                      </Link>
+                        </div>
+                        <div className="bg-pink-50 p-6 rounded-lg text-center shadow-md transition">
+                            <img src="https://phuongnamvina.com/img_data/images/lam-phu-kien-thoi-trang-handmade.jpg" alt="Phụ kiện" className="mx-auto border h-36 w-52 border-gray-200 mb-1 rounded-xl" />
+                            <h3 className="text-lg font-semibold text-gray-800">Phụ kiện</h3>
+                            <Link to={`/products/${category[2]?.maloai}`} className="text-sm font-semibold leading-6 xl:text-md text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out mt-2 block">
+                                        Xem ngay
+                                      </Link>
+                        </div>
+                        <div className="bg-pink-50 p-6 rounded-lg text-center shadow-md transition">
+                            <img src="https://veronicawedding.com/wp-content/uploads/2021/04/bo-my-pham-trang-diem-han-quoc-1024x728.jpg" alt="Trang điểm" className="mx-auto border h-36 w-52 border-gray-200 mb-1 rounded-xl" />
                             <h3 className="text-lg font-semibold text-gray-800">Trang điểm</h3>
+                            <Link to={`/products/${category[3]?.maloai}`} className="text-sm font-semibold leading-6 xl:text-md text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out mt-2 block">
+                                        Xem ngay
+                                      </Link>
                         </div>
-                        <div className="bg-pink-50 p-6 rounded-lg text-center hover:shadow-lg transition">
-                            <img src="/api/placeholder/200/200" alt="Chăm sóc tóc" className="mx-auto mb-4 rounded-full" />
-                            <h3 className="text-lg font-semibold text-gray-800">Chăm sóc tóc</h3>
-                        </div>
-                        <div className="bg-pink-50 p-6 rounded-lg text-center hover:shadow-lg transition">
-                            <img src="/api/placeholder/200/200" alt="Nước hoa" className="mx-auto mb-4 rounded-full" />
-                            <h3 className="text-lg font-semibold text-gray-800">Nước hoa</h3>
+                        <div className="bg-pink-50 p-6 rounded-lg text-center shadow-md transition">
+                            <img src="https://vinmec-prod.s3.amazonaws.com/images/20200111_031444_804592_Thuc_pham_chuc_nang.max-800x800.jpg" alt="Thực phẩm chức năng" className="mx-auto border h-36 w-52 border-gray-200 mb-1 rounded-xl" />
+                            <h3 className="text-lg font-semibold text-gray-800">Thực phẩm chức năng</h3>
+                            <Link to={`/products/${category[4]?.maloai}`} className="text-sm font-semibold leading-6 xl:text-md text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out mt-2 block">
+                                        Xem ngay
+                                      </Link>
                         </div>
                     </div>
                 </div>
@@ -155,64 +210,197 @@ export default function About() {
 
             {/* Testimonials */}
             <section className="py-16 bg-pink-50">
-                <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">Khách hàng nói gì về chúng tôi</h2>
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <div className="bg-white p-6 rounded-lg shadow">
-                            <div className="flex items-center mb-4">
-                                <img src="/api/placeholder/60/60" alt="Avatar" className="rounded-full w-12 h-12" />
-                                <div className="ml-4">
-                                    <h4 className="font-semibold text-gray-800">Nguyễn Thị Hương</h4>
-                                    <div className="flex text-yellow-400">
-                                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p className="text-gray-600 italic">"Sản phẩm chất lượng, giao hàng nhanh. Tôi đã trở thành khách hàng thân thiết của BeautyShop được 2 năm và chưa bao giờ thất vọng."</p>
-                        </div>
-                        <div className="bg-white p-6 rounded-lg shadow">
-                            <div className="flex items-center mb-4">
-                                <img src="/api/placeholder/60/60" alt="Avatar" className="rounded-full w-12 h-12" />
-                                <div className="ml-4">
-                                    <h4 className="font-semibold text-gray-800">Trần Minh Anh</h4>
-                                    <div className="flex text-yellow-400">
-                                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p className="text-gray-600 italic">"Tôi rất hài lòng với dịch vụ tư vấn của BeautyShop. Nhân viên am hiểu và giúp tôi chọn được sản phẩm phù hợp với làn da nhạy cảm của mình."</p>
-                        </div>
-                        <div className="bg-white p-6 rounded-lg shadow">
-                            <div className="flex items-center mb-4">
-                                <img src="/api/placeholder/60/60" alt="Avatar" className="rounded-full w-12 h-12" />
-                                <div className="ml-4">
-                                    <h4 className="font-semibold text-gray-800">Phạm Thanh Mai</h4>
-                                    <div className="flex text-yellow-400">
-                                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p className="text-gray-600 italic">"Bộ sản phẩm dưỡng da của BeautyShop đã giúp tôi cải thiện làn da rõ rệt sau 2 tháng sử dụng. Giá cả hợp lý và chất lượng tuyệt vời."</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+  <div className="container mx-auto px-4">
+    <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">Khách hàng nói gì về chúng tôi</h2>
+    <div className="grid md:grid-cols-3 gap-8">
+      {/* Đánh giá từ khách hàng */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center mb-4">
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
+            alt="Avatar"
+            className="rounded-full w-14 h-14"
+          />
+          <div className="ml-4">
+            <h4 className="font-semibold text-gray-800">Nguyễn Thị Hương</h4>
+            <div className="flex text-yellow-400">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600 italic">
+          "Sản phẩm chất lượng, giao hàng nhanh. Tôi đã trở thành khách hàng thân thiết của MyPhamHTCT được 2 năm và chưa bao giờ thất vọng."
+        </p>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center mb-4">
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
+            alt="Avatar"
+            className="rounded-full w-14 h-14"
+          />
+          <div className="ml-4">
+            <h4 className="font-semibold text-gray-800">Trần Minh Anh</h4>
+            <div className="flex text-yellow-400">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600 italic">
+          "Tôi rất hài lòng với dịch vụ tư vấn của MyPhamHTCT. Nhân viên am hiểu và giúp tôi chọn được sản phẩm phù hợp với làn da nhạy cảm của mình."
+        </p>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center mb-4">
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
+            alt="Avatar"
+            className="rounded-full w-14 h-14"
+          />
+          <div className="ml-4">
+            <h4 className="font-semibold text-gray-800">Phạm Thanh Mai</h4>
+            <div className="flex text-yellow-400">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600 italic">
+          "Bộ sản phẩm dưỡng da của MyPhamHTCT đã giúp tôi cải thiện làn da rõ rệt sau 2 tháng sử dụng. Giá cả hợp lý và chất lượng tuyệt vời."
+        </p>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center mb-4">
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
+            alt="Avatar"
+            className="rounded-full w-14 h-14"
+          />
+          <div className="ml-4">
+            <h4 className="font-semibold text-gray-800">Lê Văn Hùng</h4>
+            <div className="flex text-yellow-400">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>☆</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600 italic">
+          "Sản phẩm tốt, nhưng tôi mong có thêm nhiều ưu đãi cho khách hàng mới."
+        </p>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center mb-4">
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
+            alt="Avatar"
+            className="rounded-full w-14 h-14"
+          />
+          <div className="ml-4">
+            <h4 className="font-semibold text-gray-800">Hoàng Lan Chi</h4>
+            <div className="flex text-yellow-400">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600 italic">
+          "Dịch vụ chăm sóc khách hàng tuyệt vời, sản phẩm đúng như mô tả. Rất đáng để thử!"
+        </p>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center mb-4">
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
+            alt="Avatar"
+            className="rounded-full w-14 h-14"
+          />
+          <div className="ml-4">
+            <h4 className="font-semibold text-gray-800">Đỗ Thị Ngọc</h4>
+            <div className="flex text-yellow-400">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600 italic">
+          "Tôi thích cách MyPhamHTCT đóng gói sản phẩm, rất cẩn thận và đẹp mắt."
+        </p>
+      </div>
+    </div>
+
+   
+  </div>
+</section>
 
             {/* CTA */}
-            <section className="py-12 bg-gradient-to-r from-pink-500 to-purple-500">
-                <div className="container mx-auto px-4 text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">Khám phá bộ sưu tập mỹ phẩm cao cấp</h2>
-                    <p className="text-white mb-8 max-w-2xl mx-auto">
-                        Hãy để BeautyShop đồng hành cùng bạn trên hành trình chăm sóc và nâng niu làn da của mình với những sản phẩm an toàn, chất lượng.
-                    </p>
-                    <a
-                        href="#"
-                        className="inline-block bg-white text-pink-600 font-semibold px-8 py-3 rounded-full hover:bg-pink-50 hover:text-pink-700 transition"
-                    >
-                        Mua sắm ngay
-                    </a>
-                </div>
-            </section>
+            <section className="py-24" style={{ backgroundImage: `url('https://hali.vn/wp-content/uploads/2020/07/thiet-ke-banner-my-pham37.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <div className="container mx-auto px-4 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Khám phá bộ sưu tập mỹ phẩm cao cấp</h2>
+        <p className="text-gray-800 mb-8 max-w-2xl mx-auto">
+            Hãy để MyPhamHTCT đồng hành cùng bạn trên hành trình chăm sóc và nâng niu làn da của mình với những sản phẩm an toàn, chất lượng.
+        </p>
+        <a
+            href="#"
+            className="inline-block hover:bg-gray-200 shadow-md text-pink-500 font-semibold px-8 py-3 rounded-full bg-white hover:text-pink-700 transition"
+        >
+            Mua sắm ngay
+        </a>
+    </div>
+</section>
+ {/* Form gửi đánh giá */}
+ <section className="py-16 bg-pink-50">
+ <div className=" bg-white p-6 rounded-lg shadow max-w-2xl mx-auto">
+      <h3 className="text-xl font-semibold text-center mb-6 text-gray-800 uppercase tracking-wider ">Đánh giá của bạn</h3>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
+            Họ và tên
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            placeholder="Nhập họ và tên của bạn"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="rating" className="block text-gray-700 font-medium mb-2">
+            Đánh giá sao
+          </label>
+          <select
+            id="rating"
+            name="rating"
+            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            required
+          >
+            <option value="">Chọn số sao</option>
+            <option value="5">★★★★★ (5 sao)</option>
+            <option value="4">★★★★☆ (4 sao)</option>
+            <option value="3">★★★☆☆ (3 sao)</option>
+            <option value="2">★★☆☆☆ (2 sao)</option>
+            <option value="1">★☆☆☆☆ (1 sao)</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="comment" className="block text-gray-700 font-medium mb-2">
+            Nhận xét của bạn
+          </label>
+          <textarea
+            id="comment"
+            name="comment"
+            rows="4"
+            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            placeholder="Chia sẻ cảm nhận của bạn về MyPhamHTCT..."
+            required
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-pink-500 text-white font-semibold py-2 rounded-lg hover:bg-pink-600 transition duration-150 ease-in-out"
+        >
+          Gửi đánh giá
+        </button>
+      </form>
+    </div>
+</section>
         </div>
     );
 };

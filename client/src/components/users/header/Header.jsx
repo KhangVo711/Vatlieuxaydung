@@ -470,11 +470,13 @@ const products = [
         </>
       )}
     </Popover>
-          <Link to="about" className="text-sm font-semibold leading-6 xl:text-md text-gray-900">
+          <Link to="about" className="text-sm font-semibold flex items-center  flex-col leading-6 xl:text-md text-gray-900">
             Thông tin
+            {location.pathname === '/about' ? <hr className='bg-black h-0.5 w-1/2' /> : ''} 
           </Link>
-          <Link to="contact" className="text-sm font-semibold leading-6 xl:text-md text-gray-900">
+          <Link to="contact" className="text-sm font-semibold flex items-center flex-col  leading-6 xl:text-md text-gray-900">
             Liên hệ
+            {location.pathname === '/contact' ? <hr className='bg-black h-0.5 w-1/2' /> : ''} 
           </Link>
 
           <div className="flex items-center border border-gray-300 rounded-full p-2 xl:w-80 lg:w-64 bg-white shadow-sm">

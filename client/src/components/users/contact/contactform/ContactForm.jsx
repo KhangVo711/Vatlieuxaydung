@@ -156,7 +156,7 @@ const ContactForm = () => {
       <div>
         <button
           type="submit"
-          className="w-full bg-pink-600 text-white py-3 px-4 rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 transition-colors"
+          className="w-full bg-pink-500 text-white py-3 px-4 rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 transition-colors"
         >
           Gửi Tin Nhắn
         </button>

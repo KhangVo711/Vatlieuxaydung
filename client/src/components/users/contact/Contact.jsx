@@ -5,14 +5,15 @@ import ContactForm from './contactform/ContactForm';
 
 export default function Contact() {
   return (
-    <div className="bg-gradient-to-r from-pink-50 to-purple-50 min-h-screen">
+    <div className=" min-h-screen">
 
       {/* Main Content */}
       <main className="container mx-auto py-12 px-6">
         <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="md:flex">
             {/* Left Side - Contact Info */}
-            <div className="md:w-2/5 bg-gradient-to-b from-pink-400 to-purple-500 text-white p-8">
+            <div className="md:w-2/5 bg-pink-300 text-white p-8">
+
               <h2 className="text-3xl font-bold mb-6">Liên Hệ Với Chúng Tôi</h2>
               <p className="mb-8 text-white/80">
                 Chúng tôi luôn sẵn sàng hỗ trợ và lắng nghe ý kiến của bạn. Đừng ngần ngại liên hệ với chúng tôi!
@@ -44,7 +45,7 @@ export default function Contact() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold">Địa chỉ</h3>
-                    <p className="text-white/80">123 Đường Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</p>
+                    <p className="text-white/80">789 Nguyễn Trãi, Ninh Kiều, Cần Thơ</p>
                   </div>
                 </div>
 
@@ -67,7 +68,7 @@ export default function Contact() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold">Điện thoại</h3>
-                    <p className="text-white/80">+84 (0) 123 456 789</p>
+                    <p className="text-white/80">1900 1234 567</p>
                   </div>
                 </div>
 
@@ -90,7 +91,7 @@ export default function Contact() {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold">Email</h3>
-                    <p className="text-white/80">contact@beautycosmetics.com</p>
+                    <p className="text-white/80">MyPhamHTCT@gmail.com</p>
                   </div>
                 </div>
 
