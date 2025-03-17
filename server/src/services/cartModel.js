@@ -70,8 +70,9 @@ const detailProductInOrder = async (madh) => {
             sp.tensp,
             sp.maloai,
             sp.ttct,
+            sp.masp,
             sp.soluongsp,
-            sp.hinhanh,
+            hasp.hinhanh,
             sp.gia,
             sp.mansx,
             ct.soluongsanpham,
@@ -88,8 +89,18 @@ const detailProductInOrder = async (madh) => {
             sanpham sp ON ct.masp = sp.masp
         JOIN
             donvivanchuyen dv ON dh.madvvc = dv.madvvc
+        LEFT JOIN
+            hinhanhsanpham hasp ON sp.masp = hasp.masp
         WHERE
-            dh.madh = ?;
+            dh.madh = ?
+        GROUP BY
+            dh.madh, dh.makh, dh.maform, kh.tenkh, fd.tenkh, kh.diachi, fd.diachi, kh.sdt, fd.sdt, fd.email,
+            dh.ngaydat, dh.trangthai, dh.tonggia, dh.madvvc, dv.tendvvc, dv.phivanchuyen, ct.masp, ct.km,
+            sp.tensp, sp.maloai, sp.ttct, sp.soluongsp, sp.gia, sp.mansx, ct.soluongsanpham, ct.dongia,
+            hasp.hinhanh
+        ORDER BY
+            hasp.masp
+        LIMIT 1; 
     `, [madh]);
 
     return rows;

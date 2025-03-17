@@ -16,7 +16,7 @@ export default function ViewDetailOrder({ formRefView, selected }) {
 
   return (
     <div className='w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center'>
-      <div ref={formRefView} className="2xl:w-1/2 w-2/3 mx-auto bg-gray-50 shadow-xl border flex flex-col py-5 px-2 rounded">
+      <div ref={formRefView} className="2xl:w-7/12 w-2/3 mx-auto bg-gray-50 shadow-xl border flex flex-col py-5 px-2 rounded">
         <h1 className='text-center text-xl font-bold text-gray-800 mb-5'>Chi tiết đơn hàng</h1>
         <div className='mb-1'>
           <div className='flex justify-center items-start w-full mb-3 bg-slate-300 px-4 rounded-sm py-2'>
@@ -51,6 +51,7 @@ export default function ViewDetailOrder({ formRefView, selected }) {
         <table className="w-full text-md leading-5">
           <thead className="bg-gray-300">
             <tr>
+              <th className="py-3 px-4 text-left font-bold text-gray-800">Mã sản phẩm</th>
               <th className="py-3 px-4 text-left font-bold text-gray-800">Sản phẩm</th>
               <th className="py-3 px-4 text-center font-bold text-gray-800">Khuyến mãi</th>
               <th className="py-3 px-4 text-center font-bold text-gray-800">Số lượng</th>
@@ -61,6 +62,7 @@ export default function ViewDetailOrder({ formRefView, selected }) {
           <tbody>
             {selected.map((detail, index) => (
               <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}>
+                <td className="py-3 px-4 text-left font-medium text-gray-600">{detail.masp}</td>
                 <td className="py-3 px-4 text-left font-medium text-gray-600">{detail.tensp}</td>
                 <td className="py-3 px-4 text-center font-medium text-gray-600">{detail.km}%</td>
                 <td className="py-3 px-4 text-center">{detail.soluongsanpham}</td>

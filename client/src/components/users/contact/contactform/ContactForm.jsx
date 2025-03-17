@@ -81,7 +81,7 @@ const ContactForm = () => {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 ${
+          className={`mt-1 block w-full py-1.5 px-3 border rounded-md shadow-sm  focus:outline-pink-400 focus:ring-pink-500 ${
             formErrors.name ? 'border-red-500' : ''
           }`}
         />
@@ -98,7 +98,7 @@ const ContactForm = () => {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 ${
+          className={`mt-1 block w-full py-1.5 px-3 rounded-md border border-gray-300 shadow-sm focus:outline-pink-400 focus:ring-pink-500 ${
             formErrors.email ? 'border-red-500' : ''
           }`}
         />
@@ -115,7 +115,7 @@ const ContactForm = () => {
           name="phone"
           value={formData.phone}
           onChange={handleChange}
-          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 ${
+          className={`mt-1 block w-full rounded-md py-1.5 px-3 border border-gray-300 shadow-sm focus:outline-pink-400 focus:ring-pink-500 ${
             formErrors.phone ? 'border-red-500' : ''
           }`}
         />
@@ -132,7 +132,7 @@ const ContactForm = () => {
           name="subject"
           value={formData.subject}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500"
+          className="mt-1 block w-full rounded-md py-1.5 px-3 border border-gray-300 shadow-sm focus:outline-pink-400 focus:ring-pink-500"
         />
       </div>
 
@@ -146,7 +146,7 @@ const ContactForm = () => {
           value={formData.message}
           onChange={handleChange}
           rows="4"
-          className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500 ${
+          className={`mt-1 block w-full rounded-md py-1.5 px-3 border border-gray-300 shadow-sm focus:outline-pink-400 focus:ring-pink-500 ${
             formErrors.message ? 'border-red-500' : ''
           }`}
         ></textarea>

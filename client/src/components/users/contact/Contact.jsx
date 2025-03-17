@@ -168,7 +168,7 @@ export default function Contact() {
 
             {/* Right Side - Contact Form */}
             <div className="md:w-3/5 p-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Gửi Tin Nhắn Cho Chúng Tôi</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Gửi Tin Nhắn Cho Chúng Tôi</h2>
               <Suspense fallback={<div className="text-center py-6">Đang tải form...</div>}>
                 <ContactForm />
               </Suspense>

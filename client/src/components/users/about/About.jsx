@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
+import { Context } from '../../../components/Context';
 
 export default function About() {
     const [category, setCategory] = useState([]); 
-    
+    const {isData} = useContext(Context);
+    const [rating, setRating] = useState([]);
+    console.log(rating);
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -18,6 +21,27 @@ export default function About() {
       };
       fetchData();
     }, []);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`http://localhost:5001/getReview`);
+          if (response.status === 200) {
+            setRating(response.data);
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+    
+      fetchData();
+    
+      const intervalId = setInterval(() => {
+        fetchData();
+      }, 5000); 
+      return () => clearInterval(intervalId);
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -25,11 +49,13 @@ export default function About() {
           name: formData.get('name'),
           rating: formData.get('rating'),
           comment: formData.get('comment'),
+          date: new Date().toISOString().split('T')[0]
         };
         try {
-          const response = await axios.post('http://localhost:5001/submitReview', review);
+          const response = await axios.post('http://localhost:5001/submitReview', review,
+            { headers: { 'Content-Type': 'application/json' } }
+          );
           if (response.status === 200) {
-            alert('Đánh giá của bạn đã được gửi thành công!');
             e.target.reset();
           }
         } catch (error) {
@@ -143,14 +169,14 @@ export default function About() {
                             <p className="text-gray-600">Chúng tôi đặt sự an toàn của khách hàng lên hàng đầu với các sản phẩm được kiểm nghiệm nghiêm ngặt.</p>
                         </div>
                         <div className="bg-white p-6 rounded-lg shadow text-center">
-                            <div className="bg-pink-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-semibold mb-2 text-gray-800">Hiệu quả</h3>
-                            <p className="text-gray-600">Sản phẩm của chúng tôi được nghiên cứu kỹ lưỡng để mang lại hiệu quả rõ rệt và bền vững.</p>
-                        </div>
+    <div className="bg-pink-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+    </div>
+    <h3 className="text-xl font-semibold mb-2 text-gray-800">Hiệu quả</h3>
+    <p className="text-gray-600">Chúng tôi chọn lọc những sản phẩm đã được chứng minh mang lại hiệu quả rõ rệt, bền vững từ các thương hiệu uy tín.</p>
+</div>
                         <div className="bg-white p-6 rounded-lg shadow text-center">
                             <div className="bg-pink-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -213,119 +239,22 @@ export default function About() {
   <div className="container mx-auto px-4">
     <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">Khách hàng nói gì về chúng tôi</h2>
     <div className="grid md:grid-cols-3 gap-8">
-      {/* Đánh giá từ khách hàng */}
-      <div className="bg-white p-6 rounded-lg shadow">
-        <div className="flex items-center mb-4">
-          <img
-            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
-            alt="Avatar"
-            className="rounded-full w-14 h-14"
-          />
-          <div className="ml-4">
-            <h4 className="font-semibold text-gray-800">Nguyễn Thị Hương</h4>
-            <div className="flex text-yellow-400">
-              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-            </div>
+  {rating.map((review, index) => (
+    <div key={index} className="bg-white p-6 rounded-lg shadow">
+      <div className="flex items-center mb-2">
+        <img src="https://img3.thuthuatphanmem.vn/uploads/2019/10/17/anh-bong-hoa-dao-png_102501764.png" alt="Avatar" className="rounded-full w-14 h-14" />
+        <div className="ml-4">
+          <h4 className="font-semibold text-gray-800">{review.name}</h4>
+          <div className="flex text-yellow-400">
+            {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
           </div>
         </div>
-        <p className="text-gray-600 italic">
-          "Sản phẩm chất lượng, giao hàng nhanh. Tôi đã trở thành khách hàng thân thiết của MyPhamHTCT được 2 năm và chưa bao giờ thất vọng."
-        </p>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <div className="flex items-center mb-4">
-          <img
-            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
-            alt="Avatar"
-            className="rounded-full w-14 h-14"
-          />
-          <div className="ml-4">
-            <h4 className="font-semibold text-gray-800">Trần Minh Anh</h4>
-            <div className="flex text-yellow-400">
-              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-            </div>
-          </div>
-        </div>
-        <p className="text-gray-600 italic">
-          "Tôi rất hài lòng với dịch vụ tư vấn của MyPhamHTCT. Nhân viên am hiểu và giúp tôi chọn được sản phẩm phù hợp với làn da nhạy cảm của mình."
-        </p>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <div className="flex items-center mb-4">
-          <img
-            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
-            alt="Avatar"
-            className="rounded-full w-14 h-14"
-          />
-          <div className="ml-4">
-            <h4 className="font-semibold text-gray-800">Phạm Thanh Mai</h4>
-            <div className="flex text-yellow-400">
-              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-            </div>
-          </div>
-        </div>
-        <p className="text-gray-600 italic">
-          "Bộ sản phẩm dưỡng da của MyPhamHTCT đã giúp tôi cải thiện làn da rõ rệt sau 2 tháng sử dụng. Giá cả hợp lý và chất lượng tuyệt vời."
-        </p>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <div className="flex items-center mb-4">
-          <img
-            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
-            alt="Avatar"
-            className="rounded-full w-14 h-14"
-          />
-          <div className="ml-4">
-            <h4 className="font-semibold text-gray-800">Lê Văn Hùng</h4>
-            <div className="flex text-yellow-400">
-              <span>★</span><span>★</span><span>★</span><span>★</span><span>☆</span>
-            </div>
-          </div>
-        </div>
-        <p className="text-gray-600 italic">
-          "Sản phẩm tốt, nhưng tôi mong có thêm nhiều ưu đãi cho khách hàng mới."
-        </p>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <div className="flex items-center mb-4">
-          <img
-            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
-            alt="Avatar"
-            className="rounded-full w-14 h-14"
-          />
-          <div className="ml-4">
-            <h4 className="font-semibold text-gray-800">Hoàng Lan Chi</h4>
-            <div className="flex text-yellow-400">
-              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-            </div>
-          </div>
-        </div>
-        <p className="text-gray-600 italic">
-          "Dịch vụ chăm sóc khách hàng tuyệt vời, sản phẩm đúng như mô tả. Rất đáng để thử!"
-        </p>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow">
-        <div className="flex items-center mb-4">
-          <img
-            src="https://static.vecteezy.com/system/resources/previews/014/194/216/original/avatar-icon-human-a-person-s-badge-social-media-profile-symbol-the-symbol-of-a-person-vector.jpg"
-            alt="Avatar"
-            className="rounded-full w-14 h-14"
-          />
-          <div className="ml-4">
-            <h4 className="font-semibold text-gray-800">Đỗ Thị Ngọc</h4>
-            <div className="flex text-yellow-400">
-              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-            </div>
-          </div>
-        </div>
-        <p className="text-gray-600 italic">
-          "Tôi thích cách MyPhamHTCT đóng gói sản phẩm, rất cẩn thận và đẹp mắt."
-        </p>
-      </div>
+      <p className="text-gray-600 italic">"{review.comment}"</p>
     </div>
-
-   
-  </div>
+  ))}
+</div>
+    </div>
 </section>
 
             {/* CTA */}
@@ -346,13 +275,25 @@ export default function About() {
  {/* Form gửi đánh giá */}
  <section className="py-16 bg-pink-50">
  <div className=" bg-white p-6 rounded-lg shadow max-w-2xl mx-auto">
-      <h3 className="text-xl font-semibold text-center mb-6 text-gray-800 uppercase tracking-wider ">Đánh giá của bạn</h3>
+      <h3 className="text-2xl font-bold text-center mb-6 text-gray-800 uppercase tracking-wider ">Đánh giá của bạn</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
             Họ và tên
           </label>
-          <input
+          {isData && isData?.fullname ? (
+            <>
+            <p className="w-full p-2 border rounded-lg focus:outline-none" >{isData?.fullname}</p>
+            <input
+            type="hidden"
+            id="name"
+            name="name"
+            placeholder="Nhập họ và tên của bạn"
+            value={isData?.fullname}
+          />
+          </>
+          ) : (
+            <input
             type="text"
             id="name"
             name="name"
@@ -360,6 +301,8 @@ export default function About() {
             placeholder="Nhập họ và tên của bạn"
             required
           />
+          )}
+          
         </div>
         <div className="mb-4">
           <label htmlFor="rating" className="block text-gray-700 font-medium mb-2">

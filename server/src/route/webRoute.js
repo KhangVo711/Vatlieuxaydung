@@ -6,6 +6,7 @@ import invoice from '../controllers/invoiceController.js'
 import ship from '../controllers/shipController.js'
 import promo from '../controllers/promoController.js'
 import cart from '../controllers/cartController.js'
+import rating from "../controllers/ratingController.js";
 import repo from '../controllers/repoController.js'
 import uploadMiddleware from '../../middleware/upload.js'
 import auth from '../../middleware/jwt.js'
@@ -82,6 +83,9 @@ const initWebRoute = (app) => {
 
     // router.get('/getRepoMonthCurrent', repo.getRepoMonthCurrent)
     router.get('/getRepoSumAllMonth', repo.getRepoSumAllMonth)
+
+    router.post('/submitReview', rating.createRatingStore)
+    router.get('/getReview', rating.getRatingStore)
 
     return app.use('/', router)
 }
