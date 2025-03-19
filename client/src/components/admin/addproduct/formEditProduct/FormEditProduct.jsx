@@ -220,7 +220,7 @@ export default function FormEditProduct({ formRefEdit, selectedProduct, setSelec
         )}
 
         <div className="flex justify-center">
-          <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-md hover:bg-blue-800 focus:ring-4 focus:ring-blue-300">
+          <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-pink-500 rounded-md hover:bg-pink-600 focus:ring-4 focus:ring-pink-300 transition duration-150 ease-in-out">
             Đồng ý
           </button>
         </div>

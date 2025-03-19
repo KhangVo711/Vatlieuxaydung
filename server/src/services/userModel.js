@@ -68,9 +68,16 @@ const changePassword = async (password, id) => {
     return rows;
 };
 
-const getAdmin = async (email) => {
+const getAdminByEmail = async (email) => {
     const [rows, fields] = await connectDB.execute(
         `SELECT * FROM quanly WHERE email = ?`, [email]
+    );
+    return rows[0];
+}
+
+const getAdminByPhone = async (sdt) => {
+    const [rows, fields] = await connectDB.execute(
+        `SELECT * FROM quanly WHERE sdt = ?`, [sdt]
     );
     return rows[0];
 }
@@ -88,5 +95,5 @@ const getAllUsers = async () => {
 }
 
 
-export default {getUser, insertUser, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdmin, getAllUsers};
+export default {getUser, insertUser, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers};
 

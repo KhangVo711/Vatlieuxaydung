@@ -230,36 +230,58 @@ const changePassword = async (req, res) => {
 
 const loginAdmin = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        if ( !email || !password) {
-            return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
-        }
-        const acc = await userModel.getAdmin(email);
-        if (!acc) {
-            return res.status(400).json({ message: 'Sai Email' });
-        }
-        const isPasswordMatch = await bcrypt.compare(password, acc.matkhau);
+        const { email, phone, password } = req.body;
 
+        // Kiểm tra xem có ít nhất một trong hai (email hoặc phone) và password được cung cấp
+        if ((!email && !phone) || !password) {
+            return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin (email hoặc số điện thoại và mật khẩu)' });
+        }
+
+        // Lấy thông tin admin dựa trên email hoặc phone
+        const acc = email 
+            ? await userModel.getAdminByEmail(email) 
+            : await userModel.getAdminByPhone(phone);
+
+        if (!acc) {
+            return res.status(400).json({ 
+                message: email ? 'Sai Email' : 'Sai số điện thoại' 
+            });
+        }
+
+        // So sánh mật khẩu
+        const isPasswordMatch = await bcrypt.compare(password, acc.matkhau);
         if (!isPasswordMatch) {
             return res.status(401).json({ message: 'Mật khẩu không đúng' });
         }
+
+        // Tạo payload cho JWT
         const payload = {
             maql: acc.maql,
             tenql: acc.tenql,
             sdt: acc.sdt,
             email: acc.email,
             diachi: acc.diachi,
-        }
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
-        res.cookie("admin", token, { path: "/", httpOnly: false, secure: false, sameSite: 'Lax' });
+        };
 
-        return res.status(200).json({ message: 'Đăng nhập thành công', token, admin: acc });
-    }
-    catch (error) {
+        // Tạo token
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
+        res.cookie("admin", token, { 
+            path: "/", 
+            httpOnly: false, 
+            secure: false, 
+            sameSite: 'Lax' 
+        });
+
+        return res.status(200).json({ 
+            message: 'Đăng nhập thành công', 
+            token, 
+            admin: acc 
+        });
+    } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Lỗi xảy ra bên server' });
     }
-}
+};
 
 const getAllUsers = async (req, res) => {
     try {
