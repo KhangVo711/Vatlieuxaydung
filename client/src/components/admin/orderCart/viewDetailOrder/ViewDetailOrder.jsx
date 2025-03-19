@@ -36,6 +36,12 @@ export default function ViewDetailOrder({ formRefView, selected }) {
             <h2 className='text-left'>
                 <span className='font-bold text-gray-800 '>Đơn vị vận chuyển:</span> {invoiceData.tendvvc}
               </h2>
+              <h2 className='text-left'>
+                <span className='font-bold text-gray-800 '>Phí vận chuyển:</span> {formatCurrency(invoiceData.phivanchuyen)}
+              </h2>
+              <h2 className='text-left'>
+                <span className='font-bold text-gray-800 '>Khoảng cách:</span> {invoiceData.quangduong.toFixed(2)} km
+              </h2>
               <h2>
                 <span className='font-bold text-gray-800 mr-0.5'>Ngày giờ lập:</span> {formatDateTime(invoiceData.ngaydat)}
               </h2>
@@ -72,7 +78,7 @@ export default function ViewDetailOrder({ formRefView, selected }) {
             ))}
           </tbody>
         </table>
-        <h2 className='text-right mt-3 px-4'><span className='font-bold'>Phí vận chuyển:</span> {formatCurrency(invoiceData.phivanchuyen)}</h2>
+        <h2 className='text-right mt-3 px-4'><span className='font-bold'>Tổng phí vận chuyển:</span> {formatCurrency(invoiceData.phivanchuyen*invoiceData.quangduong)}</h2>
         <h2 className='text-center mt-3'><span className='font-bold'>Tổng giá:</span> {formatCurrency(invoiceData.tonggia)}</h2>
       </div>
     </div>

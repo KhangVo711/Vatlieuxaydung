@@ -68,9 +68,9 @@ const changePassword = async (password, id) => {
     return rows;
 };
 
-const getAdmin = async (phone, email) => {
+const getAdmin = async (email) => {
     const [rows, fields] = await connectDB.execute(
-        `SELECT * FROM quanly WHERE sdt = ? AND email = ?`, [phone, email]
+        `SELECT * FROM quanly WHERE email = ?`, [email]
     );
     return rows[0];
 }

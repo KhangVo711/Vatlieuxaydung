@@ -197,7 +197,7 @@ const handleError = () => {
       <div className='w-full flex items-center justify-between mb-6'>
         <nav className="text-sm font-semibold">
           <ol className="list-none p-0 inline-flex">
-            <li className="flex items-center text-blue-500">
+            <li className="flex items-center text-pink-500">
               <a href="#" className="text-gray-700">Nhân viên</a>
               <ChevronRightIcon className="w-3 h-3 mx-3" />
             </li>
@@ -206,7 +206,7 @@ const handleError = () => {
             </li>
           </ol>
         </nav>
-        <button onClick={handleAddProductClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2.5 text-sm px-3 rounded transition duration-150 ease-in-out">Thêm nhân viên</button>
+        <button onClick={handleAddProductClick} className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2.5 text-sm px-3 rounded transition duration-150 ease-in-out">Thêm nhân viên</button>
       </div>
 
       <TableStaff staff={staff}  

@@ -23,10 +23,10 @@ export default function TableInvoice({ dataInvoice, handleViewProductClick }) {
           currentInvoice.map((invoice, index) => (
             <div
               key={index}
-              className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+              className="bg-gray-50 border border-gray-200 rounded-lg shadow dark:bg-pink-800 dark:border-pink-700"
             >
               <div className="pb-3">
-                <div className="bg-gray-300 w-full p-1.5">
+                <div className="bg-pink-300 w-full rounded-t-lg p-1.5">
                   <h2 className="text-center font-bold">Mã phiếu: {invoice.mapn}</h2>
                 </div>
                 <h2 className="text-center mt-1 font-semibold">
@@ -50,7 +50,7 @@ export default function TableInvoice({ dataInvoice, handleViewProductClick }) {
                   <button
                     type="button"
                     onClick={() => handleViewProductClick(invoice)}
-                    className="px-2 py-1.5 bg-gray-800 rounded-sm hover:bg-gray-600 text-white transition ease-in-out duration-150"
+                    className="px-2 py-1.5 bg-pink-500 rounded-sm hover:bg-pink-600 text-white font-semibold mt-2 transition ease-in-out duration-150"
                     aria-label={`View details for invoice ${invoice.mapn}`}
                   >
                     Xem chi tiết

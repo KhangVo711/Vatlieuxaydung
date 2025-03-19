@@ -9,7 +9,7 @@ export default function HeaderAdmin() {
 
   return (
     <div className="sticky top-0 z-40 w-full">
-      <div className="w-full h-16 px-3 bg-gray-100 border-b flex items-center justify-between">
+      <div className="w-full h-16 px-3 bg-gray-50 border-b flex items-center justify-between">
         
         {/* Left navbar */}
         <div className="flex">

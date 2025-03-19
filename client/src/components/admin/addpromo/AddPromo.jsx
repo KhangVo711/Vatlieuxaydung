@@ -144,7 +144,7 @@ export default function AddPromo() {
             <div className='w-full flex items-center justify-between mb-6'>
                 <nav className="text-sm font-semibold">
                     <ol className="list-none p-0 inline-flex">
-                        <li className="flex items-center text-blue-500">
+                        <li className="flex items-center text-pink-500">
                             <a href="#" className="text-gray-700">Khuyến mãi</a>
                             <ChevronRightIcon className="w-3 h-3 mx-3" />
                         </li>
@@ -153,7 +153,7 @@ export default function AddPromo() {
                         </li>
                     </ol>
                 </nav>
-                <button onClick={handleAddProductClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2.5 text-sm px-3 rounded transition duration-150 ease-in-out">Thêm khuyến mãi</button>
+                <button onClick={handleAddProductClick} className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2.5 text-sm px-3 rounded transition duration-150 ease-in-out">Thêm khuyến mãi</button>
             </div>
 
             <TablePromo promo={promo} handleEditProductClick={handleEditProductClick} setLoadPromo={setLoadPromo} handleDeleteProductClick={handleDeleteProductClick} />

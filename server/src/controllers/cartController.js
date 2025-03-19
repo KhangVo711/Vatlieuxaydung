@@ -15,11 +15,11 @@ const getCart = async (req, res) => {
 
 const insertCart = async (req, res) => {
     try {
-        const { madh, makh, ngaydat, trangthai, tonggia, madvvc, maform } = req.body;
-        if (!madh || (!makh && !maform) || !ngaydat || !trangthai || !tonggia || !madvvc) {
+        const { madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong } = req.body;
+        if (!madh || (!makh && !maform) || !ngaydat || !trangthai || !tonggia || !madvvc || !quangduong) {
             return res.status(400).send({ message: "Thiếu thông tin đặt hàng." });
         }
-        await cartModel.insertCart(madh, makh, ngaydat, trangthai, tonggia, madvvc, maform);
+        await cartModel.insertCart(madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong);
         res.status(200).send({ message: "Đơn hàng đã được đặt thành công!" });
     } catch (error) {
         console.error("Error saving order:", error);

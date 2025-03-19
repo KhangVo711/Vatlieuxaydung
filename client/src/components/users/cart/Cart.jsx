@@ -48,7 +48,6 @@ export default function Cart() {
         setLoadDelivery(false);
 
     }, [loadDelivery]);
- 
     useEffect(() => {
         if (delivery.length > 0 && !selectedDelivery) {
             handleDeliveryChange(delivery[0]);
@@ -75,6 +74,8 @@ export default function Cart() {
       }, 0);
 
     const [ship, setShip] = useState([]);
+    const [distance, setDistance] = useState(null);
+
     const [isProcessing, setIsProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [message, setMessage] = useState('');
@@ -107,7 +108,6 @@ export default function Cart() {
         const orderId = generateOrderId(); // Tạo mã đơn hàng duy nhất
         const totalAmount = total + feeShip
         const makhachhang = isData?.id ?? null;
-
         const maformid = (makhachhang === null)
             ? formData.maform
             : null;
@@ -118,7 +118,8 @@ export default function Cart() {
             trangthai: "Chờ xác nhận",
             tonggia: totalAmount,
             madvvc: selectedDelivery.madvvc,
-            maform: maformid
+            maform: maformid,
+            quangduong: distance
         };
  
         try {
@@ -362,7 +363,7 @@ export default function Cart() {
                     </div>
                     
 
-                    <DeliveryMap selectedDelivery = {selectedDelivery} setFeeShip = {setFeeShip} formData ={formData}/>
+                    <DeliveryMap setDistanceCart ={setDistance} selectedDelivery = {selectedDelivery} setFeeShip = {setFeeShip} formData ={formData}/>
 
                     <div className="p-4 border-t">
                         <div className="flex justify-between items-center">

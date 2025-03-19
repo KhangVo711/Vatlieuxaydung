@@ -232,7 +232,7 @@ const token = Cookies.get('admin') || Cookies.get('staff');
                                         <button
                                             type="button"
                                             onClick={() => handleSubProduct(groupIndex * 3 + index)}
-                                            className="text-gray-700 hover:text-gray-500"
+                                            className="text-red-500 hover:text-red-400 transition duration-150 ease-in-out"
                                         >
                                             <MinusCircleIcon className="h-7 w-7" />
                                         </button>
@@ -287,7 +287,7 @@ const token = Cookies.get('admin') || Cookies.get('staff');
                     <button
                         type="button"
                         onClick={handleAddProduct}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-pink-500 hover:text-pink-600 transition duration-150 ease-in-out"
                     >
                         <PlusCircleIcon className="h-8 w-8" />
                     </button>
@@ -295,7 +295,7 @@ const token = Cookies.get('admin') || Cookies.get('staff');
                 <div className="flex justify-center mt-6">
                     <button
                         type="submit"
-                        className="px-6 py-2 text-white bg-blue-700 hover:bg-blue-800 rounded shadow focus:outline-none focus:ring-4 focus:ring-blue-300"
+                        className="px-6 py-2 text-white bg-pink-500 hover:bg-pink-600 rounded shadow focus:outline-none focus:ring-4 focus:ring-pink-300"
                     >
                         Thêm
                     </button>

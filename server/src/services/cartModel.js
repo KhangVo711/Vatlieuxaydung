@@ -1,8 +1,8 @@
 import connectDB from "../configs/connectDB.js";
 
 // CART
-const insertCart = async (madh, makh, ngaydat, trangthai, tonggia, madvvc, maform) => {
-    await connectDB.execute("INSERT INTO `donhang` VALUES (?, ?, ?, ?, ?, ?, ?)", [madh, makh, ngaydat, trangthai, tonggia, madvvc, maform]);
+const insertCart = async (madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong) => {
+    await connectDB.execute("INSERT INTO `donhang` VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong]);
 }
 const insertDetailCart = async (madh, masp, soluongsanpham, km, dongia ) => {
     await connectDB.execute("INSERT INTO `chitietdonhang` VALUES (?, ?, ?, ?, ?)", [madh, masp, soluongsanpham, km, dongia ]);
@@ -60,6 +60,7 @@ const detailProductInOrder = async (madh) => {
             END AS sdt_or_form,
             fd.email AS email_or_form,
             dh.ngaydat,
+            dh.quangduong,
             dh.trangthai,
             dh.tonggia,
             dh.madvvc,

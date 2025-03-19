@@ -13,7 +13,6 @@ export default function OrderCart() {
     const [selected, setSelected] = useState({});
     const [showFormEdit, setShowFormEdit] = useState(false);
     const formRefEdit = useRef(null);
-
     const handleEditClick = (item) => {
         setSelected(item);
         setShowFormEdit(true);
@@ -38,8 +37,10 @@ export default function OrderCart() {
       // VIEW DETAIL INVOICE
   const formRefView = useRef(null);
   const [showFormView, setShowFormView] = useState(false);
+
     console.log('selectDetail', selected);
-  const handleViewClick = async (item) => {
+  
+    const handleViewClick = async (item) => {
     console.log('item', item.madh);
     try {
     setShowFormView(true);

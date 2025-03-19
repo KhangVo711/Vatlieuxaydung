@@ -230,13 +230,13 @@ const changePassword = async (req, res) => {
 
 const loginAdmin = async (req, res) => {
     try {
-        const { phone, email, password } = req.body;
-        if (!phone || !email || !password) {
+        const { email, password } = req.body;
+        if ( !email || !password) {
             return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
         }
-        const acc = await userModel.getAdmin(phone, email);
+        const acc = await userModel.getAdmin(email);
         if (!acc) {
-            return res.status(400).json({ message: 'Sai Email hoặc số điện thoại' });
+            return res.status(400).json({ message: 'Sai Email' });
         }
         const isPasswordMatch = await bcrypt.compare(password, acc.matkhau);
 
@@ -250,7 +250,7 @@ const loginAdmin = async (req, res) => {
             email: acc.email,
             diachi: acc.diachi,
         }
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '2h' });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
         res.cookie("admin", token, { path: "/", httpOnly: false, secure: false, sameSite: 'Lax' });
 
         return res.status(200).json({ message: 'Đăng nhập thành công', token, admin: acc });

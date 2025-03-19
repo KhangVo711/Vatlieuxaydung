@@ -11,10 +11,9 @@ export default function LoginAdmin() {
 
     const [formData, setFormData] = useState({
         email: '',
-        phone: '',
+        // phone: '',
         password: '',
     });
-    // console.log(formData);
     const [message, setMessage] = useState('');
     const [colorMsg, setColorMsg] = useState('');
 
@@ -84,104 +83,105 @@ export default function LoginAdmin() {
         <>
         <ToastContainer />
 
-        <section className="grid text-center h-screen items-center p-8">
-            <div>
-                <Typography variant="h3" color="blue-gray" className="mb-2 uppercase">
-                    Đăng nhập
-                </Typography>
-                <Typography className="mb-12 text-gray-600 font-normal text-[18px]">
-                    Đăng nhập vào tài khoản quản lý
-                </Typography>
-                {message && <p className={`${colorMsg} text-center text-sm`}>{message}</p>}
+        <section className="min-h-screen flex items-center justify-center bg-pink-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+        <div className="text-center">
+            <Typography 
+                variant="h3" 
+                color="blue-gray" 
+                className="mb-2 uppercase tracking-wide font-bold"
+            >
+                Đăng nhập
+            </Typography>
+            <Typography 
+                className="text-gray-600 font-normal text-lg opacity-80"
+            >
+                Đăng nhập vào tài khoản quản lý
+            </Typography>
+            {message && (
+                <p className={`${colorMsg} text-center text-sm mt-2 bg-opacity-10 p-2 rounded`}>
+                    {message}
+                </p>
+            )}
+        </div>
 
-                <form onSubmit={handleSubmit} className="mx-auto max-w-[24rem] text-left">
-                    <div className="mb-6">
-                        <label htmlFor="email">
-                            <Typography
-                                variant="small"
-                                className="mb-2 block font-medium text-gray-900"
-                            >
-                                Email
-                            </Typography>
-                        </label>
-                        <Input
-                            id="email"
-                            color="gray"
-                            size="lg"
-                            type="email"
-                            name="email"
-                            placeholder="name@mail.com"
-                            className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
-                            labelProps={{
-                                className: "hidden",
-                            }}
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-6">
-                        <label htmlFor="phone">
-                            <Typography
-                                variant="small"
-                                className="mb-2 block font-medium text-gray-900"
-                            >
-                                Số điện thoại
-                            </Typography>
-                        </label>
-                        <Input
-                            id="phone"
-                            color="gray"
-                            size="lg"
-                            type="text"
-                            name="phone"
-                            placeholder="098722235"
-                            className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
-                            labelProps={{
-                                className: "hidden",
-                            }}
-                            value={formData.phone}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-6 relative">
-                        <label htmlFor="password">
-                            <Typography
-                                variant="small"
-                                className="mb-2 block font-medium text-gray-900"
-                            >
-                                Mật khẩu
-                            </Typography>
-                        </label>
-                        <Input
-                            size="lg"
-                            placeholder="********"
-                            labelProps={{
-                                className: "hidden",
-                            }}
-                            name='password'
-                            className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
-                            value={formData.password}
-                            onChange={handleChange}
-                            type={passwordShown ? "text" : "password"}
-                            icon={
-                                <i className="absolute top-1/2 right-0" onClick={togglePasswordVisiblity}>
-                                    {passwordShown ? (
-                                        <EyeIcon className="h-5 w-5" />
-                                    ) : (
-                                        <EyeSlashIcon className="h-5 w-5" />
-                                    )}
-                                </i>
-                            }
-                        />
-                    </div>
-                    <Button type='submit' color="gray" size="lg" className="mt-6 bg-gray-900 py-3.5 hover:bg-gray-800" fullWidth>
-                        Đăng nhập
-                    </Button>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+            <div className="space-y-6">
+                <div>
+                    <label htmlFor="email">
+                        <Typography
+                            variant="small"
+                            className="mb-2 block font-medium text-gray-700"
+                        >
+                            Email
+                        </Typography>
+                    </label>
+                    <Input
+                        id="email"
+                        color="pink"
+                        size="lg"
+                        type="email"
+                        name="email"
+                        placeholder="name@mail.com"
+                        className="w-full border bg-gray-50 border-pink-300 rounded-lg transition-all duration-200"
+                        labelProps={{ className: "hidden" }}
+                        value={formData.email}
+                        onChange={handleChange}
+                    />
+                </div>
 
-
-                </form>
+                <div className="relative">
+                    <label htmlFor="password">
+                        <Typography
+                            variant="small"
+                            className="mb-2 block font-medium text-gray-700"
+                        >
+                            Mật khẩu
+                        </Typography>
+                    </label>
+                    <Input
+                        size="lg"
+                        placeholder="********"
+                        labelProps={{ className: "hidden" }}
+                        name="password"
+                        className="w-full bg-gray-50 border border-pink-300 rounded-lg transition-all duration-200 pr-8"
+                        value={formData.password}
+                        onChange={handleChange}
+                        type={passwordShown ? "text" : "password"}
+                        icon={
+                            <button
+                                type="button"
+                                className="absolute inset-y-0 right-0 flex items-center pr-1 top-5"
+                                onClick={togglePasswordVisiblity}
+                            >
+                                {passwordShown ? (
+                                    <EyeIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                ) : (
+                                    <EyeSlashIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                )}
+                            </button>
+                        }
+                    />
+                </div>
             </div>
-        </section>
+
+            <Button 
+                type="submit" 
+                size="lg" 
+                className="w-full bg-gradient-to-r from-pink-500 to-pink-400 hover:from-pink-400 hover:to-pink-400 text-white py-3 rounded-lg font-medium transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
+            >
+                Đăng nhập
+            </Button>
+        </form>
+
+        {/* Optional: Thêm link quên mật khẩu */}
+        <div className="text-center">
+            <a href="#" className="text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200">
+                Quên mật khẩu?
+            </a>
+        </div>
+    </div>
+</section>
         </>
     );
 }

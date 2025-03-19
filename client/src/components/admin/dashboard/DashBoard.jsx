@@ -45,8 +45,8 @@ export default function Dashboard() {
           labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
           datasets: [
             {
-              backgroundColor: 'rgba(99,179,237,0.4)',
-              borderColor: '#63b3ed',
+              backgroundColor: '#db2777',
+              borderColor: '#f472b6',
               data: [203, 156, 99, 251, 305, 247, 256],
             },
             {
@@ -80,8 +80,8 @@ export default function Dashboard() {
           labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
           datasets: [
             {
-              backgroundColor: 'rgba(99,179,237,0.4)',
-              borderColor: '#63b3ed',
+              backgroundColor: 'rgba(236,72,153,0.4)',
+              borderColor: '#f472b6',
               data: [203, 156, 99, 251, 305, 247, 256],
             },
           ],
@@ -112,7 +112,7 @@ export default function Dashboard() {
       {/* Breadcrumb */}
       <nav className="text-sm font-semibold mb-3" aria-label="Breadcrumb">
         <ol className="list-none p-0 inline-flex">
-          <li className="flex items-center text-blue-500">
+          <li className="flex items-center text-pink-500">
             <a href="#" className="text-gray-700">Trang chủ</a>
             <ChevronRightIcon className="w-3 h-3 mx-3" />
           </li>
@@ -124,7 +124,7 @@ export default function Dashboard() {
 
       <div className="lg:flex justify-between items-center mb-4">
         <p className="text-2xl font-semibold mb-2 lg:mb-0">Chào buổi sáng, Admin!</p>
-        <button className="bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-3 py-2 text-white font-semibold shadow">
+        <button className="bg-pink-500 hover:bg-pink-600 focus:outline-none rounded-lg px-3 py-2 text-white font-semibold shadow">
           Nhật ký
         </button>
       </div>
@@ -138,7 +138,7 @@ export default function Dashboard() {
           { count: '1,653', label: 'Lượt xem sản phẩm', iconPath: "M17.431,2.156h-3.715c-0.228,0-0.413,0.186-0.413,0.413v6.973h-2.89V6.687c0-0.229-0.186-0.413-0.413-0.413H6.285c-0.228,0-0.413,0.184-0.413,0.413v6.388H2.569c-0.227,0-0.413,0.187-0.413,0.413v3.942c0,0.228,0.186,0.413,0.413,0.413h14.862c0.228,0,0.413-0.186,0.413-0.413V2.569C17.844,2.342,17.658,2.156,17.431,2.156 M5.872,17.019h-2.89v-3.117h2.89V17.019zM9.587,17.019h-2.89V7.1h2.89V17.019z M13.303,17.019h-2.89v-6.651h2.89V17.019z M17.019,17.019h-2.891V2.982h2.891V17.019z"},
         ].map(({ count, label, iconPath }, index) => (
           <div key={index} className="w-1/2 xl:w-1/4 px-3">
-            <div className="w-full bg-white border text-blue-400 rounded-lg flex items-center p-3">
+            <div className="w-full bg-white border text-pink-400 rounded-lg flex items-center p-3">
               {/* SVG Icon */}
               <svg className="w-10 h-10 fill-current mr-4 hidden lg:block" viewBox="0 0 22 22">
                 <path d={iconPath}></path>
@@ -180,7 +180,7 @@ export default function Dashboard() {
               { name: 'Đào Trung Kiên', product: 'Số sản phẩm mua: 3', amount: '1.725.000đ', color: 'green' },
               { name: 'Lý Gia Minh', product: 'Số sản phẩm mua: 2', amount: '1.135.000đ', color: 'green' },
             ].map(({ name, product, amount, color }, index) => (
-              <div key={index} className="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-3 py-1.5 mb-1">
+              <div key={index} className="w-full bg-gray-50 border rounded-lg flex justify-between items-center px-3 py-1.5 mb-1">
                 <div>
                   <p className="font-semibold text-md">{name}</p>
                   <p className='text-sm'>{product}</p>

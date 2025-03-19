@@ -6,7 +6,7 @@ import 'leaflet-routing-machine'; // Plugin để vẽ đường đi
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { Context } from '../../../Context';
 import axios from 'axios';
-export default function DeliveryMap({ selectedDelivery, setFeeShip, formData }) {
+export default function DeliveryMap({ selectedDelivery, setFeeShip, formData, setDistanceCart }) {
   const [distance, setDistance] = useState(null); // Khoảng cách đến cửa hàng gần nhất
   const [shippingFee, setShippingFee] = useState(0); // Phí vận chuyển động
   const [nearestStore, setNearestStore] = useState(null); // Thông tin cửa hàng gần nhất
@@ -18,8 +18,7 @@ export default function DeliveryMap({ selectedDelivery, setFeeShip, formData }) 
 
   const {isData} = useContext(Context);
   const [loginAddress, setLoginAddress] = useState(null);
-  console.log(isData.id);
-  console.log(loginAddress);
+  
   useEffect(() => {
     if (isData) {
       axios.get(`http://localhost:5001/getInf/${isData.id}`)
@@ -131,6 +130,7 @@ export default function DeliveryMap({ selectedDelivery, setFeeShip, formData }) 
       }
       setShippingFee(fee);
       setFeeShip(fee);
+      setDistanceCart(minDistance);
       setError(null);
     } else {
       setError('Không tìm thấy cửa hàng nào gần bạn.');
