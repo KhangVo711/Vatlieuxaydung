@@ -7,6 +7,7 @@ import ship from '../controllers/shipController.js'
 import promo from '../controllers/promoController.js'
 import cart from '../controllers/cartController.js'
 import rating from "../controllers/ratingController.js";
+import branch from "../controllers/branchController.js";
 import repo from '../controllers/repoController.js'
 import uploadMiddleware from '../../middleware/upload.js'
 import auth from '../../middleware/jwt.js'
@@ -86,6 +87,13 @@ const initWebRoute = (app) => {
 
     router.post('/submitReview', rating.createRatingStore)
     router.get('/getReview', rating.getRatingStore)
+
+    router.get('/getBranch', branch.getBranch);
+router.post('/addBranch', auth.authMiddleware, branch.insertBranch);
+router.post('/detailBranch', branch.detailBranch);
+router.get('/getBranch/:id', branch.getOneBranch);
+router.post('/editBranch', auth.authMiddleware, branch.editBranch);
+router.post('/deleteBranch', auth.authMiddleware, branch.deleteBranch); 
 
     return app.use('/', router)
 }

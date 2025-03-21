@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 import { Context } from '../../../components/Context';
+import Map from './map/Map';
 
 export default function About() {
     const [category, setCategory] = useState([]); 
@@ -64,6 +65,7 @@ export default function About() {
         }
       };
     return (
+      <>
         <div className="min-h-screen bg-pink-50">
             {/* Banner */}
             <div
@@ -345,6 +347,14 @@ export default function About() {
     </div>
 </section>
         </div>
+        <div className='flex items-center'>
+          <div className='w-1/4 h-[calc(100vh-280px)] pl-8 flex flex-col justify-between'>
+          <img src="https://pendecor.vn/uploads/files/2023/03/14/mo-shop-my-pham-5.jpg" alt="Ảnh cửa hàng" className='h-1/4 rounded-t-lg' />
+          <img src="https://housedesign.vn/wp-content/uploads/2020/05/ke-trung-bay-my-pham.jpg" alt="Ảnh cửa hàng" className='h-3/4 rounded-b-lg' />
+          </div>
+        <Map />
+        </div>
+        </>
     );
 };
 

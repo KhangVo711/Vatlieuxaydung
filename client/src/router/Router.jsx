@@ -26,6 +26,7 @@ import Repo from '../components/admin/repoProduct/Repo.jsx';
 import Calendar from '../components/admin/calendar/tableCalender/Calendar.jsx';
 import Contact from '../components/users/contact/Contact.jsx';
 import About from '../components/users/about/About.jsx';
+import AddBranch from '../components/admin/addbranch/AddBranch.jsx';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -181,7 +182,13 @@ export const router = createBrowserRouter([
             <Calendar />
           </PrivateRouterAdmin>
       },
-
+      {
+        path: "branch",
+        element:
+          <PrivateRouterAdmin>
+            <AddBranch />
+          </PrivateRouterAdmin>
+      },
     ]
   },
   {

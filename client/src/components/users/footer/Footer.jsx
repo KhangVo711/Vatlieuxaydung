@@ -19,7 +19,7 @@ export default function Footer() {
                         <div className=" text-gray-600 w-full md:w-5/6 lg:w-5/6 xl:w-5/6 mb-4">
                             <p className='mb-2.5'><PhoneIcon className="h-5 w-5 inline-block text-gray-600 mr-2" /><strong>Số điện thoại:</strong> 1900 1234 567</p>
                             <p className='mb-2.5'><EnvelopeIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Email:</strong> MyPhamHTCT@gmail.com</p>
-                            <p className='mb-2.5'><MapIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Địa chỉ:</strong> 789 Nguyễn Trãi, Ninh Kiều, Cần Thơ</p>
+                            {/* <p className='mb-2.5'><MapIcon className="h-6 w-6 inline-block text-gray-600 mr-2" /><strong>Địa chỉ:</strong> 789 Nguyễn Trãi, Ninh Kiều, Cần Thơ</p> */}
                         </div>
                         <div className="mt-3 lg:mb-0 mb-6 flex">
                             <button className="bg-white shadow-lg rounded-full h-10 w-10 flex items-center justify-center outline-none focus:outline-none mr-2" type="button">
