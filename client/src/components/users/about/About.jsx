@@ -266,12 +266,12 @@ export default function About() {
         <p className="text-gray-800 mb-8 max-w-2xl mx-auto">
             Hãy để MyPhamHTCT đồng hành cùng bạn trên hành trình chăm sóc và nâng niu làn da của mình với những sản phẩm an toàn, chất lượng.
         </p>
-        <a
-            href="#"
-            className="inline-block hover:bg-gray-200 shadow-md text-pink-500 font-semibold px-8 py-3 rounded-full bg-white hover:text-pink-700 transition"
+        <Link
+            to="/products"
+            className="inline-block hover:bg-gray-200 shadow-md text-pink-500 font-semibold px-8 py-3 rounded-full bg-white hover:text-pink-700 transition duration-200 ease-in-out"
         >
             Mua sắm ngay
-        </a>
+        </Link>
     </div>
 </section>
  {/* Form gửi đánh giá */}

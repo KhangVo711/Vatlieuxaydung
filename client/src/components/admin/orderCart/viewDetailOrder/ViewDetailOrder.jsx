@@ -3,7 +3,6 @@ import { formatCurrency } from '../../../../utils/currency.jsx';
 
 export default function ViewDetailOrder({ formRefView, selected }) {
   const invoiceData = Array.isArray(selected) && selected.length > 0 ? selected[0] : null;
-
   if (!invoiceData) {
     return (
       <div className='w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center'>
@@ -78,7 +77,7 @@ export default function ViewDetailOrder({ formRefView, selected }) {
             ))}
           </tbody>
         </table>
-        <h2 className='text-right mt-3 px-4'><span className='font-bold'>Tổng phí vận chuyển:</span> {formatCurrency(invoiceData.phivanchuyen*invoiceData.quangduong)}</h2>
+        <h2 className='text-right mt-3 px-4'><span className='font-bold'>Tổng phí vận chuyển:</span> {invoiceData.quangduong < 20 ? formatCurrency(invoiceData.phivanchuyen*invoiceData.quangduong) : formatCurrency(30000)}</h2>
         <h2 className='text-center mt-3'><span className='font-bold'>Tổng giá:</span> {formatCurrency(invoiceData.tonggia)}</h2>
       </div>
     </div>
