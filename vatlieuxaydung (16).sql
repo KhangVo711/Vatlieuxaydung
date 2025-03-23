@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2025 at 03:38 PM
+-- Generation Time: Mar 23, 2025 at 05:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,6 +42,30 @@ CREATE TABLE `calam` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `chinhanh`
+--
+
+CREATE TABLE `chinhanh` (
+  `id` varchar(50) NOT NULL,
+  `tencuahang` varchar(255) NOT NULL,
+  `diachi` varchar(255) NOT NULL,
+  `kinhdo` varchar(255) NOT NULL,
+  `vido` varchar(255) NOT NULL,
+  `giohoatdong` varchar(50) NOT NULL,
+  `created_at` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chinhanh`
+--
+
+INSERT INTO `chinhanh` (`id`, `tencuahang`, `diachi`, `kinhdo`, `vido`, `giohoatdong`, `created_at`) VALUES
+('CH-6623', 'MyPhamHTCT 1', '225 Đ. 3 Tháng 2, Hưng Lợi, Ninh Kiều, Cần Thơ', '105.765794', '10.022291', '07:30 - 22:00', '2025-03-21'),
+('CN-8732', 'MyPhamHTCT 2', '46 Đ. Trường Chinh, Tân Thới Nhất, Quận 12, Hồ Chí Minh', '106.616308', '10.840561', '08:00 - 22:00', '2025-03-21');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `chitietdonhang`
 --
 
@@ -58,11 +82,53 @@ CREATE TABLE `chitietdonhang` (
 --
 
 INSERT INTO `chitietdonhang` (`madh`, `masp`, `soluongsanpham`, `km`, `dongia`) VALUES
-('OD17416551834225', 'GP65237653', 1, 10, 121500),
-('OD17416551834225', 'RM98723245', 1, 0, 83000),
-('OD17416573114083', 'KN66424567', 1, 0, 259000),
-('OD17416573114083', 'SR65478231', 1, 0, 299000),
-('OD17416573114083', 'TC97412232', 2, 20, 168000);
+('OD17427322261342', 'RC83943432', 3, 12, 224400),
+('OD17427322261342', 'SG62587431', 2, 7, 130200),
+('OD17427322261342', 'UC62194372', 1, 0, 85000),
+('OD17427330741295', 'SG62587431', 3, 7, 130200),
+('OD17427330741295', 'ST65523738', 1, 0, 309000),
+('OD17427330741295', 'TC97412232', 1, 20, 168000),
+('OD17427330741295', 'TD47237523', 2, 0, 132000),
+('OD17427331558154', 'GP65237653', 2, 0, 135000),
+('OD17427331558154', 'RM98723245', 1, 0, 83000),
+('OD17427331558154', 'UC62194372', 1, 0, 85000),
+('OD17427333463520', 'BT87230912', 2, 0, 58000),
+('OD17427333463520', 'CB28365738', 1, 0, 340000),
+('OD17427333463520', 'KL32639864', 1, 0, 199000),
+('OD17427333777796', 'KL32639864', 1, 0, 199000),
+('OD17427333777796', 'NH09812527', 1, 0, 425000),
+('OD17427333777796', 'ST56383818', 3, 0, 72000),
+('OD17427333777796', 'UE84463029', 2, 0, 130000),
+('OD17427334173275', 'KL32639864', 1, 0, 199000),
+('OD17427334173275', 'RC83943432', 1, 12, 224400),
+('OD17427334173275', 'SK35467745', 1, 10, 292500),
+('OD17427334173275', 'ST65523738', 1, 0, 309000),
+('OD17427334173275', 'TD47237523', 1, 0, 132000),
+('OD17427334173275', 'UC62194372', 1, 0, 85000),
+('OD17427345537678', 'BT87230912', 2, 0, 58000),
+('OD17427345537678', 'GP65237653', 1, 0, 135000),
+('OD17427345537678', 'RM98723245', 1, 0, 83000),
+('OD17427345537678', 'ST65523738', 2, 0, 309000),
+('OD17427364262312', 'CB28365738', 1, 0, 340000),
+('OD17427364262312', 'EC45263431', 2, 0, 435000),
+('OD17427364262312', 'NH09812527', 1, 0, 425000),
+('OD17427364262312', 'ST56383818', 1, 0, 72000),
+('OD17427365044512', 'BG65772325', 1, 0, 55000),
+('OD17427365044512', 'KL32639864', 1, 0, 199000),
+('OD17427365044512', 'KN66424567', 1, 25, 194250),
+('OD17427365044512', 'TC97412232', 1, 20, 168000),
+('OD17427365044512', 'TD47237523', 2, 0, 132000),
+('OD17427403643267', 'KN66424567', 2, 25, 194250),
+('OD17427403643267', 'RC83943432', 4, 12, 224400),
+('OD17427403643267', 'RM98723245', 3, 0, 83000),
+('OD17427403643267', 'SG62587431', 3, 7, 130200),
+('OD17427403643267', 'SK35467745', 3, 10, 292500),
+('OD17427403643267', 'TC97412232', 2, 20, 168000),
+('OD17427403643267', 'UC62194372', 2, 0, 85000),
+('OD17427410449087', 'GP65237653', 2, 0, 135000),
+('OD17427410449087', 'SG62587431', 2, 7, 130200),
+('OD17427410449087', 'TC97412232', 1, 20, 168000),
+('OD17427410449087', 'TD47237523', 3, 0, 132000);
 
 -- --------------------------------------------------------
 
@@ -104,14 +170,40 @@ INSERT INTO `chitietphieunhap` (`mapn`, `masp`, `soluong`, `dongia`, `tennsx`) V
 ('17416198026875', 'KL32639864', 25, 65000, 'Focallure'),
 ('17416198026875', 'KN66424567', 95, 75000, 'Catrice'),
 ('17416194804432', 'NH09812527', 80, 115000, 'Tesori DOriente'),
+('17427311071102', 'RC83943432', 120, 31000, 'DHC'),
 ('17416193638471', 'RM98723245', 70, 33000, 'Hada Labo'),
 ('17416193638471', 'SG62587431', 120, 46000, 'SVR'),
+('17427311071102', 'SK35467745', 65, 39000, '3CE'),
 ('17416198026875', 'SR65478231', 105, 105000, 'Black Rouge'),
 ('17416194804432', 'ST56383818', 75, 35000, 'Tesori DOriente'),
+('17427311071102', 'ST65523738', 75, 36000, 'Black Rouge'),
 ('17416193638471', 'TC97412232', 55, 52000, 'DrCeutics'),
+('17427311071102', 'TD47237523', 105, 27000, 'DHC'),
 ('17416193638471', 'TT75643232', 120, 48000, 'DrCeutics'),
 ('17416198805948', 'UC62194372', 350, 20000, 'DHC'),
 ('17416198805948', 'UE84463029', 315, 30000, 'DHC');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `danhgiacuahang`
+--
+
+CREATE TABLE `danhgiacuahang` (
+  `name` varchar(50) NOT NULL,
+  `rating` varchar(50) NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `danhgiacuahang`
+--
+
+INSERT INTO `danhgiacuahang` (`name`, `rating`, `comment`, `date`) VALUES
+('Võ Huỳnh Minh Khang', '5', 'Dịch vụ chăm sóc khách hàng tuyệt vời, sản phẩm đúng như mô tả. Rất đáng để thử!', '2025-03-17'),
+('Nguyễn Thị Hương', '5', 'Sản phẩm chất lượng, giao hàng nhanh. Tôi đã trở thành khách hàng thân thiết của MyPhamHTCT được 2 năm và chưa bao giờ thất vọng.', '2025-03-17'),
+('Lê Văn Hùng', '4', 'Sản phẩm tốt, nhưng tôi mong có thêm nhiều ưu đãi cho khách hàng mới.', '2025-03-17');
 
 -- --------------------------------------------------------
 
@@ -126,16 +218,26 @@ CREATE TABLE `donhang` (
   `trangthai` varchar(50) NOT NULL,
   `tonggia` int(11) NOT NULL,
   `madvvc` varchar(50) NOT NULL,
-  `maform` varchar(50) DEFAULT NULL
+  `maform` varchar(50) DEFAULT NULL,
+  `quangduong` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `donhang`
 --
 
-INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `trangthai`, `tonggia`, `madvvc`, `maform`) VALUES
-('OD17416551834225', 'KHVF4RWW3N', '2025-03-11 08:06:00', 'Chờ xác nhận', 209703, 'GHT-812', NULL),
-('OD17416573114083', 'KHVF4RWW3N', '2025-03-11 08:41:00', 'Chờ xác nhận', 905706, 'NHS-146', NULL);
+INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `trangthai`, `tonggia`, `madvvc`, `maform`, `quangduong`) VALUES
+('OD17427322261342', 'KHI5NCFJFF', '2025-03-23 19:17:00', 'Đã xác nhận', 1039588, 'NHS-146', NULL, 4.664),
+('OD17427330741295', 'KHEQCH0YQU', '2025-03-23 19:31:00', 'Đã xác nhận', 1137357, 'GHT-812', NULL, 2.87834),
+('OD17427331558154', 'KHEQCH0YQU', '2025-03-23 19:32:00', 'Đã xác nhận', 450953, 'NHS-146', NULL, 2.87834),
+('OD17427333463520', 'KHUHSHLE73', '2025-03-23 19:35:00', 'Đã xác nhận', 664184, 'GHT-812', NULL, 4.59176),
+('OD17427333777796', 'KHUHSHLE73', '2025-03-23 19:36:00', 'Đã xác nhận', 1113775, 'EXP-787', NULL, 4.59176),
+('OD17427334173275', 'KHUHSHLE73', '2025-03-23 19:36:00', 'Đã xác nhận', 1262563, 'NHS-146', NULL, 4.59176),
+('OD17427345537678', 'KHM7V08AMM', '2025-03-23 19:55:00', 'Đã xác nhận', 982000, 'EXP-787', NULL, 73.8454),
+('OD17427364262312', 'KHONUVAZ7W', '2025-03-23 20:27:00', 'Đã xác nhận', 1737000, 'NHS-146', NULL, 73.1965),
+('OD17427365044512', 'KHONUVAZ7W', '2025-03-23 20:28:00', 'Đã xác nhận', 910250, 'GHT-812', NULL, 73.1965),
+('OD17427403643267', 'KHONUVAZ7W', '2025-03-23 21:32:00', 'Đã xác nhận', 3339200, 'EXP-787', NULL, 73.1965),
+('OD17427410449087', 'KHI5NCFJFF', '2025-03-23 21:44:00', 'Đã xác nhận', 1115388, 'NHS-146', NULL, 4.664);
 
 -- --------------------------------------------------------
 
@@ -311,16 +413,11 @@ CREATE TABLE `khachhang` (
 --
 
 INSERT INTO `khachhang` (`tenkh`, `makh`, `email`, `sdt`, `diachi`, `matkhau`) VALUES
-('Vy', 'KH5A0LYR2K', 'vy@gmail.com', '01234568888', 'Can Tho', '$2b$10$V6vfYRim/rW82DM5Q1soN.eXEQTCYHqKveQC1a4Dwn3c0jeCoRvqu'),
-('To Huynh Huyen Tran', 'KH92JJYAJG', 'tran1@gmail.com', '03344455555', 'quản trọng hoàng, ninh kiều, cần thơ', '$2b$10$BaEPc62grJDUSPIlEVS1L.UGoXGbUZSHaYdcu6qJv804YxobGS4Ce'),
-('Huyen Tran', 'KHD3UO56G4', NULL, '0334445566', NULL, '$2b$10$5hOJqbligU.VOIb7G/dN4OnFkXAInqEzEhqb5NmumQmyefQqYvB86'),
-('Trang', 'KHF9OMM1RZ', 'trang@gmail.com', '0123456888', 'Ninh Kiều, Cần Thơ', '$2b$10$QnUTY9GYAk96mmv8T.3SWe.2hEA0PffhPZHIWCCpNyAreUedasque'),
-('tran', 'KHMCKG10KJ', 'tran11@gmail.com', '0123456788', 'Ninh Kieu, Cần Thơ', '$2b$10$FODeUCGwdJCwFndH/5M5v.IV79fwWqD2Asl9zNYBrHZMr88VBc38W'),
-('Võ Huỳnh Minh Khang', 'KHVF4RWW3N', 'khangvvo0711@gmail.com', '0983251652', '15 Bùi Hữu Nghĩa, Bình Thủy, Cần Thơ', '$2b$10$3KVPdf6XwO16TAngvg7glOzOJUfpePlj48PIt4sMXRa0dzyUrT93W'),
-('Nga', 'KHW21ZS5LK', NULL, '0123456123', NULL, '$2b$10$pVf6rqQsgsrZQ7PFlabB3OPQx07a/sa7Kff6H5/lLE94zwdjpn1.i'),
-('Ngan', 'KHWRILEYIW', 'ngan@gmail.com', '0918747999', 'Soc Trang', '$2b$10$mNCks3J/z/SU4n8BrlghTe9xGFipM0oupgNVefG04ecrOsdeDulz.'),
-('Do Huynh Kha Ai', 'KHWY2E0BIY', NULL, '0123455555', NULL, '$2b$10$9JxYukklOYkwvTJ9y6fsB.GYvlcCnT9UVflmynKvr.k1UCMgzzKaa'),
-('Do Huynh Kha Ai', 'KHYLKYIU6W', 'thht060303@gmail.com', '03344456789', '27 Lê Bình, phường Hưng Lợi, quận Ninh Kiều, tp Cần Thơ', '$2b$10$OgRI1SxJxbtKKmaVSdreN.c9OO6.PXKTq6YiY6R9YCWoM0v3y5pdO');
+('Nguyễn Văn Hoàng', 'KHEQCH0YQU', 'hoangvan@gmail.com', '0897005658', '9 Đ. Nguyễn Văn Quá, Tân Thới Hiệp, Quận 12, Hồ Chí Minh', '$2b$10$X8EmvRiTmElyQ.mgvaMWJO6hrylppR6cItn68QOYbfpHg.e37vElm'),
+('Võ Huỳnh Minh Khang', 'KHI5NCFJFF', 'vokhang123@gmail.com', '0983251652', '15 Bùi Hữu Nghĩa, Bình Thủy, Cần Thơ', '$2b$10$GSND6KV.mIWXw5/l3NN1QOEQLZR0o8vUYBUbuUxOaVBqjTuKLOBDq'),
+('Lý Thi Mai', 'KHM7V08AMM', 'maithi@gmail.com', '0987654321', '236 Mạc Cửu, Vĩnh Thanh, Rạch Giá, Kiên Giang', '$2b$10$w1LeJsoWvo0GrhaxxoE4yuaKyTnHcH4vLdFfXE6LGqJTpDNIA0p9y'),
+('Trần Khánh Nam', 'KHONUVAZ7W', 'khanhnam@gmail.com', '0123456789', '40 Nguyễn Văn Cừ, TT. Tân Phú, Đồng Phú, Bình Phước', '$2b$10$sgCkY8KGj4y9ixVzs4DQmOeG8C3w7gWWycoq2d2T1Tujv2xl.9o9O'),
+('Trần Thị Thanh Xuân', 'KHUHSHLE73', 'thanhxuantran@gmail.com', '0775221459', '44 Đ. Quang Trung, Phường 11, Gò Vấp, Hồ Chí Minh', '$2b$10$AFdfMcASK9V6ht9TCNhxD.aEJIwB7RvbGc9HCMm961WmGW3YYNf4i');
 
 -- --------------------------------------------------------
 
@@ -458,7 +555,8 @@ INSERT INTO `phieunhap` (`mapn`, `tenpn`, `ngaylap`, `maql`, `manv`) VALUES
 ('17416194804432', 'Chăm sóc cơ thể', '2025-03-10 22:11:00', 'RPA67S', NULL),
 ('17416195974997', 'Phụ kiện', '2025-03-10 22:13:00', 'RPA67S', NULL),
 ('17416198026875', 'Trang điểm', '2025-03-10 22:16:00', 'RPA67S', NULL),
-('17416198805948', 'Thực phẩm chức năng', '2025-03-10 22:18:00', 'RPA67S', NULL);
+('17416198805948', 'Thực phẩm chức năng', '2025-03-10 22:18:00', 'RPA67S', NULL),
+('17427311071102', 'Mỹ phẩm và thực phẩm chức năng', '2025-03-23 18:58:00', 'RPA67S', NULL);
 
 -- --------------------------------------------------------
 
@@ -503,26 +601,26 @@ CREATE TABLE `sanpham` (
 --
 
 INSERT INTO `sanpham` (`masp`, `tensp`, `maloai`, `ttct`, `soluongsp`, `gia`, `mansx`) VALUES
-('BG65772325', 'Bông giọt nước', 'PK637124', 'Mềm gấp 2.3 lần chỉ trong 5s ngậm nước bông hoạt động hoàn hảo với mọi chất liệu nền (kem, lỏng, phấn), ít hút kem nền', 255, 55000, 'VS630289'),
-('BT87230912', 'Set 3 bông makeup', 'PK637124', 'Cải tiến từ chất liệu Latex-free theo công nghệ Bouncyx2 Blender giúp bông hoạt động hoàn hảo với mọi chất liệu nền', 135, 58000, 'VS630289'),
-('CB28365738', 'Bộ cọ và Bóp da', 'PK637124', 'Được thiết kế chuyên biệt với nhiều kích thước và công dụng khác nhau, dễ dàng sử dụng tùy theo mục đích trang điểm', 45, 340000, 'VS630289'),
-('EC45263431', 'Son kem siêu lì', 'TD902642', 'Với 8 gam màu bắt kịp xu hướng làm đẹp của chị em, sẵn sàng đốn tim nàng từ cái nhìn đầu tiên', 85, 435000, 'CE567824'),
-('GP65237653', 'Gel rửa mặt dưỡng ẩm', 'CS874523', 'Làm mềm da và giúp duy trì làn da luôn sạch khỏe và tràn đầy sức sống; giúp giảm cảm giác da khô căng khó chịu', 50, 135000, 'SV657632'),
-('KL32639864', 'Kem lót', 'TD902642', 'Hiệu chỉnh làm đều màu da, sáng da đồng thời cấp ẩm giúp da bạn sẵn sàng trước khi đi tới bước tán kem nền', 25, 199000, 'FC125768'),
-('KN66424567', 'Kem nền che phủ', 'TD902642', 'Độ che phủ cao nhưng nền lại cực kì mỏng nhẹ, chúng ta không thể bỏ qua hãng Catrice đã rất thành công với kem nền dạng lỏng', 95, 259000, 'CT325671'),
-('NH09812527', 'Nước hoa Tesori', 'CT368716', 'Hương thơm quyến rũ, gợi cảm của xạ hương và gỗ đàn hương, hương vani và hổ phách ấm áp, cuốn hút', 80, 425000, 'TL842324'),
-('RC83943432', 'Viên uống rau củ Nhật', 'TP378676', 'Viên uống DHC Perfect Vegetable Premium giúp bạn dễ dàng cung cấp vitamin, khoáng chất và chất xơ cần thiết cho cơ thể', 0, 255000, 'DC456782'),
-('RM98723245', 'Kem rửa mặt', 'CS874523', 'Kem tạo bọt mịn, giúp nhẹ nhàng len lỏi sâu vào bên trong từng lỗ chân lông để loại bỏ bụi bẩn, bã nhờn bên trong da', 70, 83000, 'HL213276'),
-('SG62587431', 'Gel rửa mặt cho da dầu', 'CS874523', 'Tạo bọt mịn sẽ nhẹ nhàng đánh bay những tác nhân gây hại sâu bên trong lỗ chân lông, trả lại cho bạn làn da sạch đẹp', 120, 140000, 'SV657632'),
-('SK35467745', 'Son kem 3CE', 'TD902642', 'Sở hữu chất gel nước mềm mịn, có chứa các dưỡng chất giúp cung cấp độ ẩm cũng như tạo một lớp son lì trên môi', 0, 325000, 'CE567824'),
+('BG65772325', 'Bông giọt nước', 'PK637124', 'Mềm gấp 2.3 lần chỉ trong 5s ngậm nước bông hoạt động hoàn hảo với mọi chất liệu nền (kem, lỏng, phấn), ít hút kem nền', 254, 55000, 'VS630289'),
+('BT87230912', 'Set 3 bông makeup', 'PK637124', 'Cải tiến từ chất liệu Latex-free theo công nghệ Bouncyx2 Blender giúp bông hoạt động hoàn hảo với mọi chất liệu nền', 131, 58000, 'VS630289'),
+('CB28365738', 'Bộ cọ và Bóp da', 'PK637124', 'Được thiết kế chuyên biệt với nhiều kích thước và công dụng khác nhau, dễ dàng sử dụng tùy theo mục đích trang điểm', 43, 340000, 'VS630289'),
+('EC45263431', 'Son kem siêu lì', 'TD902642', 'Với 8 gam màu bắt kịp xu hướng làm đẹp của chị em, sẵn sàng đốn tim nàng từ cái nhìn đầu tiên', 83, 435000, 'CE567824'),
+('GP65237653', 'Gel rửa mặt dưỡng ẩm', 'CS874523', 'Làm mềm da và giúp duy trì làn da luôn sạch khỏe và tràn đầy sức sống; giúp giảm cảm giác da khô căng khó chịu', 41, 135000, 'SV657632'),
+('KL32639864', 'Kem lót', 'TD902642', 'Hiệu chỉnh làm đều màu da, sáng da đồng thời cấp ẩm giúp da bạn sẵn sàng trước khi đi tới bước tán kem nền', 20, 199000, 'FC125768'),
+('KN66424567', 'Kem nền che phủ', 'TD902642', 'Độ che phủ cao nhưng nền lại cực kì mỏng nhẹ, chúng ta không thể bỏ qua hãng Catrice đã rất thành công với kem nền dạng lỏng', 92, 259000, 'CT325671'),
+('NH09812527', 'Nước hoa Tesori', 'CT368716', 'Hương thơm quyến rũ, gợi cảm của xạ hương và gỗ đàn hương, hương vani và hổ phách ấm áp, cuốn hút', 77, 425000, 'TL842324'),
+('RC83943432', 'Viên uống rau củ Nhật', 'TP378676', 'Viên uống DHC Perfect Vegetable Premium giúp bạn dễ dàng cung cấp vitamin, khoáng chất và chất xơ cần thiết cho cơ thể', 112, 255000, 'DC456782'),
+('RM98723245', 'Kem rửa mặt', 'CS874523', 'Kem tạo bọt mịn, giúp nhẹ nhàng len lỏi sâu vào bên trong từng lỗ chân lông để loại bỏ bụi bẩn, bã nhờn bên trong da', 64, 83000, 'HL213276'),
+('SG62587431', 'Gel rửa mặt cho da dầu', 'CS874523', 'Tạo bọt mịn sẽ nhẹ nhàng đánh bay những tác nhân gây hại sâu bên trong lỗ chân lông, trả lại cho bạn làn da sạch đẹp', 108, 140000, 'SV657632'),
+('SK35467745', 'Son kem 3CE', 'TD902642', 'Sở hữu chất gel nước mềm mịn, có chứa các dưỡng chất giúp cung cấp độ ẩm cũng như tạo một lớp son lì trên môi', 61, 325000, 'CE567824'),
 ('SR65478231', 'Son kem Airfit Velvet', 'TD902642', 'Các sắc đỏ trendy đã tạo nên một làn sóng cho các cô gái đam mê son Hàn với thiết kế sang chảnh cùng bảng màu siêu đẹp. ', 105, 299000, 'BR563283'),
-('ST56383818', 'Sữa tắm nước hoa', 'CT368716', 'Hương cao cấp độc đáo, mà thường chỉ áp dụng để sản xuất nước hoa cao cấp, và có khả năng lưu hương 6 tiếng trên da.', 75, 72000, 'TL842324'),
-('ST65523738', 'Son Tint bóng', 'TD902642', 'Chia thành 3 concept Original - Rose - Soy. Mỗi concept sẽ cho một phong cách trang điểm khác nhau với những màu son khác nhau', 0, 309000, 'BR563283'),
-('TC97412232', 'Tẩy tế bào chết', 'CS874523', 'Chiết xuất rau má, rau sam và diếp cá giúp làm sạch tế bào chết, giảm dầu thừa và hỗ trợ giảm mụn trứng cá, ngăn mụn tái phát', 55, 210000, 'HJ354107'),
-('TD47237523', 'Viên uống trắng da', 'TP378676', 'Hoàn toàn phù hợp cho mọi đối tượng, kể cả những người có làn da cực kỳ nhạy cảm, da mụn, da vừa trị liệu', 0, 132000, 'DC456782'),
+('ST56383818', 'Sữa tắm nước hoa', 'CT368716', 'Hương cao cấp độc đáo, mà thường chỉ áp dụng để sản xuất nước hoa cao cấp, và có khả năng lưu hương 6 tiếng trên da.', 68, 72000, 'TL842324'),
+('ST65523738', 'Son Tint bóng', 'TD902642', 'Chia thành 3 concept Original - Rose - Soy. Mỗi concept sẽ cho một phong cách trang điểm khác nhau với những màu son khác nhau', 71, 309000, 'BR563283'),
+('TC97412232', 'Tẩy tế bào chết', 'CS874523', 'Chiết xuất rau má, rau sam và diếp cá giúp làm sạch tế bào chết, giảm dầu thừa và hỗ trợ giảm mụn trứng cá, ngăn mụn tái phát', 49, 210000, 'HJ354107'),
+('TD47237523', 'Viên uống trắng da', 'TP378676', 'Hoàn toàn phù hợp cho mọi đối tượng, kể cả những người có làn da cực kỳ nhạy cảm, da mụn, da vừa trị liệu', 94, 132000, 'DC456782'),
 ('TT75643232', 'Nước tẩy trang', 'CS874523', 'Làm dịu da, dưỡng ẩm cho da từ cây olive vô cùng lành tính giúp làm sạch sâu cho làn da một cách nhanh chóng', 120, 170000, 'HJ354107'),
-('UC62194372', 'Viên Uống Bổ Sung Vitamin C', 'TP378676', 'Giúp bảo vệ da khỏi tác hại của môi trường, đồng thời mang đến làn da đều màu, căng mịn và khỏe mạnh', 350, 85000, 'DC456782'),
-('UE84463029', 'Viên bổ sung Vitamin E', 'TP378676', 'Làm chậm quá trình lão hóa và mang lại làn da sáng mịn. Đã đến lúc bạn khám phá bí quyết của vẻ đẹp bền vững', 315, 130000, 'DC456782');
+('UC62194372', 'Viên Uống Bổ Sung Vitamin C', 'TP378676', 'Giúp bảo vệ da khỏi tác hại của môi trường, đồng thời mang đến làn da đều màu, căng mịn và khỏe mạnh', 344, 85000, 'DC456782'),
+('UE84463029', 'Viên bổ sung Vitamin E', 'TP378676', 'Làm chậm quá trình lão hóa và mang lại làn da sáng mịn. Đã đến lúc bạn khám phá bí quyết của vẻ đẹp bền vững', 311, 130000, 'DC456782');
 
 -- --------------------------------------------------------
 

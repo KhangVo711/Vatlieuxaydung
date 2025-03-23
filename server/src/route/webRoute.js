@@ -8,6 +8,7 @@ import promo from '../controllers/promoController.js'
 import cart from '../controllers/cartController.js'
 import rating from "../controllers/ratingController.js";
 import branch from "../controllers/branchController.js";
+import statistic from "../controllers/statisticController.js";
 import repo from '../controllers/repoController.js'
 import uploadMiddleware from '../../middleware/upload.js'
 import auth from '../../middleware/jwt.js'
@@ -15,7 +16,7 @@ const router = express.Router()
 const initWebRoute = (app) => {
 
     router.post('/loginAdmin', user.loginAdmin)
-    
+
     router.post('/login', user.getUser)
     router.post('/updateInf/:id', user.updateInf)
     router.get('/getInf/:id', user.getInf)
@@ -34,7 +35,7 @@ const initWebRoute = (app) => {
     router.get('/getProducer/:mansx', product.getNSX)
     router.post('/editProducer', auth.authMiddleware, product.editNSX)
     router.post('/deleteProducer', auth.authMiddleware, product.deleteNSX)
-   
+
 
     router.post('/addProduct', auth.authMiddleware, uploadMiddleware, product.insertProducts)
     router.get('/getProduct', product.getAllProduct)
@@ -61,7 +62,7 @@ const initWebRoute = (app) => {
     router.get('/getOrderOfUser/:makh', cart.detailOrderOfUser)
     router.post('/insertFormOD', cart.insertFormOD)
 
-    
+
     router.post('/addStaff', staff.addStaff)
     router.post('/loginStaff', staff.loginStaff)
     router.get('/getStaff', staff.getAllStaff)
@@ -73,7 +74,7 @@ const initWebRoute = (app) => {
     router.get('/getDelivery/:maloai', ship.getOneShip)
     router.post('/editDelivery', auth.authMiddleware, ship.editShip)
     router.post('/deleteDelivery', auth.authMiddleware, ship.deleteShip)
-    
+
     router.post('/addPromo', auth.authMiddleware, promo.addPromo)
     // router.get('/getPromo', promo.getAllPromo)
     router.get('/getPromo/:makm', promo.getOnePromo)
@@ -89,11 +90,17 @@ const initWebRoute = (app) => {
     router.get('/getReview', rating.getRatingStore)
 
     router.get('/getBranch', branch.getBranch);
-router.post('/addBranch', auth.authMiddleware, branch.insertBranch);
-router.post('/detailBranch', branch.detailBranch);
-router.get('/getBranch/:id', branch.getOneBranch);
-router.post('/editBranch', auth.authMiddleware, branch.editBranch);
-router.post('/deleteBranch', auth.authMiddleware, branch.deleteBranch); 
+    router.post('/addBranch', auth.authMiddleware, branch.insertBranch);
+    router.post('/detailBranch', branch.detailBranch);
+    router.get('/getBranch/:id', branch.getOneBranch);
+    router.post('/editBranch', auth.authMiddleware, branch.editBranch);
+    router.post('/deleteBranch', auth.authMiddleware, branch.deleteBranch);
+
+    router.get('/getReTract', statistic.getReTract);
+    router.get('/getDailyRevenue', statistic.getDailyRevenue);
+    router.get('/getDailyProductSales', statistic.getDailyProductSales);
+    router.get('/getTotalProductsSold', statistic.getTotalProductsSold);
+    router.get('/getTotalReviews', statistic.getTotalReviews);
 
     return app.use('/', router)
 }
