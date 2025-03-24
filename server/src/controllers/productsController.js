@@ -239,6 +239,14 @@ const getAllProduct = async (req, res) => {
       res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm" });
     }
   };
+  const getProduct_Hot8 = async (req, res) => {
+    try {
+      const product = await productsModel.getProduct_Hot8();
+      res.status(200).send({ product });
+    } catch (error) {
+      res.status(500).send({ message: "Đã xảy ra lỗi khi lấy danh sách sản phẩm" });
+    }
+  };
   const getProduct5 = async (req, res) => {
     try {
       const product = await productsModel.getProduct5();
@@ -614,5 +622,6 @@ export default {
     detailProduct, deleteProduct,
     getProductImages,
     getRecommendations,
-    getProductOfCategory
+    getProductOfCategory,
+    getProduct_Hot8
 }

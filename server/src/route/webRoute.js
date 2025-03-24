@@ -41,6 +41,7 @@ const initWebRoute = (app) => {
     router.get('/getProduct', product.getAllProduct)
     router.get('/getProductOfCategory/:maloai', product.getProductOfCategory)
     router.get('/getProduct8', product.getProduct8)
+    router.get('/getProduct_Hot8', product.getProduct_Hot8)
     router.get('/getProduct5', product.getProduct5)
     router.get('/getProduct12', product.getProduct12)
     router.post('/editProduct', auth.authMiddleware, uploadMiddleware, product.editProduct)

@@ -1,108 +1,330 @@
-
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { gsap } from 'gsap';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import { Context } from '../../../../components/Context';
+import axios from 'axios';
+import ReactModal from 'react-modal';
+import { formatCurrency } from '../../../../utils/currency';
 
-export default function BestSellProduct() {
-    const products = [
+// Bind modal to app element (required for accessibility, placed outside the component)
+ReactModal.setAppElement('#root');
+
+export default function NewProduct() {
+  const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productImages, setProductImages] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { onAddToCart } = useContext(Context);
+    console.log(products);
+  useEffect(() => {
+    axios
+      .get('http://localhost:5001/getProduct_Hot8')
+      .then((response) => {
+        setProducts(response.data.product);
+      })
+      .catch((error) => {
+        console.error('Error fetching products:', error);
+      });
+  }, []);
+
+
+  const handleAddToCart = (product, e) => {
+
+    const productCard = e.target.closest('.product-card');
+    if (!productCard) {
+      console.error('Product card not found');
+      onAddToCart(product); 
+      return;
+    }
+
+
+    const imgElement = productCard.querySelector('img');
+    const cartElement = document.querySelector('#cart-icon');
+
+
+    const fullProduct = products.find((p) => p.masp === product.masp) || product;
+    const productToAdd = {
+      masp: fullProduct.masp,
+      tensp: fullProduct.tensp,
+      gia: fullProduct.gia,
+      hinhanh: fullProduct.hinhanh,
+      maloai: fullProduct.maloai,
+      mansx: fullProduct.mansx,
+      soluong: 1,
+      soluongsp: fullProduct.soluongsp,
+      tenloai: fullProduct.tenloai,
+      tennsx: fullProduct.tennsx,
+      ttct: fullProduct.ttct,
+      km: fullProduct.km,
+      makm: fullProduct.makm,
+      tenkm: fullProduct.tenkm,
+      thoigianbatdaukm: fullProduct.thoigianbatdaukm,
+      thoigianketthuckm: fullProduct.thoigianketthuckm,
+    };
+
+
+    if (!imgElement || !cartElement) {
+      console.warn('Image or cart icon not found, adding to cart without animation');
+      onAddToCart(productToAdd);
+      return;
+    }
+
+
+    const imgRect = imgElement.getBoundingClientRect();
+    const cartRect = cartElement.getBoundingClientRect();
+
+
+    const cloneImg = imgElement.cloneNode(true);
+    document.body.appendChild(cloneImg);
+
+
+    Object.assign(cloneImg.style, {
+      position: 'absolute',
+      top: `${imgRect.top + window.scrollY}px`,
+      left: `${imgRect.left + window.scrollX}px`,
+      width: `${imgRect.width}px`,
+      height: `${imgRect.height}px`,
+      zIndex: 1000, 
+      pointerEvents: 'none',
+    });
+
+    gsap.to(cloneImg, {
+      duration: 0.7, 
+      ease: 'power2.inOut',
+      x: cartRect.left + window.scrollX - imgRect.left - window.scrollX,
+      y: cartRect.top + window.scrollY - imgRect.top - window.scrollY,
+      width: 20,
+      height: 20,
+      opacity: 0.5,
+      onComplete: () => {
+        cloneImg.remove();
+        onAddToCart(productToAdd); 
+      },
+    });
+  };
+
+  const handleViewProductClick = useCallback(
+    async (product) => {
+
+      if (isModalOpen) {
+        setIsModalOpen(false);
+        setSelectedProduct(null);
+        setProductImages([]);
+
+        setTimeout(() => {
+          fetchProductDetails(product);
+        }, 300); 
+      } else {
+        fetchProductDetails(product);
+      }
+    },
+    [isModalOpen]
+  );
+  const handleAddCartSelect = (product) => {
+    const fullProduct = products.find((p) => p.masp === product.masp) || product;
+    const productToAdd = {
+      masp: fullProduct.masp,
+      tensp: fullProduct.tensp,
+      gia: fullProduct.gia,
+      hinhanh: fullProduct.hinhanh,
+      maloai: fullProduct.maloai,
+      mansx: fullProduct.mansx,
+      soluong: 1,
+      soluongsp: fullProduct.soluongsp,
+      tenloai: fullProduct.tenloai,
+      tennsx: fullProduct.tennsx,
+      ttct: fullProduct.ttct,
+      km: fullProduct.km,
+      makm: fullProduct.makm,
+      tenkm: fullProduct.tenkm,
+      thoigianbatdaukm: fullProduct.thoigianbatdaukm,
+      thoigianketthuckm: fullProduct.thoigianketthuckm,
+    };
+    onAddToCart(productToAdd);
+    closeModal();
+    };
+  const fetchProductDetails = async (product) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:5001/detailProduct',
+        { masp: product.masp, maloai: product.maloai, mansx: product.mansx },
         {
-            id: 1,
-            name: 'Kem Dưỡng Da Hỗ Trợ Giảm Mụn',
-            image: 'https://product.hstatic.net/200000868185/product/3701129805367_895fe4b889574369a36f18f90f7ec48b_96fc29025bef41bb970a2c71b2f387c2_master.jpg',
-            cta1: 'ĐẶT HÀNG',
-            cta2: 'XEM NGAY',
-        },
-        {
-            id: 2,
-            name: 'Kem Chống Nắng Che Khuyết Điểm',
-            image: 'https://product.hstatic.net/200000868185/product/1089566365249960_149246432374919086_n_73c072463bd742e4a00793baeb7c0e2e_c87315103e2d4420ae7bf684824af338_master.jpg',
-            cta1: 'ĐẶT HÀNG',
-            cta2: 'XEM NGAY',
-        },
-        {
-            id: 3,
-            name: 'Bột Uống Collagen',
-            image: 'https://product.hstatic.net/200000868185/product/1840_308c1c135d6b8197bbed9e718484631a_3c2352d32687449cb43dd6d268e4efdf_64c6d7009d1045849d29a569d6b15e71_master.jpg',
-            cta1: 'ĐẶT HÀNG',
-            cta2: 'XEM NGAY',
-        }, {
-            id: 4,
-            name: 'Trà Giảm cân Genpi Tea',
-            image: 'https://product.hstatic.net/200000868185/product/orihiro_genpi_tea_f2da0396b9c3442898c167bce280d950_8475a0681ecf4cd1b168ecddce81ef61_master.jpeg',
-            cta1: 'ĐẶT HÀNG',
-            cta2: 'XEM NGAY',
-        }, {
-            id: 5,
-            name: 'Gel Dưỡng Vùng Mắt',
-            image: 'https://product.hstatic.net/200000868185/product/6955416224486__62__25154db06bdc45799536988ba228def6_c21b189dd73943e9bae399daa9e07d67_master.jpg',
-            cta1: 'ĐẶT HÀNG',
-            cta2: 'XEM NGAY',
-        }, {
-            id: 6,
-            name: 'Phấn Mắt 4 Ô',
-            image: 'https://product.hstatic.net/200000868185/product/a36457ffe4556be368b3-removebg-preview_a3ebaca15270466ca320dc683b1fa1c6_9027e92bd08843baa5c8ae9471a223a6_master.png',
-            cta1: 'ĐẶT HÀNG',
-            cta2: 'XEM NGAY',
-        }, {
-            id: 7,
-            name: 'Kem Tắm Trắng Da',
-            image: 'https://product.hstatic.net/200000868185/product/snow_f2757ad35d8840c2885472dcbf1aa34d_f4e9f278de304492941b10c4a5d585df_master.jpg',
-            cta1: 'ĐẶT HÀNG',
-            cta2: 'XEM NGAY',
-        }, {
-            id: 8,
-            name: 'Miếng Dán Mụn',
-            image: 'https://product.hstatic.net/200000868185/product/5067-represent_33bec1847fdb4e8ca3d93c2d536225cb_dbf5b19afaaf4d239ab35470a4613a97_master.jpg',
-            cta1: 'ĐẶT HÀNG',
-            cta2: 'XEM NGAY',
-        },
-    ];
-    return (
-        <div>
-            <h2 className="my-6 lg:my-12 tracking-wider text-xl ml-4 md:ml-6 lg:ml-12 uppercase font-bold sm:text-2xl md:text-3xl lg:text-3xl">Sản phẩm bán chạy</h2>
-            <Swiper
-                modules={[Navigation]}
-                spaceBetween={20}
-                breakpoints={{
-                    // Khi màn hình lớn hơn 640px (điện thoại)
-                    640: {
-                        slidesPerView: 1,  // Hiển thị 2 sản phẩm
-                    },
-                    // Khi màn hình lớn hơn 768px (máy tính bảng)
-                    768: {
-                        slidesPerView: 2,  // Hiển thị 2 sản phẩm
-                    },
-                    // Khi màn hình lớn hơn 1024px (máy tính)
-                    1024: {
-                        slidesPerView: 3,  // Hiển thị 3 sản phẩm
-                    },
-                    // Khi màn hình lớn hơn 1280px (màn hình lớn hơn)
-                    1280: {
-                        slidesPerView: 4,  // Hiển thị 4 sản phẩm
-                    },
-                }}
-                navigation
-            >
-                {products.map((product) => (
-                    <SwiperSlide className="p-4" key={product.id}>
-                        <div className="bg-white shadow-md rounded-lg p-8 h-[350px] md:h-[360px] lg:h-[380px]">
-                            <img src={product.image} alt={product.name} className="lg:w-2/3 h-48 object-cover sm:h-40 w-1/2 md:h-48 lg:h-56 mx-auto" />
-                            <h3 className="text-md tracking-tighter font-semibold mt-2 sm:text-sm md:text-md lg:text-lg">
-                                {product.name}
-                            </h3>
-                            <div className="flex justify-between mt-4">
-                                <button className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md">
-                                    {product.cta1}
-                                </button>
-                                <button className="bg-blue-400 text-white px-4 py-2 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md">
-                                    {product.cta2}
-                                </button>
-                            </div>
-                        </div>
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          withCredentials: true,
+        }
+      );
+      setSelectedProduct(response.data.dataProduct);
+      setProductImages(response.data.images);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+    setProductImages([]);
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isModalOpen]);
+
+  return (
+    <div>
+      {/* Section header */}
+      <h2 className="my-6 lg:my-12 tracking-wider text-xl ml-4 md:ml-6 lg:ml-12 uppercase font-bold sm:text-2xl md:text-3xl lg:text-3xl">
+        Sản phẩm bán chạy
+      </h2>
+      {/* Swiper slider for displaying products */}
+      <Swiper
+        modules={[Navigation]}
+        spaceBetween={20}
+        breakpoints={{
+          640: { slidesPerView: 1 }, // 1 product on small screens
+          768: { slidesPerView: 2 }, // 2 products on tablets
+          1024: { slidesPerView: 3 }, // 3 products on desktops
+          1280: { slidesPerView: 4 }, // 4 products on larger screens
+        }}
+        navigation
+      >
+        {products.map((product) => (
+          <SwiperSlide className="p-4" key={product.masp}>
+            {/* Product card */}
+            <div className="bg-white shadow-md rounded-lg p-8 h-fit product-card">
+              <img
+                src={`http://localhost:5001/uploads/${product.masp}/${product.hinhanh}`}
+                alt={product.tensp}
+                className="lg:w-2/3 h-48 object-cover sm:h-40 w-1/2 md:h-48 lg:h-56 mx-auto"
+              />
+              <h3 className="text-md tracking-tighter font-semibold mt-2 sm:text-sm md:text-md lg:text-lg">
+                {product.tensp}
+              </h3>
+              <p>{product.ttct}</p>
+              <div className="flex justify-between mt-4">
+                <button
+                  onClick={(e) => handleAddToCart(product, e)}
+                  className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
+                  aria-label={`Add ${product.tensp} to cart`}
+                >
+                  Mua ngay
+                </button>
+                <button
+                  onClick={() => handleViewProductClick(product)}
+                  className="bg-blue-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
+                  aria-label={`View details of ${product.tensp}`}
+                >
+                  Chi tiết
+                </button>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      <ReactModal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Chi tiết sản phẩm"
+        className="relative bg-white rounded-lg shadow-2xl mx-auto mt-24 max-w-3xl w-full h-fit py-24"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center"
+      >
+        {selectedProduct && (
+          <div className="p-4 flex items-center gap-6">
+            <div className="w-1/2">
+              <Swiper modules={[Navigation]} navigation spaceBetween={10} slidesPerView={1} className="w-full h-64">
+                {productImages.length > 0 ? (
+                  productImages.map((image, index) => (
+                    <SwiperSlide key={index}>
+                      <img
+                        className="w-9/12 ml-11 h-full object-cover rounded"
+                        src={`http://localhost:5001/uploads/${selectedProduct.masp}/${image}`}
+                        alt={`${selectedProduct.tensp} - ${index}`}
+                      />
                     </SwiperSlide>
-                ))}
-            </Swiper>
-        </div>
-    );
+                  ))
+                ) : (
+                  <SwiperSlide>
+                    <img
+                      className="w-full h-full object-cover rounded"
+                      src={`http://localhost:5001/uploads/${selectedProduct.masp}/${selectedProduct.hinhanh}`}
+                      alt={selectedProduct.tensp}
+                    />
+                  </SwiperSlide>
+                )}
+              </Swiper>
+            </div>
+            <div className="w-1/2 flex flex-col justify-between">
+              <h2 className="text-xl text-center font-bold text-gray-800 mb-2">{selectedProduct.tensp}</h2>
+              <div className="flex h-20 justify-between text-sm">
+                <div className="flex flex-col justify-center">
+                  <div className="mb-2">
+                    <span className="font-bold">Loại:</span> {selectedProduct.tenloai}
+                  </div>
+                  <div className="mb-2">
+                    <span className="font-bold">Nhà sản xuất:</span> {selectedProduct.tennsx}
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center">
+                  <div>
+                    <p className="text-md font-semibold flex text-gray-800 mb-2">
+                      <span className="font-bold mr-2">Tình trạng:</span>
+                      {selectedProduct.soluongsp > 0 ? (
+                        <p className="text-gray-700 font-semibold">Còn hàng</p>
+                      ) : (
+                        <p className="text-red-600 font-semibold">Hết hàng</p>
+                      )}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-md font-semibold flex text-gray-800 mb-2">
+                      <span className="font-bold mr-2">Giá:</span>
+                      <p className={`${selectedProduct.tenkm ? 'line-through' : null} mr-3`}>
+                        {formatCurrency(selectedProduct.gia)}
+                      </p>
+                      {selectedProduct.km ? (
+                        <p className="text-red-600 font-semibold">
+                          {formatCurrency(selectedProduct.gia - selectedProduct.gia * (selectedProduct.km / 100))}
+                        </p>
+                      ) : null}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-gray-600 text-sm">{selectedProduct.ttct}</p>
+              <div className="mt-16 flex justify-center space-x-8">
+              
+                <button
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-150"
+                  onClick={closeModal}
+                >
+                  Đóng
+                </button>
+                <button
+                  onClick={() => handleAddCartSelect(selectedProduct)}
+                  className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
+                  aria-label={`Add ${selectedProduct.tensp} to cart`}
+                >
+                  Mua ngay
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </ReactModal>
+    </div>
+  );
 }

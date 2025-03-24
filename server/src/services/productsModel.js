@@ -72,7 +72,48 @@ const getAllProduct = async () => {
       `);
       return rows;
   };
-  
+  const getProduct_Hot8 = async () => {
+    const [rows] = await connectDB.execute(`
+        SELECT 
+            s.masp, 
+            s.tensp, 
+            s.maloai, 
+            s.soluongsp, 
+            s.gia, 
+            s.mansx, 
+            h.hinhanh,
+            COALESCE(SUM(ct.soluongsanpham), 0) as total_sold,
+            k.makm, 
+            k.tenkm, 
+            k.km, 
+            k.thoigianbatdaukm, 
+            k.thoigianketthuckm
+        FROM sanpham s
+        LEFT JOIN (
+            SELECT masp, hinhanh,
+                   ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
+            FROM hinhanhsanpham
+        ) h ON s.masp = h.masp AND h.rn = 1
+        LEFT JOIN khuyenmai k ON s.masp = k.masp
+        LEFT JOIN chitietdonhang ct ON s.masp = ct.masp
+        GROUP BY 
+            s.masp, 
+            s.tensp, 
+            s.maloai, 
+            s.soluongsp, 
+            s.gia, 
+            s.mansx, 
+            h.hinhanh, 
+            k.makm, 
+            k.tenkm, 
+            k.km, 
+            k.thoigianbatdaukm, 
+            k.thoigianketthuckm
+        ORDER BY total_sold DESC
+        LIMIT 8
+    `);
+    return rows;
+  };
   const getProduct12 = async () => {
     const [rows] = await connectDB.execute(`
         SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh
@@ -151,7 +192,6 @@ const editProduct = async (masp, tensp, ttct, soluongsp, gia, maloai, mansx) => 
     await connectDB.execute('UPDATE `sanpham` SET tensp=?, ttct=?, soluongsp=?, gia=?, maloai=?, mansx=? WHERE masp=?',[tensp, ttct, soluongsp, gia, maloai, mansx, masp])
 }
 
-// models/productsModel.js
 const updateProductImages = async (masp, updatedImages) => {
   try {
     if (updatedImages && updatedImages.length > 0) {
@@ -268,5 +308,5 @@ const getRecommendedProducts = async (maloai) => {
 };
 
 
-export default {getProductOfCategory, getRecommendedProducts, getCategory, insertProductImages, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
+export default {getProduct_Hot8, getProductOfCategory, getRecommendedProducts, getCategory, insertProductImages, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
 
