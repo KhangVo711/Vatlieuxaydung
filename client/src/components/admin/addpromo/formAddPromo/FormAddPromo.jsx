@@ -143,7 +143,36 @@ export default function FormAddPromo({ formRef }) {
             progress: undefined,
         });
     };
-
+  // Tùy chỉnh giao diện react-select
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      borderColor: '#d1d5db',
+      backgroundColor: '#f9fafb',
+      padding: '0.5px',
+      borderRadius: '0.2rem',
+      '&:hover': {
+        borderColor: '#f472b6',
+      },
+      boxShadow: 'none',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#f472b6' : state.isFocused ? '#fce7f3' : 'white',
+      color: state.isSelected ? 'white' : '#374151',
+      '&:hover': {
+        backgroundColor: '#fce7f3',
+      },
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: '#374151',
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: '#9ca3af',
+    }),
+  };
     return (
         <>
             <div className='w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center'>
@@ -179,6 +208,9 @@ export default function FormAddPromo({ formRef }) {
                             onChange={handleChange}
                         />
                     </div>
+                    <div className="mb-4">
+                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chọn sản phẩm</label>
+
                     <Select
             options={options}
             onChange={(selectedOption) =>
@@ -186,7 +218,9 @@ export default function FormAddPromo({ formRef }) {
             }
             placeholder="Chọn sản phẩm"
             className="w-full text-sm rounded-lg"
+            styles={customStyles}
         />
+                    </div>
 
 <div className="mb-3 mt-3">
     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thời gian bắt đầu</label>

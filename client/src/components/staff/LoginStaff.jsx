@@ -3,16 +3,18 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Typography, Input, Button } from "@material-tailwind/react";
+import { Typography, Input, Button, Radio } from "@material-tailwind/react";
+import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 
 export default function LoginStaff() {
     const navigate = useNavigate();
 
+    const [loginMethod, setLoginMethod] = useState('email');
     const [formData, setFormData] = useState({
-        manv: '',
-        
+        emailnv: '', // Đổi từ email thành emailnv
+        sdtnv: '',   // Đổi từ phone thành sdtnv
+        matkhau: '', // Đổi từ password thành matkhau
     });
-    // console.log(formData);
     const [message, setMessage] = useState('');
     const [colorMsg, setColorMsg] = useState('');
 
@@ -24,26 +26,38 @@ export default function LoginStaff() {
             [name]: value
         });
     };
-    console.log(formData);
+
+    const handleLoginMethodChange = (method) => {
+        setMessage('');
+        setLoginMethod(method);
+        setFormData({
+            ...formData,
+            emailnv: '',
+            sdtnv: ''
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`http://localhost:5001/loginStaff`, formData, {
+            const payload = {
+                matkhau: formData.matkhau, // Đổi từ password thành matkhau
+                ...(loginMethod === 'email' ? { emailnv: formData.emailnv } : { sdtnv: formData.sdtnv })
+            };
+
+            const response = await axios.post(`http://localhost:5001/loginStaff`, payload, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
                 withCredentials: true
             });
+
             if (response.status === 200) {
                 setColorMsg('text-green-500');
                 setMessage(response.data.message);
                 handleSuccess();
                 setTimeout(() => { navigate('/staff'); }, 2000);
-            }
-            if (response.status === 400) {
-                setColorMsg('text-red-500');
-                setMessage(response.data.message);
             }
         } catch (error) {
             setColorMsg('text-red-500');
@@ -52,6 +66,8 @@ export default function LoginStaff() {
         }
     };
 
+    const [passwordShown, setPasswordShown] = useState(false);
+    const togglePasswordVisiblity = () => setPasswordShown((cur) => !cur);
 
     const handleSuccess = () => {
         toast.success("Đăng nhập thành công!", {
@@ -64,6 +80,7 @@ export default function LoginStaff() {
             progress: undefined,
         });
     };
+
     const handleError = () => {
         toast.error("Có lỗi xảy ra!", {
             position: "top-right",
@@ -80,48 +97,148 @@ export default function LoginStaff() {
         <>
         <ToastContainer />
 
-        <section className="grid text-center h-screen items-center p-8">
-            <div>
-                <Typography variant="h3" color="blue-gray" className="mb-2 uppercase">
-                    Đăng nhập
-                </Typography>
-                <Typography className="mb-12 text-gray-600 font-normal text-[18px]">
-                    Đăng nhập vào tài khoản nhân viên
-                </Typography>
-                {message && <p className={`${colorMsg} text-center text-sm`}>{message}</p>}
+        <section className="min-h-screen flex items-center justify-center bg-pink-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+                <div className="text-center">
+                    <Typography 
+                        variant="h3" 
+                        color="blue-gray" 
+                        className="mb-2 uppercase tracking-wide font-bold"
+                    >
+                        Đăng nhập
+                    </Typography>
+                    <Typography 
+                        className="text-gray-600 font-normal text-lg opacity-80"
+                    >
+                        Đăng nhập vào tài khoản nhân viên
+                    </Typography>
+                    {message && (
+                        <p className={`${colorMsg} text-center text-sm mt-2 bg-opacity-10 p-2 rounded`}>
+                            {message}
+                        </p>
+                    )}
+                </div>
 
-                <form onSubmit={handleSubmit} className="mx-auto max-w-[24rem] text-left">
-                    <div className="mb-6">
-                        <label htmlFor="manv">
-                            <Typography
-                                variant="small"
-                                className="mb-2 block font-medium text-gray-900"
-                            >
-                                Mã nhân viên
-                            </Typography>
-                        </label>
-                        <Input
-                            id="manv"
-                            color="gray"
-                            size="lg"
-                            type="manv"
-                            name="manv"
-                            placeholder="NVKS3411"
-                            className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
-                            labelProps={{
-                                className: "hidden",
-                            }}
-                            value={formData.manv}
-                            onChange={handleChange}
-                        />
+                <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+                    <div className="space-y-6">
+                        <div className="flex justify-center gap-6 mb-4">
+                            <Radio
+                                name="loginMethod"
+                                label="Email"
+                                checked={loginMethod === 'email'}
+                                onChange={() => handleLoginMethodChange('email')}
+                                color="pink"
+                                className="checked:bg-pink-400 checked:border-gray-400"
+                                ripple={true}
+                            />
+                            <Radio
+                                name="loginMethod"
+                                label="Số điện thoại"
+                                checked={loginMethod === 'phone'}
+                                onChange={() => handleLoginMethodChange('phone')}
+                                color="pink"
+                                className="checked:bg-pink-400 checked:border-gray-400"
+                                ripple={true}
+                            />
+                        </div>
+
+                        {loginMethod === 'email' ? (
+                            <div>
+                                <label htmlFor="emailnv">
+                                    <Typography
+                                        variant="small"
+                                        className="mb-2 block font-medium text-gray-700"
+                                    >
+                                        Email
+                                    </Typography>
+                                </label>
+                                <Input
+                                    id="emailnv" // Đổi từ email thành emailnv
+                                    color="pink"
+                                    size="lg"
+                                    type="email"
+                                    name="emailnv" // Đổi từ email thành emailnv
+                                    placeholder="name@mail.com"
+                                    className="w-full border bg-gray-50 border-pink-300 rounded-lg transition-all duration-200"
+                                    labelProps={{ className: "hidden" }}
+                                    value={formData.emailnv}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        ) : (
+                            <div>
+                                <label htmlFor="sdtnv">
+                                    <Typography
+                                        variant="small"
+                                        className="mb-2 block font-medium text-gray-700"
+                                    >
+                                        Số điện thoại
+                                    </Typography>
+                                </label>
+                                <Input
+                                    id="sdtnv" // Đổi từ phone thành sdtnv
+                                    color="pink"
+                                    size="lg"
+                                    type="tel"
+                                    name="sdtnv" // Đổi từ phone thành sdtnv
+                                    placeholder="0123456789"
+                                    className="w-full border bg-gray-50 border-pink-300 rounded-lg transition-all duration-200"
+                                    labelProps={{ className: "hidden" }}
+                                    value={formData.sdtnv}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        )}
+
+                        <div className="relative">
+                            <label htmlFor="matkhau">
+                                <Typography
+                                    variant="small"
+                                    className="mb-2 block font-medium text-gray-700"
+                                >
+                                    Mật khẩu
+                                </Typography>
+                            </label>
+                            <Input
+                                size="lg"
+                                placeholder="********"
+                                labelProps={{ className: "hidden" }}
+                                name="matkhau" // Đổi từ password thành matkhau
+                                className="w-full bg-gray-50 border border-pink-300 rounded-lg transition-all duration-200 pr-8"
+                                value={formData.matkhau}
+                                onChange={handleChange}
+                                type={passwordShown ? "text" : "password"}
+                                icon={
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 flex items-center pr-1 top-5"
+                                        onClick={togglePasswordVisiblity}
+                                    >
+                                        {passwordShown ? (
+                                            <EyeIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                        ) : (
+                                            <EyeSlashIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                        )}
+                                    </button>
+                                }
+                            />
+                        </div>
                     </div>
-                   
-                    <Button type='submit' color="gray" size="lg" className="mt-6 bg-gray-900 py-3.5 hover:bg-gray-800" fullWidth>
+
+                    <Button 
+                        type="submit" 
+                        size="lg" 
+                        className="w-full bg-gradient-to-r from-pink-500 to-pink-400 hover:from-pink-400 hover:to-pink-400 text-white py-3 rounded-lg font-medium transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
+                    >
                         Đăng nhập
                     </Button>
-
-
                 </form>
+
+                <div className="text-center">
+                    <a href="#" className="text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200">
+                        Quên mật khẩu?
+                    </a>
+                </div>
             </div>
         </section>
         </>

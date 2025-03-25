@@ -131,13 +131,42 @@ export default function FormAddProduct({ formRef, category, producer }) {
     toast.success('Thêm thành công!', { position: 'top-right', autoClose: 1500 });
   const handleError = () =>
     toast.error('Có lỗi xảy ra!', { position: 'top-right', autoClose: 1500 });
-
+  // Tùy chỉnh giao diện react-select
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      borderColor: '#d1d5db',
+      backgroundColor: '#f9fafb',
+      padding: '0.5px',
+      borderRadius: '0.2rem',
+      '&:hover': {
+        borderColor: '#f472b6',
+      },
+      boxShadow: 'none',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#f472b6' : state.isFocused ? '#fce7f3' : 'white',
+      color: state.isSelected ? 'white' : '#374151',
+      '&:hover': {
+        backgroundColor: '#fce7f3',
+      },
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: '#374151',
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: '#9ca3af',
+    }),
+  };
   return (
     <div className="w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center">
       <form
         onSubmit={handleSubmit}
         ref={formRef}
-        className="2xl:w-1/2 w-2/3 mx-auto bg-white shadow-lg border flex flex-col rounded py-5 px-8 mt-16"
+        className="2xl:w-1/2 w-2/3 mx-auto bg-gray-100 shadow-lg border flex flex-col rounded py-5 px-8 mt-16"
       >
         <h2 className="mb-4 uppercase font-bold tracking-wider text-lg text-center">
           Thêm sản phẩm
@@ -155,7 +184,7 @@ export default function FormAddProduct({ formRef, category, producer }) {
               value={formData.masp}
               onChange={handleChange}
               placeholder="SP00189413"
-              className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-pink-500 focus:border-pink-500"
             />
           </div>
           <div className="w-2/3">
@@ -168,7 +197,7 @@ export default function FormAddProduct({ formRef, category, producer }) {
               value={formData.tensp}
               onChange={handleChange}
               placeholder="Kem chống nắng"
-              className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-pink-500 focus:border-pink-500"
             />
           </div>
         </div>
@@ -183,7 +212,7 @@ export default function FormAddProduct({ formRef, category, producer }) {
             value={formData.gia}
             onChange={handleChange}
             placeholder="25000"
-            className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-pink-500 focus:border-pink-500"
           />
         </div>
 
@@ -198,6 +227,7 @@ export default function FormAddProduct({ formRef, category, producer }) {
               }}
               placeholder="Chọn loại sản phẩm"
               className="text-sm"
+              styles={customStyles}
             />
           </div>
           <div className="w-1/2">
@@ -210,6 +240,7 @@ export default function FormAddProduct({ formRef, category, producer }) {
               }}
               placeholder="Chọn nhà sản xuất"
               className="text-sm"
+              styles={customStyles}
             />
           </div>
         </div>
@@ -224,7 +255,7 @@ export default function FormAddProduct({ formRef, category, producer }) {
             onChange={handleChange}
             rows={3}
             placeholder="Thông tin chi tiết của sản phẩm"
-            className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-pink-500 focus:border-pink-500"
           />
         </div>
 
@@ -235,12 +266,12 @@ export default function FormAddProduct({ formRef, category, producer }) {
           <div
             {...getRootProps()}
             className={`p-6 text-center border-2 border-dashed rounded-sm cursor-pointer h-24 flex items-center justify-center bg-gray-50 ${
-              isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+              isDragActive ? 'border-pink-500 bg-pink-50' : 'border-gray-300'
             }`}
           >
             <input {...getInputProps()} ref={fileInputRef} />
             {isDragActive ? (
-              <p className="text-sm text-blue-500">Thả ảnh vào đây...</p>
+              <p className="text-sm text-pink-500">Thả ảnh vào đây...</p>
             ) : (
               <p className="text-sm text-gray-900">
                 Kéo và thả ảnh vào đây

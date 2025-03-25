@@ -262,6 +262,13 @@ export const router = createBrowserRouter([
             <Repo />
           </PrivateRouterStaff>
       },
+      {
+        path: "calendar",
+        element:
+          <PrivateRouterStaff>
+            <Calendar />
+          </PrivateRouterStaff>
+      },
     ]
   },
 ]);

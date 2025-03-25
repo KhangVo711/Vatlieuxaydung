@@ -81,7 +81,36 @@ const status = [
             progress: undefined,
         });
     };
-
+  // Tùy chỉnh giao diện react-select
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      borderColor: '#d1d5db',
+      backgroundColor: '#f9fafb',
+      padding: '0.5px',
+      borderRadius: '0.2rem',
+      '&:hover': {
+        borderColor: '#f472b6',
+      },
+      boxShadow: 'none',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#f472b6' : state.isFocused ? '#fce7f3' : 'white',
+      color: state.isSelected ? 'white' : '#374151',
+      '&:hover': {
+        backgroundColor: '#fce7f3',
+      },
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: '#374151',
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: '#9ca3af',
+    }),
+  };
     return(
         <>
         <div className='w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center'>
@@ -103,6 +132,7 @@ const status = [
                 }}
                 placeholder="Trạng thái"
                 className="w-full text-sm rounded shadow"
+                styles={customStyles}
               />
             </div>
 

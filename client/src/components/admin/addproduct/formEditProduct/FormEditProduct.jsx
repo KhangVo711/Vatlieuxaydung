@@ -107,10 +107,39 @@ export default function FormEditProduct({ formRefEdit, selectedProduct, setSelec
 
   const handleSuccess = () => toast.success('Cập nhật thành công!', { position: 'top-right', autoClose: 1500 });
   const handleError = () => toast.error('Có lỗi xảy ra!', { position: 'top-right', autoClose: 1500 });
-
+// Tùy chỉnh giao diện react-select
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    borderColor: '#d1d5db',
+    backgroundColor: '#f9fafb',
+    padding: '0.5px',
+    borderRadius: '0.2rem',
+    '&:hover': {
+      borderColor: '#f472b6',
+    },
+    boxShadow: 'none',
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? '#f472b6' : state.isFocused ? '#fce7f3' : 'white',
+    color: state.isSelected ? 'white' : '#374151',
+    '&:hover': {
+      backgroundColor: '#fce7f3',
+    },
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: '#374151',
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    color: '#9ca3af',
+  }),
+};
   return (
     <div className="w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center">
-      <form onSubmit={handleSubmit} ref={formRefEdit} className="2xl:w-1/2 w-2/3 mx-auto bg-white shadow-lg border flex flex-col rounded py-5 px-8 mt-16">
+      <form onSubmit={handleSubmit} ref={formRefEdit} className="2xl:w-1/2 w-2/3 mx-auto bg-gray-100 shadow-lg border flex flex-col rounded py-5 px-8 mt-16">
         <h2 className="mb-4 uppercase font-bold tracking-wider text-lg text-center">Sửa sản phẩm</h2>
         {message && <p className={`${colorMsg} text-center text-sm`}>{message}</p>}
 
@@ -153,6 +182,7 @@ export default function FormEditProduct({ formRefEdit, selectedProduct, setSelec
               onChange={(option) => setSelectedProduct({ ...selectedProduct, maloai: option?.value || '' })}
               placeholder="Chọn loại sản phẩm"
               className="text-sm"
+              styles={customStyles}
             />
           </div>
           <div className="w-1/2">
@@ -163,6 +193,7 @@ export default function FormEditProduct({ formRefEdit, selectedProduct, setSelec
               onChange={(option) => setSelectedProduct({ ...selectedProduct, mansx: option?.value || '' })}
               placeholder="Chọn nhà sản xuất"
               className="text-sm"
+              styles={customStyles}
             />
           </div>
         </div>
@@ -185,7 +216,7 @@ export default function FormEditProduct({ formRefEdit, selectedProduct, setSelec
           <select
             value={selectedImageToReplace}
             onChange={(e) => setSelectedImageToReplace(e.target.value)}
-            className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-2 text-sm border border-gray-300 rounded-sm bg-gray-50 focus:ring-pink-500 focus:border-pink-500"
           >
             <option value="">Không thay thế ảnh</option>
             {currentImages.map((image, index) => (
