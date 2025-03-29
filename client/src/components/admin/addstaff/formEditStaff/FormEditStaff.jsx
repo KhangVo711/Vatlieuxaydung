@@ -1,112 +1,76 @@
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import Select from 'react-select';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 export default function FormEditStaff({ formRefEdit, selectedStaff, setSelectedStaff, setLoadStaff }) {
-
-  const staffE = [
-    {value: 'Nhân viên', label: 'Nhân viên'}, 
-    {value: 'Quản lý', label: 'Quản lý'}, 
-    {value: 'Kế toán', label: 'Kế toán'},
-    {value: 'Bảo vệ', label: 'Bảo vệ'}];
-
   const [colorMessage, setColorMessage] = useState('');
-
   const [message, setMessage] = useState('');
 
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post(`http://localhost:5001/editStaff`, selectedStaff, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${Cookies.get('admin')}`,
-                'Accept': 'application/json'
-            },
-            withCredentials: true
-        });
-        if (response.status === 200) {
-            setMessage(response.data.message);
-            setLoadStaff(true);
-            setColorMessage('text-green-500');
-            setTimeout(() => {
-                setMessage('');
-            }, 1500);
-            handleSuccess();
-        }
-        if (response.status === 400) {
-            setMessage(response.data.message);
-            setColorMessage('text-red-500');
-            handleError();
-
-        }
-    } catch (error) {
-        handleError();
-        setMessage(error.response ? error.response.data.message : 'An error occurred');
+      const response = await axios.post(`http://localhost:5001/editStaff`, {
+        ...selectedStaff,
+        chucvunv: 'Nhân viên' // Force position to "Nhân viên"
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Cookies.get('admin')}`,
+          'Accept': 'application/json'
+        },
+        withCredentials: true
+      });
+      if (response.status === 200) {
+        setMessage(response.data.message);
+        setLoadStaff(true);
+        setColorMessage('text-green-500');
+        setTimeout(() => {
+          setMessage('');
+        }, 1500);
+        handleSuccess();
+      }
+      if (response.status === 400) {
+        setMessage(response.data.message);
         setColorMessage('text-red-500');
+        handleError();
+      }
+    } catch (error) {
+      handleError();
+      setMessage(error.response ? error.response.data.message : 'An error occurred');
+      setColorMessage('text-red-500');
     }
-}
-const handleSuccess = () => {
+  };
+
+  const handleSuccess = () => {
     toast.success("Sửa thành công!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
     });
-};
-const handleError = () => {
+  };
+
+  const handleError = () => {
     toast.error("Có lỗi xảy ra!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
     });
-};
-// Tùy chỉnh giao diện react-select
-const customStyles = {
-  control: (provided) => ({
-    ...provided,
-    borderColor: '#d1d5db',
-    backgroundColor: '#f9fafb',
-    padding: '0.5px',
-    borderRadius: '0.2rem',
-    '&:hover': {
-      borderColor: '#f472b6',
-    },
-    boxShadow: 'none',
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected ? '#f472b6' : state.isFocused ? '#fce7f3' : 'white',
-    color: state.isSelected ? 'white' : '#374151',
-    '&:hover': {
-      backgroundColor: '#fce7f3',
-    },
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: '#374151',
-  }),
-  placeholder: (provided) => ({
-    ...provided,
-    color: '#9ca3af',
-  }),
-};
+  };
+
   return (
     <div className='w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center'>
-
-      <form onSubmit={handleSubmitEdit} ref={formRefEdit} className=" w-1/3 mx-auto bg-gray-100 shadow-lg border flex rounded py-5 px-8 mt-16 ">
-
-       
+      <form onSubmit={handleSubmitEdit} ref={formRefEdit} className="w-1/3 mx-auto bg-gray-100 shadow-lg border flex rounded py-5 px-8 mt-16">
         <div className='mx-auto'>
           <h2 className='mb-4 uppercase font-bold tracking-wider text-lg text-center'>Sửa nhân viên</h2>
           {message && <p className={`${colorMessage} text-center text-sm`}>{message}</p>}
@@ -118,76 +82,71 @@ const customStyles = {
             </div>
             <div className="w-2/3 ml-1">
               <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên nhân viên</label>
-              <input type="text" id="name" name='tennv' className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+              <input type="text" id="name" name='tennv' 
+                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                 placeholder='Tên nhân viên'
                 value={selectedStaff.tennv}
                 onChange={(e) => setSelectedStaff({ ...selectedStaff, tennv: e.target.value })}
               />
             </div>
           </div>
+
           <div className="mb-3 flex">
             <div className="w-1/3 mr-1">
               <label htmlFor="sdt" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số điện thoại</label>
-              <input type="text" id="sdt" name='tennv' className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+              <input type="text" id="sdt" name='sdtnv' 
+                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                 placeholder='Số điện thoại'
                 value={selectedStaff.sdtnv}
                 onChange={(e) => setSelectedStaff({ ...selectedStaff, sdtnv: e.target.value })}
               />
             </div>
             <div className="w-2/3 ml-1">
-              <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-              <input type="text" id="name" name='tennv' className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                placeholder='Tên nhân viên'
+              <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+              <input type="text" id="email" name='emailnv' 
+                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                placeholder='Email nhân viên'
                 value={selectedStaff.emailnv}
                 onChange={(e) => setSelectedStaff({ ...selectedStaff, emailnv: e.target.value })}
               />
             </div>
           </div>
-       
+
           <div className='mb-3'>
-            <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ</label>
-            <input type="text" id="name" name='tennv' className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                placeholder='Tên nhân viên'
-                value={selectedStaff.diachinv}
-                onChange={(e) => setSelectedStaff({ ...selectedStaff, diachinv: e.target.value })}
-              />
+            <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Địa chỉ</label>
+            <input type="text" id="address" name='diachinv' 
+              className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+              placeholder='Địa chỉ nhân viên'
+              value={selectedStaff.diachinv}
+              onChange={(e) => setSelectedStaff({ ...selectedStaff, diachinv: e.target.value })}
+            />
           </div>
+
           <div className='mb-3 flex justify-between'>
-            {/* Dropdown Chức vụ */}
-            <div className="w-1/2 relative mr-1">
-              <label htmlFor="producer" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chức vụ</label>
-              <Select
-                options={staffE}
-                value={staffE.find(option => option.value === selectedStaff.chucvunv)} // Khớp giá trị đã chọn với options
-                onChange={(selectedOption) => {
-                  setSelectedStaff({ ...selectedStaff, chucvunv: selectedOption.value }); // Cập nhật `mansx` trong state
-                }}
-                placeholder="Chọn nhà sản xuất"
-                className="w-full text-sm rounded shadow"
-                styles={customStyles}
+            <div className="w-1/2 mr-1">
+              <label htmlFor="position" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chức vụ</label>
+              <input type="text" id="position"
+                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 outline-none text-sm rounded-sm block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:shadow-sm-light"
+                value="Nhân viên"
+                readOnly
               />
             </div>
-          <div className='mb-3'>
-            <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tổng lương</label>
-            <input type="text" id="name" name='tennv' className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                placeholder='Tên nhân viên'
+            <div className="w-1/2 ml-1">
+              <label htmlFor="salary" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tổng lương</label>
+              <input type="text" id="salary" name='tongluong' 
+                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                placeholder='Tổng lương'
                 value={selectedStaff.tongluong}
                 onChange={(e) => setSelectedStaff({ ...selectedStaff, tongluong: e.target.value })}
               />
+            </div>
           </div>
-            
-          
 
-          
-          </div>
-          
-       
           <div className='flex items-center justify-center w-full'>
             <button type="submit" className="text-white bg-pink-500 hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-md text-sm px-3 py-2 text-center dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800 transition duration-150 ease-in-out">Đồng ý</button>
           </div>
         </div>
       </form>
-
     </div>
-  )
+  );
 }

@@ -13,9 +13,29 @@ export default function TablePromo({ promo, handleEditProductClick, handleDelete
   const currentPromo = promo.slice(offset, offset + itemsPerPage);
   const pageCount = Math.ceil(promo.length / itemsPerPage);
 
-  const handlePageChange = ({ selected }) => {
-    setCurrentPage(selected);
+  // Logic tính toán các trang hiển thị
+  const getPageNumbers = () => {
+    const maxDisplay = 3; // Hiển thị tối đa 3 trang
+    let startPage = Math.max(0, currentPage - 1); // Bắt đầu từ trang trước trang hiện tại
+    let endPage = Math.min(pageCount, startPage + maxDisplay); // Kết thúc sau 3 trang
+
+    // Điều chỉnh nếu gần cuối
+    if (endPage - startPage < maxDisplay && startPage > 0) {
+      startPage = Math.max(0, endPage - maxDisplay);
+    }
+
+    const pages = [];
+    for (let i = startPage; i < endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
   };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const pageNumbers = getPageNumbers();
     return (
         <>
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -82,31 +102,39 @@ export default function TablePromo({ promo, handleEditProductClick, handleDelete
                 </tbody>
             </table>
         </div>
-          {/* React Paginate */}
-          <ReactPaginate
-          previousLabel={"← Trước"}
-          nextLabel={"Sau →"}
-          pageCount={pageCount}
-          onPageChange={handlePageChange}
-          containerClassName={
-            "flex justify-center mt-4 space-x-2 fixed bottom-5 left-1/2 p-2 rounded-md user-select-none"
-          }
-          pageClassName={
-            "mx-1 px-3 py-1 rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          }
-          pageLinkClassName={
-            "block w-full h-full" 
-          }
-          previousClassName={
-            "text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          }
-          nextClassName={
-            "text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          }
-          activeClassName={
-            "font-bold !bg-gray-800 text-white px-3 py-1 rounded-md " 
-          }
-        />
+          {/* Phân trang tùy chỉnh */}
+      <div className="flex justify-center mt-4 space-x-2 fixed bottom-5 left-1/2 p-2 rounded-md">
+        {/* Nút Trước */}
+        <button
+          onClick={() => handlePageChange(Math.max(0, currentPage - 1))}
+          className="text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
+          disabled={currentPage === 0}
+        >
+          ← Trước
+        </button>
+
+        {/* Các số trang */}
+        {pageNumbers.map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            className={`mx-1 px-3 py-1 rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-200 transition-all duration-200 cursor-pointer ${
+              currentPage === page ? 'font-bold !bg-gray-800 text-white' : ''
+            }`}
+          >
+            {page + 1}
+          </button>
+        ))}
+
+        {/* Nút Sau */}
+        <button
+          onClick={() => handlePageChange(Math.min(pageCount - 1, currentPage + 1))}
+          className="text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
+          disabled={currentPage === pageCount - 1}
+        >
+          Sau →
+        </button>
+      </div>
         </>
     )
 }

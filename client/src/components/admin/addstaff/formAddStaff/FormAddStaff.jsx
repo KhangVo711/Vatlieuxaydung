@@ -2,20 +2,11 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useContext } from 'react';
-import Select from 'react-select';
 import { Context } from '../../../Context.jsx';
 import Cookies from 'js-cookie';
 
 export default function FormAddStaff({ formRef }) {
   const { setLoadStaff } = useContext(Context);
-  const [selectedPosition, setSelectedPosition] = useState(null);
-
-  const staffA = [
-    { value: 'Nhân viên', label: 'Nhân viên' },
-    { value: 'Quản lý', label: 'Quản lý' },
-    { value: 'Kế toán', label: 'Kế toán' },
-    { value: 'Bảo vệ', label: 'Bảo vệ' }
-  ];
 
   const [formData, setFormData] = useState({
     manv: '',
@@ -23,7 +14,7 @@ export default function FormAddStaff({ formRef }) {
     sdtnv: '',
     emailnv: '',
     diachinv: '',
-    chucvunv: '',
+    chucvunv: 'Nhân viên', // Default position set to "Nhân viên"
     matkhau: '',
     tongluong: 0,
   });
@@ -61,7 +52,7 @@ export default function FormAddStaff({ formRef }) {
           sdtnv: '',
           emailnv: '',
           diachinv: '',
-          chucvunv: '',
+          chucvunv: 'Nhân viên',
           matkhau: '',
           tongluong: 0,
         });
@@ -104,36 +95,7 @@ export default function FormAddStaff({ formRef }) {
       progress: undefined,
     });
   };
-// Tùy chỉnh giao diện react-select
-const customStyles = {
-  control: (provided) => ({
-    ...provided,
-    borderColor: '#d1d5db',
-    backgroundColor: '#f9fafb',
-    padding: '0.5px',
-    borderRadius: '0.2rem',
-    '&:hover': {
-      borderColor: '#f472b6',
-    },
-    boxShadow: 'none',
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected ? '#f472b6' : state.isFocused ? '#fce7f3' : 'white',
-    color: state.isSelected ? 'white' : '#374151',
-    '&:hover': {
-      backgroundColor: '#fce7f3',
-    },
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: '#374151',
-  }),
-  placeholder: (provided) => ({
-    ...provided,
-    color: '#9ca3af',
-  }),
-};
+
   return (
     <div className='w-full absolute h-screen bg-black bg-opacity-10 top-0 right-1/2 translate-x-1/2 flex items-center'>
       <form onSubmit={handleSubmit} ref={formRef} className="w-5/12 mx-auto bg-gray-100 shadow-lg border rounded py-5 px-8 mt-16">
@@ -199,19 +161,11 @@ const customStyles = {
           </div>
           <div className="w-1/2 ml-1">
             <label htmlFor="position" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chức vụ</label>
-            <Select
-              options={staffA}
-              value={staffA.find(option => option.value === selectedPosition?.value)}
-              onChange={(selectedOption) => {
-                setSelectedPosition(selectedOption);
-                setFormData({
-                  ...formData,
-                  chucvunv: selectedOption.value,
-                });
-              }}
-              placeholder="Chọn chức vụ"
-              className='w-full text-sm rounded-lg'
-              styles={customStyles}
+            <input type="text" id="position"
+              className="shadow-sm bg-gray-50 border border-gray-300 outline-none text-gray-900 text-sm rounded-sm block w-full pl-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:shadow-sm-light"
+              name='chucvunv'
+              value={formData.chucvunv}
+              readOnly
             />
           </div>
         </div>

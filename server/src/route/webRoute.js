@@ -73,6 +73,7 @@ const initWebRoute = (app) => {
     router.post('/addShift', staff.addShift);
     router.post('/updateShiftStaff', staff.updateShiftStaff);
     router.post('/removeStaffFromShift', staff.removeStaffFromShift);
+    router.get('/getStaffByShift/:manv', staff.getShifts);
 
     router.post('/addDelivery', auth.authMiddleware, ship.addShip)
     router.get('/getDelivery', ship.getAllShip)

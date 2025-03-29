@@ -467,8 +467,8 @@ const customStyles = {
         </div>
 
         {openShiftModal && (
-          <div className="absolute h-screen inset-0 z-20 flex items-center justify-center bg-black bg-opacity-10">
-            <div className="p-4 max-w-xl w-full mx-4 relative">
+          <div className="fixed h-screen inset-0 z-20 flex items-center justify-center bg-black bg-opacity-10">
+            <div className="p-4 max-w-xl ml-96 w-full mx-4 relative">
               <div
                 className="absolute right-2.5 top-2.5 w-7 h-7 rounded-full bg-red-400 text-gray-50 hover:scale-110 hover:bg-red-500 transition duration-150 ease-in-out inline-flex items-center justify-center cursor-pointer transform translate-x-2 -translate-y-2"
                 onClick={() => setOpenShiftModal(false)}
@@ -555,8 +555,8 @@ const customStyles = {
         )}
 
         {openEditModal && (
-          <div className="absolute h-screen inset-0 z-20 flex items-center justify-center bg-black bg-opacity-10">
-            <div className="p-4 max-w-xl w-full mx-4 relative">
+          <div className="fixed h-screen inset-0 z-20 flex items-center justify-center bg-black bg-opacity-10">
+            <div className="p-4 max-w-xl ml-96 w-full mx-4 relative">
               <div
                 className="absolute right-2.5 top-2.5 w-7 h-7 rounded-full bg-red-400 text-gray-50 hover:bg-red-500 hover:scale-110 transition duration-150 ease-in-out inline-flex items-center justify-center cursor-pointer transform translate-x-2 -translate-y-2"
                 onClick={() => setOpenEditModal(false)}
@@ -644,8 +644,8 @@ const customStyles = {
         )}
 
         {openViewModal && (
-          <div className="absolute h-screen inset-0 z-20 flex items-center justify-center bg-black bg-opacity-10">
-            <div className="p-4 max-w-xl w-full mx-4 relative">
+          <div className="fixed h-screen inset-0 z-20 flex items-center justify-center bg-black bg-opacity-10">
+            <div className="p-4 max-w-xl ml-96 w-full mx-4 relative">
               <div
                 className="absolute right-2.5 top-2.5 w-7 h-7 rounded-full bg-red-400 text-gray-50 hover:bg-red-500 hover:scale-110 transition duration-150 ease-in-out inline-flex items-center justify-center cursor-pointer transform translate-x-2 -translate-y-2"
                 onClick={() => setOpenViewModal(false)}

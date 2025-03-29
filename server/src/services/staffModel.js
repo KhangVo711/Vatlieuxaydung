@@ -62,6 +62,13 @@ const getAllStaff = async () => {
     );
     return rows;
 }
+const getShifts = async (manv) => { 
+    const [rows, fields] = await connectDB.execute(
+        'SELECT c.* FROM calam c JOIN giaonhanca g ON c.maca = g.maca WHERE g.manv = ?',
+      [manv]
+    );
+    return rows;
+}
 
 const getAllShifts = async () => { 
     const [rows, fields] = await connectDB.execute(
@@ -135,4 +142,4 @@ const deleteStaff = async (manv) => {
     return rows;
 }
 
-export default {addStaff, updateStaff, addStaffToShift, deleteShift, updateShift, getStaffByShift, removeAllStaffFromShift, getAllStaff, getAllShifts, addShift, deleteStaff, getStaffByPhone, getStaffByEmail, getStaffById, getShiftById, removeStaffFromShift};
+export default {addStaff, updateStaff, addStaffToShift, getShifts, deleteShift, updateShift, getStaffByShift, removeAllStaffFromShift, getAllStaff, getAllShifts, addShift, deleteStaff, getStaffByPhone, getStaffByEmail, getStaffById, getShiftById, removeStaffFromShift};

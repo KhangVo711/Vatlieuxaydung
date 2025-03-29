@@ -14,7 +14,7 @@ const addStaff = async (req, res) => {
             return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin' });
         }
 
-        const staff = await staffModel.getStaff(manv);
+        const staff = await staffModel.getStaffById(manv);
         if (staff) {
             return res.status(400).json({ message: 'Mã nhân viên đã tồn tại' });
         }
@@ -117,6 +117,19 @@ const getAllShifts = async (req, res) => {
     }
 }
 
+const getShifts = async (req, res) => {
+    const manv = req.params.manv;
+
+    try {
+        const shifts = await staffModel.getShifts(manv);
+        return res.status(200).json({ shifts });
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Lỗi xảy ra bên server' });
+    }
+}
+
 const addShift = async (req, res) => {
     try {
         const { maca, tenca, luongmoca, thuong, chiphaphatsinh, giovao, giora, staff } = req.body;
@@ -165,7 +178,7 @@ const editStaff = async (req, res) => {
         if (!manv || !tennv || !sdtnv || !emailnv || !diachinv || !chucvunv) {
             return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin' });
         }
-        const staff = await staffModel.getStaff(manv);
+        const staff = await staffModel.getStaffById(manv);
         if (!staff) {
             return res.status(400).json({ message: 'Nhân viên không tồn tại' });
         }
@@ -260,4 +273,4 @@ const updateShiftStaff  = async (req, res) => {
         return res.status(500).json({ message: 'Lỗi xảy ra bên server' });
     }
 }
-export default { loginStaff, addStaff, getAllStaff, editStaff, deleteStaff, getAllShifts, addShift, removeStaffFromShift, updateShiftStaff };
+export default { loginStaff, addStaff, getAllStaff, editStaff, getShifts, deleteStaff, getAllShifts, addShift, removeStaffFromShift, updateShiftStaff };
