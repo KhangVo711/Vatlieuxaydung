@@ -45,18 +45,29 @@ const getReTract = async () => {
 };
 
 const getDailyRevenue = async () => {
+    // Lấy ngày đầu và cuối của tuần hiện tại
+    const today = new Date();
+    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Chủ nhật là ngày đầu tuần
+    const endOfWeek = new Date(today.setDate(startOfWeek.getDate() + 6)); // Thứ bảy là ngày cuối tuần
+
+    // Format ngày theo định dạng YYYY-MM-DD cho SQL
+    const startDate = startOfWeek.toISOString().split('T')[0];
+    const endDate = endOfWeek.toISOString().split('T')[0];
+
     const [rows] = await connectDB.execute(`
         SELECT 
             DAYNAME(ngaydat) AS day_of_week,
             SUM(tonggia) AS total_revenue
         FROM 
             donhang
+        WHERE 
+            ngaydat BETWEEN ? AND ?
         GROUP BY 
             DAYNAME(ngaydat),
             DAYOFWEEK(ngaydat)
         ORDER BY 
             DAYOFWEEK(ngaydat)
-    `);
+    `, [startDate, endDate]);
 
     // Ánh xạ ngày sang tiếng Việt
     const dayMapping = {
@@ -69,8 +80,7 @@ const getDailyRevenue = async () => {
         'Sunday': 'Chủ Nhật'
     };
 
-    
-    const orderedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const orderedDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const result = orderedDays.map(day => {
         const row = rows.find(r => r.day_of_week === day) || { day_of_week: day, total_revenue: 0 };
         return {
@@ -83,6 +93,15 @@ const getDailyRevenue = async () => {
 };
 
 const getDailyProductSales = async () => {
+    // Lấy ngày đầu và cuối của tuần hiện tại
+    const today = new Date();
+    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay())); // Chủ nhật là ngày đầu tuần
+    const endOfWeek = new Date(today.setDate(startOfWeek.getDate() + 6)); // Thứ bảy là ngày cuối tuần
+
+    // Format ngày theo định dạng YYYY-MM-DD cho SQL
+    const startDate = startOfWeek.toISOString().split('T')[0];
+    const endDate = endOfWeek.toISOString().split('T')[0];
+
     const [rows] = await connectDB.execute(`
         SELECT 
             DAYNAME(dh.ngaydat) AS day_of_week,
@@ -90,12 +109,14 @@ const getDailyProductSales = async () => {
         FROM 
             donhang dh
             INNER JOIN chitietdonhang ctdh ON dh.madh = ctdh.madh
+        WHERE 
+            dh.ngaydat BETWEEN ? AND ?
         GROUP BY 
             DAYNAME(dh.ngaydat),
             DAYOFWEEK(dh.ngaydat)
         ORDER BY 
             DAYOFWEEK(dh.ngaydat)
-    `);
+    `, [startDate, endDate]);
 
     // Ánh xạ ngày sang tiếng Việt
     const dayMapping = {
@@ -108,12 +129,12 @@ const getDailyProductSales = async () => {
         'Sunday': 'Chủ Nhật'
     };
 
-    // Điều chỉnh thứ tự để Sunday (1) nằm cuối
-    const orderedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    // Điều chỉnh thứ tự để bắt đầu từ Sunday
+    const orderedDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const result = orderedDays.map(day => {
         const row = rows.find(r => r.day_of_week === day) || { day_of_week: day, total_products_sold: 0 };
         return {
-            day_of_week: dayMapping[day], // Lấy 3 chữ cái đầu: Mon, Tue, ...
+            day_of_week: dayMapping[day],
             total_products_sold: row.total_products_sold
         };
     });

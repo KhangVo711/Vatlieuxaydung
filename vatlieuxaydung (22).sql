@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2025 at 05:35 PM
+-- Generation Time: Mar 30, 2025 at 03:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -34,10 +34,35 @@ CREATE TABLE `calam` (
   `thuong` float NOT NULL,
   `chiphiphatsinh` float NOT NULL,
   `giovaoca` datetime NOT NULL,
-  `gioraca` datetime NOT NULL,
-  `ngaynghi` date NOT NULL,
-  `manv` varchar(50) NOT NULL
+  `gioraca` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `calam`
+--
+
+INSERT INTO `calam` (`maca`, `tenca`, `luongmoica`, `thuong`, `chiphiphatsinh`, `giovaoca`, `gioraca`) VALUES
+('CA_0097125b', 'Ca Chiều', 15000, 0, 0, '2025-03-27 12:00:00', '2025-03-27 17:00:00'),
+('CA_0a9851d9', 'Ca Tối', 15000, 0, 0, '2025-03-27 17:00:00', '2025-03-27 22:00:00'),
+('CA_2eba58fa', 'Ca Tối', 15000, 0, 0, '2025-03-30 17:00:00', '2025-03-30 22:00:00'),
+('CA_3be679e1', 'Ca Sáng', 15000, 0, 0, '2025-03-27 06:00:00', '2025-03-27 12:00:00'),
+('CA_8010d8a8', 'Ca Chiều', 15000, 0, 0, '2025-03-28 12:00:00', '2025-03-28 17:00:00'),
+('CA_826af730', 'Ca Tối', 15000, 0, 0, '2025-03-25 17:00:00', '2025-03-25 22:00:00'),
+('CA_97a88dfa', 'Ca Sáng', 15000, 0, 0, '2025-03-30 06:00:00', '2025-03-30 12:00:00'),
+('CA_9906de44', 'Ca Chiều', 15000, 0, 0, '2025-03-26 12:00:00', '2025-03-26 17:00:00'),
+('CA_9bda898a', 'Ca Tối', 15000, 0, 0, '2025-03-31 17:00:00', '2025-03-31 22:00:00'),
+('CA_bdb50fef', 'Ca Chiều', 15000, 0, 0, '2025-03-25 12:00:00', '2025-03-25 17:00:00'),
+('CA_c23ca526', 'Ca Chiều', 15000, 0, 0, '2025-03-31 12:00:00', '2025-03-31 17:00:00'),
+('CA_c6909afc', 'Ca Sáng', 15000, 0, 0, '2025-03-31 06:00:00', '2025-03-31 12:00:00'),
+('CA_c99fb7a7', 'Ca Chiều', 15000, 0, 0, '2025-03-30 12:00:00', '2025-03-30 17:00:00'),
+('CA_d368cea9', 'Ca Sáng', 15000, 0, 0, '2025-03-25 06:00:00', '2025-03-25 12:00:00'),
+('CA_ddb21c78', 'Ca Sáng', 15000, 0, 0, '2025-03-29 06:00:00', '2025-03-29 12:00:00'),
+('CA_df374302', 'Ca Sáng', 15000, 0, 0, '2025-03-26 06:00:00', '2025-03-26 12:00:00'),
+('CA_e2be116f', 'Ca Sáng', 15000, 0, 0, '2025-03-28 06:00:00', '2025-03-28 12:00:00'),
+('CA_e5e10661', 'Ca Tối', 15000, 0, 0, '2025-03-29 17:00:00', '2025-03-29 22:00:00'),
+('CA_f0411dfb', 'Ca Tối', 15000, 0, 0, '2025-03-28 17:00:00', '2025-03-28 22:00:00'),
+('CA_fc921094', 'Ca Tối', 15000, 0, 0, '2025-03-26 17:00:00', '2025-03-26 22:00:00'),
+('CA_fef942c5', 'Ca Chiều', 15000, 0, 0, '2025-03-29 12:00:00', '2025-03-29 17:00:00');
 
 -- --------------------------------------------------------
 
@@ -128,7 +153,11 @@ INSERT INTO `chitietdonhang` (`madh`, `masp`, `soluongsanpham`, `km`, `dongia`) 
 ('OD17427410449087', 'GP65237653', 2, 0, 135000),
 ('OD17427410449087', 'SG62587431', 2, 7, 130200),
 ('OD17427410449087', 'TC97412232', 1, 20, 168000),
-('OD17427410449087', 'TD47237523', 3, 0, 132000);
+('OD17427410449087', 'TD47237523', 3, 0, 132000),
+('OD17427979055732', 'SK35467745', 9, 10, 292500),
+('OD17427982690481', 'SK35467745', 1, 10, 292500),
+('OD17433400064511', 'SG62587431', 2, 7, 130200),
+('OD17433400064511', 'SK35467745', 1, 10, 292500);
 
 -- --------------------------------------------------------
 
@@ -232,12 +261,15 @@ INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `trangthai`, `tonggia`, `madvv
 ('OD17427331558154', 'KHEQCH0YQU', '2025-03-23 19:32:00', 'Đã xác nhận', 450953, 'NHS-146', NULL, 2.87834),
 ('OD17427333463520', 'KHUHSHLE73', '2025-03-23 19:35:00', 'Đã xác nhận', 664184, 'GHT-812', NULL, 4.59176),
 ('OD17427333777796', 'KHUHSHLE73', '2025-03-23 19:36:00', 'Đã xác nhận', 1113775, 'EXP-787', NULL, 4.59176),
-('OD17427334173275', 'KHUHSHLE73', '2025-03-23 19:36:00', 'Đã xác nhận', 1262563, 'NHS-146', NULL, 4.59176),
+('OD17427334173275', 'KHUHSHLE73', '2025-03-25 19:36:00', 'Đã xác nhận', 1262563, 'NHS-146', NULL, 4.59176),
 ('OD17427345537678', 'KHM7V08AMM', '2025-03-23 19:55:00', 'Đã xác nhận', 982000, 'EXP-787', NULL, 73.8454),
-('OD17427364262312', 'KHONUVAZ7W', '2025-03-23 20:27:00', 'Đã xác nhận', 1737000, 'NHS-146', NULL, 73.1965),
+('OD17427364262312', 'KHONUVAZ7W', '2025-03-25 20:27:00', 'Đã xác nhận', 1737000, 'NHS-146', NULL, 73.1965),
 ('OD17427365044512', 'KHONUVAZ7W', '2025-03-23 20:28:00', 'Đã xác nhận', 910250, 'GHT-812', NULL, 73.1965),
 ('OD17427403643267', 'KHONUVAZ7W', '2025-03-23 21:32:00', 'Đã xác nhận', 3339200, 'EXP-787', NULL, 73.1965),
-('OD17427410449087', 'KHI5NCFJFF', '2025-03-23 21:44:00', 'Đã xác nhận', 1115388, 'NHS-146', NULL, 4.664);
+('OD17427410449087', 'KHI5NCFJFF', '2025-03-23 21:44:00', 'Đã xác nhận', 1115388, 'NHS-146', NULL, 4.664),
+('OD17427979055732', NULL, '2025-03-24 13:31:00', 'Đã xác nhận', 2662500, 'EXP-787', 'FO17427978586483', 104.2),
+('OD17427982690481', 'KHR26SAV0Y', '2025-03-24 13:37:00', 'Đã xác nhận', 322500, 'NHS-146', NULL, 1135.75),
+('OD17433400064511', 'KHM7V08AMM', '2025-03-30 20:06:00', 'Đã xác nhận', 582900, 'NHS-146', NULL, 73.8454);
 
 -- --------------------------------------------------------
 
@@ -275,6 +307,13 @@ CREATE TABLE `formdathang` (
   `email` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `formdathang`
+--
+
+INSERT INTO `formdathang` (`maform`, `tenkh`, `sdt`, `diachi`, `email`) VALUES
+('FO17427978586483', 'Hoàng Gia Nghiêm', '0668799645', 'Châu Đốc, An Giang', 'nghiemgia@gmail.com');
+
 -- --------------------------------------------------------
 
 --
@@ -285,6 +324,33 @@ CREATE TABLE `giaonhanca` (
   `manv` varchar(50) NOT NULL,
   `maca` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `giaonhanca`
+--
+
+INSERT INTO `giaonhanca` (`manv`, `maca`) VALUES
+('BV-009', 'CA_3be679e1'),
+('BV-009', 'CA_8010d8a8'),
+('BV-009', 'CA_826af730'),
+('BV-009', 'CA_c6909afc'),
+('BV-009', 'CA_e5e10661'),
+('KS-005', 'CA_0097125b'),
+('KS-005', 'CA_97a88dfa'),
+('KS-005', 'CA_bdb50fef'),
+('KS-005', 'CA_c23ca526'),
+('KS-005', 'CA_df374302'),
+('KS-005', 'CA_f0411dfb'),
+('NV-001', 'CA_0a9851d9'),
+('NV-001', 'CA_9906de44'),
+('NV-001', 'CA_9bda898a'),
+('NV-001', 'CA_c99fb7a7'),
+('NV-001', 'CA_d368cea9'),
+('NV-001', 'CA_ddb21c78'),
+('QL-003', 'CA_2eba58fa'),
+('QL-003', 'CA_e2be116f'),
+('QL-003', 'CA_fc921094'),
+('QL-003', 'CA_fef942c5');
 
 -- --------------------------------------------------------
 
@@ -417,6 +483,7 @@ INSERT INTO `khachhang` (`tenkh`, `makh`, `email`, `sdt`, `diachi`, `matkhau`) V
 ('Võ Huỳnh Minh Khang', 'KHI5NCFJFF', 'vokhang123@gmail.com', '0983251652', '15 Bùi Hữu Nghĩa, Bình Thủy, Cần Thơ', '$2b$10$GSND6KV.mIWXw5/l3NN1QOEQLZR0o8vUYBUbuUxOaVBqjTuKLOBDq'),
 ('Lý Thi Mai', 'KHM7V08AMM', 'maithi@gmail.com', '0987654321', '236 Mạc Cửu, Vĩnh Thanh, Rạch Giá, Kiên Giang', '$2b$10$w1LeJsoWvo0GrhaxxoE4yuaKyTnHcH4vLdFfXE6LGqJTpDNIA0p9y'),
 ('Trần Khánh Nam', 'KHONUVAZ7W', 'khanhnam@gmail.com', '0123456789', '40 Nguyễn Văn Cừ, TT. Tân Phú, Đồng Phú, Bình Phước', '$2b$10$sgCkY8KGj4y9ixVzs4DQmOeG8C3w7gWWycoq2d2T1Tujv2xl.9o9O'),
+('Ngô Gia Minh', 'KHR26SAV0Y', 'minhgia@gmail.com', '0227789675', 'Hà Nội', '$2b$10$KtEAm.oQN7TsjgZ4QaQlbu/wNrshkPVXtUfRdUWvidg0e74Fi0jmi'),
 ('Trần Thị Thanh Xuân', 'KHUHSHLE73', 'thanhxuantran@gmail.com', '0775221459', '44 Đ. Quang Trung, Phường 11, Gò Vấp, Hồ Chí Minh', '$2b$10$AFdfMcASK9V6ht9TCNhxD.aEJIwB7RvbGc9HCMm961WmGW3YYNf4i');
 
 -- --------------------------------------------------------
@@ -454,7 +521,6 @@ CREATE TABLE `khuyenmai` (
 INSERT INTO `khuyenmai` (`makm`, `tenkm`, `km`, `thoigianbatdaukm`, `thoigianketthuckm`, `masp`) VALUES
 ('KM-356', 'Giảm 7%', 7, '2025-03-13 10:10:00', '2025-04-04 10:10:00', 'SG62587431'),
 ('KM-432', 'Giảm 10%', 10, '2025-03-13 09:45:00', '2025-03-31 09:45:00', 'SK35467745'),
-('KM-562', 'Giảm 20%', 20, '2025-03-10 15:25:00', '2025-03-29 20:25:00', 'TC97412232'),
 ('KM-612', 'Giảm 12%', 12, '2025-03-13 09:46:00', '2025-04-03 09:46:00', 'RC83943432'),
 ('km-986', 'Giảm 25%', 25, '2025-03-13 09:46:00', '2025-04-04 09:47:00', 'KN66424567');
 
@@ -493,15 +559,19 @@ CREATE TABLE `nhanvien` (
   `emailnv` varchar(50) NOT NULL,
   `diachinv` varchar(200) NOT NULL,
   `chucvunv` varchar(50) NOT NULL,
-  `tongluong` float NOT NULL
+  `tongluong` float NOT NULL,
+  `matkhau` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nhanvien`
 --
 
-INSERT INTO `nhanvien` (`manv`, `tennv`, `sdtnv`, `emailnv`, `diachinv`, `chucvunv`, `tongluong`) VALUES
-('MJBJA12341', 'Nguyễn Văn Pha', '84510020', 'Pha@gmail.com', 'NinhThuan', 'Nhân viên', 10000);
+INSERT INTO `nhanvien` (`manv`, `tennv`, `sdtnv`, `emailnv`, `diachinv`, `chucvunv`, `tongluong`, `matkhau`) VALUES
+('BV-009', 'Trần Vĩ Gia Thành', '0987456321', 'giathanh@gmail.com', '589 Trần Phú, Phường 7, Bạc Liêu', 'Nhân viên', 0, '$2b$10$oZzxDV3grsFI37r3TJxA5..fHvXmvhuSWSb/dNXHCYO.SCrsm1cx2'),
+('KS-005', 'Đinh Thị Ngọc Hân', '0852456973', 'ngochan@gmail.com', '10 Lưu Hữu Phước, Phường 8, Cà Mau', 'Nhân viên', 0, '$2b$10$vMnn6AnwBCVArHcb67hjReVZkdBKpHQ7rXWfIBbY2fDipGFYli49u'),
+('NV-001', 'Nguyễn Trúc Mai', '0976431258', 'trucmai@gmail.com', '208A, Khóm 3, H. Lai Vung, Đồng Tháp', 'Nhân viên', 0, '$2b$10$O.Uo900vWkEwng0/Ap68ge4OnTRoj.3PZmKK8bIfBpxdZQBOpHoAO'),
+('QL-003', 'Lý Ngọc Ngân', '0963258741', 'ngocngan@gmail.com', '22 Đường Mạc Tử Hoàng, Bình San, Kiên Giang', 'Nhân viên', 0, '$2b$10$47YccxVNbkIYzUTGYu2W7.gT9TtNRF8kS5YtklsltIHgZ1ZAULpYi');
 
 -- --------------------------------------------------------
 
@@ -611,8 +681,8 @@ INSERT INTO `sanpham` (`masp`, `tensp`, `maloai`, `ttct`, `soluongsp`, `gia`, `m
 ('NH09812527', 'Nước hoa Tesori', 'CT368716', 'Hương thơm quyến rũ, gợi cảm của xạ hương và gỗ đàn hương, hương vani và hổ phách ấm áp, cuốn hút', 77, 425000, 'TL842324'),
 ('RC83943432', 'Viên uống rau củ Nhật', 'TP378676', 'Viên uống DHC Perfect Vegetable Premium giúp bạn dễ dàng cung cấp vitamin, khoáng chất và chất xơ cần thiết cho cơ thể', 112, 255000, 'DC456782'),
 ('RM98723245', 'Kem rửa mặt', 'CS874523', 'Kem tạo bọt mịn, giúp nhẹ nhàng len lỏi sâu vào bên trong từng lỗ chân lông để loại bỏ bụi bẩn, bã nhờn bên trong da', 64, 83000, 'HL213276'),
-('SG62587431', 'Gel rửa mặt cho da dầu', 'CS874523', 'Tạo bọt mịn sẽ nhẹ nhàng đánh bay những tác nhân gây hại sâu bên trong lỗ chân lông, trả lại cho bạn làn da sạch đẹp', 108, 140000, 'SV657632'),
-('SK35467745', 'Son kem 3CE', 'TD902642', 'Sở hữu chất gel nước mềm mịn, có chứa các dưỡng chất giúp cung cấp độ ẩm cũng như tạo một lớp son lì trên môi', 61, 325000, 'CE567824'),
+('SG62587431', 'Gel rửa mặt cho da dầu', 'CS874523', 'Tạo bọt mịn sẽ nhẹ nhàng đánh bay những tác nhân gây hại sâu bên trong lỗ chân lông, trả lại cho bạn làn da sạch đẹp', 106, 140000, 'SV657632'),
+('SK35467745', 'Son kem 3CE', 'TD902642', 'Sở hữu chất gel nước mềm mịn, có chứa các dưỡng chất giúp cung cấp độ ẩm cũng như tạo một lớp son lì trên môi', 50, 325000, 'CE567824'),
 ('SR65478231', 'Son kem Airfit Velvet', 'TD902642', 'Các sắc đỏ trendy đã tạo nên một làn sóng cho các cô gái đam mê son Hàn với thiết kế sang chảnh cùng bảng màu siêu đẹp. ', 105, 299000, 'BR563283'),
 ('ST56383818', 'Sữa tắm nước hoa', 'CT368716', 'Hương cao cấp độc đáo, mà thường chỉ áp dụng để sản xuất nước hoa cao cấp, và có khả năng lưu hương 6 tiếng trên da.', 68, 72000, 'TL842324'),
 ('ST65523738', 'Son Tint bóng', 'TD902642', 'Chia thành 3 concept Original - Rose - Soy. Mỗi concept sẽ cho một phong cách trang điểm khác nhau với những màu son khác nhau', 71, 309000, 'BR563283'),
@@ -644,8 +714,7 @@ CREATE TABLE `thanhtoan` (
 -- Indexes for table `calam`
 --
 ALTER TABLE `calam`
-  ADD PRIMARY KEY (`maca`),
-  ADD KEY `manv` (`manv`);
+  ADD PRIMARY KEY (`maca`);
 
 --
 -- Indexes for table `chitietdonhang`
