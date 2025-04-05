@@ -28,6 +28,7 @@ import Contact from '../components/users/contact/Contact.jsx';
 import About from '../components/users/about/About.jsx';
 import AddBranch from '../components/admin/addbranch/AddBranch.jsx';
 import WeeklySchedule from '../components/admin/calendar/tableCalender/weeklyschedule/WeeklySchedule.jsx';
+import Feedback from '../components/admin/feedback/Feedback.jsx';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -268,6 +269,13 @@ export const router = createBrowserRouter([
         element:
           <PrivateRouterStaff>
             <WeeklySchedule />
+          </PrivateRouterStaff>
+      },
+      {
+        path: "feedback",
+        element:
+          <PrivateRouterStaff>
+            <Feedback />
           </PrivateRouterStaff>
       },
     ]

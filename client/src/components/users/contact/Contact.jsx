@@ -1,19 +1,22 @@
-import React, { useState, Suspense} from 'react';
+import React, { useState, Suspense } from 'react';
 import ContactForm from './contactform/ContactForm';
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
-// Lazy load ContactForm component
 
 export default function Contact() {
-  return (
-    <div className=" min-h-screen">
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  return (
+    <div className="min-h-screen">
       {/* Main Content */}
       <main className="container relative mx-auto py-12 px-6">
         <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="md:flex">
             {/* Left Side - Contact Info */}
             <div className="md:w-2/5 bg-pink-300 text-white p-8">
-
               <h2 className="text-3xl font-bold mb-6">Liên Hệ Với Chúng Tôi</h2>
               <p className="mb-8 text-white/80">
                 Chúng tôi luôn sẵn sàng hỗ trợ và lắng nghe ý kiến của bạn. Đừng ngần ngại liên hệ với chúng tôi!
@@ -175,13 +178,43 @@ export default function Contact() {
             </div>
           </div>
         </div>
-        <div className='absolute top-4 right-0 w-24 h-24 flex items-center justify-center'>
-          <div className='w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition duration-300 group'>
-  <ChatBubbleLeftIcon className="w-8 h-8 text-pink-500 group-hover:text-pink-600 transition duration-300" />
-  </div>
-</div>
+
+        {/* Chat Icon */}
+        <div className="absolute top-4 right-0 w-24 h-24 flex items-center justify-center">
+          <div
+            className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition duration-300 group"
+            onClick={toggleModal}
+          >
+            <ChatBubbleLeftIcon className="w-8 h-8 text-pink-500 group-hover:text-pink-600 transition duration-300" />
+          </div>
+        </div>
+
+        {/* Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-xl font-bold text-center">Phản hồi liên hệ</h3>
+                <button
+                  onClick={toggleModal}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="text-gray-700">
+                <h4 className='font-bold'>Chủ đề</h4>
+                <div className='flex justify-between'>
+                  
+                <h4 className='font-semibold'>- Sao sản phẩm lỗi</h4>
+                </div>
+                <p className='ml-5'>gsvfsadi</p>
+           
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
 }
-
