@@ -1,6 +1,6 @@
 import React, { useState, Suspense} from 'react';
 import ContactForm from './contactform/ContactForm';
-
+import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
 // Lazy load ContactForm component
 
 export default function Contact() {
@@ -8,7 +8,7 @@ export default function Contact() {
     <div className=" min-h-screen">
 
       {/* Main Content */}
-      <main className="container mx-auto py-12 px-6">
+      <main className="container relative mx-auto py-12 px-6">
         <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="md:flex">
             {/* Left Side - Contact Info */}
@@ -168,13 +168,18 @@ export default function Contact() {
 
             {/* Right Side - Contact Form */}
             <div className="md:w-3/5 p-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Gửi Tin Nhắn Cho Chúng Tôi</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center uppercase">Liên hệ</h2>
               <Suspense fallback={<div className="text-center py-6">Đang tải form...</div>}>
                 <ContactForm />
               </Suspense>
             </div>
           </div>
         </div>
+        <div className='absolute top-4 right-0 w-24 h-24 flex items-center justify-center'>
+          <div className='w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition duration-300 group'>
+  <ChatBubbleLeftIcon className="w-8 h-8 text-pink-500 group-hover:text-pink-600 transition duration-300" />
+  </div>
+</div>
       </main>
     </div>
   );

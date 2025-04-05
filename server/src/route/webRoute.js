@@ -10,6 +10,7 @@ import rating from "../controllers/ratingController.js";
 import branch from "../controllers/branchController.js";
 import statistic from "../controllers/statisticController.js";
 import repo from '../controllers/repoController.js'
+import contact from '../controllers/contactController.js'
 import uploadMiddleware from '../../middleware/upload.js'
 import auth from '../../middleware/jwt.js'
 const router = express.Router()
@@ -107,6 +108,8 @@ const initWebRoute = (app) => {
     router.get('/getDailyProductSales', statistic.getDailyProductSales);
     router.get('/getTotalProductsSold', statistic.getTotalProductsSold);
     router.get('/getTotalReviews', statistic.getTotalReviews);
+
+    router.post('/send-contact', contact.insertContact)
 
     return app.use('/', router)
 }

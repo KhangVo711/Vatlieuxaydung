@@ -1,8 +1,11 @@
-// File ContactForm.js
 import React, { useState } from 'react';
+import axios from 'axios';
+
+const generateContactId = () => `FO${Date.now()}${Math.floor(Math.random() * 10)}`;
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
+    contactid: generateContactId(),
     name: '',
     email: '',
     phone: '',
@@ -12,6 +15,7 @@ const ContactForm = () => {
 
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,35 +43,67 @@ const ContactForm = () => {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validateForm();
 
     if (Object.keys(errors).length === 0) {
-      // Thay console.log bằng logic gửi dữ liệu thực tế (ví dụ: API call)
-      console.log('Form data submitted:', formData);
-      setIsSubmitted(true);
-      setFormErrors({});
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: ''
+      setIsLoading(true); // Bật loading
+      try {
+        const response = await axios.post('http://localhost:5001/send-contact', {
+          malienhe: formData.contactid,
+          hoten: formData.name,
+          email: formData.email,
+          sodienthoai: formData.phone,
+          chude: formData.subject,
+          noidung: formData.message,
+        },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+      },
+      withCredentials: true
       });
 
-      // Tự động ẩn thông báo sau 3 giây
-      setTimeout(() => setIsSubmitted(false), 3000);
+        // Thành công (status 200)
+        setIsSubmitted(true);
+        setFormErrors({});
+        setFormData({
+          contactid: generateContactId(), // Reset với ID mới
+          name: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: ''
+        });
+        setTimeout(() => setIsSubmitted(false), 5000); // Ẩn thông báo sau 5 giây
+      } catch (error) {
+        // Xử lý lỗi từ server
+        console.error('Error submitting form:', error);
+        if (error.response) {
+          setFormErrors({ submit: error.response.data.message || 'Có lỗi xảy ra khi gửi dữ liệu.' });
+        } else {
+          setFormErrors({ submit: 'Không thể kết nối đến server.' });
+        }
+      } finally {
+        setIsLoading(false); // Tắt loading dù thành công hay thất bại
+      }
     } else {
       setFormErrors(errors);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {isSubmitted && (
         <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-lg text-center">
           Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong thời gian sớm nhất.
+        </div>
+      )}
+      {formErrors.submit && (
+        <div className="mb-3 p-2 bg-red-100 text-red-700 rounded-lg text-center">
+          {formErrors.submit}
         </div>
       )}
 
@@ -81,9 +117,10 @@ const ContactForm = () => {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          className={`mt-1 block w-full py-1.5 px-3 border rounded-md shadow-sm  focus:outline-pink-400 focus:ring-pink-500 ${
+          disabled={isLoading} // Vô hiệu hóa khi đang loading
+          className={`mt-1 block w-full py-1.5 px-3 border rounded-md shadow-sm focus:outline-pink-400 focus:ring-pink-500 ${
             formErrors.name ? 'border-red-500' : ''
-          }`}
+          } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
         />
         {formErrors.name && <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>}
       </div>
@@ -98,9 +135,10 @@ const ContactForm = () => {
           name="email"
           value={formData.email}
           onChange={handleChange}
+          disabled={isLoading}
           className={`mt-1 block w-full py-1.5 px-3 rounded-md border border-gray-300 shadow-sm focus:outline-pink-400 focus:ring-pink-500 ${
             formErrors.email ? 'border-red-500' : ''
-          }`}
+          } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
         />
         {formErrors.email && <p className="mt-1 text-sm text-red-500">{formErrors.email}</p>}
       </div>
@@ -115,9 +153,10 @@ const ContactForm = () => {
           name="phone"
           value={formData.phone}
           onChange={handleChange}
+          disabled={isLoading}
           className={`mt-1 block w-full rounded-md py-1.5 px-3 border border-gray-300 shadow-sm focus:outline-pink-400 focus:ring-pink-500 ${
             formErrors.phone ? 'border-red-500' : ''
-          }`}
+          } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
         />
         {formErrors.phone && <p className="mt-1 text-sm text-red-500">{formErrors.phone}</p>}
       </div>
@@ -132,7 +171,10 @@ const ContactForm = () => {
           name="subject"
           value={formData.subject}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md py-1.5 px-3 border border-gray-300 shadow-sm focus:outline-pink-400 focus:ring-pink-500"
+          disabled={isLoading}
+          className={`mt-1 block w-full rounded-md py-1.5 px-3 border border-gray-300 shadow-sm focus:outline-pink-400 focus:ring-pink-500 ${
+            isLoading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         />
       </div>
 
@@ -146,9 +188,10 @@ const ContactForm = () => {
           value={formData.message}
           onChange={handleChange}
           rows="4"
+          disabled={isLoading}
           className={`mt-1 block w-full rounded-md py-1.5 px-3 border border-gray-300 shadow-sm focus:outline-pink-400 focus:ring-pink-500 ${
             formErrors.message ? 'border-red-500' : ''
-          }`}
+          } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
         ></textarea>
         {formErrors.message && <p className="mt-1 text-sm text-red-500">{formErrors.message}</p>}
       </div>
@@ -156,9 +199,14 @@ const ContactForm = () => {
       <div>
         <button
           type="submit"
-          className="w-full bg-pink-500 text-white py-3 px-4 rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 transition-colors"
+          disabled={isLoading}
+          className={`w-full py-3 px-4 rounded-md text-white transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 ${
+            isLoading
+              ? 'bg-pink-300 cursor-not-allowed'
+              : 'bg-pink-500 hover:bg-pink-700'
+          }`}
         >
-          Gửi Tin Nhắn
+          {isLoading ? 'Đang gửi...' : 'Gửi Tin Nhắn'}
         </button>
       </div>
     </form>
