@@ -16,7 +16,6 @@ export default function Feedback() {
             } catch (err) {
                 setError("Không thể tải dữ liệu. Vui lòng thử lại sau.");
                 setLoading(false);
-                console.error("Error fetching contacts:", err);
             }
         };
 
