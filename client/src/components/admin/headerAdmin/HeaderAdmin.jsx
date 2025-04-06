@@ -64,17 +64,18 @@ export default function HeaderAdmin() {
 
       {/* Dropdown menu */}
       {dropDownOpen && (
-        <div className="absolute bg-gray-50 border border-t-1 shadow-xl top-14 text-gray-700 rounded-b-lg w-48 h-[120px] bottom-10 right-0 mr-6">
-          <a href="#" className="block px-4 py-2 hover:bg-gray-200">
-            Tài khoản
-          </a>
-          <a href="#" className="block px-4 py-2 hover:bg-gray-200">
-            Cài đặt
-          </a>
-          <a href="#" className="block px-4 py-2 hover:bg-gray-200">
-            Đăng suất
-          </a>
-        </div>
+        // <div className="absolute bg-gray-50 border border-t-1 shadow-xl top-14 text-gray-700 rounded-b-lg w-48 h-[120px] bottom-10 right-0 mr-6">
+        //   <a href="#" className="block px-4 py-2 hover:bg-gray-200">
+        //     Tài khoản
+        //   </a>
+        //   <a href="#" className="block px-4 py-2 hover:bg-gray-200">
+        //     Cài đặt
+        //   </a>
+        //   <a href="#" className="block px-4 py-2 hover:bg-gray-200">
+        //     Đăng suất
+        //   </a>
+        // </div>
+        <></>
       )}
     </div>
   );

@@ -48,7 +48,7 @@ const ContactForm = () => {
     const errors = validateForm();
 
     if (Object.keys(errors).length === 0) {
-      setIsLoading(true); // Bật loading
+      setIsLoading(true); 
       try {
         const response = await axios.post('http://localhost:5001/send-contact', {
           malienhe: formData.contactid,
@@ -66,18 +66,17 @@ const ContactForm = () => {
       withCredentials: true
       });
 
-        // Thành công (status 200)
         setIsSubmitted(true);
         setFormErrors({});
         setFormData({
-          contactid: generateContactId(), // Reset với ID mới
+          contactid: generateContactId(), 
           name: '',
           email: '',
           phone: '',
           subject: '',
           message: ''
         });
-        setTimeout(() => setIsSubmitted(false), 5000); // Ẩn thông báo sau 5 giây
+        setTimeout(() => setIsSubmitted(false), 5000); 
       } catch (error) {
         // Xử lý lỗi từ server
         console.error('Error submitting form:', error);
@@ -87,7 +86,7 @@ const ContactForm = () => {
           setFormErrors({ submit: 'Không thể kết nối đến server.' });
         }
       } finally {
-        setIsLoading(false); // Tắt loading dù thành công hay thất bại
+        setIsLoading(false); 
       }
     } else {
       setFormErrors(errors);
@@ -117,7 +116,7 @@ const ContactForm = () => {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          disabled={isLoading} // Vô hiệu hóa khi đang loading
+          disabled={isLoading} 
           className={`mt-1 block w-full py-1.5 px-3 border rounded-md shadow-sm focus:outline-pink-400 focus:ring-pink-500 ${
             formErrors.name ? 'border-red-500' : ''
           } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -206,7 +205,7 @@ const ContactForm = () => {
               : 'bg-pink-500 hover:bg-pink-700'
           }`}
         >
-          {isLoading ? 'Đang gửi...' : 'Gửi Tin Nhắn'}
+          {isLoading ? 'Đang gửi...' : 'Gửi'}
         </button>
       </div>
     </form>

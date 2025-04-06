@@ -191,6 +191,13 @@ export const router = createBrowserRouter([
             <AddBranch />
           </PrivateRouterAdmin>
       },
+      {
+        path: "feedback",
+        element:
+          <PrivateRouterAdmin>
+            <Feedback />
+          </PrivateRouterAdmin>
+      },
     ]
   },
   {

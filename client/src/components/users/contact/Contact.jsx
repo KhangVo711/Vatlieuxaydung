@@ -169,7 +169,6 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Right Side - Contact Form */}
             <div className="md:w-3/5 p-8">
               <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center uppercase">Liên hệ</h2>
               <Suspense fallback={<div className="text-center py-6">Đang tải form...</div>}>
@@ -179,42 +178,44 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Chat Icon */}
-        <div className="absolute top-4 right-0 w-24 h-24 flex items-center justify-center">
-          <div
-            className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition duration-300 group"
-            onClick={toggleModal}
-          >
-            <ChatBubbleLeftIcon className="w-8 h-8 text-pink-500 group-hover:text-pink-600 transition duration-300" />
-          </div>
-        </div>
+        {/* Chat */}
+        
 
         {/* Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-xl font-bold text-center">Phản hồi liên hệ</h3>
-                <button
-                  onClick={toggleModal}
-                  className="text-gray-500 hover:text-gray-700 text-2xl"
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="text-gray-700">
-                <h4 className='font-bold'>Chủ đề</h4>
-                <div className='flex justify-between'>
+          // <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          //   {/* <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          //     <div className="flex justify-between items-center mb-2">
+          //       <h3 className="text-xl font-bold text-center">Phản hồi liên hệ</h3>
+          //       <button
+          //         onClick={toggleModal}
+          //         className="text-gray-500 hover:text-gray-700 text-2xl"
+          //       >
+          //         ✕
+          //       </button>
+          //     </div>
+          //     <div className="text-gray-700">
+          //       <h4 className='font-bold'>Chủ đề</h4>
+          //       <div className='flex justify-between'>
                   
-                <h4 className='font-semibold'>- Sao sản phẩm lỗi</h4>
-                </div>
-                <p className='ml-5'>gsvfsadi</p>
+          //       <h4 className='font-semibold'>- Sao sản phẩm lỗi</h4>
+          //       </div>
+          //       <p className='ml-5'>gsvfsadi</p>
            
-              </div>
-            </div>
-          </div>
+          //     </div>
+          //   </div> */}
+          // </div>
+          <></>
         )}
       </main>
+      <div className="absolute bottom-8 right-6 w-24 h-24 flex items-center justify-center">
+          <div
+            className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition duration-300 group"
+            onClick={toggleModal}
+          >
+            <ChatBubbleLeftIcon className="w-9 h-9 text-pink-500 group-hover:text-pink-600 transition duration-300" />
+          </div>
+        </div>
     </div>
   );
 }

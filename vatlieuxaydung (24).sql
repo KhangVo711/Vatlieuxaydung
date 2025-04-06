@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 30, 2025 at 03:13 PM
+-- Generation Time: Apr 06, 2025 at 03:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -519,10 +519,36 @@ CREATE TABLE `khuyenmai` (
 --
 
 INSERT INTO `khuyenmai` (`makm`, `tenkm`, `km`, `thoigianbatdaukm`, `thoigianketthuckm`, `masp`) VALUES
-('KM-356', 'Giảm 7%', 7, '2025-03-13 10:10:00', '2025-04-04 10:10:00', 'SG62587431'),
-('KM-432', 'Giảm 10%', 10, '2025-03-13 09:45:00', '2025-03-31 09:45:00', 'SK35467745'),
-('KM-612', 'Giảm 12%', 12, '2025-03-13 09:46:00', '2025-04-03 09:46:00', 'RC83943432'),
-('km-986', 'Giảm 25%', 25, '2025-03-13 09:46:00', '2025-04-04 09:47:00', 'KN66424567');
+('KM-108', 'Giảm 27%', 27, '2025-04-06 20:02:00', '2025-04-30 20:02:00', 'TD47237523'),
+('KM-426', 'Giảm 12%', 12, '0000-00-00 00:00:00', '2025-04-25 20:03:00', 'SG62587431'),
+('KM-562', 'Giảm 9%', 9, '2025-04-06 20:04:00', '2025-04-23 20:05:00', 'ST56383818'),
+('KM-781', 'Giảm 5%', 5, '2025-04-06 20:01:00', '2025-04-28 20:02:00', 'RM98723245'),
+('KM-972', 'Giảm 33%', 33, '0000-00-00 00:00:00', '2025-04-27 20:03:00', 'GP65237653');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lienhe`
+--
+
+CREATE TABLE `lienhe` (
+  `malienhe` varchar(255) NOT NULL,
+  `hoten` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `sodienthoai` varchar(255) NOT NULL,
+  `chude` varchar(255) NOT NULL,
+  `noidung` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `lienhe`
+--
+
+INSERT INTO `lienhe` (`malienhe`, `hoten`, `email`, `sodienthoai`, `chude`, `noidung`) VALUES
+('FO17439412499539', 'Trần Bảo Thanh', 'baothanh@gmail.com', '0123456789', 'Sản phẩm lỗi', 'Sản phẩm tôi nhận được hiện tại có dung tích thấp hơn trên bao bì ghi'),
+('FO17439415218054', 'Nguyễn Hà An', 'haan@gmail.com', '0963741852', 'Giao hàng sai', 'Sản phẩm được giao không đúng sản phẩm mà tôi đã đặt'),
+('FO17439416362117', 'Vũ Thành Nam', 'thnam@gmail.com', '0147258369', 'Thiếu sản phẩm', 'Hàng giao đến hiện không đủ các sản phẩm mà tôi đã đặt\n'),
+('FO17439417613942', 'Hà Uyên', 'hauyen@gmail.com', '0546789123', 'Hàng chưa đến', 'Đã hơn khoảng thời gian dự kiến nhưng vẫn chưa thấy hàng được giao đến');
 
 -- --------------------------------------------------------
 
@@ -601,6 +627,19 @@ INSERT INTO `nhasanxuat` (`mansx`, `tennsx`, `email`, `diachi`) VALUES
 ('SV657632', 'SVR', 'SVR@gmail.com', '73 Trần Hoàng Na, Ninh Kiều, Cần Thơ'),
 ('TL842324', 'Tesori DOriente', 'TesDorite@gmail.com', '94 Trần Bạch Đằng, An Khánh, Ninh Kiều, Cần Thơ'),
 ('VS630289', 'Vacosi', 'vacosi@gmail.com', '67 Nam Kỳ Khởi Nghĩa, An Hòa, Đồng Nai');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `phanhoi`
+--
+
+CREATE TABLE `phanhoi` (
+  `maphanhoi` varchar(255) NOT NULL,
+  `malienhe` varchar(255) NOT NULL,
+  `manv` varchar(50) NOT NULL,
+  `noidungphanhoi` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -805,6 +844,12 @@ ALTER TABLE `khuyenmai`
   ADD KEY `masp` (`masp`);
 
 --
+-- Indexes for table `lienhe`
+--
+ALTER TABLE `lienhe`
+  ADD PRIMARY KEY (`malienhe`);
+
+--
 -- Indexes for table `loaisanpham`
 --
 ALTER TABLE `loaisanpham`
@@ -821,6 +866,14 @@ ALTER TABLE `nhanvien`
 --
 ALTER TABLE `nhasanxuat`
   ADD PRIMARY KEY (`mansx`);
+
+--
+-- Indexes for table `phanhoi`
+--
+ALTER TABLE `phanhoi`
+  ADD PRIMARY KEY (`maphanhoi`),
+  ADD KEY `phanhoi` (`maphanhoi`,`malienhe`,`manv`),
+  ADD KEY `malienhe` (`malienhe`);
 
 --
 -- Indexes for table `phieunhap`

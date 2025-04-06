@@ -157,7 +157,7 @@ const PreFooter = ({ selectedProduct}) => {
             {recommendedProducts.map((product) => (
               <div
                 key={product.masp}
-                className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
+                className="bg-white rounded-lg overflow-hidden hover:shadow-xl shadow-md transition-shadow duration-300"
               >
                 <div className="aspect-square bg-gray-100">
                   <img
@@ -191,7 +191,7 @@ const PreFooter = ({ selectedProduct}) => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+              className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-lg shadow-md transition-shadow duration-300"
             >
               <div className="mb-4">{feature.icon}</div>
               <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>

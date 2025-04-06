@@ -110,6 +110,7 @@ const initWebRoute = (app) => {
     router.get('/getTotalReviews', statistic.getTotalReviews);
 
     router.post('/send-contact', contact.insertContact)
+    router.get('/get-contact', contact.getContact)
 
     return app.use('/', router)
 }

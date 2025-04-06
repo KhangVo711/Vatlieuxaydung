@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Context } from '../../../../Context.jsx';
+import { formatCurrency } from '../../../../../utils/currency.jsx';
 
 export default function WeeklySchedule() {
   const [currentWeek, setCurrentWeek] = useState(0);
@@ -102,10 +103,10 @@ export default function WeeklySchedule() {
           schedule[type].push({
             subject: shift.tenca,
             code: shift.maca,
-            thuong: shift.thuong ? `Thưởng: ${shift.thuong} VNĐ` : '',
-            chiphiphatsinh: shift.chiphiphatsinh ? `Chi phí phát sinh: ${shift.chiphiphatsinh} VNĐ` : '',
+            thuong: shift.thuong ? `Thưởng: ${formatCurrency(shift.thuong)}` : '',
+            chiphiphatsinh: shift.chiphiphatsinh ? `Chi phí phát sinh: ${formatCurrency(shift.chiphiphatsinh)}` : '',
             time: `${convertToVietnamTime(shift.giovaoca).toLocaleTimeString('vi-VN')} - ${convertToVietnamTime(shift.gioraca).toLocaleTimeString('vi-VN')}`,
-            salary: shift.luongmoica ? `Lương: ${shift.luongmoica} VNĐ` : 'N/A',
+            salary: shift.luongmoica ? `Lương: ${formatCurrency(shift.luongmoica)}` : 'N/A',
           });
         }
       });
@@ -126,7 +127,7 @@ export default function WeeklySchedule() {
       <div className="border rounded-lg h-full overflow-x-auto">
         <table className="w-full h-full text-sm">
           <thead>
-            <tr className="bg-pink-50">
+            <tr className="bg-pink-100">
               <th className="p-2 border">Ca làm</th>
               {weekDays.map((day, index) => <th key={index} className="p-2 border">{day.label}</th>)}
             </tr>
