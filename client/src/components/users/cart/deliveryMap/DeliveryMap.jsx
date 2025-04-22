@@ -143,12 +143,12 @@ export default function DeliveryMap({ selectedDelivery, setFeeShip, formData, se
     if (!mapRef.current || !userLatLng || !nearestStore) return;
 
     if (!mapInstance.current) {
-      mapInstance.current = L.map(mapRef.current).setView([userLatLng.lat, userLatLng.lng], 12);
+      mapInstance.current = L.map(mapRef.current).setView([nearestStore.vido, nearestStore.kinhdo], 12);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(mapInstance.current);
     } else {
-      mapInstance.current.setView([userLatLng.lat, userLatLng.lng], 12);
+      mapInstance.current.setView([nearestStore.vido, nearestStore.kinhdo], 12);
     }
 
     mapInstance.current.eachLayer((layer) => {
@@ -172,8 +172,8 @@ export default function DeliveryMap({ selectedDelivery, setFeeShip, formData, se
 
     L.Routing.control({
       waypoints: [
-        L.latLng(userLatLng.lat, userLatLng.lng),
         L.latLng(nearestStore.vido, nearestStore.kinhdo),
+        L.latLng(userLatLng.lat, userLatLng.lng),
       ],
       routeWhileDragging: true,
       show: false,

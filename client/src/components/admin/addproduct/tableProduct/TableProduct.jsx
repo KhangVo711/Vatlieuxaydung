@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 export default function TableProduct({ product, handleEditProductClick, handleDeleteProductClick, handleViewProductClick }) {
   const [currentPage, setCurrentPage] = useState(0);
+  const [pageInput, setPageInput] = useState(''); // State for page input field
   const itemsPerPage = 6;
 
   const offset = currentPage * itemsPerPage;
@@ -29,7 +30,21 @@ export default function TableProduct({ product, handleEditProductClick, handleDe
   };
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+    if (page >= 0 && page < pageCount) {
+      setCurrentPage(page);
+      setPageInput(''); // Clear input after successful jump
+    }
+  };
+
+  // Handle page input submission
+  const handlePageInputSubmit = (e) => {
+    e.preventDefault();
+    const pageNum = parseInt(pageInput, 10) - 1; // Convert to 0-based index
+    if (!isNaN(pageNum) && pageNum >= 0 && pageNum < pageCount) {
+      handlePageChange(pageNum);
+    } else {
+      setPageInput(''); // Clear invalid input
+    }
   };
 
   const pageNumbers = getPageNumbers();
@@ -74,7 +89,16 @@ export default function TableProduct({ product, handleEditProductClick, handleDe
       </div>
 
       {/* Phân trang tùy chỉnh */}
-      <div className="flex justify-center mt-4 space-x-2 fixed bottom-5 left-1/2 p-2 rounded-md">
+      <div className="flex justify-center mt-4 space-x-2 fixed bottom-5 left-[45%] p-2 rounded-md user-select-none">
+        {/* Nút Trang đầu */}
+        <button
+          onClick={() => handlePageChange(0)}
+          className="text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
+          disabled={currentPage === 0}
+        >
+          Trang đầu
+        </button>
+
         {/* Nút Trước */}
         <button
           onClick={() => handlePageChange(Math.max(0, currentPage - 1))}
@@ -105,6 +129,34 @@ export default function TableProduct({ product, handleEditProductClick, handleDe
         >
           Sau →
         </button>
+
+        {/* Nút Trang cuối */}
+        <button
+          onClick={() => handlePageChange(pageCount - 1)}
+          className="text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
+          disabled={currentPage === pageCount - 1}
+        >
+          Trang cuối
+        </button>
+
+        {/* Nhập số trang */}
+        {/* <form onSubmit={handlePageInputSubmit} className="flex items-center ml-4">
+          <input
+            type="number"
+            value={pageInput}
+            onChange={(e) => setPageInput(e.target.value)}
+            placeholder={`1-${pageCount}`}
+            className="w-16 px-2 py-1 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            min="1"
+            max={pageCount}
+          />
+          <button
+            type="submit"
+            className="ml-2 px-3 py-1 text-gray-800 font-medium rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
+          >
+            Đi
+          </button>
+        </form> */}
       </div>
     </>
   );

@@ -43,7 +43,7 @@ export default function Map() {
     useEffect(() => {
         fixMarkerIcon();
 
-        const initialMap = L.map('map').setView([21.0245, 105.8412], 15); // Default: Hanoi
+        const initialMap = L.map('map').setView([21.0245, 105.8412], 15); 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(initialMap);

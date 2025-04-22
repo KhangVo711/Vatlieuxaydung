@@ -93,13 +93,13 @@ export default function Footer() {
                 </div>
                 <hr className="my-6" />
                 <div className="flex justify-center">
-                    <div className="text-center text-sm font-semibold py-1">
+                    {/* <div className="text-center text-sm font-semibold py-1">
                         Copyright © {currentYear} by{' '}
                         <a href="!#" className="hover:text-gray-600 transition duration-150 ease-in-out">
                             Huyen Tran
                         </a>
                         .
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </footer>

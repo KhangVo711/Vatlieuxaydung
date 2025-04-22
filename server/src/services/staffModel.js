@@ -56,6 +56,8 @@ const getStaffByShift = async (maca) => {
     return rows;
 }
 
+
+
 const getAllStaff = async () => { 
     const [rows, fields] = await connectDB.execute(
         `SELECT * FROM nhanvien`
@@ -69,6 +71,8 @@ const getShifts = async (manv) => {
     );
     return rows;
 }
+
+
 
 const getAllShifts = async () => { 
     const [rows, fields] = await connectDB.execute(

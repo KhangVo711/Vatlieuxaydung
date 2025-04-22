@@ -5,7 +5,17 @@ import { Context } from '../../../../Context.jsx';
 import { formatCurrency } from '../../../../../utils/currency.jsx';
 
 export default function WeeklySchedule() {
-  const [currentWeek, setCurrentWeek] = useState(0);
+
+  const getInitialWeekOffset = () => {
+    const baseDate = new Date(2025, 2, 24);
+    const currentDate = new Date(); 
+    const timeDiff = currentDate.getTime() - baseDate.getTime();
+    const weekDiff = Math.floor(timeDiff / (7 * 24 * 60 * 60 * 1000));
+    return weekDiff;
+  };
+
+  const [currentWeek, setCurrentWeek] = useState(getInitialWeekOffset());
+ 
   const [weekDays, setWeekDays] = useState([]);
   const [scheduleData, setScheduleData] = useState([]);
   const [shifts, setShifts] = useState([]);
@@ -39,8 +49,10 @@ export default function WeeklySchedule() {
       const token = Cookies.get('staff');
       const manv = isDataStaff.manv;
       if (!manv) throw new Error('Không tìm thấy mã nhân viên. Vui lòng đăng nhập lại.');
-      
-      const response = await axios.get(`http://localhost:5001/getStaffByShift/${manv}`, {
+
+      // /getStaffByShift/:manv
+
+      const response = await axios.get(`http://localhost:5001/shifts`, {
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         withCredentials: true,
       });
@@ -102,6 +114,8 @@ export default function WeeklySchedule() {
         if (type) {
           schedule[type].push({
             subject: shift.tenca,
+            id_staff: shift.staff_ids,
+            name_staff: shift.staff_names,
             code: shift.maca,
             thuong: shift.thuong ? `Thưởng: ${formatCurrency(shift.thuong)}` : '',
             chiphiphatsinh: shift.chiphiphatsinh ? `Chi phí phát sinh: ${formatCurrency(shift.chiphiphatsinh)}` : '',
@@ -137,19 +151,28 @@ export default function WeeklySchedule() {
               <tr key={session}>
                 <td className="p-2 text-center border font-bold">{session === 'morning' ? 'Sáng' : session === 'afternoon' ? 'Chiều' : 'Tối'}</td>
                 {scheduleData.map((day, index) => (
-                  <td key={index} className="p-2 border h-1/3 bg-gray-50/65">
-                    {day[session].map((shift, shiftIndex) => (
-                      <div key={shiftIndex} className="mb-2 bg-pink-100 flex flex-col p-2 rounded shadow-sm items-center h-3/4">
-                        <p className="font-bold uppercase tracking-wider mb-1">{shift.subject}</p>
-                        <p className="font-semibold text-xs mb-0.5">({shift.code})</p>
-                        <p className="text-xs mb-3">{shift.time}</p>
-                        <p className="text-xs text-gray-500">{shift.salary}</p>
-                        <p className="text-xs text-gray-500">{shift.thuong}</p>
-                        <p className="text-xs text-gray-500">{shift.chiphiphatsinh}</p>
-                      </div>
-                    ))}
-                  </td>
-                ))}
+  <td key={index} className="p-2 border h-1/3 bg-gray-50/65">
+    {day[session].map((shift, shiftIndex) => (
+      <div
+        key={shift.id || shiftIndex} // Use shift.id if available
+        className={`mb-2 ${
+          isDataStaff.manv?.toString() === shift.id_staff?.toString()
+            ? 'bg-pink-200'
+            : 'bg-pink-100'
+        } flex flex-col p-2 rounded shadow-md items-center h-3/4`}
+      >
+        <p className="font-bold uppercase text-md tracking-wider">{shift.subject}</p>
+        <p className="font-semibold text-xs mb-1">({shift.code})</p>
+        <p className="uppercase mb-0.5">{shift.name_staff}</p>
+        <p className="text-xs">Thời gian</p>
+        <p className="text-xs mb-1.5">{shift.time}</p>
+        <p className="text-xs text-gray-600">{shift.salary}</p>
+        {/* <p className="text-xs text-gray-500">{shift.thuong}</p>
+        <p className="text-xs text-gray-500">{shift.chiphiphatsinh}</p> */}
+      </div>
+    ))}
+  </td>
+))}
               </tr>
             ))}
           </tbody>

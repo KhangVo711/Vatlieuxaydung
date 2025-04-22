@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext  } from 'react';
 import { formatCurrency } from '../../../utils/currency.jsx';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
+import { Context } from '../../Context.jsx';
+
 import {
   Chart,
   LineController,
@@ -36,7 +38,7 @@ export default function Dashboard() {
   const [totalProductsSold, setTotalProductsSold] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
   const [greeting, setGreeting] = useState('')
-
+  const { isDataStaff } = useContext(Context);
   const updateGreeting = () => {
     // Lấy thời gian hiện tại tại Việt Nam (múi giờ Asia/Ho_Chi_Minh)
     const now = new Date();
@@ -53,7 +55,7 @@ export default function Dashboard() {
     greetingText = 'Chào buổi tối';
   }
 
-  setGreeting(`${greetingText}, Admin! Bây giờ là ${hour}:${minutes}`);
+  setGreeting(`${greetingText}, ${isDataStaff && isDataStaff.tennv ? isDataStaff.tennv : 'Admin'}! Bây giờ là ${hour}:${minutes}`);
   }
   const fetchTotalReviews = async () => {
     try {

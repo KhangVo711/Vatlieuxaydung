@@ -40,7 +40,7 @@ export default function FormEditProduct({ formRefView, selectedProduct}) {
       <div ref={formRefView} className="2xl:w-1/2 w-3/4 mx-auto bg-white shadow-lg border flex rounded py-5 px-8 mt-16 ">
       
       <div className='flex items-center justify-center pt-10 z-10'>
-        <img src={`http://localhost:5001/uploads/${selectedProduct.hinhanh}`} alt="" className='w-64'/>
+        <img src={`http://localhost:5001/uploads/${selectedProduct.masp}/${selectedProduct.hinhanh}`} alt="" className='w-64'/>
         
       </div>
       <div className='mx-auto w-1/2' >
