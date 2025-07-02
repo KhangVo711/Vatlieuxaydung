@@ -172,20 +172,39 @@ const getProductOfCategory = async (maloai) => {
   };
   
 
-const insertProducts = async (masp, tensp, maloai, ttct, soluongsp, gia, mansx) => {
-    await connectDB.execute(
-        "INSERT INTO `sanpham` (masp, tensp, maloai, ttct, soluongsp, gia, mansx) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [masp, tensp, maloai, ttct, soluongsp, gia, mansx]
-    );
+// Thêm sản phẩm
+const insertProducts = async (masp, tensp, maloai, ttct, mansx, loaibienthe, cobienthe, gia, soluongsp) => {
+  await connectDB.execute(
+    "INSERT INTO sanpham (masp, tensp, maloai, ttct, mansx, loaibienthe, cobienthe, gia, soluongsp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [masp, tensp, maloai, ttct, mansx, loaibienthe, cobienthe, gia, soluongsp]
+  );
 };
 
-const insertProductImages = async (masp, images) => {
-    for (const image of images) {
-        await connectDB.execute(
-            "INSERT INTO `hinhanhsanpham` (masp, hinhanh) VALUES (?, ?)",
-            [masp, image]
-        );
-    }
+// Thêm hình ảnh sản phẩm
+const insertProductImages = async (masp, imageNames) => {
+  for (const img of imageNames) {
+    await connectDB.execute(
+      "INSERT INTO hinhanhsanpham (masp, hinhanh) VALUES (?, ?)",
+      [masp, img]
+    );
+  }
+};
+
+// Thêm biến thể
+const insertVariant = async (mabienthe, masp, gia, soluongtonkho) => {
+  await connectDB.execute(
+    "INSERT INTO cacbienthe (mabienthe, masp, gia, soluongtonkho) VALUES (?, ?, ?, ?)",
+    [mabienthe, masp, gia, soluongtonkho]
+  );
+};
+
+// Thêm thuộc tính biến thể
+const insertVariantProperty = async (mabienthe, loaithuoctinh, thuoc_tinh) => {
+  const mathuoctinh = mabienthe + "_" + Date.now(); // Hoặc UUID nếu có
+  await connectDB.execute(
+    "INSERT INTO thuoctinhbienthe (mathuoctinh, mabienthe, loaithuoctinh, thuoc_tinh) VALUES (?, ?, ?, ?)",
+    [mathuoctinh, mabienthe, loaithuoctinh, thuoc_tinh]
+  );
 };
 
 const editProduct = async (masp, tensp, ttct, soluongsp, gia, maloai, mansx) => {
@@ -308,5 +327,5 @@ const getRecommendedProducts = async (maloai) => {
 };
 
 
-export default {getProduct_Hot8, getProductOfCategory, getRecommendedProducts, getCategory, insertProductImages, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
+export default {getProduct_Hot8, getProductOfCategory, getRecommendedProducts, getCategory, insertProductImages, insertVariant, insertVariantProperty, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
 
