@@ -1,47 +1,47 @@
 import connectDB from "../configs/connectDB.js";
 // Loai
 const getCategory = async () => {
-    const [rows, fields] = await connectDB.execute('SELECT `maloai`, `tenloai` FROM `loaisanpham`')
-    return rows
+  const [rows, fields] = await connectDB.execute('SELECT `maloai`, `tenloai` FROM `loaisanpham`')
+  return rows
 }
 const insertCategory = async (maloai, tenloai) => {
-    await connectDB.execute("INSERT INTO `loaisanpham` VALUES (?, ?)", [maloai, tenloai]);
+  await connectDB.execute("INSERT INTO `loaisanpham` VALUES (?, ?)", [maloai, tenloai]);
 }
-const detailCategory= async (maloai) => {
-        const [rows, fields] = await connectDB.execute('SELECT * FROM `loaisanpham` WHERE maloai=?', [maloai])
-        return rows[0]
+const detailCategory = async (maloai) => {
+  const [rows, fields] = await connectDB.execute('SELECT * FROM `loaisanpham` WHERE maloai=?', [maloai])
+  return rows[0]
 }
 const editCategory = async (tenloai, maloai) => {
-    await connectDB.execute('UPDATE `loaisanpham` SET tenloai=? WHERE maloai =?',[tenloai, maloai])
+  await connectDB.execute('UPDATE `loaisanpham` SET tenloai=? WHERE maloai =?', [tenloai, maloai])
 }
-const deleteCategory = async(maloai) => {
-    await connectDB.execute("DELETE FROM `loaisanpham` WHERE maloai=?", [maloai])
+const deleteCategory = async (maloai) => {
+  await connectDB.execute("DELETE FROM `loaisanpham` WHERE maloai=?", [maloai])
 }
 // Loai
 
 // NSX
 const getAllNSX = async () => {
-    const [rows, fields] = await connectDB.execute('SELECT `mansx`, `tennsx`, `email`, `diachi` FROM `nhasanxuat`')
-    return rows
+  const [rows, fields] = await connectDB.execute('SELECT `mansx`, `tennsx`, `email`, `diachi` FROM `nhasanxuat`')
+  return rows
 }
 const insertNSX = async (mansx, tennsx, email, diachi) => {
-    await connectDB.execute("INSERT INTO `nhasanxuat` VALUES (?, ?, ?, ?)", [mansx, tennsx, email, diachi]);
+  await connectDB.execute("INSERT INTO `nhasanxuat` VALUES (?, ?, ?, ?)", [mansx, tennsx, email, diachi]);
 }
-const detailNSX= async (mansx) => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `nhasanxuat` WHERE mansx=?', [mansx])
-    return rows[0]
+const detailNSX = async (mansx) => {
+  const [rows, fields] = await connectDB.execute('SELECT * FROM `nhasanxuat` WHERE mansx=?', [mansx])
+  return rows[0]
 }
 const editNSX = async (mansx, tennsx, email, diachi) => {
-    await connectDB.execute('UPDATE `nhasanxuat` SET tennsx=?, email=?, diachi=? WHERE mansx =?',[tennsx, email, diachi, mansx])
+  await connectDB.execute('UPDATE `nhasanxuat` SET tennsx=?, email=?, diachi=? WHERE mansx =?', [tennsx, email, diachi, mansx])
 }
-const deleteNSX = async(mansx) => {
-    await connectDB.execute("DELETE FROM `nhasanxuat` WHERE mansx=?", [mansx])
+const deleteNSX = async (mansx) => {
+  await connectDB.execute("DELETE FROM `nhasanxuat` WHERE mansx=?", [mansx])
 }
 // NSX
 
 // SP
 const getAllProduct = async () => {
-    const query = `
+  const query = `
       SELECT sp.*, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, lsp.tenloai, nsx.tennsx,
              (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh
       FROM sanpham sp
@@ -49,15 +49,16 @@ const getAllProduct = async () => {
       JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
       LEFT JOIN khuyenmai km ON sp.masp = km.masp
     `;
-    const [rows] = await connectDB.execute(query);
-    return rows;
-  };
-  const getProductById = async (masp) => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` WHERE masp=?', [masp]);
-    return rows[0];
-    };  
-    const getProduct8 = async () => {
-      const [rows] = await connectDB.execute(`
+  const [rows] = await connectDB.execute(query);
+  return rows;
+};
+const getProductById = async (masp) => {
+  const [rows, fields] = await connectDB.execute('SELECT * FROM `sanpham` WHERE masp=?', [masp]);
+  return rows[0];
+};
+
+const getProduct8 = async () => {
+  const [rows] = await connectDB.execute(`
           SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh
           FROM sanpham s
           LEFT JOIN khuyenmai k ON s.masp = k.masp
@@ -70,10 +71,10 @@ const getAllProduct = async () => {
           ORDER BY s.masp
           LIMIT 8
       `);
-      return rows;
-  };
-  const getProduct_Hot8 = async () => {
-    const [rows] = await connectDB.execute(`
+  return rows;
+};
+const getProduct_Hot8 = async () => {
+  const [rows] = await connectDB.execute(`
         SELECT 
             s.masp, 
             s.tensp, 
@@ -112,10 +113,10 @@ const getAllProduct = async () => {
         ORDER BY total_sold DESC
         LIMIT 8
     `);
-    return rows;
-  };
-  const getProduct12 = async () => {
-    const [rows] = await connectDB.execute(`
+  return rows;
+};
+const getProduct12 = async () => {
+  const [rows] = await connectDB.execute(`
         SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh
         FROM sanpham s
         LEFT JOIN khuyenmai k ON s.masp = k.masp
@@ -128,10 +129,10 @@ const getAllProduct = async () => {
         ORDER BY s.masp
         LIMIT 12
     `);
-    return rows;
+  return rows;
 };
-  const getProduct5 = async () => {
-    const [rows] = await connectDB.execute(`
+const getProduct5 = async () => {
+  const [rows] = await connectDB.execute(`
         SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh, k.tenkm, k.km, s.ttct
         FROM sanpham s
         INNER JOIN khuyenmai k ON s.masp = k.masp
@@ -143,7 +144,7 @@ const getAllProduct = async () => {
         ORDER BY s.masp
         LIMIT 5
     `);
-    return rows;
+  return rows;
 };
 const getProductOfCategory = async (maloai) => {
   const [rows] = await connectDB.execute(`
@@ -154,12 +155,24 @@ const getProductOfCategory = async (maloai) => {
       JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
       LEFT JOIN khuyenmai km ON sp.masp = km.masp
       WHERE sp.maloai = ?
-  `, [maloai]); 
+  `, [maloai]);
   return rows;
 };
-  
-  const detailProduct = async (masp) => {
-    const query = `
+
+const getVariants = async (masp) => {
+  const query = `
+      SELECT c.mabienthe, c.gia, c.soluongtonkho, t.thuoc_tinh
+     FROM cacbienthe c
+     LEFT JOIN thuoctinhbienthe t ON c.mabienthe = t.mabienthe
+     WHERE c.masp = ?
+    `;
+  const [rows] = await connectDB.execute(query, [masp]);
+  return rows;
+};
+
+
+const detailProduct = async (masp) => {
+  const query = `
       SELECT sp.*, lsp.tenloai, nsx.tennsx, km.tenkm, km.km
       FROM sanpham sp
       JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
@@ -167,10 +180,10 @@ const getProductOfCategory = async (maloai) => {
       LEFT JOIN khuyenmai km ON sp.masp = km.masp
       WHERE sp.masp = ?
     `;
-    const [rows] = await connectDB.execute(query, [masp]);
-    return rows[0];
-  };
-  
+  const [rows] = await connectDB.execute(query, [masp]);
+  return rows[0];
+};
+
 
 // Thêm sản phẩm
 const insertProducts = async (masp, tensp, maloai, ttct, mansx, loaibienthe, cobienthe, gia, soluongsp) => {
@@ -207,9 +220,55 @@ const insertVariantProperty = async (mabienthe, loaithuoctinh, thuoc_tinh) => {
   );
 };
 
-const editProduct = async (masp, tensp, ttct, soluongsp, gia, maloai, mansx) => {
-    await connectDB.execute('UPDATE `sanpham` SET tensp=?, ttct=?, soluongsp=?, gia=?, maloai=?, mansx=? WHERE masp=?',[tensp, ttct, soluongsp, gia, maloai, mansx, masp])
-}
+const editProduct = async (masp, tensp, ttct, soluongsp, gia, maloai, mansx, loaibienthe, cobienthe) => {
+  await connectDB.execute(
+    'UPDATE `sanpham` SET tensp=?, ttct=?, soluongsp=?, gia=?, maloai=?, mansx=?, loaibienthe=?, cobienthe=? WHERE masp=?',
+    [tensp, ttct, soluongsp, gia, maloai, mansx, loaibienthe, cobienthe, masp]
+  );
+};
+
+const updateVariants = async (masp, variants, loaibienthe) => {
+  const [existingVariants] = await connectDB.execute('SELECT mabienthe FROM cacbienthe WHERE masp = ?', [masp]);
+  const existingVariantIds = existingVariants.map((v) => v.mabienthe);
+  const newVariantIds = variants.map((v) => v.mabienthe);
+
+  const variantsToDelete = existingVariantIds.filter((id) => !newVariantIds.includes(id));
+  for (const mabienthe of variantsToDelete) {
+    await connectDB.execute('DELETE FROM thuoctinhbienthe WHERE mabienthe = ?', [mabienthe]);
+    await connectDB.execute('DELETE FROM cacbienthe WHERE mabienthe = ?', [mabienthe]);
+  }
+
+  for (const variant of variants) {
+    const { mabienthe, gia, soluongtonkho, thuoc_tinh } = variant;
+    const [existing] = await connectDB.execute('SELECT mabienthe FROM cacbienthe WHERE mabienthe = ?', [mabienthe]);
+
+    if (existing.length > 0) {
+      await connectDB.execute(
+        'UPDATE cacbienthe SET gia = ?, soluongtonkho = ? WHERE mabienthe = ?',
+        [Number(gia), Number(soluongtonkho), mabienthe]
+      );
+      await connectDB.execute(
+        'UPDATE thuoctinhbienthe SET thuoc_tinh = ?, loaithuoctinh = ? WHERE mabienthe = ?',
+        [thuoc_tinh, loaibienthe, mabienthe]
+      );
+    } else {
+      await connectDB.execute(
+        'INSERT INTO cacbienthe (mabienthe, masp, gia, soluongtonkho) VALUES (?, ?, ?, ?)',
+        [mabienthe, masp, Number(gia), Number(soluongtonkho)]
+      );
+      const mathuoctinh = `${mabienthe}_${Date.now()}`;
+      await connectDB.execute(
+        'INSERT INTO thuoctinhbienthe (mathuoctinh, mabienthe, loaithuoctinh, thuoc_tinh) VALUES (?, ?, ?, ?)',
+        [mathuoctinh, mabienthe, loaibienthe, thuoc_tinh]
+      );
+    }
+  }
+};
+
+const deleteVariants = async (masp) => {
+  await connectDB.execute('DELETE FROM thuoctinhbienthe WHERE mabienthe IN (SELECT mabienthe FROM cacbienthe WHERE masp = ?)', [masp]);
+  await connectDB.execute('DELETE FROM cacbienthe WHERE masp = ?', [masp]);
+};
 
 const updateProductImages = async (masp, updatedImages) => {
   try {
@@ -228,83 +287,84 @@ const updateProductImages = async (masp, updatedImages) => {
   }
 };
 
+
 const getProductImages = async (masp) => {
   const [rows] = await connectDB.execute('SELECT hinhanh FROM `hinhanhsanpham` WHERE masp = ?', [masp]);
   return rows.map(row => row.hinhanh);
 };
-  const checkProducerExists = async (mansx) => {
-    try {
-      const [rows] = await connectDB.execute('SELECT 1 FROM nhasanxuat WHERE mansx = ?', [mansx]);
-      return rows.length > 0;
-    } catch (error) {
-      console.error('Error checking producer:', error);
-      return false;
-    }
-  };
-  const checkCategoryExists = async (maloai) => {
-    try {
-      const [rows] = await connectDB.execute('SELECT 1 FROM loaisanpham WHERE maloai = ?', [maloai]);
-      return rows.length > 0;
-    } catch (error) {
-      console.error('Error checking category:', error);
-      return false;
-    }
-  };
-const deleteProduct = async(masp) => {
-    await connectDB.execute("DELETE FROM `sanpham` WHERE masp=?", [masp])
+const checkProducerExists = async (mansx) => {
+  try {
+    const [rows] = await connectDB.execute('SELECT 1 FROM nhasanxuat WHERE mansx = ?', [mansx]);
+    return rows.length > 0;
+  } catch (error) {
+    console.error('Error checking producer:', error);
+    return false;
+  }
+};
+const checkCategoryExists = async (maloai) => {
+  try {
+    const [rows] = await connectDB.execute('SELECT 1 FROM loaisanpham WHERE maloai = ?', [maloai]);
+    return rows.length > 0;
+  } catch (error) {
+    console.error('Error checking category:', error);
+    return false;
+  }
+};
+const deleteProduct = async (masp) => {
+  await connectDB.execute("DELETE FROM `sanpham` WHERE masp=?", [masp])
 }
-const deleteImgProduct = async(masp) => {
-    await connectDB.execute("DELETE FROM `hinhanhsanpham` WHERE masp=?", [masp])
+const deleteImgProduct = async (masp) => {
+  await connectDB.execute("DELETE FROM `hinhanhsanpham` WHERE masp=?", [masp])
 }
 // SP
 
 // Detail Cart
 const getAllCart = async () => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `donhang`')
-    return rows
+  const [rows, fields] = await connectDB.execute('SELECT * FROM `donhang`')
+  return rows
 }
 const getAllDetailCart = async (madh) => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `donhang` JOIN `chitietdathang` ON `donhang`.madh = `chitietdathang`.madh JOIN `sanpham` ON `chitietdathang`.masp = `sanpham`.masp JOIN `admin` ON `donhang`.username = `admin`.username JOIN `hoso` ON `admin`.username = `hoso`.username WHERE `donhang`.madh = ?', [madh])
-    return rows
+  const [rows, fields] = await connectDB.execute('SELECT * FROM `donhang` JOIN `chitietdathang` ON `donhang`.madh = `chitietdathang`.madh JOIN `sanpham` ON `chitietdathang`.masp = `sanpham`.masp JOIN `admin` ON `donhang`.username = `admin`.username JOIN `hoso` ON `admin`.username = `hoso`.username WHERE `donhang`.madh = ?', [madh])
+  return rows
 }
 // Detail Cart
 
 // CART
 const insertCart = async (madh, username, ngaydat, trangthai, tonggia, diachinhanhang) => {
-    await connectDB.execute("INSERT INTO `donhang` VALUES (?, ?, ?, ?, ?, ?)", [madh, username, ngaydat, trangthai, tonggia, diachinhanhang]);
+  await connectDB.execute("INSERT INTO `donhang` VALUES (?, ?, ?, ?, ?, ?)", [madh, username, ngaydat, trangthai, tonggia, diachinhanhang]);
 }
 const insertDetailCart = async (madh, masp, gia, soluong) => {
-    await connectDB.execute("INSERT INTO `chitietdathang` VALUES (?, ?, ?, ?)", [madh, masp, gia, soluong]);
+  await connectDB.execute("INSERT INTO `chitietdathang` VALUES (?, ?, ?, ?)", [madh, masp, gia, soluong]);
 }
 const updateCart = async (trangthai, madh) => {
-    await connectDB.execute('UPDATE `donhang` SET trangthai=? WHERE madh =?',[trangthai, madh])
+  await connectDB.execute('UPDATE `donhang` SET trangthai=? WHERE madh =?', [trangthai, madh])
 }
 const getCartAPI = async (username) => {
-    const [rows, fields] = await connectDB.execute('SELECT * FROM `donhang` WHERE username = ?', [username])
-    return rows
+  const [rows, fields] = await connectDB.execute('SELECT * FROM `donhang` WHERE username = ?', [username])
+  return rows
 }
 const getAllAPICart = async (madh) => {
-    const [rows, fields] = await connectDB.execute(
-        `
+  const [rows, fields] = await connectDB.execute(
+    `
         SELECT * 
         FROM donhang 
         JOIN chitietdathang ON donhang.madh = chitietdathang.madh
         JOIN sanpham ON chitietdathang.masp = sanpham.masp
         WHERE donhang.madh = ?
         `,
-        [madh]
-    );
-    return rows;
+    [madh]
+  );
+  return rows;
 }
 // Update quantity
 const updateQuantity = async (masp) => {
-    await connectDB.execute('UPDATE sanpham,chitietdathang SET soluongsp=soluongsp-soluong WHERE sanpham.masp=chitietdathang.masp AND chitietdathang.masp=?', [masp])
+  await connectDB.execute('UPDATE sanpham,chitietdathang SET soluongsp=soluongsp-soluong WHERE sanpham.masp=chitietdathang.masp AND chitietdathang.masp=?', [masp])
 }
 
 // RecommendProducts
 const getRecommendedProducts = async (maloai) => {
   try {
-      const query = `
+    const query = `
           SELECT
               sp.masp, sp.tensp, sp.gia, lsp.tenloai, nsx.tennsx,
               hinhanh.hinhanh
@@ -319,13 +379,13 @@ const getRecommendedProducts = async (maloai) => {
           WHERE 1=1
           AND sp.maloai = ? LIMIT 6
       `;
-      const [rows] = await connectDB.query(query, [maloai]);
-      return rows;
+    const [rows] = await connectDB.query(query, [maloai]);
+    return rows;
   } catch (error) {
-      throw new Error('Error fetching recommended products from database: ' + error.message);
+    throw new Error('Error fetching recommended products from database: ' + error.message);
   }
 };
 
 
-export default {getProduct_Hot8, getProductOfCategory, getRecommendedProducts, getCategory, insertProductImages, insertVariant, insertVariantProperty, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory,detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
+export default { getProduct_Hot8, getProductOfCategory, getVariants, getRecommendedProducts, getCategory, insertProductImages, updateVariants, deleteVariants, insertVariant, insertVariantProperty, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory, detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
 

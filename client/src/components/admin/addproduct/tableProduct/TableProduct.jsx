@@ -59,7 +59,7 @@ export default function TableProduct({ product, handleEditProductClick, handleDe
               <th scope="col" className="px-8 py-3">Tên sản phẩm</th>
               <th scope="col" className="px-4 py-3">Loại</th>
               <th scope="col" className="px-4 py-3">Nhà sản xuất</th>
-              <th scope="col" className="px-2 py-3 text-right">Giá bán</th>
+              {/* <th scope="col" className="px-2 py-3 text-right">Biến thể</th> */}
               <th scope="col" className="text-center px-6 py-3">Hành động</th>
             </tr>
           </thead>
@@ -70,7 +70,7 @@ export default function TableProduct({ product, handleEditProductClick, handleDe
                 <td className="px-8 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{item.tensp}</td>
                 <td className="px-4 py-4">{item.tenloai}</td>
                 <td className="px-4 py-4">{item.tennsx}</td>
-                <td className="px-2 py-4 text-right">{formatCurrency(item.gia)}</td>
+                {/* <td className="px-2 py-4 text-right">{item.cobienthe === 1 ? 'Có' : 'Không'}</td> */}
                 <td className="items-center justify-center px-6 py-4 flex">
                   <button onClick={() => handleViewProductClick(item)} className="transition duration-200 ease-out">
                     <EyeIcon className="h-5 w-5 text-gray-500 dark:text-white hover:text-gray-400" />

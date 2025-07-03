@@ -375,29 +375,67 @@ const insertProducts = async (req, res) => {
   }
 };
 
-const editProduct = async (req, res) => {
-  let { masp, tensp, maloai, ttct, soluongsp, gia, mansx, updatedImages } = req.body; // updatedImages là JSON string
-  const images = req.files;
+const getVariant = async (req, res) => {
+  const masp = req.params.masp;
+  try {
+    const variants = await productsModel.getVariants(masp);
+    if (!variants || variants.length === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy biến thể cho sản phẩm này' });
+    }
+    return res.status(200).json({ variants });
+  } catch (error) {
+    console.error('Error fetching variants:', error);
+    return res.status(500).json({ message: 'Đã xảy ra lỗi khi lấy biến thể', error: error.message });
+  }
+};
 
+const editProduct = async (req, res) => {
+  let { masp, tensp, maloai, ttct, soluongsp, gia, mansx, loaibienthe, cobienthe, updatedImages, variants } = req.body;
+  const images = req.files || [];
+console.log(cobienthe)
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  const uploadDir = path.join(__dirname, `../uploads/${masp}`);
+  const uploadDir = path.join(__dirname, `../Uploads/${masp}`);
 
   try {
     if (!maloai || maloai === 'Loại sản phẩm') {
-      return res.status(400).send({ message: "Chưa chọn loại sản phẩm" });
+      return res.status(400).json({ message: 'Chưa chọn loại sản phẩm' });
     }
     if (!mansx || mansx === 'Nhà sản xuất') {
-      return res.status(400).send({ message: "Chưa chọn nhà sản xuất" });
+      return res.status(400).json({ message: 'Chưa chọn nhà sản xuất' });
     }
 
     const existingProduct = await productsModel.getProductById(masp);
     if (!existingProduct) {
-      return res.status(404).send({ message: "Sản phẩm không tồn tại" });
+      return res.status(404).json({ message: 'Sản phẩm không tồn tại' });
+    }
+
+    cobienthe = cobienthe === 'true' || cobienthe === true || cobienthe === '1' || cobienthe === 1;
+    gia = cobienthe ? null : (gia === '' || gia === 'null' ? null : Number(gia));
+    soluongsp = cobienthe ? null : (soluongsp === '' || soluongsp === 'null' ? null : Number(soluongsp));
+    loaibienthe = cobienthe ? loaibienthe || null : null;
+
+    let parsedVariants = [];
+    if (cobienthe) {
+      if (!loaibienthe) {
+        return res.status(400).json({ message: 'Vui lòng cung cấp loại biến thể' });
+      }
+      parsedVariants = variants ? JSON.parse(variants) : [];
+      if (!Array.isArray(parsedVariants) || parsedVariants.length === 0) {
+        return res.status(400).json({ message: 'Vui lòng cung cấp ít nhất một biến thể' });
+      }
+      for (const variant of parsedVariants) {
+        if (!variant.mabienthe || !variant.gia || !variant.thuoc_tinh) {
+          return res.status(400).json({ message: 'Thiếu thông tin biến thể' });
+        }
+        if (isNaN(Number(variant.gia)) || isNaN(Number(variant.soluongtonkho))) {
+          return res.status(400).json({ message: 'Giá và số lượng tồn kho phải là số' });
+        }
+      }
     }
 
     let imageUpdates = [];
-    if (images && images.length > 0) {
+    if (images.length > 0) {
       const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
       const parsedUpdatedImages = updatedImages ? JSON.parse(updatedImages) : [];
 
@@ -408,7 +446,7 @@ const editProduct = async (req, res) => {
             const filePath = path.join(uploadDir, img.originalname);
             if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
           }
-          return res.status(400).send({ message: "Vui lòng upload hình ảnh (JPG, JPEG, PNG, GIF)" });
+          return res.status(400).json({ message: 'Vui lòng upload hình ảnh (JPG, JPEG, PNG, GIF)' });
         }
       }
 
@@ -424,24 +462,31 @@ const editProduct = async (req, res) => {
       });
     }
 
-    await productsModel.editProduct(masp, tensp, ttct, soluongsp, gia, maloai, mansx);
+    await productsModel.editProduct(masp, tensp, ttct, soluongsp, gia, maloai, mansx, loaibienthe, cobienthe);
 
     if (imageUpdates.length > 0) {
       await productsModel.updateProductImages(masp, imageUpdates);
     }
 
-    res.status(200).send({ message: "Sửa sản phẩm thành công!" });
+    if (cobienthe) {
+      await productsModel.updateVariants(masp, parsedVariants, loaibienthe);
+    } else {
+      await productsModel.deleteVariants(masp);
+    }
+
+    res.status(200).json({ message: 'Sửa sản phẩm thành công!' });
   } catch (error) {
-    console.error(error);
-    if (images && images.length > 0) {
+    console.error('Error updating product:', error);
+    if (images.length > 0) {
       for (const img of images) {
         const filePath = path.join(uploadDir, img.originalname);
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
       }
     }
-    res.status(500).send({ message: "Đã xảy ra lỗi khi sửa sản phẩm" });
+    res.status(500).json({ message: 'Đã xảy ra lỗi khi sửa sản phẩm', error: error.message });
   }
 };
+
 const getProductImages = async (req, res) => {
   try {
     const images = await productsModel.getProductImages(req.params.masp);
@@ -456,13 +501,19 @@ const deleteProduct = async (req, res) => {
   try {
     const { masp } = req.body;
     const uploadDir = `./src/uploads/${masp}`;
-
+    const checkbienthe = await productsModel.getProductById(masp);
     if (fs.existsSync(uploadDir)) {
       fs.rmSync(uploadDir, { recursive: true, force: true }); 
     }
-
-    await productsModel.deleteImgProduct(masp);
+    if (checkbienthe.cobienthe === 1 || checkbienthe.cobienthe === true || checkbienthe.cobienthe === 'true' || checkbienthe.cobienthe === '1') {
+      await productsModel.deleteVariants(masp);
+      await productsModel.deleteImgProduct(masp);
     await productsModel.deleteProduct(masp);
+    } else {
+      await productsModel.deleteImgProduct(masp);
+    await productsModel.deleteProduct(masp);
+    }
+
 
     res.status(200).send({ message: "Xóa nhà sản xuất thành công!" });
   } catch (error) {
@@ -592,6 +643,7 @@ export default {
   insertDetailCart, getAllDetailCart,
   insertCategory,
   getProduct8, getProduct12, getProduct5,
+  getVariant,
   editCategory,
   getOneCategory,
   getNSX,

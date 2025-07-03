@@ -63,6 +63,7 @@ export default function AddProduct() {
         setLoadProduct(false);
 
     }, [loadProduct]);
+    
   // ADD PRODUCT
   const [showForm, setShowForm] = useState(false);
   const formRef = useRef(null);

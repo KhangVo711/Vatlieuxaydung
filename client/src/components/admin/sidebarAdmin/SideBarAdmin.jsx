@@ -52,7 +52,7 @@ const toPath = location.pathname.startsWith("/admin") ? "calendar" : "weeklysche
       <div className="w-full h-16 border-b flex px-4 items-center">
         <p className="font-semibold text-3xl text-pink-400 pl-4">LOGO</p>
       </div>
-<div className="overflow-y-scroll h-[calc(100vh-4rem)]">
+<div className="overflow-y-scroll scrollbar-hide h-[calc(100vh-4rem)]">
       <div className="mb-4 px-4 pt-2">
         <p className="pl-4 text-sm font-semibold uppercase mb-1">Trang chủ</p>
         <Link to="dashboard" className={`w-full flex items-center text-blue-400 h-10 pl-4 ${location.pathname === '/admin/dashboard' || location.pathname === '/staff/dashboard' ? 'bg-pink-100' : ''}  hover:bg-pink-100 rounded-lg cursor-pointer`}>

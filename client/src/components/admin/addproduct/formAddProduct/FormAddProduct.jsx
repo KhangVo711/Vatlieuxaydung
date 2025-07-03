@@ -198,7 +198,7 @@ export default function FormAddProduct({ formRef, category, producer }) {
       <form
         onSubmit={handleSubmit}
         ref={formRef}
-        className="2xl:w-1/2 w-2/3 h-5/6 mx-auto overflow-auto bg-gray-100 shadow-lg border flex flex-col rounded py-5 px-8 mt-16"
+        className={`2xl:w-1/2 w-2/3 ${formData.cobienthe ? 'h-5/6' : 'h-fit'} mx-auto overflow-auto scrollbar-hide bg-gray-100 shadow-lg border flex flex-col rounded py-5 px-8 mt-16`}
       >
         <h2 className="mb-4 uppercase font-bold tracking-wider text-lg text-center">
           Thêm sản phẩm
