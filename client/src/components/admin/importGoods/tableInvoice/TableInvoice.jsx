@@ -1,13 +1,11 @@
 import { formatDateTime } from '../../../../utils/dateTime.jsx';
 import { formatCurrency } from '../../../../utils/currency.jsx';
 import { useState } from 'react';
-
 import ReactPaginate from 'react-paginate';
 
 export default function TableInvoice({ dataInvoice, handleViewProductClick }) {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6;
-
 
   const offset = currentPage * itemsPerPage;
   const currentInvoice = dataInvoice.slice(offset, offset + itemsPerPage);
@@ -16,6 +14,7 @@ export default function TableInvoice({ dataInvoice, handleViewProductClick }) {
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
+
   return (
     <>
       <div className="grid grid-cols-3 gap-6 px-5">
@@ -23,10 +22,10 @@ export default function TableInvoice({ dataInvoice, handleViewProductClick }) {
           currentInvoice.map((invoice, index) => (
             <div
               key={index}
-              className="bg-gray-50 border border-gray-200 rounded-lg shadow dark:bg-pink-800 dark:border-pink-700"
+              className="bg-gray-50 border border-gray-200 rounded-sm shadow dark:bg-pink-800 dark:border-pink-700"
             >
               <div className="pb-3">
-                <div className="bg-pink-300 w-full rounded-t-lg p-1.5">
+                <div className="bg-pink-300 w-full rounded-t-sm p-1.5">
                   <h2 className="text-center font-bold">Mã phiếu: {invoice.mapn}</h2>
                 </div>
                 <h2 className="text-center mt-1 font-semibold">
@@ -43,7 +42,7 @@ export default function TableInvoice({ dataInvoice, handleViewProductClick }) {
                     <h2>
                       <span className="font-bold text-gray-800">Tổng giá</span>
                     </h2>
-                    <p>{formatCurrency(invoice.tong_gia_theo_mapn)}</p>
+                    <p>{formatCurrency(invoice.tonggia)} {/* Thay tong_gia_theo_mapn bằng tong_gia */}</p>
                   </div>
                 </div>
                 <div className="flex justify-center">

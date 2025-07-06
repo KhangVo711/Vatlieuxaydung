@@ -15,7 +15,6 @@ export default function FormAddInvoice({ formAddRef }) {
   const [colorMsg, setColorMsg] = useState('');
   const [invoice, setInvoice] = useState([{ masp: '', mabienthe: '', soluong: '', dongia: '' }]);
     const { isDataAdmin, isDataStaff } = useContext(Context);
-  // Define chunkArray function
   const chunkArray = (array, size) => {
     const result = [];
     for (let i = 0; i < array.length; i += size) {
@@ -24,7 +23,6 @@ export default function FormAddInvoice({ formAddRef }) {
     return result;
   };
 
-  // Fetch products and their variants
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,10 +32,8 @@ export default function FormAddInvoice({ formAddRef }) {
         });
         if (response.status === 200) {
           const productData = response.data.product;
-          console.log('Products:', productData); // Debug log
           setProducts(productData);
 
-          // Fetch variants for products with cobienthe = true
           const variantPromises = productData
             .filter((p) => p.cobienthe === 1)
             .map(async (p) => {
@@ -62,16 +58,14 @@ export default function FormAddInvoice({ formAddRef }) {
     fetchData();
   }, []);
 
-  // Generate product options dynamically, excluding already selected products
-  const getProductOptions = () => {
-    return products.map((item) => ({
-      value: item.masp,
-      label: item.tensp,
-      cobienthe: item.cobienthe,
-    })).filter((option) => !invoice.some((inv) => inv.masp === option.value));
-  };
+const getProductOptions = () => {
+  return products.map((item) => ({
+    value: item.masp,
+    label: item.tensp,
+    cobienthe: item.cobienthe,
+  }));
+};
 
-  // Generate variant options for a specific product
   const getVariantOptions = (masp) => {
     const variants = variantsByProduct[masp] || [];
     return variants.map((variant) => ({
@@ -88,7 +82,6 @@ export default function FormAddInvoice({ formAddRef }) {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
   };
 
-  // Handle adding a new product entry
   const handleAddProduct = () => {
     setInvoice([...invoice, { masp: '', mabienthe: '', soluong: '', dongia: '' }]);
   };
@@ -99,12 +92,10 @@ export default function FormAddInvoice({ formAddRef }) {
     setInvoice(updatedInvoice.length > 0 ? updatedInvoice : [{ masp: '', mabienthe: '', soluong: '', dongia: '' }]);
   };
 
-  // Handle input changes
   const handleInputChange = (index, field, value) => {
     const updatedInvoice = [...invoice];
     updatedInvoice[index][field] = value;
 
-    // If masp changes, reset mabienthe and update dongia/soluong for non-variant products
     if (field === 'masp') {
       const selectedProduct = products.find((p) => p.masp === value);
       if (selectedProduct) {
@@ -119,7 +110,6 @@ export default function FormAddInvoice({ formAddRef }) {
       }
     }
 
-    // If mabienthe changes, update dongia and soluong based on variant
     if (field === 'mabienthe') {
       const selectedVariant = variantsByProduct[updatedInvoice[index].masp]?.find((v) => v.mabienthe === value);
       if (selectedVariant) {
@@ -131,7 +121,6 @@ export default function FormAddInvoice({ formAddRef }) {
     setInvoice(updatedInvoice);
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = Cookies.get('admin') || Cookies.get('staff');
@@ -143,7 +132,6 @@ export default function FormAddInvoice({ formAddRef }) {
       return;
     }
 
-    // Validate invoice entries
     for (const inv of invoice) {
       if (!inv.masp) {
         setColorMsg('text-red-600');
@@ -168,7 +156,6 @@ export default function FormAddInvoice({ formAddRef }) {
       }
     }
 
-    // Check for duplicate masp:mabienthe combinations
     const itemKeys = invoice.map((inv) => `${inv.masp}:${inv.mabienthe || ''}`);
     const duplicates = itemKeys.filter((item, index) => itemKeys.indexOf(item) !== index);
     if (duplicates.length > 0) {
@@ -203,8 +190,8 @@ export default function FormAddInvoice({ formAddRef }) {
           mapn: invoiceId,
           masp: inv.masp,
           mabienthe: inv.mabienthe || null,
-          soluong: Number(inv.soluong),
-          dongia: Number(inv.dongia),
+          soluongnhap: Number(inv.soluong),
+          gianhap: Number(inv.dongia),
         }));
 
         const detailResponse = await axios.post('http://localhost:5001/addInvoiceDetail', invoiceDetail, {
@@ -217,9 +204,9 @@ export default function FormAddInvoice({ formAddRef }) {
         });
 
         if (detailResponse.status === 200) {
+          setInvoice([{ masp: '', mabienthe: '', soluong: '', dongia: '' }]);
           setColorMsg('text-green-600');
           setMessage(response.data.message);
-          setInvoice([{ masp: '', mabienthe: '', soluong: '', dongia: '' }]);
           e.target.tenpn.value = '';
           handleSuccess();
           setLoadDataInvoice(true);
@@ -296,7 +283,7 @@ export default function FormAddInvoice({ formAddRef }) {
       <form
         ref={formAddRef}
         onSubmit={handleSubmit}
-        className="mx-auto bg-gray-100 shadow-lg border rounded py-5 px-8 mt-16 max-w-7xl overflow-y-auto max-h-[80vh]"
+        className="mx-auto bg-gray-100 shadow-lg border scrollbar-hide rounded py-5 px-8 mt-16 max-w-7xl overflow-y-auto max-h-[80vh]"
       >
         <h2 className="uppercase font-bold mb-2 tracking-wider text-lg text-center">Phiếu nhập kho</h2>
         {message && <p className={`${colorMsg} text-center text-sm mb-3`}>{message}</p>}
@@ -315,76 +302,85 @@ export default function FormAddInvoice({ formAddRef }) {
         </div>
 
         <div className="grid" style={{ gridTemplateColumns: `repeat(${invoice.length >= 3 ? '2' : '1'}, 1fr)`, gap: '1rem' }}>
-          {chunkArray(invoice, 3).map((group, groupIndex) => (
-            <div key={groupIndex} className="space-y-4">
-              {group.map((inv, index) => {
-                const actualIndex = groupIndex * 3 + index;
-                const selectedProduct = products.find((p) => p.masp === inv.masp);
-                return (
-                  <div key={actualIndex} className="space-y-4 max-h-[200px]">
-                    <div className="flex justify-between items-center mb-2">
-                      <Select
-                        options={getProductOptions()}
-                        onChange={(selectedOption) => handleInputChange(actualIndex, 'masp', selectedOption.value)}
-                        placeholder="Chọn sản phẩm"
-                        className="w-11/12 text-sm rounded-lg"
-                        styles={customStyles}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleSubProduct(actualIndex)}
-                        className="text-red-500 hover:text-red-400 transition duration-150 ease-in-out"
-                      >
-                        <MinusCircleIcon className="h-7 w-7" />
-                      </button>
-                    </div>
-                    {selectedProduct?.cobienthe === 1 && (
-                      <div className="mb-2">
-                        <label className="block mb-1 text-sm font-medium text-gray-900">Biến thể</label>
-                        <Select
-                          options={getVariantOptions(inv.masp)}
-                          onChange={(selectedOption) => handleInputChange(actualIndex, 'mabienthe', selectedOption.value)}
-                          placeholder="Chọn biến thể"
-                          className="w-full text-sm rounded-lg"
-                          styles={customStyles}
-                          isDisabled={!inv.masp}
-                        />
-                      </div>
-                    )}
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label htmlFor={`soluong-${actualIndex}`} className="block mb-1 text-sm font-medium text-gray-900">
-                          Số lượng
-                        </label>
-                        <input
-                          type="text"
-                          id={`soluong-${actualIndex}`}
-                          value={inv.soluong}
-                          onChange={(e) => handleInputChange(actualIndex, 'soluong', e.target.value)}
-                          className="w-full shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 pl-2.5 py-2"
-                          placeholder="100"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor={`dongia-${actualIndex}`} className="block mb-1 text-sm font-medium text-gray-900">
-                          Đơn giá
-                        </label>
-                        <input
-                          type="text"
-                          id={`dongia-${actualIndex}`}
-                          value={inv.dongia}
-                          onChange={(e) => handleInputChange(actualIndex, 'dongia', e.target.value)}
-                          className="w-full shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 pl-2.5 py-2"
-                          placeholder="25000"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+  {chunkArray(invoice, 3).map((group, groupIndex) => (
+    <div key={groupIndex} className="space-y-4">
+      {group.map((inv, index) => {
+        const actualIndex = groupIndex * 3 + index;
+        const selectedProduct = products.find((p) => p.masp === inv.masp);
+        return (
+          <div key={actualIndex} className="space-y-4 max-h-[200px]">
+            <div className="flex justify-between items-center mb-2">
+              <Select
+                options={getProductOptions()}
+                onChange={(selectedOption) => handleInputChange(actualIndex, 'masp', selectedOption.value)}
+                placeholder="Chọn sản phẩm"
+                className="w-11/12 text-sm rounded-lg"
+                styles={customStyles}
+                value={inv.masp ? { value: inv.masp, label: products.find((p) => p.masp === inv.masp)?.tensp || '' } : null}
+              />
+              <button
+                type="button"
+                onClick={() => handleSubProduct(actualIndex)}
+                className="text-red-500 hover:text-red-400 transition duration-150 ease-in-out"
+              >
+                <MinusCircleIcon className="h-7 w-7" />
+              </button>
             </div>
-          ))}
-        </div>
+            {selectedProduct?.cobienthe === 1 && (
+              <div className="mb-2">
+                <label className="block mb-1 text-sm font-medium text-gray-900">Biến thể</label>
+                <Select
+                  options={getVariantOptions(inv.masp)}
+                  onChange={(selectedOption) => handleInputChange(actualIndex, 'mabienthe', selectedOption.value)}
+                  placeholder="Chọn biến thể"
+                  className="w-full text-sm rounded-lg"
+                  styles={customStyles}
+                  isDisabled={!inv.masp}
+                  value={
+                    inv.mabienthe
+                      ? {
+                          value: inv.mabienthe,
+                          label: variantsByProduct[inv.masp]?.find((v) => v.mabienthe === inv.mabienthe)?.thuoc_tinh || '',
+                        }
+                      : null
+                  }
+                />
+              </div>
+            )}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label htmlFor={`soluong-${actualIndex}`} className="block mb-1 text-sm font-medium text-gray-900">
+                  Số lượng
+                </label>
+                <input
+                  type="text"
+                  id={`soluong-${actualIndex}`}
+                  value={inv.soluong}
+                  onChange={(e) => handleInputChange(actualIndex, 'soluong', e.target.value)}
+                  className="w-full shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 pl-2.5 py-2"
+                  placeholder="100"
+                />
+              </div>
+              <div>
+                <label htmlFor={`dongia-${actualIndex}`} className="block mb-1 text-sm font-medium text-gray-900">
+                  Đơn giá
+                </label>
+                <input
+                  type="text"
+                  id={`dongia-${actualIndex}`}
+                  value={inv.dongia}
+                  onChange={(e) => handleInputChange(actualIndex, 'dongia', e.target.value)}
+                  className="w-full shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 pl-2.5 py-2"
+                  placeholder="25000"
+                />
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  ))}
+</div>
 
         <div className="mt-4 flex justify-center">
           <button

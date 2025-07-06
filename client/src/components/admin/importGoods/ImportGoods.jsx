@@ -29,7 +29,6 @@ export default function ImportGoods() {
         } else {
           document.removeEventListener('mousedown', handleClickOutside);
         }
-        // Cleanup event listener khi component bị hủy
         return () => {
           document.removeEventListener('mousedown', handleClickOutside);
         };
@@ -56,8 +55,8 @@ export default function ImportGoods() {
   // VIEW DETAIL INVOICE
   const formRefView = useRef(null);
   const [showFormView, setShowFormView] = useState(false);
-    console.log('selectDetailInvoice', selectDetailInvoice);
   const handleViewProductClick = async (item) => {
+    console.log(item.mapn);
     try {
     setShowFormView(true);
 

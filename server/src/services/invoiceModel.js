@@ -5,34 +5,62 @@ const getInvoice = async () => {
     const [rows, fields] = await connectDB.execute('SELECT * FROM `phieunhap`')
     return rows
 }
-const getNameProducer = async (masp) => {
-    const [rows, fields] = await connectDB.execute('SELECT `tennsx` FROM `nhasanxuat`, `sanpham` WHERE `nhasanxuat`.mansx = `sanpham`.mansx AND `sanpham`.masp = ?', [masp])
-    return rows[0]
-}
 const insertInvoice = async (mapn, tenpn, ngaylap, maql, manv) => {
-    try {
-        await connectDB.execute("INSERT INTO `phieunhap` VALUES (?, ?, ?, ?, ?)", [mapn, tenpn, ngaylap, maql, manv]);
-    } catch (error) {
-        console.error("Error inserting invoice:", error);
-        throw error;
-    }
+  try {
+    await connectDB.execute('INSERT INTO phieunhap (mapn, tenpn, ngaylap, maql, manv, tonggia) VALUES (?, ?, ?, ?, ?, ?)', [
+      mapn, tenpn, ngaylap, maql, manv, 0
+    ]);
+  } catch (error) {
+    console.error('Error inserting invoice:', error);
+    throw error;
+  }
 };
-const updateQuantity = async (masp, mapn) => {
+
+const insertDetailInvoice = async (mapn, masp, mabienthe, soluongnhap, gianhap, tennsx) => {
+  try {
     await connectDB.execute(
-        `UPDATE sanpham 
-         SET soluongsp = soluongsp + (
-             SELECT soluong 
-             FROM chitietphieunhap 
-             WHERE sanpham.masp = chitietphieunhap.masp 
-             AND chitietphieunhap.mapn = ?
-         )
-         WHERE masp = ?;`,
-        [mapn, masp]
+      'INSERT INTO chitietphieunhap (mapn, masp, mabienthe, soluongnhap, gianhap, tennsx) VALUES (?, ?, ?, ?, ?, ?)',
+      [mapn, masp, mabienthe || null, soluongnhap, gianhap, tennsx]
     );
+  } catch (error) {
+    console.error('Error inserting invoice detail:', error);
+    throw error;
+  }
 };
-const insertDetailInvoice = async (soluong, dongia, masp, mapn, tennsx) => {
-    await connectDB.execute("INSERT INTO `chitietphieunhap` VALUES (?, ?, ?, ?, ?)", [soluong, dongia, masp, mapn, tennsx]);
-}
+
+const updateQuantity = async (masp, soluong) => {
+  try {
+    await connectDB.execute('UPDATE sanpham SET soluongsp = soluongsp + ? WHERE masp = ?', [Number(soluong), masp]);
+  } catch (error) {
+    console.error('Error updating product quantity:', error);
+    throw error;
+  }
+};
+
+const updateVariantQuantity = async (mabienthe, soluong) => {
+  try {
+    await connectDB.execute('UPDATE cacbienthe SET soluongtonkho = soluongtonkho + ? WHERE mabienthe = ?', [
+      Number(soluong),
+      mabienthe,
+    ]);
+  } catch (error) {
+    console.error('Error updating variant quantity:', error);
+    throw error;
+  }
+};
+
+const getNameProducer = async (masp) => {
+  try {
+    const [rows] = await connectDB.execute(
+      'SELECT nsx.tennsx FROM nhasanxuat nsx JOIN sanpham sp ON nsx.mansx = sp.mansx WHERE sp.masp = ?',
+      [masp]
+    );
+    return rows[0];
+  } catch (error) {
+    console.error('Error fetching producer:', error);
+    throw error;
+  }
+};
 
 const showInvoice = async () => {
     const query = `
@@ -41,7 +69,7 @@ const showInvoice = async () => {
             pn.ngaylap, 
             pn.tenpn, 
             COALESCE(ql.tenql, nv.tennv) AS nguoi_phu_trach,
-            SUM(ctn.soluong * ctn.dongia) AS tong_gia_theo_mapn
+            pn.tonggia
         FROM 
             phieunhap pn
         JOIN 
@@ -64,47 +92,42 @@ const showInvoice = async () => {
 };
 
 const showDetailInvoice = async (mapn) => {
-    const query = `
-        SELECT
-            pn.mapn,
-            pn.tenpn,
-            pn.ngaylap,
-            sp.tensp AS ten_san_pham,
-            COALESCE(ql.tenql, nv.tennv) AS nguoi_phu_trach,
-            ct.soluong,
-            ct.dongia,
-            ct.tennsx,
-            (ct.soluong * ct.dongia) AS thanh_tien,
-            total.tong_gia
-        FROM
-            chitietphieunhap ct
-        JOIN
-            phieunhap pn ON ct.mapn = pn.mapn
-        JOIN
-            sanpham sp ON ct.masp = sp.masp
-        LEFT JOIN
-            quanly ql ON pn.maql = ql.maql
-        LEFT JOIN
-            nhanvien nv ON pn.manv = nv.manv
-        JOIN
-            (
-                SELECT
-                    mapn,
-                    SUM(soluong * dongia) AS tong_gia
-                FROM
-                    chitietphieunhap
-                GROUP BY
-                    mapn
-            ) AS total ON pn.mapn = total.mapn
-        WHERE
-            ct.mapn = ?
-        GROUP BY
-            pn.mapn, sp.tensp, nguoi_phu_trach, ct.soluong, ct.dongia, total.tong_gia;
-    `;
-    const [rows] = await connectDB.execute(query, [mapn]);
-    return rows;
+  const query = `
+    SELECT
+      pn.mapn,
+      pn.tenpn,
+      pn.ngaylap,
+      sp.tensp AS ten_san_pham,
+      COALESCE(ql.tenql, nv.tennv) AS nguoi_phu_trach,
+      ct.soluongnhap,
+      ct.gianhap,
+      ct.tennsx,
+      ct.mabienthe,
+      tb.thuoc_tinh AS tenbienthe,
+      (ct.soluongnhap * ct.gianhap) AS thanh_tien,
+      (SELECT SUM(soluongnhap * gianhap) FROM chitietphieunhap WHERE mapn = pn.mapn) AS tong_gia
+    FROM
+      chitietphieunhap ct
+    JOIN
+      phieunhap pn ON ct.mapn = pn.mapn
+    JOIN
+      sanpham sp ON ct.masp = sp.masp
+    LEFT JOIN
+      cacbienthe cb ON ct.mabienthe = cb.mabienthe
+    LEFT JOIN
+      thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+    LEFT JOIN
+      quanly ql ON pn.maql = ql.maql
+    LEFT JOIN
+      nhanvien nv ON pn.manv = nv.manv
+    WHERE
+      ct.mapn = ?
+  
+  `;
+  const [rows] = await connectDB.execute(query, [mapn]);
+  return rows;
 };
 
 
-export default { insertInvoice, showInvoice, insertDetailInvoice, getNameProducer, getInvoice, updateQuantity, showDetailInvoice };
+export default { insertInvoice, showInvoice, insertDetailInvoice, getNameProducer, updateVariantQuantity, getInvoice, updateQuantity, showDetailInvoice };
 
