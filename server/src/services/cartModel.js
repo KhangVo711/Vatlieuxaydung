@@ -88,7 +88,8 @@ const detailProductInOrder = async (madh) => {
             sp.gia,
             sp.mansx,
             ct.soluongsanpham,
-            ct.dongia
+            ct.dongia,
+            tt.thuoc_tinh
         FROM
             donhang dh
         LEFT JOIN
@@ -99,6 +100,10 @@ const detailProductInOrder = async (madh) => {
             chitietdonhang ct ON dh.madh = ct.madh
         JOIN
             sanpham sp ON ct.masp = sp.masp
+        LEFT JOIN
+            cacbienthe cb ON ct.mabienthe = cb.mabienthe
+        LEFT JOIN
+            thuoctinhbienthe tt ON cb.mabienthe = tt.mabienthe
         JOIN
             donvivanchuyen dv ON dh.madvvc = dv.madvvc
         WHERE

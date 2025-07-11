@@ -57,7 +57,7 @@ export default function ViewDetailOrder({ formRefView, selected }) {
           <thead className="bg-pink-300">
             <tr>
               <th className="py-3 px-4 text-left font-bold text-gray-800">Mã sản phẩm</th>
-              <th className="py-3 px-4 text-left font-bold text-gray-800">Sản phẩm</th>
+              <th className="py-3 px-4 text-center font-bold text-gray-800">Sản phẩm</th>
               <th className="py-3 px-4 text-center font-bold text-gray-800">Khuyến mãi</th>
               <th className="py-3 px-4 text-center font-bold text-gray-800">Số lượng</th>
               <th className="py-3 px-4 text-right font-bold text-gray-800">Đơn giá</th>
@@ -68,7 +68,7 @@ export default function ViewDetailOrder({ formRefView, selected }) {
             {selected.map((detail, index) => (
               <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-pink-100'}>
                 <td className="py-3 px-4 text-left font-medium text-gray-600">{detail.masp}</td>
-                <td className="py-3 px-4 text-left font-medium text-gray-600">{detail.tensp}</td>
+                <td className="py-3 px-4 text-left font-medium text-gray-600">{detail.tensp} {detail.thuoc_tinh ? <span className='font-bold text-sm'>({detail.thuoc_tinh})</span> : null}</td>
                 <td className="py-3 px-4 text-center font-medium text-gray-600">{detail.km}%</td>
                 <td className="py-3 px-4 text-center">{detail.soluongsanpham}</td>
                 <td className="py-3 px-4 text-right">{formatCurrency(detail.dongia)}</td>
