@@ -31,8 +31,14 @@ export default function Calendar() {
   const [currentShift, setCurrentShift] = useState(null);
   const [viewShifts, setViewShifts] = useState([]);
   const [viewShiftType, setViewShiftType] = useState('');
-  const [viewMode, setViewMode] = useState('month'); // New state for view mode
-  const [selectedWeek, setSelectedWeek] = useState(null); // New state for selected week
+  const [viewMode, setViewMode] = useState('month');
+  const [selectedWeek, setSelectedWeek] = useState(() => {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - dayOfWeek);
+    return weekStart;
+  });
 
   useEffect(() => {
     if (viewMode === 'month') {
@@ -42,7 +48,6 @@ export default function Calendar() {
     fetchShifts();
   }, [month, year, viewMode]);
 
-  // Chặn scroll khi modal mở
   useEffect(() => {
     if (openShiftModal || openEditModal || openViewModal) {
       document.body.style.overflow = 'hidden';
@@ -371,17 +376,16 @@ export default function Calendar() {
     });
   };
 
-  // New function to handle weekly view
-  const showWeeklyView = (date) => {
+  const showWeeklyView = () => {
     setViewMode('week');
-    const selectedDate = new Date(year, month, date);
-    const weekStart = new Date(selectedDate);
-    const dayOfWeek = selectedDate.getDay();
-    weekStart.setDate(selectedDate.getDate() - dayOfWeek);
-    setSelectedWeek(weekStart);
   };
 
-  // Function to get shifts for a specific date and shift type
+  const navigateWeek = (direction) => {
+    const newWeek = new Date(selectedWeek);
+    newWeek.setDate(selectedWeek.getDate() + (direction === 'next' ? 7 : -7));
+    setSelectedWeek(newWeek);
+  };
+
   const getShiftsForDateAndType = (date, type) => {
     return shifts.filter(shift => {
       const shiftDate = new Date(shift.giovaoca);
@@ -390,7 +394,6 @@ export default function Calendar() {
     });
   };
 
-  // Function to render weekly view
   const renderWeeklyView = () => {
     if (!selectedWeek) return null;
     const weekDays = Array.from({ length: 7 }, (_, i) => {
@@ -404,22 +407,36 @@ export default function Calendar() {
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="flex items-center justify-between py-2 px-6">
             <div>
-              <span className="text-lg font-bold text-gray-800">Tuần từ {weekDays[0].toLocaleDateString('vi-VN')}</span>
+              <span className="text-lg font-bold text-gray-800">Tuần từ {weekDays[0].toLocaleDateString('vi-VN')} đến {weekDays[6].toLocaleDateString('vi-VN')}</span>
             </div>
-            <button
-              className="bg-pink-500 hover:bg-pink-400 text-white font-semibold py-1.5 px-3 rounded-md"
-              onClick={() => setViewMode('month')}
-            >
-              Quay lại tháng
-            </button>
+            <div className="flex items-center space-x-2">
+              <button
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1.5 px-3 rounded-md"
+                onClick={() => navigateWeek('prev')}
+              >
+                Tuần trước
+              </button>
+              <button
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1.5 px-3 rounded-md"
+                onClick={() => navigateWeek('next')}
+              >
+                Tuần sau
+              </button>
+              <button
+                className="bg-pink-500 hover:bg-pink-400 text-white font-semibold py-1.5 px-3 rounded-md"
+                onClick={() => setViewMode('month')}
+              >
+                Xem tháng
+              </button>
+            </div>
           </div>
           <div className="p-4 overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="border p-2">Ca</th>
+                  <th className="border p-2 bg-gray-50">Ca</th>
                   {weekDays.map((day, index) => (
-                    <th key={index} className="border p-2 text-center">
+                    <th key={index} className="border p-2 bg-pink-100 text-center">
                       {DAYS[day.getDay()]}<br />
                       {day.toLocaleDateString('vi-VN')}
                     </th>
@@ -429,7 +446,7 @@ export default function Calendar() {
               <tbody>
                 {['Sáng', 'Chiều', 'Tối'].map((shiftType) => (
                   <tr key={shiftType}>
-                    <td className="border p-2 font-bold">{shiftType}</td>
+                    <td className="border p-2 text-center font-bold bg-pink-100">{shiftType}</td>
                     {weekDays.map((day, index) => (
                       <td key={index} className="border p-2">
                         {getShiftsForDateAndType(day, shiftType).map((shift, i) => (
@@ -438,15 +455,10 @@ export default function Calendar() {
                               {new Date(shift.giovaoca).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(shift.gioraca).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </p>
                             {shift.staff_names.map((name, j) => (
-                              <p key={j} className="text-xs text-gray-600">{name}</p>
+                              <p key={j} className="text-xs font-bold mt-1 text-gray-600">{name}</p>
                             ))}
                             <button
-                              onClick={() => {
-                                setViewMode('month');
-                                setMonth(day.getMonth());
-                                setYear(day.getFullYear());
-                                showEditModal(shift);
-                              }}
+                              onClick={() => showEditModal(shift)}
                               className="text-pink-500 text-xs hover:underline"
                             >
                               Chỉnh sửa
@@ -477,27 +489,35 @@ export default function Calendar() {
                   <span className="text-lg font-bold text-gray-800">{MONTH_NAMES[month]}</span>
                   <span className="ml-1 text-lg text-gray-600 font-normal">năm {year}</span>
                 </div>
-                <div className="border rounded-lg px-1" style={{ paddingTop: '2px' }}>
+                <div className="flex items-center space-x-2">
+                  <div className="border rounded-lg px-1" style={{ paddingTop: '2px' }}>
+                    <button
+                      type="button"
+                      className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center ${month === 0 ? 'cursor-not-allowed opacity-25' : ''}`}
+                      disabled={month === 0}
+                      onClick={() => setMonth(month - 1)}
+                    >
+                      <svg className="h-6 w-6 text-gray-500 inline-flex leading-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <div className="border-r inline-flex h-6"></div>
+                    <button
+                      type="button"
+                      className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex items-center cursor-pointer hover:bg-gray-200 p-1 ${month === 11 ? 'cursor-not-allowed opacity-25' : ''}`}
+                      disabled={month === 11}
+                      onClick={() => setMonth(month + 1)}
+                    >
+                      <svg className="h-6 w-6 text-gray-500 inline-flex leading-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
                   <button
-                    type="button"
-                    className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center ${month === 0 ? 'cursor-not-allowed opacity-25' : ''}`}
-                    disabled={month === 0}
-                    onClick={() => setMonth(month - 1)}
+                    className="bg-pink-500 hover:bg-pink-400 text-white font-semibold py-1.5 px-3 rounded-md"
+                    onClick={showWeeklyView}
                   >
-                    <svg className="h-6 w-6 text-gray-500 inline-flex leading-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <div className="border-r inline-flex h-6"></div>
-                  <button
-                    type="button"
-                    className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex items-center cursor-pointer hover:bg-gray-200 p-1 ${month === 11 ? 'cursor-not-allowed opacity-25' : ''}`}
-                    disabled={month === 11}
-                    onClick={() => setMonth(month + 1)}
-                  >
-                    <svg className="h-6 w-6 text-gray-500 inline-flex leading-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                    </svg>
+                    Xem tuần
                   </button>
                 </div>
               </div>
@@ -529,20 +549,25 @@ export default function Calendar() {
                     >
                       <div
                         onClick={() => showShiftModal(date)}
-                        className={`inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 ${
-                          isToday(date) ? 'bg-pink-500 text-white' : 'text-gray-700 hover:bg-pink-200'
+                        className={`inline-flex w-6 h-6 items-center justify-center select-none text-center leading-none rounded-full transition ease-in-out duration-100 ${
+                          isToday(date) ? 'bg-pink-500 text-white' : 'text-gray-700'
                         }`}
                       >
                         {date}
+                      </div>
+                      <div>
+                        <button type='button' onClick={() => showShiftModal(date)} className="absolute top-3 font-bold bg-pink-200 px-1 right-2 text-xs rounded-sm py-0.5 text-gray-500 hover:bg-pink-300 transition duration-100 ease-in-out">
+                          Xếp ca
+                        </button>
                       </div>
                       <div className="mt-2 flex flex-col space-y-1">
                         {['Sáng', 'Chiều', 'Tối'].map((type) => {
                           const shift = getShiftsForDateAndType(new Date(year, month, date), type);
                           return (
-                            <div key={type}>
+                            <div key={type} className="flex items-center space-x-2">
                               <button
                                 onClick={() => showViewModal(date, type)}
-                                className={`text-xs px-2 py-1 rounded w-full text-left ${
+                                className={`text-xs w-10 py-1 rounded text-center ${
                                   type === 'Sáng' ? 'bg-blue-100 text-blue-800 hover:bg-blue-200' :
                                   type === 'Chiều' ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' :
                                   'bg-purple-100 text-purple-800 hover:bg-purple-200'
@@ -551,7 +576,7 @@ export default function Calendar() {
                                 {type}
                               </button>
                               {shift.length > 0 && (
-                                <div className="text-xs text-gray-600 mt-1 truncate">
+                                <div className="text-xs select-none text-gray-600 truncate">
                                   {shift[0].staff_names.join(', ')}
                                 </div>
                               )}
@@ -559,17 +584,15 @@ export default function Calendar() {
                           );
                         })}
                       </div>
-                      <button
-                        onClick={() => showWeeklyView(date)}
-                        className="absolute bottom-1 right-1 text-xs text-pink-500 hover:underline"
-                      >
-                        Xem tuần
-                      </button>
                     </div>
                   ))}
                 </div>
               </div>
+              <p className="text-xs text-gray-600 text-center py-2">
+                <span className="font-semibold text-red-600">Lưu ý:</span> Nhấn vào thêm ca để thêm ca làm việc. Nhấn vào ca để xem chi tiết.
+              </p>
             </div>
+      
           </div>
         ) : (
           renderWeeklyView()
