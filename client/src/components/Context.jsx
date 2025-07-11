@@ -50,16 +50,20 @@ const ContextProvider = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const onAddToCart = (product) => {
-    setCartItems((prevCart) => {
-      const existingProduct = prevCart.find((item) => item.masp === product.masp);
-      if (existingProduct) {
-        return prevCart.map((item) =>
-          item.masp === product.masp ? { ...item, soluong: item.soluong + 1 } : item
-        );
-      }
-      return [...prevCart, product]; // Truyền toàn bộ product vào cart
-    });
-  };
+  setCartItems((prevCart) => {
+    const existingProduct = prevCart.find(
+      (item) => item.masp === product.masp && item.mabienthe === product.mabienthe
+    );
+    if (existingProduct) {
+      return prevCart.map((item) =>
+        item.masp === product.masp && item.mabienthe === product.mabienthe
+          ? { ...item, soluong: item.soluong + 1 }
+          : item
+      );
+    }
+    return [...prevCart, { ...product, soluong: 1 }];
+  });
+};
   const decreaseQuantity = (productId) => {
     setCartItems((prevCart) =>
       prevCart

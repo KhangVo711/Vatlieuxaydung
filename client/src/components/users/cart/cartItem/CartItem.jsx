@@ -15,7 +15,7 @@ export default function CartItem({ cartItem }) {
           alt={cartItem.tensp}
           className="w-16 h-16 object-cover rounded-lg"
         />
-        <h2 className="text-sm font-medium text-gray-700">{cartItem.tensp}</h2>
+        <h2 className="text-sm font-medium text-gray-700">{cartItem.tensp} {cartItem.mabienthe && cartItem.thuoctinh ? <span className='font-bold'>({cartItem.thuoctinh })</span> : null}</h2>
       </div>
      
       {/* Đơn giá */}

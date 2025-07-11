@@ -266,15 +266,17 @@ const getProduct12 = async (req, res) => {
 };
 
 const detailProduct = async (req, res) => {
-  const { masp, mansx, maloai } = req.body;
+  const { masp, mabienthe } = req.body; // mabienthe is optional for initial load
   try {
-    const dataProduct = await productsModel.detailProduct(masp, mansx, maloai); // Lấy thông tin sản phẩm
-    const images = await productsModel.getProductImages(masp); // Lấy danh sách ảnh
+    const dataProduct = await productsModel.detailProduct(masp, mabienthe); // Fetch base product or specific variant
+    const images = await productsModel.getProductImages(masp); // Fetch all images
+    const variants = await productsModel.getProductVariants(masp); // Fetch all variants
 
     res.status(200).send({
       message: "Lấy chi tiết sản phẩm thành công!",
       dataProduct,
-      images, // Trả về danh sách ảnh
+      images,
+      variants, // Include all variants
     });
   } catch (error) {
     res.status(500).send({ message: "Đã xảy ra lỗi khi lấy chi tiết sản phẩm" });

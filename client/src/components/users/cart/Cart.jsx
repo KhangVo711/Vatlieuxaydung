@@ -32,7 +32,7 @@ export default function Cart() {
 
     const [delivery, setDelivery] = useState([]);
     const [selectedDelivery, setSelectedDelivery] = useState(null);
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -65,13 +65,14 @@ export default function Cart() {
     });
 
     const { cartItems, setCartItems } = useContext(Context);
+    console.log(cartItems);
     const listCX = cartItems.map((cartItem) => (
         <CartItem key={cartItem.masp} cartItem={cartItem} />
     ));
     const total = cartItems.reduce((acc, item) => {
         const price = item.km ? item.gia * (1 - item.km / 100) : item.gia;
         return acc + price * item.soluong;
-      }, 0);
+    }, 0);
 
     const [ship, setShip] = useState([]);
     const [distance, setDistance] = useState(null);
@@ -121,10 +122,10 @@ export default function Cart() {
             maform: maformid,
             quangduong: distance
         };
- 
+
         try {
             if (!isData?.id) {
-                if(formData.fullname === '' || formData.email === '' || formData.phone === '' || formData.address === '') {
+                if (formData.fullname === '' || formData.email === '' || formData.phone === '' || formData.address === '') {
                     setIsProcessing(false);
                     setMessage('Vui lòng nhập đầy đủ thông tin');
                     return;
@@ -151,7 +152,8 @@ export default function Cart() {
                         const orderDetails = cartItems.map(item => ({
                             madh: orderId,
                             masp: item.masp,
-                            dongia: item.km ? item.gia * (1 - item.km/100) : item.gia,
+                            mabienthe: item.mabienthe || null,
+                            dongia: item.km ? item.gia * (1 - item.km / 100) : item.gia,
                             km: item.km ? item.km : '0',
                             soluongsanpham: item.soluong
                         }));
@@ -179,7 +181,7 @@ export default function Cart() {
                     } else {
                         setIsProcessing(false); // Dừng xử lý nếu lỗi
                     }
-                } 
+                }
             }
             else {
                 const cartResponse = await axios.post('http://localhost:5001/createCart', orderData, {
@@ -194,11 +196,12 @@ export default function Cart() {
                     const orderDetails = cartItems.map(item => ({
                         madh: orderId,
                         masp: item.masp,
-                        dongia: item.km ? item.gia * (1 - item.km/100) : item.gia,
+                        mabienthe: item.mabienthe || null,
+                        dongia: item.km ? item.gia * (1 - item.km / 100) : item.gia,
                         km: item.km ? item.km : 0,
                         soluongsanpham: item.soluong
                     }));
-
+                    console.log(orderDetails);
                     const detailResponse = await axios.post('http://localhost:5001/createCartDetail', orderDetails, {
                         headers: {
                             'Content-Type': 'application/json',
@@ -335,40 +338,40 @@ export default function Cart() {
                         null
                     }
 
-                
+
                     <div className="p-4 bg-gray-50 border-t">
                         <p className="text-sm text-gray-800 font-medium">Chọn đơn vị vận chuyển:</p>
                         <div className='w-full flex justify-center items-center'>
-                        <RadioGroup
-                            value={selectedDelivery?.madvvc }
-                            onValueChange={(value) => {
-                                const ship = delivery.find((d) => d.madvvc === value);
-                                handleDeliveryChange(ship);
-                            }}
-                            className="space-y-3 w-1/2 "
-                        >
-                            {delivery.map((ship) => (
-                                <div
-                                    key={ship.madvvc}
-                                    className={`flex items-center gap-3 px-3 rounded-2xl border ${selectedDelivery?.madvvc === ship.madvvc ? 'border-pink-500 bg-pink-50' : 'border-gray-300'}`}
-                                >
-                                    <RadioGroupItem value={ship.madvvc} id={ship.madvvc} className="h-0.5 w-0.5" />
-                                    <label htmlFor={ship.madvvc} className="text-sm w-full h-full flex justify-between py-3 text-gray-800 cursor-pointer">
-                                        <span className="font-semibold">{ship.tendvvc}</span> - <span className="font-semibold">{ship.songayvanchuyen}</span> - <span className="font-semibold mr-2.5">Phí vận chuyển: {formatCurrency(ship.phivanchuyen)}/km</span>
-                                    </label>
-                                </div>
-                            ))}
-                        </RadioGroup>
+                            <RadioGroup
+                                value={selectedDelivery?.madvvc}
+                                onValueChange={(value) => {
+                                    const ship = delivery.find((d) => d.madvvc === value);
+                                    handleDeliveryChange(ship);
+                                }}
+                                className="space-y-3 w-1/2 "
+                            >
+                                {delivery.map((ship) => (
+                                    <div
+                                        key={ship.madvvc}
+                                        className={`flex items-center gap-3 px-3 rounded-2xl border ${selectedDelivery?.madvvc === ship.madvvc ? 'border-pink-500 bg-pink-50' : 'border-gray-300'}`}
+                                    >
+                                        <RadioGroupItem value={ship.madvvc} id={ship.madvvc} className="h-0.5 w-0.5" />
+                                        <label htmlFor={ship.madvvc} className="text-sm w-full h-full flex justify-between py-3 text-gray-800 cursor-pointer">
+                                            <span className="font-semibold">{ship.tendvvc}</span> - <span className="font-semibold">{ship.songayvanchuyen}</span> - <span className="font-semibold mr-2.5">Phí vận chuyển: {formatCurrency(ship.phivanchuyen)}/km</span>
+                                        </label>
+                                    </div>
+                                ))}
+                            </RadioGroup>
                         </div>
                     </div>
-                    
 
-                    <DeliveryMap setDistanceCart ={setDistance} selectedDelivery = {selectedDelivery} setFeeShip = {setFeeShip} formData ={formData}/>
+
+                    <DeliveryMap setDistanceCart={setDistance} selectedDelivery={selectedDelivery} setFeeShip={setFeeShip} formData={formData} />
 
                     <div className="p-4 border-t">
                         <div className="flex justify-between items-center">
                             <p className="text-sm font-medium">Tổng thanh toán ({cartItems.length} sản phẩm):</p>
-                            <p className="text-lg font-bold text-red-500">{formatCurrency(total +(feeShip || 0))}</p>
+                            <p className="text-lg font-bold text-red-500">{formatCurrency(total + (feeShip || 0))}</p>
                         </div>
                         <form onSubmit={handleSubmit} className='w-full flex items-center justify-center'>
                             <button className=" mt-4 bg-pink-400 text-white py-2 px-8 rounded-md hover:bg-pink-500 text-md">

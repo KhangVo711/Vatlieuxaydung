@@ -42,13 +42,28 @@ const deleteNSX = async (mansx) => {
 // SP
 const getAllProduct = async () => {
   const query = `
-      SELECT sp.*, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, lsp.tenloai, nsx.tennsx,
-             (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh
-      FROM sanpham sp
-      JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
-      JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
-      LEFT JOIN khuyenmai km ON sp.masp = km.masp
-    `;
+    SELECT 
+    sp.*, 
+    km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+    lsp.tenloai, nsx.tennsx,
+    (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
+    GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
+    GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
+    CASE 
+        WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia -- No variants, use base price
+        WHEN MAX(cb.gia) - MIN(cb.gia) <= 6000 AND MIN(cb.gia) >= 72000 AND MAX(cb.gia) <= 78000 
+            THEN CONCAT(FLOOR(MIN(cb.gia) / 10000) * 10000, ' +') -- e.g., 70000 + for 72000-78000 range
+        ELSE CONCAT('Từ ', MIN(cb.gia), ' đến ', MAX(cb.gia)) -- Full range for other cases
+    END AS gia_range
+FROM sanpham sp
+JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+LEFT JOIN khuyenmai km ON sp.masp = km.masp
+LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
+LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+GROUP BY sp.masp, sp.tensp, sp.gia, sp.soluongsp, sp.ttct, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+         lsp.tenloai, nsx.tennsx; 
+  `;
   const [rows] = await connectDB.execute(query);
   return rows;
 };
@@ -148,13 +163,18 @@ const getProduct5 = async () => {
 };
 const getProductOfCategory = async (maloai) => {
   const [rows] = await connectDB.execute(`
-      SELECT sp.*, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, lsp.tenloai, nsx.tennsx,
-             (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh
-      FROM sanpham sp
-      JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
-      JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
-      LEFT JOIN khuyenmai km ON sp.masp = km.masp
-      WHERE sp.maloai = ?
+    SELECT 
+      sp.*, 
+      km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+      lsp.tenloai, nsx.tennsx,
+      (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
+      cb.* -- Include variant attributes from cacbienthe
+    FROM sanpham sp
+    JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+    JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+    LEFT JOIN khuyenmai km ON sp.masp = km.masp
+    LEFT JOIN cacbienthe cb ON sp.masp = cb.masp -- Join with cacbienthe table
+    WHERE sp.maloai = ?
   `, [maloai]);
   return rows;
 };
@@ -171,19 +191,42 @@ const getVariants = async (masp) => {
 };
 
 
-const detailProduct = async (masp) => {
-  const query = `
-      SELECT sp.*, lsp.tenloai, nsx.tennsx, km.tenkm, km.km
-      FROM sanpham sp
-      JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
-      JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
-      LEFT JOIN khuyenmai km ON sp.masp = km.masp
-      WHERE sp.masp = ?
-    `;
-  const [rows] = await connectDB.execute(query, [masp]);
-  return rows[0];
+const detailProduct = async (masp, mabienthe = null) => {
+  let query = `
+    SELECT 
+      sp.*, 
+      lsp.tenloai, nsx.tennsx, km.tenkm, km.km,
+      km.thoigianbatdaukm, km.thoigianketthuckm,
+      ha.hinhanh
+    FROM sanpham sp
+    JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+    JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+    LEFT JOIN hinhanhsanpham ha ON sp.masp = ha.masp
+    LEFT JOIN khuyenmai km ON sp.masp = km.masp
+    WHERE sp.masp = ?
+  `;
+  const params = [masp];
+
+  if (mabienthe) {
+    query += ` AND EXISTS (SELECT 1 FROM cacbienthe cb WHERE cb.masp = sp.masp AND cb.mabienthe = ?)`;
+    params.push(mabienthe);
+  }
+
+  const [rows] = await connectDB.execute(query, params);
+  return rows.length > 0 ? rows[0] : null;
 };
 
+const getProductVariants = async (masp) => {
+  const query = `
+    SELECT cb.*, tb.thuoc_tinh, cb.soluongtonkho
+    FROM cacbienthe cb
+    LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+    
+    WHERE cb.masp = ?
+  `;
+  const [rows] = await connectDB.execute(query, [masp]);
+  return rows;
+};
 
 // Thêm sản phẩm
 const insertProducts = async (masp, tensp, maloai, ttct, mansx, loaibienthe, cobienthe, gia, soluongsp) => {
@@ -387,5 +430,5 @@ const getRecommendedProducts = async (maloai) => {
 };
 
 
-export default { getProduct_Hot8, getProductOfCategory, getVariants, getRecommendedProducts, getCategory, insertProductImages, updateVariants, deleteVariants, insertVariant, insertVariantProperty, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory, detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
+export default { getProduct_Hot8, getProductOfCategory, getVariants, getProductVariants, getRecommendedProducts, getCategory, insertProductImages, updateVariants, deleteVariants, insertVariant, insertVariantProperty, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory, detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
 

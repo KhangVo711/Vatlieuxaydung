@@ -4,9 +4,12 @@ import connectDB from "../configs/connectDB.js";
 const insertCart = async (madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong) => {
     await connectDB.execute("INSERT INTO `donhang` VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong]);
 }
-const insertDetailCart = async (madh, masp, soluongsanpham, km, dongia ) => {
-    await connectDB.execute("INSERT INTO `chitietdonhang` VALUES (?, ?, ?, ?, ?)", [madh, masp, soluongsanpham, km, dongia ]);
-}
+const insertDetailCart = async (madh, masp, mabienthe, soluongsanpham, km, dongia) => {
+  await connectDB.execute(
+    "INSERT INTO `chitietdonhang` (madh, masp, mabienthe, soluongsanpham, km, dongia, thanhtien) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    [madh, masp, mabienthe || null, soluongsanpham, km, dongia, soluongsanpham * dongia * (1 - (km || 0) / 100)]
+  );
+};
 const insertFormOD = async (maform, tenkh, sdt, diachi, email) => {
     await connectDB.execute("INSERT INTO `formdathang` VALUES (?, ?, ?, ?, ?)", [maform, tenkh, sdt, diachi, email]);
 }
@@ -22,21 +25,29 @@ const updateStatus = async (trangthai, madh ) => {
     await connectDB.execute("UPDATE `donhang` SET trangthai = ? WHERE madh = ?", [trangthai, madh]);
 }
 // // Update quantity
-const updateQuantity = async (masp, madh) => {
-    const query = `
+const updateQuantity = async (masp, mabienthe, madh, isAdd = false) => {
+  const query = mabienthe
+    ? `
+        UPDATE cacbienthe
+        INNER JOIN chitietdonhang ON cacbienthe.mabienthe = chitietdonhang.mabienthe
+        SET cacbienthe.soluongtonkho = cacbienthe.soluongtonkho ${isAdd ? '+' : '-'} chitietdonhang.soluongsanpham
+        WHERE chitietdonhang.masp = ? AND chitietdonhang.mabienthe = ? AND chitietdonhang.madh = ?;
+      `
+    : `
         UPDATE sanpham
         INNER JOIN chitietdonhang ON sanpham.masp = chitietdonhang.masp
-        SET sanpham.soluongsp = sanpham.soluongsp - chitietdonhang.soluongsanpham
-        WHERE chitietdonhang.masp = ? AND chitietdonhang.madh = ?;
-    `;
+        SET sanpham.soluongsp = sanpham.soluongsp ${isAdd ? '+' : '-'} chitietdonhang.soluongsanpham
+        WHERE chitietdonhang.masp = ? AND chitietdonhang.madh = ? AND chitietdonhang.mabienthe IS NULL;
+      `;
 
-    try {
-        await connectDB.execute(query, [masp, madh]);
-        console.log('Cập nhật số lượng sản phẩm thành công!');
-    } catch (error) {
-        console.error('Lỗi cập nhật số lượng:', error);
-    }
-}
+  try {
+    await connectDB.execute(query, mabienthe ? [masp, mabienthe, madh] : [masp, madh]);
+    console.log(`Cập nhật số lượng ${isAdd ? 'cộng' : 'trừ'} thành công!`);
+  } catch (error) {
+    console.error('Lỗi cập nhật số lượng:', error);
+    throw error;
+  }
+};
 
 const detailProductInOrder = async (madh) => {
     const [rows] = await connectDB.execute(`
