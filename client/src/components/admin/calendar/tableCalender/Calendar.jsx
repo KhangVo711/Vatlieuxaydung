@@ -31,24 +31,28 @@ export default function Calendar() {
   const [currentShift, setCurrentShift] = useState(null);
   const [viewShifts, setViewShifts] = useState([]);
   const [viewShiftType, setViewShiftType] = useState('');
+  const [viewMode, setViewMode] = useState('month'); // New state for view mode
+  const [selectedWeek, setSelectedWeek] = useState(null); // New state for selected week
 
   useEffect(() => {
-    getNoOfDays();
+    if (viewMode === 'month') {
+      getNoOfDays();
+    }
     fetchStaffList();
     fetchShifts();
-  }, [month, year]);
+  }, [month, year, viewMode]);
 
   // Chặn scroll khi modal mở
   useEffect(() => {
     if (openShiftModal || openEditModal || openViewModal) {
-      document.body.style.overflow = 'hidden'; // Chặn scroll trực tiếp qua style
-      document.body.style.height = '100vh'; // Giới hạn chiều cao body
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100vh';
     } else {
-      document.body.style.overflow = ''; // Khôi phục scroll
-      document.body.style.height = ''; // Xóa giới hạn chiều cao
+      document.body.style.overflow = '';
+      document.body.style.height = '';
     }
     return () => {
-      document.body.style.overflow = ''; // Cleanup khi unmount
+      document.body.style.overflow = '';
       document.body.style.height = '';
     };
   }, [openShiftModal, openEditModal, openViewModal]);
@@ -69,7 +73,6 @@ export default function Calendar() {
   const fetchShifts = async () => {
     try {
       const response = await axios.get('http://localhost:5001/shifts');
-      console.log('Dữ liệu ca làm việc từ CSDL:', response.data.shifts);
       setShifts(response.data.shifts);
     } catch (error) {
       console.error('Lỗi khi lấy danh sách ca làm:', error);
@@ -314,36 +317,35 @@ export default function Calendar() {
     { value: 'Tối', label: 'Tối (5:00 PM - 10:00 PM)' },
   ];
 
-// Tùy chỉnh giao diện react-select
-const customStyles = {
-  control: (provided) => ({
-    ...provided,
-    borderColor: '#d1d5db',
-    backgroundColor: '#f9fafb',
-    padding: '0.5px',
-    borderRadius: '0.2rem',
-    '&:hover': {
-      borderColor: '#f472b6',
-    },
-    boxShadow: 'none',
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected ? '#f472b6' : state.isFocused ? '#fce7f3' : 'white',
-    color: state.isSelected ? 'white' : '#374151',
-    '&:hover': {
-      backgroundColor: '#fce7f3',
-    },
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: '#374151',
-  }),
-  placeholder: (provided) => ({
-    ...provided,
-    color: '#9ca3af',
-  }),
-};
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      borderColor: '#d1d5db',
+      backgroundColor: '#f9fafb',
+      padding: '0.5px',
+      borderRadius: '0.2rem',
+      '&:hover': {
+        borderColor: '#f472b6',
+      },
+      boxShadow: 'none',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#f472b6' : state.isFocused ? '#fce7f3' : 'white',
+      color: state.isSelected ? 'white' : '#374151',
+      '&:hover': {
+        backgroundColor: '#fce7f3',
+      },
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: '#374151',
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: '#9ca3af',
+    }),
+  };
 
   const handleSuccess = () => {
     toast.success("Thành công!", {
@@ -369,102 +371,209 @@ const customStyles = {
     });
   };
 
+  // New function to handle weekly view
+  const showWeeklyView = (date) => {
+    setViewMode('week');
+    const selectedDate = new Date(year, month, date);
+    const weekStart = new Date(selectedDate);
+    const dayOfWeek = selectedDate.getDay();
+    weekStart.setDate(selectedDate.getDate() - dayOfWeek);
+    setSelectedWeek(weekStart);
+  };
+
+  // Function to get shifts for a specific date and shift type
+  const getShiftsForDateAndType = (date, type) => {
+    return shifts.filter(shift => {
+      const shiftDate = new Date(shift.giovaoca);
+      const shiftType = getShiftType(shift.giovaoca);
+      return isSameDate(shiftDate, date) && shiftType === type;
+    });
+  };
+
+  // Function to render weekly view
+  const renderWeeklyView = () => {
+    if (!selectedWeek) return null;
+    const weekDays = Array.from({ length: 7 }, (_, i) => {
+      const day = new Date(selectedWeek);
+      day.setDate(selectedWeek.getDate() + i);
+      return day;
+    });
+
+    return (
+      <div className="container mx-auto py-2 w-11/12">
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="flex items-center justify-between py-2 px-6">
+            <div>
+              <span className="text-lg font-bold text-gray-800">Tuần từ {weekDays[0].toLocaleDateString('vi-VN')}</span>
+            </div>
+            <button
+              className="bg-pink-500 hover:bg-pink-400 text-white font-semibold py-1.5 px-3 rounded-md"
+              onClick={() => setViewMode('month')}
+            >
+              Quay lại tháng
+            </button>
+          </div>
+          <div className="p-4 overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className="border p-2">Ca</th>
+                  {weekDays.map((day, index) => (
+                    <th key={index} className="border p-2 text-center">
+                      {DAYS[day.getDay()]}<br />
+                      {day.toLocaleDateString('vi-VN')}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {['Sáng', 'Chiều', 'Tối'].map((shiftType) => (
+                  <tr key={shiftType}>
+                    <td className="border p-2 font-bold">{shiftType}</td>
+                    {weekDays.map((day, index) => (
+                      <td key={index} className="border p-2">
+                        {getShiftsForDateAndType(day, shiftType).map((shift, i) => (
+                          <div key={i} className="mb-2">
+                            <p className="text-sm font-semibold">
+                              {new Date(shift.giovaoca).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(shift.gioraca).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </p>
+                            {shift.staff_names.map((name, j) => (
+                              <p key={j} className="text-xs text-gray-600">{name}</p>
+                            ))}
+                            <button
+                              onClick={() => {
+                                setViewMode('month');
+                                setMonth(day.getMonth());
+                                setYear(day.getFullYear());
+                                showEditModal(shift);
+                              }}
+                              className="text-pink-500 text-xs hover:underline"
+                            >
+                              Chỉnh sửa
+                            </button>
+                          </div>
+                        ))}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <ToastContainer />
-
       <div className="antialiased sans-serif border-l h-screen bg-gray-50">
-        <div className="container mx-auto py-2 w-11/12">
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="flex items-center justify-between py-2 px-6">
-              <div>
-                <span className="text-lg font-bold text-gray-800">{MONTH_NAMES[month]}</span>
-                <span className="ml-1 text-lg text-gray-600 font-normal">năm {year}</span>
-              </div>
-              <div className="border rounded-lg px-1" style={{ paddingTop: '2px' }}>
-                <button
-                  type="button"
-                  className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center ${month === 0 ? 'cursor-not-allowed opacity-25' : ''}`}
-                  disabled={month === 0}
-                  onClick={() => { setMonth(month - 1); }}
-                >
-                  <svg className="h-6 w-6 text-gray-500 inline-flex leading-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <div className="border-r inline-flex h-6"></div>
-                <button
-                  type="button"
-                  className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex items-center cursor-pointer hover:bg-gray-200 p-1 ${month === 11 ? 'cursor-not-allowed opacity-25' : ''}`}
-                  disabled={month === 11}
-                  onClick={() => { setMonth(month + 1); }}
-                >
-                  <svg className="h-6 w-6 text-gray-500 inline-flex leading-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div className="-mx-1 -mb-1">
-              <div className="flex flex-wrap" style={{ marginBottom: '-40px' }}>
-                {DAYS.map((day) => (
-                  <div key={day} style={{ width: '14.26%' }} className="px-2 py-2">
-                    <div className="text-gray-600 text-sm uppercase tracking-wide font-bold text-center">
-                      {day}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-wrap border-t border-l">
-                {blankDays.map((_, i) => (
-                  <div
-                    key={`blank-${i}`}
-                    style={{ width: '14.28%', height: '150px' }}
-                    className="text-center border-r border-b px-4 pt-2"
-                  ></div>
-                ))}
-                {noOfDays.map((date) => (
-                  <div
-                    key={date}
-                    style={{ width: '14.28%', height: '150px' }}
-                    className="px-4 pt-2 border-r border-b relative"
+        {viewMode === 'month' ? (
+          <div className="container mx-auto py-2 w-11/12">
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="flex items-center justify-between py-2 px-6">
+                <div>
+                  <span className="text-lg font-bold text-gray-800">{MONTH_NAMES[month]}</span>
+                  <span className="ml-1 text-lg text-gray-600 font-normal">năm {year}</span>
+                </div>
+                <div className="border rounded-lg px-1" style={{ paddingTop: '2px' }}>
+                  <button
+                    type="button"
+                    className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center ${month === 0 ? 'cursor-not-allowed opacity-25' : ''}`}
+                    disabled={month === 0}
+                    onClick={() => setMonth(month - 1)}
                   >
+                    <svg className="h-6 w-6 text-gray-500 inline-flex leading-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <div className="border-r inline-flex h-6"></div>
+                  <button
+                    type="button"
+                    className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex items-center cursor-pointer hover:bg-gray-200 p-1 ${month === 11 ? 'cursor-not-allowed opacity-25' : ''}`}
+                    disabled={month === 11}
+                    onClick={() => setMonth(month + 1)}
+                  >
+                    <svg className="h-6 w-6 text-gray-500 inline-flex leading-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div className="-mx-1 -mb-1">
+                <div className="flex flex-wrap" style={{ marginBottom: '-40px' }}>
+                  {DAYS.map((day) => (
+                    <div key={day} style={{ width: '14.26%' }} className="px-2 py-2">
+                      <div className="text-gray-600 text-sm uppercase tracking-wide font-bold text-center">
+                        {day}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap border-t border-l">
+                  {blankDays.map((_, i) => (
                     <div
-                      onClick={() => showShiftModal(date)}
-                      className={`inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 ${
-                        isToday(date) ? 'bg-pink-500 text-white' : 'text-gray-700 hover:bg-pink-200'
-                      }`}
+                      key={`blank-${i}`}
+                      style={{ width: '14.28%', height: '150px' }}
+                      className="text-center border-r border-b px-4 pt-2"
+                    ></div>
+                  ))}
+                  {noOfDays.map((date) => (
+                    <div
+                      key={date}
+                      style={{ width: '14.28%', height: '150px' }}
+                      className="px-4 pt-2 border-r border-b relative"
                     >
-                      {date}
+                      <div
+                        onClick={() => showShiftModal(date)}
+                        className={`inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 ${
+                          isToday(date) ? 'bg-pink-500 text-white' : 'text-gray-700 hover:bg-pink-200'
+                        }`}
+                      >
+                        {date}
+                      </div>
+                      <div className="mt-2 flex flex-col space-y-1">
+                        {['Sáng', 'Chiều', 'Tối'].map((type) => {
+                          const shift = getShiftsForDateAndType(new Date(year, month, date), type);
+                          return (
+                            <div key={type}>
+                              <button
+                                onClick={() => showViewModal(date, type)}
+                                className={`text-xs px-2 py-1 rounded w-full text-left ${
+                                  type === 'Sáng' ? 'bg-blue-100 text-blue-800 hover:bg-blue-200' :
+                                  type === 'Chiều' ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' :
+                                  'bg-purple-100 text-purple-800 hover:bg-purple-200'
+                                }`}
+                              >
+                                {type}
+                              </button>
+                              {shift.length > 0 && (
+                                <div className="text-xs text-gray-600 mt-1 truncate">
+                                  {shift[0].staff_names.join(', ')}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <button
+                        onClick={() => showWeeklyView(date)}
+                        className="absolute bottom-1 right-1 text-xs text-pink-500 hover:underline"
+                      >
+                        Xem tuần
+                      </button>
                     </div>
-                    <div className="mt-2 flex flex-col space-y-1">
-                      <button
-                        onClick={() => showViewModal(date, 'Sáng')}
-                        className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded hover:bg-blue-200"
-                      >
-                        Sáng
-                      </button>
-                      <button
-                        onClick={() => showViewModal(date, 'Chiều')}
-                        className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded hover:bg-yellow-200"
-                      >
-                        Chiều
-                      </button>
-                      <button
-                        onClick={() => showViewModal(date, 'Tối')}
-                        className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded hover:bg-purple-200"
-                      >
-                        Tối
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          renderWeeklyView()
+        )}
 
         {openShiftModal && (
           <div className="fixed h-screen inset-0 z-20 flex items-center justify-center bg-black bg-opacity-10">

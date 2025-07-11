@@ -164,9 +164,9 @@ export default function AllProduct() {
               </div>
               <div className="pt-4 px-4 w-full flex items-center justify-between">
                 <p><strong>{product.tensp}</strong></p>
-                <button type="button" onClick={(e) => handleAddToCart(product, e)}>
+                {/* <button type="button" onClick={(e) => handleAddToCart(product, e)}>
                   <PlusCircleIcon className="h-7 w-7 text-gray-600 hover:scale-105 cursor-pointer" />
-                </button>
+                </button> */}
               </div>
               <div className="flex w-full px-4 justify-start items-center">
                 <p className={`${product.tenkm ? 'line-through' : null} mr-5`}>
