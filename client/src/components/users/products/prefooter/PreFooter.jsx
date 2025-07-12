@@ -9,14 +9,15 @@ import 'swiper/css/navigation';
 import { formatCurrency } from '../../../../utils/currency';
 import { Context } from '../../../../components/Context';
 
-const PreFooter = ({ selectedProduct}) => {
-    const [products, setProducts] = useState([]);
-  
+const PreFooter = ({ selectedProduct }) => {
+  const [products, setProducts] = useState([]);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productImages, setProductImages] = useState([]);
   const [selectedProductModal, setSelectedProductModal] = useState(null);
+  const [variants, setVariants] = useState([]);
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const [error, setError] = useState(null);
   const { onAddToCart } = useContext(Context);
 
@@ -67,6 +68,9 @@ const PreFooter = ({ selectedProduct}) => {
       );
       setSelectedProductModal(response.data.dataProduct);
       setProductImages(response.data.images);
+      setVariants(response.data.variants || []);
+      const firstAvailableVariant = response.data.variants?.find(v => v.soluongtonkho > 0) || response.data.variants?.[0] || null;
+      setSelectedVariant(firstAvailableVariant);
       setIsModalOpen(true);
     } catch (error) {
       console.error('Error fetching product details:', error);
@@ -80,6 +84,8 @@ const PreFooter = ({ selectedProduct}) => {
         setIsModalOpen(false);
         setSelectedProductModal(null);
         setProductImages([]);
+        setVariants([]);
+        setSelectedVariant(null);
         setTimeout(() => fetchProductDetails(product), 300);
       } else {
         fetchProductDetails(product);
@@ -88,35 +94,39 @@ const PreFooter = ({ selectedProduct}) => {
     [isModalOpen]
   );
 
+  const handleAddCartSelect = () => {
+    if (!selectedVariant && variants.length > 0) return;
+    const productToAdd = {
+      masp: selectedProductModal.masp,
+      tensp: selectedProductModal.tensp,
+      gia: selectedVariant ? selectedVariant.gia : selectedProductModal.gia,
+      hinhanh: selectedProductModal.hinhanh,
+      maloai: selectedProductModal.maloai,
+      mansx: selectedProductModal.mansx,
+      soluong: 1,
+      soluongsp: selectedVariant ? selectedVariant.soluongtonkho : selectedProductModal.soluongsp,
+      tenloai: selectedProductModal.tenloai,
+      tennsx: selectedProductModal.tennsx,
+      ttct: selectedProductModal.ttct,
+      km: selectedProductModal.km,
+      makm: selectedProductModal.makm,
+      tenkm: selectedProductModal.tenkm,
+      thoigianbatdaukm: selectedProductModal.thoigianbatdaukm,
+      thoigianketthuckm: selectedProductModal.thoigianketthuckm,
+      ...(selectedVariant && selectedVariant.mabienthe && { mabienthe: selectedVariant.mabienthe }),
+      ...(selectedVariant && selectedVariant.thuoc_tinh && { thuoctinh: selectedVariant.thuoc_tinh }),
+    };
+    onAddToCart(productToAdd);
+    closeModal();
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedProductModal(null);
     setProductImages([]);
+    setVariants([]);
+    setSelectedVariant(null);
   };
-
-  const handleAddCartSelect = (product) => {
-    const fullProduct = products.find((p) => p.masp === product.masp) || product;
-    const productToAdd = {
-      masp: fullProduct.masp,
-      tensp: fullProduct.tensp,
-      gia: fullProduct.gia,
-      hinhanh: fullProduct.hinhanh,
-      maloai: fullProduct.maloai,
-      mansx: fullProduct.mansx,
-      soluong: 1,
-      soluongsp: fullProduct.soluongsp,
-      tenloai: fullProduct.tenloai,
-      tennsx: fullProduct.tennsx,
-      ttct: fullProduct.ttct,
-      km: fullProduct.km,
-      makm: fullProduct.makm,
-      tenkm: fullProduct.tenkm,
-      thoigianbatdaukm: fullProduct.thoigianbatdaukm,
-      thoigianketthuckm: fullProduct.thoigianketthuckm,
-    };
-    onAddToCart(productToAdd);
-    closeModal();
-    };
 
   useEffect(() => {
     document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
@@ -125,67 +135,82 @@ const PreFooter = ({ selectedProduct}) => {
 
   const features = [
     { icon: <Truck className="w-8 h-8 text-pink-400" />, title: "Vận chuyển miễn phí", description: "Miễn phí giao hàng cho đơn hàng trên 2.000.000đ" },
-    { icon: <CreditCard className="w-8 h-8 text-pink-400" />, title: "Thanh toán an toàn", description: "Nhiều phương thức thanh toán bảo mật" },
+    { icon: <CreditCard className="w-8 h-8 text-pink-400" />, title: "Thanh toán an toàn", description: "Nhà nhiều phương thức thanh toán bảo mật" },
     { icon: <HelpCircle className="w-8 h-8 text-pink-400" />, title: "Hỗ trợ 24/7", description: "Luôn sẵn sàng hỗ trợ bạn mọi lúc" },
     { icon: <Phone className="w-8 h-8 text-pink-400" />, title: "Đặt hàng qua điện thoại", description: "Gọi ngay: 1900 1234 567" },
   ];
 
   return (
     <div className="py-12 mt-3">
-    {recommendedProducts.length > 0 ? (
-
-      <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-bold mb-2">Sản phẩm tương tự</h2>
-        <p className="text-gray-600 mb-6">Dựa trên {"sản phẩm bạn vừa xem"}</p>
-        {error && <p className="text-red-500">{error}</p>}
-        {isLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div key={item} className="bg-white rounded-lg overflow-hidden shadow-sm">
-                <div className="aspect-square bg-gray-200 animate-pulse"></div>
-                <div className="p-3">
-                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
-                  <div className="h-4 w-1/2 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : recommendedProducts.length === 0 ? (
-          <p className="text-gray-500">Không có sản phẩm tương tự nào.</p>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {recommendedProducts.map((product) => (
-              <div
-                key={product.masp}
-                className="bg-white rounded-lg overflow-hidden hover:shadow-xl shadow-md transition-shadow duration-300"
-              >
-                <div className="aspect-square bg-gray-100">
-                  <img
-                    src={`http://localhost:5001/uploads/${product.masp}/${product.hinhanh}`}
-                    alt={product.tensp}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-3">
-                  <div className="text-xs text-gray-500 mb-1">{product.tennsx}</div>
-                  <h3 className="font-medium text-sm truncate">{product.tensp}</h3>
-                  <div className="flex items-center justify-between mt-2">
-                    <p className="text-gray-800 font-semibold mt-1">{formatCurrency(product.gia)}</p>
-                    <button
-                      onClick={() => handleViewProductClick(product)}
-                      className="bg-pink-400 text-white px-0.5 py-0.5 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
-                      aria-label={`View details of ${product.tensp}`}
-                    >
-                      Chi tiết
-                    </button>
+      {recommendedProducts.length > 0 && (
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl font-bold mb-2">Sản phẩm tương tự</h2>
+          <p className="text-gray-600 mb-6">Dựa trên {"sản phẩm bạn vừa xem"}</p>
+          {error && <p className="text-red-500">{error}</p>}
+          {isLoading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              {[1, 2, 3, 4, 5, 6].map((item) => (
+                <div key={item} className="bg-white rounded-lg overflow-hidden shadow-sm">
+                  <div className="aspect-square bg-gray-200 animate-pulse"></div>
+                  <div className="p-3">
+                    <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                    <div className="h-4 w-1/2 bg-gray-200 rounded animate-pulse"></div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    ): null}
+              ))}
+            </div>
+          ) : recommendedProducts.length === 0 ? (
+            <p className="text-gray-500">Không có sản phẩm tương tự nào.</p>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              {recommendedProducts.map((product) => (
+                <div
+                  key={product.masp}
+                  className="bg-white rounded-lg overflow-hidden hover:shadow-xl shadow-md transition-shadow duration-300"
+                >
+                  <div className="aspect-square bg-gray-100">
+                    <img
+                      src={`http://localhost:5001/uploads/${product.masp}/${product.hinhanh}`}
+                      alt={product.tensp}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="py-3 flex justify-between px-2">
+                    <div>
+                    <div className="text-xs text-gray-500 mb-1">{product.tennsx}</div>
+                    <h3 className="font-medium text-sm truncate">{product.tensp}</h3>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      {/* <p className="text-gray-800 font-semibold mt-1">
+                        {product.tenkm && product.km ? (
+                          <span className="line-through mr-2">{product.gia_range ? formatCurrency(product.gia_range) : product.gia_range}</span>
+                        ) : null}
+                        
+                        {product.km ? (
+                          <span className="text-red-600 font-semibold ml-2">
+                            {product.gia_range && product.gia_range.includes('+')
+                              ? `${formatCurrency(parseInt(product.gia_range.split(' ')[0]) * (1 - product.km / 100))} +`
+                              : product.gia_range
+                                ? `${formatCurrency(parseInt(product.gia_range.split(' đến ')[0].replace('Từ ', '')) * (1 - product.km / 100))} đến ${formatCurrency(parseInt(product.gia_range.split(' đến ')[1]) * (1 - product.km / 100))}`
+                                : formatCurrency(product.gia - (product.gia * (product.km / 100)))}
+                          </span>
+                        ) : null}
+                      </p> */}
+                      <button
+                        onClick={() => handleViewProductClick(product)}
+                        className="bg-pink-400 text-white px-0.5 py-0.5 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
+                        aria-label={`View details of ${product.tensp}`}
+                      >
+                        Chi tiết
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       <div className="container mx-auto px-4 mt-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => (
@@ -243,7 +268,7 @@ const PreFooter = ({ selectedProduct}) => {
                   <div>
                     <p className="text-md font-semibold flex text-gray-800 mb-2">
                       <span className="font-bold mr-2">Tình trạng:</span>
-                      {selectedProductModal.soluongsp > 0 ? (
+                      {(selectedVariant?.soluongtonkho || selectedProductModal.soluongsp) > 0 ? (
                         <p className="text-gray-700 font-semibold">Còn hàng</p>
                       ) : (
                         <p className="text-red-600 font-semibold">Hết hàng</p>
@@ -254,17 +279,43 @@ const PreFooter = ({ selectedProduct}) => {
                     <p className="text-md font-semibold flex text-gray-800 mb-2">
                       <span className="font-bold mr-2">Giá:</span>
                       <p className={`${selectedProductModal.tenkm ? 'line-through' : null} mr-3`}>
-                        {formatCurrency(selectedProductModal.gia)}
+                        {selectedVariant ? formatCurrency(selectedVariant.gia) : 
+                          selectedProductModal.gia_range && selectedProductModal.gia_range.includes('+') 
+                            ? formatCurrency(selectedProductModal.gia_range.split(' ')[0]) + ' +'
+                            : selectedProductModal.gia_range ? selectedProductModal.gia_range : formatCurrency(selectedProductModal.gia)}
                       </p>
                       {selectedProductModal.km ? (
                         <p className="text-red-600 font-semibold">
-                          {formatCurrency(selectedProductModal.gia - selectedProductModal.gia * (selectedProductModal.km / 100))}
+                          {selectedVariant ? formatCurrency(selectedVariant.gia * (1 - selectedProductModal.km / 100)) :
+                            selectedProductModal.gia_range && selectedProductModal.gia_range.includes('+') 
+                              ? `Từ ${formatCurrency(parseInt(selectedProductModal.gia_range.split(' ')[0]) * (1 - selectedProductModal.km / 100))} +`
+                              : selectedProductModal.gia_range 
+                                ? `Từ ${formatCurrency(parseInt(selectedProductModal.gia_range.split(' đến ')[0].replace('Từ ', '')) * (1 - selectedProductModal.km / 100))} đến ${formatCurrency(parseInt(selectedProductModal.gia_range.split(' đến ')[1]) * (1 - selectedProductModal.km / 100))}`
+                                : formatCurrency(selectedProductModal.gia - (selectedProductModal.gia * (selectedProductModal.km / 100)))
+                          }
                         </p>
                       ) : null}
                     </p>
                   </div>
                 </div>
               </div>
+              {variants.length > 0 && (
+                <div className="mb-4">
+                  <p className="font-bold text-sm mb-2">{selectedProductModal.loaibienthe}:</p>
+                  <div className="grid grid-cols-4 gap-3">
+                    {variants.map(variant => (
+                      <button
+                        key={variant.mabienthe}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`py-1 text-sm border rounded ${selectedVariant?.mabienthe === variant.mabienthe ? 'bg-pink-500 text-white' : 'bg-gray-200'} ${variant.soluongtonkho === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={variant.soluongtonkho === 0}
+                      >
+                        {variant.thuoc_tinh}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <p className="text-gray-600 text-sm">{selectedProductModal.ttct}</p>
               <div className="mt-16 flex justify-center space-x-8">
                 <button
@@ -274,9 +325,10 @@ const PreFooter = ({ selectedProduct}) => {
                   Đóng
                 </button>
                 <button
-                  onClick={() => handleAddCartSelect(selectedProductModal)}
+                  onClick={handleAddCartSelect}
                   className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
                   aria-label={`Add ${selectedProductModal.tensp} to cart`}
+                  disabled={!selectedVariant && variants.length > 0 || (selectedVariant?.soluongtonkho === 0)}
                 >
                   Mua ngay
                 </button>
@@ -286,8 +338,7 @@ const PreFooter = ({ selectedProduct}) => {
         )}
       </ReactModal>
     </div>
-
-)
+  );
 };
 
 export default PreFooter;

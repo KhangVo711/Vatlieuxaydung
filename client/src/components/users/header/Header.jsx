@@ -574,14 +574,14 @@ const products = [
                 type="text"
                 id="fullname_inf"
                 name='fullname'
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
                 placeholder='Họ và tên'
                 value={formData.fullname}
                 onChange={handleChange}
               />
             ) : (
               <p
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400">
                 {isData.fullname}
               </p>
             )}
@@ -614,13 +614,13 @@ const products = [
                 type="text"
                 id='phone_inf'
                 name='phone'
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
                 placeholder='Số điện thoại'
                 value={formData.phone}
                 onChange={handleChange}
               />) : (
               <p
-                className={`w-full p-2 border ${!isData.phone ? 'border-red-500 text-red-400' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}>
+                className={`w-full p-2 border ${!isData.phone ? 'border-red-500 text-red-400' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500`}>
                 {!isData.phone ? 'Chưa cập nhật' : isData.phone}
               </p>
             )}
@@ -633,14 +633,14 @@ const products = [
                 type="text"
                 id='address_inf'
                 name='address'
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
                 placeholder='Địa chỉ'
                 value={formData.address}
                 onChange={handleChange}
               />
             ) : (
               <p
-                className={`w-full p-2 border ${!isData.address ? 'border-red-500 text-red-400' : 'border-gray-300'} border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}>
+                className={`w-full p-2 border ${!isData.address ? 'border-red-500 text-red-400' : 'border-gray-300'} border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500`}>
                 {!isData.address ? 'Chưa cập nhật' : isData.address}
               </p>
             )}
@@ -649,13 +649,13 @@ const products = [
           {modalUpdate ? (
             <button
               type="submit"
-              className="w-full py-2 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="w-full py-2 mt-4 bg-pink-400 text-white rounded-md hover:bg-pink-500 trasition duration-150 ease-in-out"
             >
               Lưu
             </button>) : (
             <div
 
-              className="w-full py-2 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="w-full py-2 mt-4 bg-pink-400 text-white rounded-md hover:bg-pink-500 transition duration-150 ease-in-out"
               onClick={() => setModalUpdate(true)}
             >
               <p className='text-center'>Cập nhật</p>

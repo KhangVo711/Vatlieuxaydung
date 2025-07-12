@@ -14,7 +14,6 @@ import PreFooter from '../prefooter/PreFooter';
 import CosmeticsProductCard from '../cosmeticsproductcard/CosmeticsProductCard';
 import { useLocation } from 'react-router-dom';
 
-// Bind modal to app element (required for accessibility)
 ReactModal.setAppElement('#root');
 
 export default function AllProduct() {
@@ -135,6 +134,10 @@ export default function AllProduct() {
     setVariants([]);
     setSelectedVariant(null);
   };
+useEffect(() => {
+    document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
+    return () => { document.body.style.overflow = 'auto'; };
+  }, [isModalOpen]);
 
   const filteredProducts = products.filter(product =>
     product.tensp.toLowerCase().includes(searchQuery.toLowerCase())
@@ -170,16 +173,16 @@ export default function AllProduct() {
               </div>
               <div className="flex w-full px-4 justify-start items-center">
                 <p className={`${product.tenkm ? 'line-through' : null} mr-5`}>
-                  {product.gia_range && product.gia_range.includes('+') 
-                    ? formatCurrency(product.gia_range.split(' ')[0]) + ' +'
+                  {product.gia_range && product.gia_range
+                    ? formatCurrency(product.gia_range) + ' +'
                     : product.gia_range ? formatCurrency(product.gia_range) : formatCurrency(product.gia)}
                 </p>
                 {product.km ? (
                   <p className="text-red-600 font-semibold">
-                    {product.gia_range && product.gia_range.includes('+') 
-                      ? `Từ ${formatCurrency(parseInt(product.gia_range.split(' ')[0]) * (1 - product.km / 100))} +`
+                    {product.gia && product.gia 
+                      ? `${formatCurrency(parseInt(product.gia) * (1 - product.km / 100))}`
                       : product.gia_range 
-                        ? `Từ ${formatCurrency(parseInt(product.gia_range.split(' đến ')[0].replace('Từ ', '')) * (1 - product.km / 100))} đến ${formatCurrency(parseInt(product.gia_range.split(' đến ')[1]) * (1 - product.km / 100))}`
+                        ? `Chỉ từ ${formatCurrency(parseInt(product.gia_range) * (1 - product.km / 100))} +`
                         : formatCurrency(product.gia - (product.gia * (product.km / 100)))
                     }
                   </p>
@@ -251,17 +254,17 @@ export default function AllProduct() {
                         <span className="font-bold mr-2">Giá:</span>
                         <p className={`${selectedProduct.tenkm ? 'line-through' : null} mr-3`}>
                           {selectedVariant ? formatCurrency(selectedVariant.gia) : 
-                            selectedProduct.gia_range && selectedProduct.gia_range.includes('+') 
-                              ? formatCurrency(selectedProduct.gia_range.split(' ')[0]) + ' +'
+                            selectedProduct.gia_range && selectedProduct.gia_range 
+                              ? formatCurrency(selectedProduct.gia_range) + ' +'
                               : selectedProduct.gia_range ? selectedProduct.gia_range : formatCurrency(selectedProduct.gia)}
                         </p>
                         {selectedProduct.km ? (
                           <p className="text-red-600 font-semibold">
                             {selectedVariant ? formatCurrency(selectedVariant.gia * (1 - selectedProduct.km / 100)) :
-                              selectedProduct.gia_range && selectedProduct.gia_range.includes('+') 
-                                ? `Từ ${formatCurrency(parseInt(selectedProduct.gia_range.split(' ')[0]) * (1 - selectedProduct.km / 100))} +`
+                              selectedProduct.gia_range && selectedProduct.gia_range 
+                                ? `${formatCurrency(parseInt(selectedProduct.gia_range) * (1 - selectedProduct.km / 100))} +`
                                 : selectedProduct.gia_range 
-                                  ? `Từ ${formatCurrency(parseInt(selectedProduct.gia_range.split(' đến ')[0].replace('Từ ', '')) * (1 - selectedProduct.km / 100))} đến ${formatCurrency(parseInt(selectedProduct.gia_range.split(' đến ')[1]) * (1 - selectedProduct.km / 100))}`
+                                  ? `${formatCurrency(parseInt(selectedProduct.gia_range) * (1 - selectedProduct.km / 100))}}`
                                   : formatCurrency(selectedProduct.gia - (selectedProduct.gia * (selectedProduct.km / 100)))
                             }
                           </p>

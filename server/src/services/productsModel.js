@@ -43,26 +43,24 @@ const deleteNSX = async (mansx) => {
 const getAllProduct = async () => {
   const query = `
     SELECT 
-    sp.*, 
-    km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
-    lsp.tenloai, nsx.tennsx,
-    (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
-    GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
-    GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
-    CASE 
-        WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia -- No variants, use base price
-        WHEN MAX(cb.gia) - MIN(cb.gia) <= 6000 AND MIN(cb.gia) >= 72000 AND MAX(cb.gia) <= 78000 
-            THEN CONCAT(FLOOR(MIN(cb.gia) / 10000) * 10000, ' +') -- e.g., 70000 + for 72000-78000 range
-        ELSE CONCAT('Từ ', MIN(cb.gia), ' đến ', MAX(cb.gia)) -- Full range for other cases
-    END AS gia_range
-FROM sanpham sp
-JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
-JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
-LEFT JOIN khuyenmai km ON sp.masp = km.masp
-LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
-LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
-GROUP BY sp.masp, sp.tensp, sp.gia, sp.soluongsp, sp.ttct, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
-         lsp.tenloai, nsx.tennsx; 
+      sp.*, 
+      km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+      lsp.tenloai, nsx.tennsx,
+      (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
+      GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
+      GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
+      CASE 
+          WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia -- No variants, use base price
+          ELSE MIN(cb.gia) -- Use the minimum price when there are variants
+      END AS gia_range
+    FROM sanpham sp
+    JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+    JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+    LEFT JOIN khuyenmai km ON sp.masp = km.masp
+    LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
+    LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+    GROUP BY sp.masp, sp.tensp, sp.gia, sp.soluongsp, sp.ttct, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+             lsp.tenloai, nsx.tennsx; 
   `;
   const [rows] = await connectDB.execute(query);
   return rows;
@@ -74,60 +72,74 @@ const getProductById = async (masp) => {
 
 const getProduct8 = async () => {
   const [rows] = await connectDB.execute(`
-          SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh
-          FROM sanpham s
-          LEFT JOIN khuyenmai k ON s.masp = k.masp
-          LEFT JOIN (
-              SELECT masp, hinhanh,
-                     ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
-              FROM hinhanhsanpham
-          ) h ON s.masp = h.masp AND h.rn = 1
-          WHERE k.masp IS NULL
-          ORDER BY s.masp
-          LIMIT 8
-      `);
+    SELECT 
+      s.masp, s.tensp, s.maloai, s.mansx, s.gia, s.soluongsp, s.ttct,
+      h.hinhanh,
+      lsp.tenloai, nsx.tennsx,
+      km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km,
+      GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
+      GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
+      CASE 
+        WHEN COUNT(cb.mabienthe) = 0 THEN s.gia
+        WHEN MAX(cb.gia) - MIN(cb.gia) <= 6000 AND MIN(cb.gia) >= 72000 AND MAX(cb.gia) <= 78000 
+          THEN CONCAT(FLOOR(MIN(cb.gia) / 10000) * 10000, ' +')
+        ELSE CONCAT('Từ ', MIN(cb.gia), ' đến ', MAX(cb.gia))
+      END AS gia_range,
+      MAX(cb.soluongtonkho) AS max_soluongtonkho
+    FROM sanpham s
+    JOIN loaisanpham lsp ON s.maloai = lsp.maloai
+    JOIN nhasanxuat nsx ON s.mansx = nsx.mansx
+    LEFT JOIN khuyenmai km ON s.masp = km.masp
+    LEFT JOIN cacbienthe cb ON s.masp = cb.masp
+    LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+    LEFT JOIN (
+      SELECT masp, hinhanh,
+             ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
+      FROM hinhanhsanpham
+    ) h ON s.masp = h.masp AND h.rn = 1
+    WHERE km.masp IS NULL OR (km.thoigianketthuckm > NOW() AND km.thoigianbatdaukm <= NOW())
+    GROUP BY s.masp, s.tensp, s.gia, s.soluongsp, s.ttct, lsp.tenloai, nsx.tennsx, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km
+    ORDER BY s.masp
+    LIMIT 8
+  `);
   return rows;
 };
 const getProduct_Hot8 = async () => {
   const [rows] = await connectDB.execute(`
-        SELECT 
-            s.masp, 
-            s.tensp, 
-            s.maloai, 
-            s.soluongsp, 
-            s.gia, 
-            s.mansx, 
-            h.hinhanh,
-            COALESCE(SUM(ct.soluongsanpham), 0) as total_sold,
-            k.makm, 
-            k.tenkm, 
-            k.km, 
-            k.thoigianbatdaukm, 
-            k.thoigianketthuckm
-        FROM sanpham s
-        LEFT JOIN (
-            SELECT masp, hinhanh,
-                   ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
-            FROM hinhanhsanpham
-        ) h ON s.masp = h.masp AND h.rn = 1
-        LEFT JOIN khuyenmai k ON s.masp = k.masp
-        LEFT JOIN chitietdonhang ct ON s.masp = ct.masp
-        GROUP BY 
-            s.masp, 
-            s.tensp, 
-            s.maloai, 
-            s.soluongsp, 
-            s.gia, 
-            s.mansx, 
-            h.hinhanh, 
-            k.makm, 
-            k.tenkm, 
-            k.km, 
-            k.thoigianbatdaukm, 
-            k.thoigianketthuckm
-        ORDER BY total_sold DESC
-        LIMIT 8
-    `);
+    SELECT 
+      s.masp, s.tensp, s.maloai, s.mansx, s.gia, s.soluongsp, s.ttct,
+      lsp.tenloai, nsx.tennsx,
+      h.hinhanh,
+      COALESCE(SUM(CASE WHEN dh.trangthai = 'Đã giao hàng' THEN ct.soluongsanpham ELSE 0 END), 0) as total_sold,
+      km.makm, km.tenkm, km.km, km.thoigianbatdaukm, km.thoigianketthuckm,
+      GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
+      GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
+      CASE 
+        WHEN COUNT(cb.mabienthe) = 0 THEN s.gia
+        WHEN MAX(cb.gia) - MIN(cb.gia) <= 6000 AND MIN(cb.gia) >= 72000 AND MAX(cb.gia) <= 78000 
+          THEN CONCAT(FLOOR(MIN(cb.gia) / 10000) * 10000, ' +')
+        ELSE CONCAT('Từ ', MIN(cb.gia), ' đến ', MAX(cb.gia))
+      END AS gia_range,
+      MAX(cb.soluongtonkho) AS max_soluongtonkho
+    FROM sanpham s
+    JOIN loaisanpham lsp ON s.maloai = lsp.maloai
+    JOIN nhasanxuat nsx ON s.mansx = nsx.mansx
+    LEFT JOIN (
+      SELECT masp, hinhanh,
+             ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
+      FROM hinhanhsanpham
+    ) h ON s.masp = h.masp AND h.rn = 1
+    LEFT JOIN khuyenmai km ON s.masp = km.masp AND km.thoigianketthuckm > NOW() AND km.thoigianbatdaukm <= NOW()
+    LEFT JOIN chitietdonhang ct ON s.masp = ct.masp
+    LEFT JOIN donhang dh ON ct.madh = dh.madh
+    LEFT JOIN cacbienthe cb ON s.masp = cb.masp
+    LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+    GROUP BY 
+      s.masp, s.tensp, s.maloai, s.mansx, s.gia, s.soluongsp, s.ttct,
+      lsp.tenloai, nsx.tennsx, h.hinhanh, km.makm, km.tenkm, km.km, km.thoigianbatdaukm, km.thoigianketthuckm
+    ORDER BY total_sold DESC
+    LIMIT 8
+  `);
   return rows;
 };
 const getProduct12 = async () => {
@@ -148,17 +160,35 @@ const getProduct12 = async () => {
 };
 const getProduct5 = async () => {
   const [rows] = await connectDB.execute(`
-        SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh, k.tenkm, k.km, s.ttct
-        FROM sanpham s
-        INNER JOIN khuyenmai k ON s.masp = k.masp
-        LEFT JOIN (
-            SELECT masp, hinhanh,
-                   ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
-            FROM hinhanhsanpham
-        ) h ON s.masp = h.masp AND h.rn = 1
-        ORDER BY s.masp
-        LIMIT 5
-    `);
+    SELECT 
+  s.masp, s.tensp, s.maloai, s.mansx, s.gia, s.soluongsp, s.ttct,
+  lsp.tenloai, nsx.tennsx,
+  h.hinhanh,
+  km.makm, km.tenkm, km.km, km.thoigianbatdaukm, km.thoigianketthuckm,
+  GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
+  GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
+  CASE 
+    WHEN COUNT(cb.mabienthe) = 0 THEN s.gia -- No variants, use base price
+    ELSE MIN(cb.gia) -- Use the minimum price when there are variants
+  END AS gia_range,
+  MAX(cb.soluongtonkho) AS max_soluongtonkho
+FROM sanpham s
+JOIN loaisanpham lsp ON s.maloai = lsp.maloai
+JOIN nhasanxuat nsx ON s.mansx = nsx.mansx
+INNER JOIN khuyenmai km ON s.masp = km.masp AND km.thoigianketthuckm > NOW() AND km.thoigianbatdaukm <= NOW()
+LEFT JOIN (
+  SELECT masp, hinhanh,
+         ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
+  FROM hinhanhsanpham
+) h ON s.masp = h.masp AND h.rn = 1
+LEFT JOIN cacbienthe cb ON s.masp = cb.masp
+LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+GROUP BY 
+  s.masp, s.tensp, s.maloai, s.mansx, s.gia, s.soluongsp, s.ttct,
+  lsp.tenloai, nsx.tennsx, h.hinhanh, km.makm, km.tenkm, km.km, km.thoigianbatdaukm, km.thoigianketthuckm
+ORDER BY s.masp
+LIMIT 5
+  `);
   return rows;
 };
 const getProductOfCategory = async (maloai) => {
@@ -168,13 +198,23 @@ const getProductOfCategory = async (maloai) => {
       km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
       lsp.tenloai, nsx.tennsx,
       (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
-      cb.* -- Include variant attributes from cacbienthe
+      GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
+      GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
+      CASE 
+        WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia -- No variants, use base price
+        ELSE MIN(cb.gia) -- Use the minimum price when there are variants
+      END AS gia_range,
+      MAX(cb.soluongtonkho) AS max_soluongtonkho
     FROM sanpham sp
     JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
     JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
-    LEFT JOIN khuyenmai km ON sp.masp = km.masp
-    LEFT JOIN cacbienthe cb ON sp.masp = cb.masp -- Join with cacbienthe table
+    LEFT JOIN khuyenmai km ON sp.masp = km.masp AND km.thoigianketthuckm > NOW() AND km.thoigianbatdaukm <= NOW()
+    LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
+    LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
     WHERE sp.maloai = ?
+    GROUP BY 
+      sp.masp, sp.tensp, sp.gia, sp.soluongsp, sp.ttct, 
+      lsp.tenloai, nsx.tennsx, km.makm, km.tenkm, km.km, km.thoigianbatdaukm, km.thoigianketthuckm
   `, [maloai]);
   return rows;
 };
@@ -408,20 +448,30 @@ const updateQuantity = async (masp) => {
 const getRecommendedProducts = async (maloai) => {
   try {
     const query = `
-          SELECT
-              sp.masp, sp.tensp, sp.gia, lsp.tenloai, nsx.tennsx,
-              hinhanh.hinhanh
-          FROM sanpham sp
-          LEFT JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
-          LEFT JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
-          LEFT JOIN (
-              SELECT masp, MIN(hinhanh) AS hinhanh
-              FROM hinhanhsanpham
-              GROUP BY masp
-          ) hinhanh ON sp.masp = hinhanh.masp
-          WHERE 1=1
-          AND sp.maloai = ? LIMIT 6
-      `;
+      SELECT 
+        sp.masp, sp.tensp, sp.gia, sp.soluongsp, sp.ttct,
+        lsp.tenloai, nsx.tennsx,
+        (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
+        km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km,
+        GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
+        GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
+        CASE 
+          WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia
+          WHEN MAX(cb.gia) - MIN(cb.gia) <= 6000 AND MIN(cb.gia) >= 72000 AND MAX(cb.gia) <= 78000 
+            THEN CONCAT(FLOOR(MIN(cb.gia) / 10000) * 10000, ' +')
+          ELSE CONCAT('Từ ', MIN(cb.gia), ' đến ', MAX(cb.gia))
+        END AS gia_range,
+        MAX(cb.soluongtonkho) AS max_soluongtonkho
+      FROM sanpham sp
+      JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+      JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+      LEFT JOIN khuyenmai km ON sp.masp = km.masp
+      LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
+      LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+      WHERE sp.maloai = ?
+      GROUP BY sp.masp, sp.tensp, sp.gia, sp.soluongsp, sp.ttct, lsp.tenloai, nsx.tennsx, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km
+      LIMIT 6;
+    `;
     const [rows] = await connectDB.query(query, [maloai]);
     return rows;
   } catch (error) {
