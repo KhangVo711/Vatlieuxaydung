@@ -16,6 +16,7 @@
     "@radix-ui/react-radio-group": "^1.2.3",
     "axios": "^1.7.7",
     "chart.js": "^4.4.3",
+    "compromise": "^14.14.4",
     "gsap": "^3.12.5",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",

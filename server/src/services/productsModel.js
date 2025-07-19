@@ -479,6 +479,84 @@ const getRecommendedProducts = async (maloai) => {
   }
 };
 
+// Chatbot
+const getProductsByCriteria = async (criteria) => {
+  try {
+    let query = `
+      SELECT sp.*, lsp.tenloai, nsx.tennsx, km.km,
+             (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
+             CASE WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia ELSE MIN(cb.gia) END AS gia_range,
+             MAX(cb.soluongtonkho) AS max_soluongtonkho
+      FROM sanpham sp
+      JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+      JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+      LEFT JOIN khuyenmai km ON sp.masp = km.masp
+           AND km.thoigianketthuckm > NOW() AND km.thoigianbatdaukm <= NOW()
+      LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
+      GROUP BY sp.masp
+      HAVING 1=1
+    `;
 
-export default { getProduct_Hot8, getProductOfCategory, getVariants, getProductVariants, getRecommendedProducts, getCategory, insertProductImages, updateVariants, deleteVariants, insertVariant, insertVariantProperty, getProduct8, checkProducerExists, checkCategoryExists, getProductById, getProduct5, getProduct12, getProductImages, updateQuantity, getCartAPI, updateProductImages, getAllDetailCart, updateCart, getAllCart, getAllAPICart, insertCategory, insertCart, insertDetailCart, editCategory, detailCategory, deleteCategory, insertNSX, editNSX, getAllNSX, detailNSX, deleteNSX, insertProducts, getAllProduct, editProduct, detailProduct, deleteProduct, deleteImgProduct }
+    const params = [];
+
+    if (criteria.category) {
+      query += " AND (sp.tensp LIKE ? OR sp.ttct LIKE ?)";
+      params.push(`%${criteria.category}%`, `%${criteria.category}%`);
+    }
+
+    if (criteria.maxPrice) {
+      query += " AND gia_range <= ?";
+      params.push(criteria.maxPrice);
+    }
+
+    if (criteria.brand) {
+      query += " AND nsx.tennsx LIKE ?";
+      params.push(`%${criteria.brand}%`);
+    }
+
+    if (criteria.skinType) {
+      const keywords = {
+        "da nhạy cảm": ["nhạy cảm", "sensitive", "dịu nhẹ"],
+        "da dầu": ["dầu", "oily", "kiềm dầu"],
+        "da khô": ["khô", "ẩm", "hydrating"],
+        "da hỗn hợp": ["hỗn hợp", "combination"],
+        "da mụn": ["mụn", "acne", "trị mụn"],
+      }[criteria.skinType.toLowerCase()] || [];
+
+      if (keywords.length > 0) {
+        query += " AND (" + keywords.map(() => `sp.ttct LIKE ?`).join(" OR ") + ")";
+        params.push(...keywords.map(kw => `%${kw}%`));
+      }
+    }
+
+    query += " LIMIT 5";
+
+    const [rows] = await connectDB.execute(query, params);
+    return rows;
+  } catch (error) {
+    throw new Error("Database error: " + error.message);
+  }
+};
+
+
+
+export default { 
+  getProduct_Hot8, getProductsByCriteria, 
+  getProductOfCategory, getVariants, 
+  getProductVariants, getRecommendedProducts, 
+  getCategory, insertProductImages, 
+  updateVariants, deleteVariants, insertVariant, 
+  insertVariantProperty, getProduct8, 
+  checkProducerExists, checkCategoryExists, 
+  getProductById, getProduct5, getProduct12, 
+  getProductImages, updateQuantity, getCartAPI, 
+  updateProductImages, getAllDetailCart, 
+  updateCart, getAllCart, getAllAPICart, 
+  insertCategory, insertCart, insertDetailCart, 
+  editCategory, detailCategory, deleteCategory, 
+  insertNSX, editNSX, getAllNSX, detailNSX, 
+  deleteNSX, insertProducts, getAllProduct, 
+  editProduct, detailProduct, deleteProduct, 
+  deleteImgProduct 
+}
 

@@ -113,6 +113,8 @@ const initWebRoute = (app) => {
     router.post('/send-contact', contact.insertContact)
     router.get('/get-contact', contact.getContact)
 
+    router.post('/chatbot', product.chatbot);
+
     return app.use('/', router)
 }
 export default initWebRoute

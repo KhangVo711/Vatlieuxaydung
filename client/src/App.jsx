@@ -6,6 +6,7 @@ import HeaderAdmin from './components/admin/headerAdmin/HeaderAdmin.jsx';
 import { useEffect, useState } from 'react';
 import SideBarAdmin from './components/admin/sidebarAdmin/SideBarAdmin.jsx';
 import { ContextProvider } from './components/Context.jsx';
+import Chatbot from './components/users/chatbot/Chatbot.jsx';
 function App() {
 
   const location = useLocation()
@@ -31,6 +32,7 @@ function App() {
     <>
       <ContextProvider>
         <Header />
+        <Chatbot />
         <Outlet />
         {(location.pathname !== '/cart' && location.pathname !== '/ordered') ? <Footer /> : null}
         
