@@ -479,7 +479,7 @@ const getRecommendedProducts = async (maloai) => {
   }
 };
 
-// Chatbot
+
 const getProductsByCriteria = async (criteria) => {
   try {
     let query = `
@@ -504,11 +504,6 @@ const getProductsByCriteria = async (criteria) => {
       params.push(`%${criteria.category}%`, `%${criteria.category}%`);
     }
 
-    if (criteria.maxPrice) {
-      query += " AND gia_range <= ?";
-      params.push(criteria.maxPrice);
-    }
-
     if (criteria.brand) {
       query += " AND nsx.tennsx LIKE ?";
       params.push(`%${criteria.brand}%`);
@@ -517,7 +512,7 @@ const getProductsByCriteria = async (criteria) => {
     if (criteria.skinType) {
       const keywords = {
         "da nhạy cảm": ["nhạy cảm", "sensitive", "dịu nhẹ"],
-        "da dầu": ["dầu", "oily", "kiềm dầu"],
+        "da dầu": ["dầu", "kiềm dầu", "oily"],
         "da khô": ["khô", "ẩm", "hydrating"],
         "da hỗn hợp": ["hỗn hợp", "combination"],
         "da mụn": ["mụn", "acne", "trị mụn"],
@@ -533,8 +528,38 @@ const getProductsByCriteria = async (criteria) => {
 
     const [rows] = await connectDB.execute(query, params);
     return rows;
-  } catch (error) {
-    throw new Error("Database error: " + error.message);
+  } catch (err) {
+    console.error("Lỗi truy vấn sản phẩm:", err.message);
+    return [];
+  }
+};
+
+const getBrandsBySkinType = async (skinType) => {
+  try {
+    const keywords = {
+      "da nhạy cảm": ["nhạy cảm", "sensitive", "dịu nhẹ"],
+      "da dầu": ["dầu", "kiềm dầu", "oily"],
+      "da khô": ["khô", "ẩm", "hydrating"],
+      "da hỗn hợp": ["hỗn hợp", "combination"],
+      "da mụn": ["mụn", "acne", "trị mụn"],
+    }[skinType.toLowerCase()] || [];
+
+    if (keywords.length === 0) return [];
+
+    let query = `
+      SELECT DISTINCT nsx.tennsx
+      FROM sanpham sp
+      JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+      WHERE ${keywords.map(() => `sp.ttct LIKE ?`).join(" OR ")}
+      LIMIT 5
+    `;
+
+    const params = keywords.map(kw => `%${kw}%`);
+    const [rows] = await connectDB.execute(query, params);
+    return rows.map(row => row.tennsx);
+  } catch (err) {
+    console.error("Lỗi truy vấn hãng:", err.message);
+    return [];
   }
 };
 
@@ -557,6 +582,6 @@ export default {
   insertNSX, editNSX, getAllNSX, detailNSX, 
   deleteNSX, insertProducts, getAllProduct, 
   editProduct, detailProduct, deleteProduct, 
-  deleteImgProduct 
+  deleteImgProduct, getBrandsBySkinType 
 }
 

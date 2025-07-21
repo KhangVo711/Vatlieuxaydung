@@ -1,4 +1,5 @@
 import express from "express";
+import connectDB from "../configs/connectDB.js";
 import productsModel from "../services/productsModel.js"
 import path from 'path';
 import fs from 'fs';
@@ -6,6 +7,7 @@ import { fileURLToPath } from 'url';
 import compromise from 'compromise';
 import { detectIntent } from '../services/dialogflowService.js';
 import { getSession, clearSession } from '../../middleware/sessionStore.js';
+import e from "express";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Loai
@@ -643,104 +645,88 @@ const insertDetailCart = async (req, res) => {
 
 // Chatbox
 
-// Những từ khoá để gợi ý sản phẩm
 
-const triggerKeywords = ['tìm', 'muốn', 'mua', 'cho', 'kiếm', 'xem', 'tư vấn', 'gợi ý', 'giới thiệu', 'cần'];
-
-// Bot đang hỏi thêm thông tin không?
-const isAskingForInfo = (reply) => {
-  const keywords = ['loại da', 'bạn là gì', 'bạn muốn', 'hãy chọn', 'cần thêm thông tin', 'bạn đang tìm'];
-  return keywords.some(kw => reply.toLowerCase().includes(kw));
-};
-
-// Kiểm tra đủ thông tin để gợi ý
-const hasEnoughCriteria = (params) => {
-  return params.category || params.brand || params.skinType;
-};
+const isPositiveReply = (message) => ['có', 'vâng', 'ok', 'đồng ý', 'đúng rồi'].some(word => message.toLowerCase().includes(word));
+const isNegativeReply = (message) => ['không', 'không cần', 'không muốn'].some(word => message.toLowerCase().includes(word));
+const hasEnoughCriteria = (params) => params.skinType;
 
 const chatbot = async (req, res) => {
   const { message, action, sessionId } = req.body;
-
   try {
-    if (!sessionId) {
-      return res.status(400).json({ reply: "Thiếu sessionId!" });
-    }
+    if (!sessionId) return res.status(400).json({ reply: "Thiếu sessionId!" });
 
-    const sessionData = getSession(sessionId);
+    let sessionData = getSession(sessionId);
+    if (!sessionData.parameters) sessionData.parameters = {};
+
+    if (!sessionData.initialized) {
+      clearSession(sessionId);
+      sessionData = getSession(sessionId);
+      sessionData.initialized = true;
+      sessionData.parameters = {};
+    }
 
     let reply = "";
     let products = [];
-    let showSuggestionButton = false;
     let needMoreInfo = false;
 
-    // 🟢 Nếu người dùng nhấn "Xem gợi ý sản phẩm"
-    if (action === 'suggest_products') {
-      const params = sessionData.parameters;
+    // Trường hợp xử lý phản hồi về gợi ý hãng
+    if (sessionData.awaitingBrandSuggestionResponse) {
+      delete sessionData.awaitingBrandSuggestionResponse;
 
-      if (hasEnoughCriteria(params)) {
-        products = await productsModel.getProductsByCriteria(params);
+      if (isPositiveReply(message)) {
+        if (hasEnoughCriteria(sessionData.parameters)) {
+          products = await productsModel.getProductsByCriteria(sessionData.parameters);
+          reply = products.length > 0 ? "Dưới đây là sản phẩm gợi ý cho bạn." : "Xin lỗi, không tìm thấy sản phẩm phù hợp.";
+          clearSession(sessionId);
+        } else {
+          reply = "Tôi cần thêm thông tin để gợi ý sản phẩm.";
+          needMoreInfo = true;
+        }
+      } else if (isNegativeReply(message)) {
+        reply = "Khi nào bạn muốn mình giúp gợi ý sản phẩm, hãy nói cho mình biết nhé!";
+      }
+      return res.json({ reply, products, needMoreInfo });
+    }
 
-        reply = products.length > 0
-          ? `Dưới đây là một số sản phẩm mình gợi ý cho bạn:`
-          : `Xin lỗi, mình không tìm thấy sản phẩm phù hợp.`;
+    const result = await detectIntent(message === "__welcome__" ? "welcome" : message, sessionId);
+    const newParams = result.parameters?.fields || {};
+    if (newParams.category?.stringValue) sessionData.parameters.category = newParams.category.stringValue;
+    if (newParams.brand?.stringValue) sessionData.parameters.brand = newParams.brand.stringValue;
+    if (newParams.producer?.stringValue) sessionData.parameters.brand = newParams.producer.stringValue;
+    if (newParams.skinType?.stringValue) sessionData.parameters.skinType = newParams.skinType.stringValue;
 
-        clearSession(sessionId);   // 🛑 Reset session sau khi gợi ý
-
+    if (action === 'recommend_product_skinType' || result.intent?.displayName === 'recommend_product_skinType') {
+      if (hasEnoughCriteria(sessionData.parameters)) {
+        products = await productsModel.getProductsByCriteria(sessionData.parameters);
+        reply = products.length > 0 ? "Dưới đây là sản phẩm gợi ý cho bạn:" : "Xin lỗi, không tìm thấy sản phẩm phù hợp.";
+        clearSession(sessionId);
       } else {
-        reply = `Tôi chưa có đủ thông tin để gợi ý sản phẩm cho bạn.`;
+        reply = "Tôi cần thêm thông tin để gợi ý sản phẩm cho bạn.";
         needMoreInfo = true;
       }
-
-      return res.json({
-        reply,
-        products,
-        showSuggestionButton: false,
-        needMoreInfo
-      });
+      return res.json({ reply, products, needMoreInfo });
     }
 
-    // 🟢 Xử lý hội thoại bình thường
-    const result = message === "__welcome__"
-      ? await detectIntent("welcome", sessionId)
-      : await detectIntent(message, sessionId);
-
-    reply = result.fulfillmentText || "Xin lỗi, tôi chưa hiểu câu hỏi của bạn.";
-
-    const newParams = result.parameters?.fields || {};
-
-    // Lưu trữ parameters vào session
-    if (newParams.category?.stringValue)
-      sessionData.parameters.category = newParams.category.stringValue;
-    if (newParams.brand?.stringValue)
-      sessionData.parameters.brand = newParams.brand.stringValue;
-    if (newParams.producer?.stringValue)
-      sessionData.parameters.brand = newParams.producer.stringValue;
-    if (newParams.skinType?.stringValue)
-      sessionData.parameters.skinType = newParams.skinType.stringValue;
-
-    const đủTiêuChí = hasEnoughCriteria(sessionData.parameters);
-
-    // Nếu bot đang hỏi thêm thông tin
-    if (reply.toLowerCase().includes('loại da') || reply.toLowerCase().includes('bạn là gì')) {
-      needMoreInfo = true;
+    if (hasEnoughCriteria(sessionData.parameters) && !sessionData.parameters.brand) {
+      const suggestedBrands = await productsModel.getBrandsBySkinType(sessionData.parameters.skinType);
+      if (suggestedBrands.length > 0) {
+        reply = `Da ${sessionData.parameters.skinType} thường phù hợp với các hãng như: ${suggestedBrands.join(", ")}. Bạn có muốn mình gợi ý sản phẩm từ các hãng này không?`;
+        sessionData.awaitingBrandSuggestionResponse = true;
+        return res.json({ reply, products: [], needMoreInfo });
+      }
     }
 
-    if (đủTiêuChí && !needMoreInfo) {
-      showSuggestionButton = true;  // ✅ Hiện nút gợi ý
-    }
-
-    return res.json({
-      reply,
-      products: [],
-      showSuggestionButton,
-      needMoreInfo
-    });
-
+    reply = result.fulfillmentText || "Bạn cần tôi giúp tìm sản phẩm theo loại da, hãng, hay loại sản phẩm nào không?";
+    return res.json({ reply, products, needMoreInfo });
   } catch (error) {
-    console.error('Chatbot controller error:', error);
-    return res.status(500).json({ reply: "Lỗi máy chủ. Vui lòng thử lại sau!" });
+    console.error('Chatbot error:', error);
+    return res.status(500).json({ reply: "Lỗi hệ thống. Vui lòng thử lại sau." });
   }
 };
+
+
+
+
 
 
 

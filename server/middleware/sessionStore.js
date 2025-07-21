@@ -1,17 +1,14 @@
-// Giả lập lưu session trên bộ nhớ (có thể chuyển sang Redis hoặc DB)
-const sessionStore = {};
+const sessionMap = new Map();
 
 function getSession(sessionId) {
-  if (!sessionStore[sessionId]) {
-    sessionStore[sessionId] = {
-      parameters: {}
-    };
+  if (!sessionMap.has(sessionId)) {
+    sessionMap.set(sessionId, { parameters: {}, initialized: false });
   }
-  return sessionStore[sessionId];
+  return sessionMap.get(sessionId);
 }
 
 function clearSession(sessionId) {
-  sessionStore[sessionId] = { parameters: {} };
+  sessionMap.delete(sessionId);
 }
 
 export { getSession, clearSession };
