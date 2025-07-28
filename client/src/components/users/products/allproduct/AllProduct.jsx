@@ -173,9 +173,9 @@ useEffect(() => {
               </div>
               <div className="flex w-full px-4 justify-start items-center">
                 <p className={`${product.tenkm ? 'line-through' : null} mr-5`}>
-                  {product.gia_range && product.gia_range
-                    ? formatCurrency(product.gia_range) + ' +'
-                    : product.gia_range ? formatCurrency(product.gia_range) : formatCurrency(product.gia)}
+                  {product.gia && product.gia
+                    ? formatCurrency(product.gia)
+                    : product.gia_range ? formatCurrency(product.gia_range)  + ' +' : formatCurrency(product.gia)}
                 </p>
                 {product.km ? (
                   <p className="text-red-600 font-semibold">

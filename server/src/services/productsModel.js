@@ -511,12 +511,18 @@ const getProductsByCriteria = async (criteria) => {
 
     if (criteria.skinType) {
       const keywords = {
-        "da nhạy cảm": ["nhạy cảm", "sensitive", "dịu nhẹ"],
-        "da dầu": ["dầu", "kiềm dầu", "oily"],
-        "da khô": ["khô", "ẩm", "hydrating"],
-        "da hỗn hợp": ["hỗn hợp", "combination"],
-        "da mụn": ["mụn", "acne", "trị mụn"],
-      }[criteria.skinType.toLowerCase()] || [];
+  "da nhạy cảm": ["nhạy cảm", "sensitive", "dịu nhẹ"],
+  "da dầu": ["dầu", "kiềm dầu", "oily"],
+  "da khô": ["khô", "ẩm", "hydrating"],
+  "da hỗn hợp": ["hỗn hợp", "combination"],
+  "da mụn": ["mụn", "acne", "trị mụn"],
+  "da thường": ["bình thường", "normal", "cân bằng"],
+  "da lão hóa": ["lão hóa", "chống nhăn", "anti-aging", "mature"],
+  "da nám": ["nám", "tàn nhang", "sạm", "đốm nâu", "pigment", "brightening"],
+  "da thiếu nước": ["thiếu nước", "dehydrated", "khô căng", "thiếu ẩm"],
+  "da lỗ chân lông to": ["lỗ chân lông", "se khít", "pore", "thu nhỏ lỗ chân lông"],
+  "da dễ kích ứng": ["kích ứng", "mẩn đỏ", "đỏ da", "reactive", "allergic"]
+}[criteria.skinType.toLowerCase()] || [];
 
       if (keywords.length > 0) {
         query += " AND (" + keywords.map(() => `sp.ttct LIKE ?`).join(" OR ") + ")";
@@ -537,12 +543,18 @@ const getProductsByCriteria = async (criteria) => {
 const getBrandsBySkinType = async (skinType) => {
   try {
     const keywords = {
-      "da nhạy cảm": ["nhạy cảm", "sensitive", "dịu nhẹ"],
-      "da dầu": ["dầu", "kiềm dầu", "oily"],
-      "da khô": ["khô", "ẩm", "hydrating"],
-      "da hỗn hợp": ["hỗn hợp", "combination"],
-      "da mụn": ["mụn", "acne", "trị mụn"],
-    }[skinType.toLowerCase()] || [];
+  "da nhạy cảm": ["nhạy cảm", "sensitive", "dịu nhẹ"],
+  "da dầu": ["dầu", "kiềm dầu", "oily"],
+  "da khô": ["khô", "ẩm", "hydrating"],
+  "da hỗn hợp": ["hỗn hợp", "combination"],
+  "da mụn": ["mụn", "acne", "trị mụn"],
+  "da thường": ["bình thường", "normal", "cân bằng"],
+  "da lão hóa": ["lão hóa", "chống nhăn", "anti-aging", "mature"],
+  "da nám": ["nám", "tàn nhang", "sạm", "đốm nâu", "pigment", "brightening"],
+  "da thiếu nước": ["thiếu nước", "dehydrated", "khô căng", "thiếu ẩm"],
+  "da lỗ chân lông to": ["lỗ chân lông", "se khít", "pore", "thu nhỏ lỗ chân lông"],
+  "da dễ kích ứng": ["kích ứng", "mẩn đỏ", "đỏ da", "reactive", "allergic"]
+}[skinType.toLowerCase()] || [];
 
     if (keywords.length === 0) return [];
 
@@ -563,8 +575,71 @@ const getBrandsBySkinType = async (skinType) => {
   }
 };
 
+const getLipstickByCriteria = async (criteria) => {
+  try {
+    let query = `
+      SELECT sp.*, lsp.tenloai, nsx.tennsx,
+        (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
+        CASE WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia ELSE MIN(cb.gia) END AS gia_range,
+        MAX(cb.soluongtonkho) AS max_soluongtonkho
+      FROM sanpham sp
+      JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+      JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+      LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
+      LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+      WHERE tenloai = 'Trang điểm' AND tensp LIKE '%son%'
+    `;
 
+    const params = [];
 
+    if (criteria.loaison) {
+      query += " AND sp.ttct LIKE ?";
+      params.push(`%${criteria.loaison}%`);
+    }
+
+    if (criteria.loaimoi) {
+      query += " AND sp.ttct LIKE ?";
+      params.push(`%${criteria.loaimoi}%`);
+    }
+
+    if (criteria.tongda) {
+      query += " AND sp.ttct LIKE ?";
+      params.push(`%${criteria.tongda}%`);
+    }
+
+    if (criteria.tongmauson) {
+      query += " AND tb.thuoc_tinh LIKE ?";
+      params.push(`%${criteria.tongmauson}%`);
+    }
+
+    query += " GROUP BY sp.masp LIMIT 5";
+    const [rows] = await connectDB.execute(query, params);
+    return rows;
+  } catch (err) {
+    console.error("Lỗi truy vấn son:", err.message);
+    return [];
+  }
+};
+const getBrandsByLipstick = async (loaimoi, tongda, loaison) => {
+  try {
+     const [rows] = await connectDB.query(`
+     SELECT DISTINCT nsx.tennsx
+FROM sanpham sp
+JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+WHERE lsp.tenloai = 'Trang điểm'
+  AND sp.tensp LIKE '%son%'
+  AND sp.ttct LIKE CONCAT('%', ?, '%')
+  AND sp.ttct LIKE CONCAT('%', ?, '%')
+  AND sp.ttct LIKE CONCAT('%', ?, '%')
+    `, [loaimoi, tongda, loaison]);
+
+    return rows.map(row => row.tennsx);
+  } catch (error) {
+    console.error("Lỗi truy vấn getBrandsByLipstick:", error);
+    return [];
+  }
+};
 export default { 
   getProduct_Hot8, getProductsByCriteria, 
   getProductOfCategory, getVariants, 
@@ -582,6 +657,7 @@ export default {
   insertNSX, editNSX, getAllNSX, detailNSX, 
   deleteNSX, insertProducts, getAllProduct, 
   editProduct, detailProduct, deleteProduct, 
-  deleteImgProduct, getBrandsBySkinType 
+  deleteImgProduct, getBrandsBySkinType,
+  getLipstickByCriteria, getBrandsByLipstick, 
 }
 

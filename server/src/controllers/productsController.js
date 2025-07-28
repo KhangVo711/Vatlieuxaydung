@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import compromise from 'compromise';
 import { detectIntent } from '../services/dialogflowService.js';
 import { getSession, clearSession } from '../../middleware/sessionStore.js';
-import e from "express";
+import { hasEnoughCriteria } from "../../utils/criteriaHelper.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Loai
@@ -398,7 +398,7 @@ const getVariant = async (req, res) => {
 const editProduct = async (req, res) => {
   let { masp, tensp, maloai, ttct, soluongsp, gia, mansx, loaibienthe, cobienthe, updatedImages, variants } = req.body;
   const images = req.files || [];
-console.log(cobienthe)
+  console.log(cobienthe)
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const uploadDir = path.join(__dirname, `../Uploads/${masp}`);
@@ -509,15 +509,15 @@ const deleteProduct = async (req, res) => {
     const uploadDir = `./src/uploads/${masp}`;
     const checkbienthe = await productsModel.getProductById(masp);
     if (fs.existsSync(uploadDir)) {
-      fs.rmSync(uploadDir, { recursive: true, force: true }); 
+      fs.rmSync(uploadDir, { recursive: true, force: true });
     }
     if (checkbienthe.cobienthe === 1 || checkbienthe.cobienthe === true || checkbienthe.cobienthe === 'true' || checkbienthe.cobienthe === '1') {
       await productsModel.deleteVariants(masp);
       await productsModel.deleteImgProduct(masp);
-    await productsModel.deleteProduct(masp);
+      await productsModel.deleteProduct(masp);
     } else {
       await productsModel.deleteImgProduct(masp);
-    await productsModel.deleteProduct(masp);
+      await productsModel.deleteProduct(masp);
     }
 
 
@@ -643,12 +643,9 @@ const insertDetailCart = async (req, res) => {
   }
 };
 
-// Chatbox
-
-
+// Chatbot
 const isPositiveReply = (message) => ['có', 'vâng', 'ok', 'đồng ý', 'đúng rồi'].some(word => message.toLowerCase().includes(word));
 const isNegativeReply = (message) => ['không', 'không cần', 'không muốn'].some(word => message.toLowerCase().includes(word));
-const hasEnoughCriteria = (params) => params.skinType;
 
 const chatbot = async (req, res) => {
   const { message, action, sessionId } = req.body;
@@ -668,7 +665,7 @@ const chatbot = async (req, res) => {
     let reply = "";
     let products = [];
     let needMoreInfo = false;
-
+    let isYesNoQuestion = false;
     // Trường hợp xử lý phản hồi về gợi ý hãng
     if (sessionData.awaitingBrandSuggestionResponse) {
       delete sessionData.awaitingBrandSuggestionResponse;
@@ -687,36 +684,87 @@ const chatbot = async (req, res) => {
       }
       return res.json({ reply, products, needMoreInfo });
     }
-
     const result = await detectIntent(message === "__welcome__" ? "welcome" : message, sessionId);
     const newParams = result.parameters?.fields || {};
+    if (newParams.product?.stringValue) sessionData.parameters.product = newParams.product.stringValue;
     if (newParams.category?.stringValue) sessionData.parameters.category = newParams.category.stringValue;
     if (newParams.brand?.stringValue) sessionData.parameters.brand = newParams.brand.stringValue;
     if (newParams.producer?.stringValue) sessionData.parameters.brand = newParams.producer.stringValue;
     if (newParams.skinType?.stringValue) sessionData.parameters.skinType = newParams.skinType.stringValue;
 
+    if (newParams.loaison?.stringValue) sessionData.parameters.loaison = newParams.loaison.stringValue;
+    if (newParams.loaimoi?.stringValue) sessionData.parameters.loaimoi = newParams.loaimoi.stringValue;
+    if (newParams.tongda?.stringValue) sessionData.parameters.tongda = newParams.tongda.stringValue;
+    if (newParams.tongmauson?.stringValue) sessionData.parameters.tongmauson = newParams.tongmauson.stringValue;
+    console.log(action)
+    console.log(sessionData.parameters)
+    console.log(hasEnoughCriteria(sessionData.parameters));
     if (action === 'recommend_product_skinType' || result.intent?.displayName === 'recommend_product_skinType') {
       if (hasEnoughCriteria(sessionData.parameters)) {
         products = await productsModel.getProductsByCriteria(sessionData.parameters);
         reply = products.length > 0 ? "Dưới đây là sản phẩm gợi ý cho bạn:" : "Xin lỗi, không tìm thấy sản phẩm phù hợp.";
         clearSession(sessionId);
-      } else {
-        reply = "Tôi cần thêm thông tin để gợi ý sản phẩm cho bạn.";
-        needMoreInfo = true;
+      }
+      else {
+        return res.json({ reply: result.fulfillmentText || "", products: [], needMoreInfo: false });
       }
       return res.json({ reply, products, needMoreInfo });
     }
+    else if (action === 'recommend_product_son') {
+      if (hasEnoughCriteria(sessionData.parameters)) {
+        products = await productsModel.getLipstickByCriteria(sessionData.parameters);
+        reply = products.length > 0
+          ? "Đây là một số dòng son phù hợp với bạn:"
+          : "Xin lỗi, mình chưa tìm thấy dòng son phù hợp.";
+        clearSession(sessionId);
+      } else {
+        return res.json({ reply: result.fulfillmentText || "", products: [], needMoreInfo: false });
+      }
 
-    if (hasEnoughCriteria(sessionData.parameters) && !sessionData.parameters.brand) {
+      return res.json({ reply, products, needMoreInfo });
+    }
+
+    if (hasEnoughCriteria(sessionData.parameters) && sessionData.parameters.product && sessionData.parameters.skinType) {
       const suggestedBrands = await productsModel.getBrandsBySkinType(sessionData.parameters.skinType);
       if (suggestedBrands.length > 0) {
-        reply = `Da ${sessionData.parameters.skinType} thường phù hợp với các hãng như: ${suggestedBrands.join(", ")}. Bạn có muốn mình gợi ý sản phẩm từ các hãng này không?`;
+        reply = `${sessionData.parameters.skinType} thường phù hợp với sản phẩm của các hãng như: ${suggestedBrands.join(", ")}. Bạn có muốn mình gợi ý sản phẩm từ các hãng này không?`;
         sessionData.awaitingBrandSuggestionResponse = true;
-        return res.json({ reply, products: [], needMoreInfo });
+        return res.json({ reply, products: [], needMoreInfo, isYesNoQuestion: true });
+      }
+      if (suggestedBrands.length === 0) {
+        reply = "Xin lỗi, tôi không tìm thấy sản phẩm ở cửa hàng phù hợp với loại da của bạn.";
+        return res.json({ reply, products: [], needMoreInfo: false });
+      }
+    }
+    console.log("Check điều kiện:");
+console.log("loaimoi:", sessionData.parameters.loaimoi);
+console.log("tongda:", sessionData.parameters.tongda);
+console.log("loaison:", sessionData.parameters.loaison);
+console.log("hasEnoughCriteria:", hasEnoughCriteria(sessionData.parameters));
+    if (
+      sessionData.parameters.loaimoi &&
+      sessionData.parameters.tongda &&
+      sessionData.parameters.loaison && // chỉ gọi khi đã có
+      hasEnoughCriteria(sessionData.parameters)
+    ) {
+      const suggestedBrands = await productsModel.getBrandsByLipstick(
+        sessionData.parameters.loaimoi,
+        sessionData.parameters.tongda,
+        sessionData.parameters.loaison
+      );
+      console.log("suggestedBrands.length", suggestedBrands);
+      if (suggestedBrands.length > 0) {
+        reply = `Bạn muốn tìm ${sessionData.parameters.loaison} phù hợp ${sessionData.parameters.tongda} và ${sessionData.parameters.loaimoi} thì mình gợi ý sản phẩm của các hãng như: ${suggestedBrands.join(", ")}. Bạn có muốn mình gợi ý sản phẩm từ các hãng này không?`;
+        sessionData.awaitingBrandSuggestionResponse = true;
+        return res.json({ reply, products: [], needMoreInfo, isYesNoQuestion: true });
+      }
+      if (suggestedBrands.length === 0) {
+        reply = "Xin lỗi, tôi không tìm thấy sản phẩm ở cửa hàng phù hợp với loại da của bạn.";
+        return res.json({ reply, products: [], needMoreInfo: false });
       }
     }
 
-    reply = result.fulfillmentText || "Bạn cần tôi giúp tìm sản phẩm theo loại da, hãng, hay loại sản phẩm nào không?";
+    reply = result.fulfillmentText;
     return res.json({ reply, products, needMoreInfo });
   } catch (error) {
     console.error('Chatbot error:', error);
