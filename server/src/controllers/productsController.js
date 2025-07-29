@@ -671,8 +671,16 @@ const chatbot = async (req, res) => {
       delete sessionData.awaitingBrandSuggestionResponse;
 
       if (isPositiveReply(message)) {
-        if (hasEnoughCriteria(sessionData.parameters)) {
+        if (hasEnoughCriteria(sessionData.parameters) && sessionData.parameters.product && sessionData.parameters.skinType) {
           products = await productsModel.getProductsByCriteria(sessionData.parameters);
+          reply = products.length > 0 ? "Dưới đây là sản phẩm gợi ý cho bạn." : "Xin lỗi, không tìm thấy sản phẩm phù hợp.";
+          clearSession(sessionId);
+        } else {
+          reply = "Tôi cần thêm thông tin để gợi ý sản phẩm.";
+          needMoreInfo = true;
+        }
+        if (hasEnoughCriteria(sessionData.parameters) && sessionData.parameters.loaimoi && sessionData.parameters.tongda && sessionData.parameters.loaison) {
+          products = await productsModel.getLipstickByCriteria(sessionData.parameters);
           reply = products.length > 0 ? "Dưới đây là sản phẩm gợi ý cho bạn." : "Xin lỗi, không tìm thấy sản phẩm phù hợp.";
           clearSession(sessionId);
         } else {
@@ -723,7 +731,6 @@ const chatbot = async (req, res) => {
 
       return res.json({ reply, products, needMoreInfo });
     }
-
     if (hasEnoughCriteria(sessionData.parameters) && sessionData.parameters.product && sessionData.parameters.skinType) {
       const suggestedBrands = await productsModel.getBrandsBySkinType(sessionData.parameters.skinType);
       if (suggestedBrands.length > 0) {
@@ -737,14 +744,14 @@ const chatbot = async (req, res) => {
       }
     }
     console.log("Check điều kiện:");
-console.log("loaimoi:", sessionData.parameters.loaimoi);
-console.log("tongda:", sessionData.parameters.tongda);
-console.log("loaison:", sessionData.parameters.loaison);
-console.log("hasEnoughCriteria:", hasEnoughCriteria(sessionData.parameters));
+    console.log("loaimoi:", sessionData.parameters.loaimoi);
+    console.log("tongda:", sessionData.parameters.tongda);
+    console.log("loaison:", sessionData.parameters.loaison);
+    console.log("hasEnoughCriteria:", hasEnoughCriteria(sessionData.parameters));
     if (
       sessionData.parameters.loaimoi &&
       sessionData.parameters.tongda &&
-      sessionData.parameters.loaison && // chỉ gọi khi đã có
+      sessionData.parameters.loaison && 
       hasEnoughCriteria(sessionData.parameters)
     ) {
       const suggestedBrands = await productsModel.getBrandsByLipstick(
@@ -754,7 +761,7 @@ console.log("hasEnoughCriteria:", hasEnoughCriteria(sessionData.parameters));
       );
       console.log("suggestedBrands.length", suggestedBrands);
       if (suggestedBrands.length > 0) {
-        reply = `Bạn muốn tìm ${sessionData.parameters.loaison} phù hợp ${sessionData.parameters.tongda} và ${sessionData.parameters.loaimoi} thì mình gợi ý sản phẩm của các hãng như: ${suggestedBrands.join(", ")}. Bạn có muốn mình gợi ý sản phẩm từ các hãng này không?`;
+        reply = `Bạn muốn tìm ${sessionData.parameters.product} ${sessionData.parameters.loaison} phù hợp ${sessionData.parameters.tongda} và ${sessionData.parameters.loaimoi} thì mình gợi ý sản phẩm của các hãng như: ${suggestedBrands.join(", ")}. Bạn có muốn mình gợi ý sản phẩm từ các hãng này không?`;
         sessionData.awaitingBrandSuggestionResponse = true;
         return res.json({ reply, products: [], needMoreInfo, isYesNoQuestion: true });
       }

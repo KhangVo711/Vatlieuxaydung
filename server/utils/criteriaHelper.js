@@ -1,4 +1,3 @@
-import { console } from "inspector";
 
 const criteriaMap = {
   son: ["loaimoi", "loaison", "tongda", "tongmauson"],
@@ -15,7 +14,6 @@ const criteriaMap = {
  */
 export const hasEnoughCriteria = (params) => {
   const category = params.product?.toLowerCase() || "";
-console.log("hasEnoughCriteria", category, params);
   for (const [key, fields] of Object.entries(criteriaMap)) {
     if (category.includes(key)) {
       const filled = fields.filter((f) => !!params[f]).length;

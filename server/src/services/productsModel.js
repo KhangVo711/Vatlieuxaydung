@@ -144,16 +144,25 @@ const getProduct_Hot8 = async () => {
 };
 const getProduct12 = async () => {
   const [rows] = await connectDB.execute(`
-        SELECT s.masp, s.tensp, s.maloai, s.soluongsp, s.gia, s.mansx, h.hinhanh
-        FROM sanpham s
-        LEFT JOIN khuyenmai k ON s.masp = k.masp
-        LEFT JOIN (
-            SELECT masp, hinhanh,
-                   ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
-            FROM hinhanhsanpham
-        ) h ON s.masp = h.masp AND h.rn = 1
-        WHERE k.masp IS NULL
-        ORDER BY s.masp
+        SELECT 
+      sp.*, 
+      km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+      lsp.tenloai, nsx.tennsx,
+      (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
+      GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
+      GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
+      CASE 
+          WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia -- No variants, use base price
+          ELSE MIN(cb.gia) -- Use the minimum price when there are variants
+      END AS gia_range
+    FROM sanpham sp
+    JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+    JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+    LEFT JOIN khuyenmai km ON sp.masp = km.masp
+    LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
+    LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+    GROUP BY sp.masp, sp.tensp, sp.gia, sp.soluongsp, sp.ttct, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+             lsp.tenloai, nsx.tennsx
         LIMIT 12
     `);
   return rows;

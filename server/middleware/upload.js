@@ -38,6 +38,6 @@ const upload = multer({
   fileFilter: fileFilter,
 });
 
-const uploadMiddleware = upload.array('hinhanh', 10); // Cho phép tối đa 10 ảnh
+const uploadMiddleware = upload.array('hinhanh', 20); // Cho phép tối đa 10 ảnh
 
 export default uploadMiddleware;

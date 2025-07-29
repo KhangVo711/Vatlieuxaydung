@@ -226,7 +226,7 @@ export default function NewProduct() {
               <h3 className="text-md tracking-tighter font-semibold mt-2 sm:text-sm md:text-md lg:text-lg">
                 {product.tensp}
               </h3>
-              <p>{product.ttct}</p>
+              <p className='line-clamp-3'>{product.ttct}</p>
               <div className="flex justify-between mt-4">
                 <button
                   onClick={(e) => handleAddToCart(product, e)}
