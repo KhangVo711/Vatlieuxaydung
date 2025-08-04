@@ -9,6 +9,7 @@ import cart from '../controllers/cartController.js'
 import rating from "../controllers/ratingController.js";
 import branch from "../controllers/branchController.js";
 import statistic from "../controllers/statisticController.js";
+import faceController from '../controllers/faceController.js'
 import repo from '../controllers/repoController.js'
 import contact from '../controllers/contactController.js'
 import uploadMiddleware from '../../middleware/upload.js'
@@ -114,7 +115,8 @@ const initWebRoute = (app) => {
     router.get('/get-contact', contact.getContact)
 
     router.post('/chatbot', product.chatbot);
-
+    router.post('/face_register', faceController.faceRegister);
+    router.post('/face_recognize', faceController.faceRecognize);
     return app.use('/', router)
 }
 export default initWebRoute

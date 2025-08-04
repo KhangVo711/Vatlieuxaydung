@@ -29,6 +29,8 @@ import About from '../components/users/about/About.jsx';
 import AddBranch from '../components/admin/addbranch/AddBranch.jsx';
 import WeeklySchedule from '../components/admin/calendar/tableCalender/weeklyschedule/WeeklySchedule.jsx';
 import Feedback from '../components/admin/feedback/Feedback.jsx';
+import FaceCheckin from '../components/staff/timekeeping/faceCheckin/FaceCheckin.jsx';
+import FaceRegister from '../components/staff/timekeeping/faceRegister/FaceRegister.jsx';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -198,6 +200,20 @@ export const router = createBrowserRouter([
             <Feedback />
           </PrivateRouterAdmin>
       },
+      {
+        path: "timekeeping",
+        element:
+          <PrivateRouterAdmin>
+            <FaceCheckin />
+          </PrivateRouterAdmin>
+      },
+      {
+        path: "faceregister",
+        element:
+          <PrivateRouterAdmin>
+            <FaceRegister />
+          </PrivateRouterAdmin>
+      },
     ]
   },
   {
@@ -283,6 +299,13 @@ export const router = createBrowserRouter([
         element:
           <PrivateRouterStaff>
             <Feedback />
+          </PrivateRouterStaff>
+      },
+      {
+        path: "timekeeping",
+        element:
+          <PrivateRouterStaff>
+            <FaceCheckin />
           </PrivateRouterStaff>
       },
     ]
