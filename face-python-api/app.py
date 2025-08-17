@@ -38,8 +38,8 @@ def process_image(image_base64):
             print("[PROCESS_IMAGE] Không đọc được ảnh từ base64")
             return None, "Không đọc được ảnh từ base64"
 
-        cv2.imwrite("debug_input.jpg", img)
-        print(f"[PROCESS_IMAGE] Ảnh gốc đã được lưu tại debug_input.jpg, Kích thước: {img.shape}, Kiểu dữ liệu: {img.dtype}")
+        # cv2.imwrite("debug_input.jpg", img)
+        # print(f"[PROCESS_IMAGE] Ảnh gốc đã được lưu tại debug_input.jpg, Kích thước: {img.shape}, Kiểu dữ liệu: {img.dtype}")
 
         if len(img.shape) == 3 and img.shape[2] == 4:
             print("[PROCESS_IMAGE] Chuyển đổi ảnh RGBA sang BGR")
@@ -69,8 +69,8 @@ def process_image(image_base64):
             img_rgb = cv2.resize(img_rgb, (int(width * scale), int(height * scale)), interpolation=cv2.INTER_AREA)
             print(f"[PROCESS_IMAGE] Đã resize ảnh thành: {img_rgb.shape}")
 
-        cv2.imwrite("debug_preprocessed.jpg", cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
-        print("[PROCESS_IMAGE] Ảnh sau tiền xử lý đã được lưu tại debug_preprocessed.jpg")
+        # cv2.imwrite("debug_preprocessed.jpg", cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
+        # print("[PROCESS_IMAGE] Ảnh sau tiền xử lý đã được lưu tại debug_preprocessed.jpg")
 
         print(f"[PROCESS_IMAGE] Kích thước ảnh RGB: {img_rgb.shape}, Kiểu dữ liệu: {img_rgb.dtype}, Contiguous: {img_rgb.flags['C_CONTIGUOUS']}")
         return img_rgb, None
