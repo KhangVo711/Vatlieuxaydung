@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 import Cookies from 'js-cookie';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-
 export default function Calendar() {
   const MONTH_NAMES = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
   const DAYS = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
@@ -286,6 +285,17 @@ export default function Calendar() {
     setNoOfDays(daysArray);
   };
 
+  function formatDateTimeVN(isoString) {
+  if (!isoString) return "";
+  const d = new Date(isoString);
+  if (isNaN(d)) return "";
+  return new Intl.DateTimeFormat('vi-VN', {
+    // day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  }).format(d); 
+}
+
   const isSameDate = (date1, date2) => {
     const d1 = new Date(date1);
     const d2 = new Date(date2);
@@ -451,12 +461,16 @@ export default function Calendar() {
                       <td key={index} className="border p-2">
                         {getShiftsForDateAndType(day, shiftType).map((shift, i) => (
                           <div key={i} className="mb-2">
-                            <p className="text-sm font-semibold">
+                            <p className="text-sm text-center font-semibold">
                               {new Date(shift.giovaoca).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(shift.gioraca).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </p>
                             {shift.staff_names.map((name, j) => (
-                              <p key={j} className="text-xs font-bold mt-1 text-gray-600">{name}</p>
+                              <p key={j} className="text-xs text-center font-bold mt-1 text-gray-600">{name}</p>
                             ))}
+                            
+                              <p className="text-xs font-semibold mt-1 text-gray-600"><span className='font-bold'>Giờ vào:</span> {formatDateTimeVN(shift.checkin)}</p>
+                              <p className="text-xs font-semibold mt-1 text-gray-600"><span className='font-bold mr-2'>Giờ ra:</span> {formatDateTimeVN(shift.checkout)}</p>
+                              <p className="text-xs font-semibold mt-1 text-gray-600"><span className='font-bold'>Tổng giờ làm:</span> {Math.ceil(shift.giolam * 10) / 10} giờ</p>
                             <button
                               onClick={() => showEditModal(shift)}
                               className="text-pink-500 text-xs hover:underline"
