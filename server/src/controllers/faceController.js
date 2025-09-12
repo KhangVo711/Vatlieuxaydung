@@ -28,20 +28,20 @@ const faceRecognize = async (req, res) => {
       return res.status(400).json({ message: "Thiếu image hoặc mã nhân viên" });
     }
 
-    console.log("[FACE RECOGNIZE] Nhận image:", image.slice(0, 30));
-    console.log("[FACE RECOGNIZE] Nhân viên đăng nhập:", manvClient);
+    console.log("[REQ] manvClient:", manvClient);
 
-    // Gửi ảnh đến Python server để nhận diện gương mặt
+    // 1. Gửi ảnh đến Python server để nhận diện gương mặt
     const pyRes = await axios.post("http://127.0.0.1:5000/recognize", { image });
-    console.log("[FACE RECOGNIZE] Kết quả từ Python:", pyRes.data);
+    console.log("[PYTHON RES]", pyRes.data);
 
     if (!pyRes.data.success) {
       return res.json({ success: false, message: pyRes.data.message || "Không nhận diện được khuôn mặt" });
     }
 
     const manvRecognized = pyRes.data.manv;
+    console.log("[MANV RECOGNIZED]", manvRecognized);
 
-    // So sánh gương mặt nhận diện được với mã nhân viên đang đăng nhập
+    // 2. Kiểm tra gương mặt có khớp với mã nhân viên đăng nhập
     if (manvRecognized !== manvClient) {
       return res.json({
         success: false,
@@ -49,16 +49,85 @@ const faceRecognize = async (req, res) => {
       });
     }
 
-    // Ghi thời gian chấm công
-    const currentTime = new Date();
-    const formattedTime = currentTime.toISOString().slice(0, 19).replace('T', ' ');
-
-    await connectDB.execute(
-      "INSERT INTO chamcong (manv, thoigian) VALUES (?, ?)",
-      [manvRecognized, formattedTime]
+    // 3. Xác định ca làm hiện tại của nhân viên
+    const [rows] = await connectDB.execute(
+      `SELECT c.maca, c.giovaoca, c.gioraca
+       FROM giaonhanca g
+       JOIN calam c ON g.maca = c.maca
+       WHERE g.manv = ?
+         AND NOW() BETWEEN c.giovaoca AND c.gioraca`,
+      [manvRecognized]
     );
 
-    res.json({ success: true, manv: manvRecognized });
+    console.log("[CURRENT SHIFT ROWS]", rows);
+
+    if (rows.length === 0) {
+      return res.json({ success: false, message: "Không tìm thấy ca làm hiện tại của nhân viên" });
+    }
+
+    const maca = rows[0].maca;
+    console.log("[MACA FOUND]", maca);
+
+    // 4. Kiểm tra nhân viên đã có bản ghi chấm công trong ca này chưa
+    const [record] = await connectDB.execute(
+      "SELECT * FROM chitietchamcong WHERE manv = ? AND maca = ?",
+      [manvRecognized, maca]
+    );
+
+    console.log("[CHITIETCHAMCONG RECORD]", record);
+
+    if (!record.length) {
+      // Chưa có -> ghi checkin
+      await connectDB.execute(
+        "INSERT INTO chitietchamcong (manv, maca, checkin) VALUES (?, ?, NOW())",
+        [manvRecognized, maca]
+      );
+
+      console.log(`[CHECKIN INSERTED] manv=${manvRecognized}, maca=${maca}`);
+
+      await connectDB.execute(
+        "UPDATE calam SET soluongCheckin = IFNULL(soluongCheckin, 0) + 1 WHERE maca = ?",
+        [maca]
+      );
+
+      return res.json({ success: true, message: "Điểm danh CHECKIN thành công", manv: manvRecognized, maca });
+    } else {
+      // Đã có checkin -> cập nhật checkout + tính giờ làm
+      console.log("[CHECKIN TIME FROM RECORD]", record[0].checkin);
+
+      if (!record[0].checkin) {
+        return res.json({ success: false, message: "Không có thời gian checkin để tính checkout" });
+      }
+
+      const checkinTime = new Date(record[0].checkin);
+      const checkoutTime = new Date();
+
+      const diffMs = checkoutTime - checkinTime;
+      const diffHours = diffMs / (1000 * 60 * 60);
+
+      const giolam = isNaN(diffHours) ? 0 : parseFloat(diffHours.toFixed(2));
+
+      console.log(`[CHECKOUT] checkin=${checkinTime}, checkout=${checkoutTime}, giolam=${giolam}, id=${record[0].id}`);
+
+      await connectDB.execute(
+        "UPDATE chitietchamcong SET checkout = NOW(), giolam = ? WHERE id = ?",
+        [giolam, record[0].id]
+      );
+
+      await connectDB.execute(
+        "UPDATE calam SET soluongCheckout = IFNULL(soluongCheckout, 0) + 1 WHERE maca = ?",
+        [maca]
+      );
+
+      return res.json({
+        success: true,
+        message: "Điểm danh CHECKOUT thành công",
+        manv: manvRecognized,
+        maca,
+        giolam
+      });
+    }
+
   } catch (error) {
     console.error("[FACE RECOGNIZE ERROR]", error.response?.data || error.message);
     res.status(500).json({
@@ -67,6 +136,8 @@ const faceRecognize = async (req, res) => {
     });
   }
 };
+
+
 
 
 

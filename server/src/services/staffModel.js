@@ -76,12 +76,13 @@ const getShifts = async (manv) => {
 
 const getAllShifts = async () => { 
     const [rows, fields] = await connectDB.execute(
-        `SELECT c.*, 
+        `SELECT c.*, ct.*, 
                 GROUP_CONCAT(n.manv) as staff_ids, 
                 GROUP_CONCAT(n.tennv) as staff_names
          FROM calam c
          LEFT JOIN giaonhanca g ON c.maca = g.maca
          LEFT JOIN nhanvien n ON g.manv = n.manv
+         LEFT JOIN chitietchamcong ct ON c.maca = ct.maca
          GROUP BY c.maca`
     );
     return rows.map(row => ({
