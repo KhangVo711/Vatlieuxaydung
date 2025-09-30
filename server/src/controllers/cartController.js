@@ -3,7 +3,15 @@ import connectDB from "../configs/connectDB.js";
 
 import cartModel from "../services/cartModel.js";
 import productsModel from "../services/productsModel.js";
+import { PayOS } from "@payos/node";
+import dotenv from "dotenv";
+dotenv.config();
 
+const payos = new PayOS(
+  process.env.PAYOS_CLIENT_ID,
+  process.env.PAYOS_API_KEY,
+  process.env.PAYOS_CHECKSUM_KEY
+);
 
 const getCart = async (req, res) => {
     try {
@@ -16,17 +24,129 @@ const getCart = async (req, res) => {
 }
 
 const insertCart = async (req, res) => {
-    try {
-        const { madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong } = req.body;
-        if (!madh || (!makh && !maform) || !ngaydat || !trangthai || !tonggia || !madvvc || !quangduong) {
-            return res.status(400).send({ message: "Thiếu thông tin đặt hàng." });
-        }
-        await cartModel.insertCart(madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong);
-        res.status(200).send({ message: "Đơn hàng đã được đặt thành công!" });
-    } catch (error) {
-        console.error("Error saving order:", error);
-        res.status(500).send({ message: "Đặt hàng không thành công." });
+  try {
+    const {
+      madh,
+      makh,
+      ngaydat,
+      trangthai,
+      tonggia,
+      madvvc,
+      maform,
+      quangduong,
+      hinhthucthanhtoan,
+    } = req.body;
+
+    if (
+      !madh ||
+      (!makh && !maform) ||
+      !ngaydat ||
+      !trangthai ||
+      !tonggia ||
+      !madvvc ||
+      !quangduong ||
+      !hinhthucthanhtoan
+    ) {
+      return res.status(400).send({ message: "Thiếu thông tin đặt hàng." });
     }
+
+    const trangthaithanhtoan =
+      hinhthucthanhtoan === "cod" ? "Chưa thanh toán" : "Chờ thanh toán";
+
+    await cartModel.insertCart(
+      madh,
+      makh,
+      ngaydat,
+      trangthai,
+      tonggia,
+      madvvc,
+      maform,
+      quangduong,
+      hinhthucthanhtoan,
+      trangthaithanhtoan
+    );
+
+    res.status(200).send({
+      message: "Đơn hàng đã được đặt thành công!",
+      // needPayment: hinhthucthanhtoan === "qr" 
+    });
+  } catch (error) {
+    console.error("Error saving order:", error);
+    res.status(500).send({ message: "Đặt hàng không thành công." });
+  }
+};
+
+
+// Tạo đơn hàng PayOS 
+const createPayOSOrder = async (req, res) => {
+  try {
+    let { orderId, amount, description } = req.body;
+console.log(payos);
+
+    if (isNaN(orderId)) {
+      orderId = Math.floor(Date.now() / 1000);
+    }
+
+    const body = {
+      orderCode: Number(orderId),
+      amount: Number(amount),
+      description,
+      returnUrl: "http://localhost:5173/payment-success",
+      cancelUrl: "http://localhost:5173/payment-cancel",
+    };
+
+    const response = await payos.paymentRequests.create(body);
+
+    res.json({
+      checkoutUrl: response.checkoutUrl,
+      qrCode: response.qrCode,
+    });
+  } catch (err) {
+    console.error("createPayOSOrder error:", err.response?.data || err.message);
+    res.status(500).json({ error: "Không tạo được link PayOS" });
+  }
+};
+
+
+
+
+const payOSWebhook = async (req, res) => {
+  try {
+    const body = req.body;
+    console.log("Webhook data:", body);
+
+    if (body.code === "00" && body.success && body.data) {
+      const orderId = body.data.orderCode;  
+      await cartModel.updateOrderPaymentStatus(orderId, "Đã thanh toán");
+      console.log(`Đơn hàng ${orderId} đã cập nhật thành "Đã thanh toán"`);
+    }
+
+    res.status(200).json({ message: "ok" });
+  } catch (err) {
+    console.error("Webhook error:", err);
+    res.status(500).json({ error: "Webhook failed" });
+  }
+};
+
+const getOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const codeCart = id;
+    const order = await cartModel.getOrderById(codeCart);
+
+    if (!order) {
+      return res.status(404).json({ status: "Không tìm thấy đơn hàng" });
+    }
+
+    res.json({
+      orderId: id,
+      paymentStatus: order.trangthaithanhtoan, // "Chưa thanh toán" | "Chờ thanh toán" | "Đã thanh toán"
+      orderStatus: order.trangthai,          // "Chờ xác nhận" | "Đã xác nhận" | "Đang giao hàng" | "Đã giao hàng" | "Đã hủy"
+    });
+  } catch (error) {
+    console.error("getOrderStatus error:", error);
+    res.status(500).json({ error: "Lỗi khi lấy trạng thái đơn hàng" });
+  }
 };
 const insertFormOD = async (req, res) => {
     try {
@@ -58,7 +178,6 @@ const insertFormOD = async (req, res) => {
         const tenkh = fullname;
         const sdt = phone;
         const diachi = address;
-      
         await cartModel.insertFormOD(maform, tenkh, sdt, diachi, email);
         return res.status(200).json({ message: 'Cập nhật thành công' });
         
@@ -190,4 +309,4 @@ const detailOrderOfUser = async (req, res) => {
 }
 
 
-export default { insertCart, insertDetailCart, getCart, updateStatus, detailProductInOrder, detailOrderOfUser, insertFormOD };
+export default { insertCart, insertDetailCart, getCart, updateStatus, detailProductInOrder, detailOrderOfUser, insertFormOD, payOSWebhook, getOrderStatus, createPayOSOrder };

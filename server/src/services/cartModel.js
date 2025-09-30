@@ -1,8 +1,32 @@
 import connectDB from "../configs/connectDB.js";
 
 // CART
-const insertCart = async (madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong) => {
-    await connectDB.execute("INSERT INTO `donhang` VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong]);
+const insertCart = async (madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong, hinhthucthanhtoan, trangthaithanhtoan) => {
+    const sql = `
+      INSERT INTO donhang 
+      (madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong, hinhthucthanhtoan, trangthaithanhtoan) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    await connectDB.execute(sql, [
+      madh,
+      makh,
+      ngaydat,
+      trangthai,
+      tonggia,
+      madvvc,
+      maform,
+      quangduong,
+      hinhthucthanhtoan,
+      trangthaithanhtoan
+    ]);
+};
+const updateOrderPaymentStatus = async (madh, status) => {
+  const sql = `UPDATE donhang SET trangthaithanhtoan = ? WHERE madh = ?`;
+  await connectDB.execute(sql, [status, madh]);
+};
+const getOrderById = async (madh) => {
+  const [rows] = await connectDB.execute(`SELECT * FROM donhang WHERE madh = ?`, [madh]);
+  return rows[0];
 }
 const insertDetailCart = async (madh, masp, mabienthe, soluongsanpham, km, dongia) => {
   await connectDB.execute(
@@ -154,4 +178,4 @@ GROUP BY
 };
 
 
-export default { insertCart, insertDetailCart, getCart, updateStatus, getDetailCart, updateQuantity, detailProductInOrder, detailOrderOfUser, insertFormOD };
+export default { insertCart, insertDetailCart, getCart, updateStatus, getDetailCart, updateQuantity, detailProductInOrder, detailOrderOfUser, insertFormOD, updateOrderPaymentStatus, getOrderById };
