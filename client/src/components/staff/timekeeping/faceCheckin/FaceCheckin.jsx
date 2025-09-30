@@ -151,7 +151,7 @@ const FaceCheckin = () => {
                         className="w-full h-auto rounded-2xl transition-all duration-700 scale-100 group-hover:scale-105"
                       />
 
-                      <div className="absolute w-full h-[73.5%] inset-0 bg-green-500/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute w-full h-full inset-0 bg-green-500/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="text-center">
                           <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2 mx-auto">
                             <svg

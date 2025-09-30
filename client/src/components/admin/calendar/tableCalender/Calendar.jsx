@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Cookies from 'js-cookie';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import {formatCurrency} from '../../../../utils/currency.jsx';
 export default function Calendar() {
   const MONTH_NAMES = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
   const DAYS = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
@@ -467,10 +468,11 @@ export default function Calendar() {
                             {shift.staff_names.map((name, j) => (
                               <p key={j} className="text-xs text-center font-bold mt-1 text-gray-600">{name}</p>
                             ))}
-                            
-                              <p className="text-xs font-semibold mt-1 text-gray-600"><span className='font-bold'>Giờ vào:</span> {formatDateTimeVN(shift.checkin)}</p>
-                              <p className="text-xs font-semibold mt-1 text-gray-600"><span className='font-bold mr-2'>Giờ ra:</span> {formatDateTimeVN(shift.checkout)}</p>
-                              <p className="text-xs font-semibold mt-1 text-gray-600"><span className='font-bold'>Tổng giờ làm:</span> {Math.ceil(shift.giolam * 10) / 10} giờ</p>
+                              <p className="text-xs font-semibold mt-0.5 text-gray-600"><span className='font-bold'>Lương:</span> {formatCurrency(shift.luongmoica)}/h</p>
+                              <p className="text-xs font-semibold mt-0.5 text-gray-600"><span className='font-bold'>Giờ vào:</span> {formatDateTimeVN(shift.checkin)}</p>
+                              <p className="text-xs font-semibold mt-0.5 text-gray-600"><span className='font-bold mr-2'>Giờ ra:</span> {formatDateTimeVN(shift.checkout)}</p>
+                              <p className="text-xs font-semibold mt-0.5 text-gray-600"><span className='font-bold'>Tổng giờ làm:</span> {Math.ceil(shift.giolam * 10) / 10} giờ</p>
+                              <p className="text-xs font-semibold mt-0.5 text-gray-600"><span className='font-bold'>Tổng lương:</span> {formatCurrency(shift.luongmoica * Math.ceil(shift.giolam * 10) / 10)}</p>
                             <button
                               onClick={() => showEditModal(shift)}
                               className="text-pink-500 text-xs hover:underline"

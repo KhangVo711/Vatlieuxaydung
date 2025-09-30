@@ -2,6 +2,7 @@ import { useEffect, useState, useContext  } from 'react';
 import { formatCurrency } from '../../../utils/currency.jsx';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { Context } from '../../Context.jsx';
+import { useLocation } from 'react-router-dom';
 
 import {
   Chart,
@@ -32,6 +33,9 @@ Chart.register(
 );
 
 export default function Dashboard() {
+  const location = useLocation()
+  const isLocation = /^\/admin\/.*/.test(location.pathname);
+
   const [orders, setOrders] = useState([]);
   const [productSales, setProductSales] = useState([]);
   const [revenue, setRevenue] = useState([]);
@@ -55,7 +59,7 @@ export default function Dashboard() {
     greetingText = 'Chào buổi tối';
   }
 
-  setGreeting(`${greetingText}, ${isDataStaff && isDataStaff.tennv ? isDataStaff.tennv : 'Admin'}! Bây giờ là ${hour}:${minutes}`);
+  setGreeting(`${greetingText}, ${isDataStaff && isDataStaff.tennv && !isLocation ? isDataStaff.tennv : 'Admin'}! Bây giờ là ${hour}:${minutes}`);
   }
   const fetchTotalReviews = async () => {
     try {

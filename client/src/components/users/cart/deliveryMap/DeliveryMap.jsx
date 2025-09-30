@@ -172,8 +172,8 @@ export default function DeliveryMap({ selectedDelivery, setFeeShip, formData, se
 
     L.Routing.control({
       waypoints: [
-        L.latLng(nearestStore.vido, nearestStore.kinhdo),
         L.latLng(userLatLng.lat, userLatLng.lng),
+        L.latLng(nearestStore.vido, nearestStore.kinhdo),
       ],
       routeWhileDragging: true,
       show: false,

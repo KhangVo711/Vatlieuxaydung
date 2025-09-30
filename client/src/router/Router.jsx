@@ -31,6 +31,8 @@ import WeeklySchedule from '../components/admin/calendar/tableCalender/weeklysch
 import Feedback from '../components/admin/feedback/Feedback.jsx';
 import FaceCheckin from '../components/staff/timekeeping/faceCheckin/FaceCheckin.jsx';
 import FaceRegister from '../components/staff/timekeeping/faceRegister/FaceRegister.jsx';
+import PaymentSuccess from '../components/users/cart/payment/PaymentSuccess.jsx';
+import PaymentCancel from '../components/users/cart/payment/PaymentCancel.jsx';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -71,6 +73,14 @@ export const router = createBrowserRouter([
         element:
           <About />
       },
+      {
+        path: "payment-success",
+        element: <PaymentSuccess />
+      },
+      {
+        path: "payment-cancel",
+        element: <PaymentCancel />
+      }
     ]
   },
   {
