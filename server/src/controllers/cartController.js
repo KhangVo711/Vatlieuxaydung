@@ -91,8 +91,8 @@ console.log(payos);
       orderCode: Number(orderId),
       amount: Number(amount),
       description,
-      returnUrl: "http://localhost:5173/payment-success",
-      cancelUrl: "http://localhost:5173/payment-cancel",
+      returnUrl: `http://localhost:5173/payment-success`,
+      cancelUrl: `http://localhost:5001/orders/payment-cancel?orderId=${orderId}`,
     };
 
     const response = await payos.paymentRequests.create(body);
@@ -114,6 +114,7 @@ const payOSWebhook = async (req, res) => {
   try {
     const body = req.body;
     console.log("Webhook data:", body);
+      console.log("Updating order status for order ID:", body.data.orderCode);
 
     if (body.code === "00" && body.success && body.data) {
       const orderId = body.data.orderCode;  
@@ -128,10 +129,31 @@ const payOSWebhook = async (req, res) => {
   }
 };
 
+const paymentCancel = async (req, res) => {
+  try {
+    const { orderId } = req.query; 
+    
+    // Xóa chi tiết đơn hàng trước
+    await connectDB.execute("DELETE FROM chitietdonhang WHERE madh = ?", [orderId]);
+    
+    // Xóa đơn hàng
+    await connectDB.execute("DELETE FROM donhang WHERE madh = ?", [orderId]);
+
+    console.log(`Đơn hàng ${orderId} đã bị hủy do cancel thanh toán`);
+    
+    // Redirect về trang hủy thanh toán
+    res.redirect("http://localhost:5173/payment-cancel");
+  } catch (err) {
+    console.error("Cancel payment error:", err);
+    res.status(500).json({ error: "Không thể xử lý hủy thanh toán" });
+  }
+};
+
 const getOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const codeCart = id;
+    console.log("Fetching status for order ID:", codeCart);
     const order = await cartModel.getOrderById(codeCart);
 
     if (!order) {
@@ -309,4 +331,4 @@ const detailOrderOfUser = async (req, res) => {
 }
 
 
-export default { insertCart, insertDetailCart, getCart, updateStatus, detailProductInOrder, detailOrderOfUser, insertFormOD, payOSWebhook, getOrderStatus, createPayOSOrder };
+export default { insertCart, insertDetailCart, getCart, updateStatus, detailProductInOrder, detailOrderOfUser, insertFormOD, payOSWebhook, getOrderStatus, createPayOSOrder, paymentCancel };

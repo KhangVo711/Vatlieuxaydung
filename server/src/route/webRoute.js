@@ -62,6 +62,7 @@ const initWebRoute = (app) => {
     router.post("/payos/webhook", cart.payOSWebhook);
     router.get("/orders/get-order-status/:id", cart.getOrderStatus);
     router.post("/orders/create-payos-order", cart.createPayOSOrder);
+    router.get("/orders/payment-cancel", cart.paymentCancel);
     router.post('/createCartDetail', cart.insertDetailCart)
     router.get('/getOrder', cart.getCart)
     router.post('/updateStatus', cart.updateStatus)

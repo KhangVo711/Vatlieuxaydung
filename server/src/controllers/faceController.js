@@ -118,7 +118,15 @@ const faceRecognize = async (req, res) => {
         "UPDATE calam SET soluongCheckout = IFNULL(soluongCheckout, 0) + 1 WHERE maca = ?",
         [maca]
       );
-
+      const [luongmoica] = await connectDB.execute(
+        "SELECT c.luongmoica, ct.giolam, CASE WHEN (c.luongmoica * ct.giolam) % 1000 >= 500 THEN CEIL((c.luongmoica * ct.giolam) / 1000) * 1000 ELSE FLOOR((c.luongmoica * ct.giolam) / 1000) * 1000 END AS tongluong FROM calam c JOIN chitietcalam ct ON c.maca = ct.maca WHERE c.maca = ?;",
+        [maca]
+      );
+      console.log("[LUONG MOI CA]", luongmoica[0].tongluong);
+      await connectDB.execute(
+        "UPDATE nhanvien SET tongluong = IFNULL(tongluong, 0) + ? WHERE manv = ?",
+        [luongmoica[0].tongluong, manvRecognized]
+      );
       return res.json({
         success: true,
         message: "Điểm danh CHECKOUT thành công",

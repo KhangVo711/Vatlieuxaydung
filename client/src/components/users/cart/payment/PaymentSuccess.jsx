@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import { Context } from "../../../Context.jsx"; // 🔹 import context
 
 export default function PaymentSuccess() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("");
+  const { isData } = useContext(Context); // 🔹 lấy thông tin khách hàng
 
   useEffect(() => {
     const checkPaymentStatus = async () => {
@@ -26,8 +28,9 @@ export default function PaymentSuccess() {
         if (res.data.paymentStatus === "Đã thanh toán") {
           setStatus("Thanh toán thành công! Cảm ơn bạn đã mua hàng.");
           setTimeout(() => {
-            navigate("/ordered"); 
-          }, 2000);
+            if (isData?.id) navigate("/ordered");
+            else navigate("/products");
+          }, 3000);
         } else {
           setStatus("Đơn hàng chưa được xác nhận thanh toán. Vui lòng chờ...");
         }
@@ -40,7 +43,7 @@ export default function PaymentSuccess() {
     };
 
     checkPaymentStatus();
-  }, [navigate, searchParams]);
+  }, [navigate, searchParams, isData]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
