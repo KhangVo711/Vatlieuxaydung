@@ -208,14 +208,14 @@ export default function Contact() {
           <></>
         )}
       </main>
-      <div className="absolute bottom-8 right-6 w-24 h-24 flex items-center justify-center">
+      {/* <div className="absolute bottom-8 right-6 w-24 h-24 flex items-center justify-center">
           <div
             className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition duration-300 group"
             onClick={toggleModal}
           >
             <ChatBubbleLeftIcon className="w-9 h-9 text-pink-500 group-hover:text-pink-600 transition duration-300" />
           </div>
-        </div>
+        </div> */}
     </div>
   );
 }

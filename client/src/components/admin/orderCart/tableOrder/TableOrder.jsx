@@ -69,6 +69,9 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
               <th scope="col" className="px-4 py-3 text-right">
                 Trạng thái
               </th>
+              <th scope="col" className="px-4 py-3 text-right">
+                Thanh toán
+              </th>
               <th scope="col" className="text-center px-6 py-3 ">
                 Hành động
               </th>
@@ -96,6 +99,9 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
                 </td>
                 <td className="px-2.5 py-3 text-right">
                   {item.trangthai}
+                </td>
+                <td className="px-2.5 py-3 text-right">
+                  {item.trangthaithanhtoan}
                 </td>
             
                 <td className="items-center justify-center px-6 py-4 flex">

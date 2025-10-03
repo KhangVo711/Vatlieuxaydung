@@ -147,6 +147,7 @@ const detailOrderOfUser = async (makh) => {
     dh.ngaydat,
     dh.trangthai,
     dh.tonggia,
+    dh.trangthaithanhtoan,
     dv.tendvvc,
     GROUP_CONCAT(
         CONCAT(
@@ -168,7 +169,7 @@ JOIN
 WHERE
     kh.makh = ?
 GROUP BY
-    dh.madh, dh.makh, kh.tenkh, dh.ngaydat, dh.trangthai, dh.tonggia, dv.tendvvc;
+    dh.madh, dh.makh, kh.tenkh, dh.ngaydat, dh.trangthai, dh.trangthaithanhtoan, dh.tonggia, dv.tendvvc;
 
 
 

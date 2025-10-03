@@ -46,7 +46,7 @@ const callsToAction = [
 
 export default function Header() {
   const location = useLocation()
-  
+  const isLocation = /^\/products\/.*/.test(location.pathname);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { isData, setIsData } = useContext(Context);
   const {cartItems} = useContext(Context);
@@ -479,7 +479,9 @@ const products = [
             {location.pathname === '/contact' ? <hr className='bg-black h-0.5 w-1/2' /> : ''} 
           </Link>
 
-          <div className="flex items-center border border-gray-300 rounded-full p-2 xl:w-80 lg:w-64 bg-white shadow-sm">
+          <div className={`flex items-center ${location.pathname === '/products' || isLocation ? 'border-gray-300 bg-white border shadow-sm' : ''} rounded-full p-2 xl:w-80 lg:w-64`}>
+ {location.pathname === '/products' || isLocation ? (
+            <>
             <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
             <input
               type="text"
@@ -487,8 +489,9 @@ const products = [
               className="ml-2 outline-none w-full text-sm"
               onChange={handleSearch}
             />
-            <div className="w-0.5 h-5 bg-gray-300 mr-2"></div>
-            <MicrophoneIcon className="h-5 w-5 text-gray-700" />
+            {/* <div className="w-0.5 h-5 bg-gray-300 mr-2"></div> */}
+            {/* <MicrophoneIcon className="h-5 w-5 text-gray-700" /> */}
+            </>) : null}
           </div>
           <Link to='cart' id='cart-icon' className="text-sm font-semibold leading-6  relative">
             <ShoppingCartIcon className={`h-7 w-7 ${location.pathname === '/cart' ? 'text-gray-900' : 'text-gray-500'} hover:text-gray-900 transition duration-150 `} />
