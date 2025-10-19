@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
-import { FunnelIcon, BarsArrowDownIcon, BarsArrowUpIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import { gsap } from 'gsap';
+// import { FunnelIcon, BarsArrowDownIcon, BarsArrowUpIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+// import { gsap } from 'gsap';
+import toast from "react-hot-toast";
 import { formatCurrency } from '../../../../utils/currency';
 import { Context } from '../../../../components/Context';
 import ReactModal from 'react-modal';
@@ -12,7 +13,7 @@ import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import PreFooter from '../prefooter/PreFooter';
 import CosmeticsProductCard from '../cosmeticsproductcard/CosmeticsProductCard';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 ReactModal.setAppElement('#root');
 
@@ -76,31 +77,31 @@ export default function AllProduct() {
     }
   };
 
-  const handleAddToCart = (product, e) => {
-    const fullProduct = products.find(p => p.masp === product.masp) || product;
-    const productToAdd = {
-      masp: fullProduct.masp,
-      tensp: fullProduct.tensp,
-      gia: fullProduct.gia,
-      hinhanh: fullProduct.hinhanh,
-      maloai: fullProduct.maloai,
-      mansx: fullProduct.mansx,
-      soluong: 1,
-      soluongsp: fullProduct.soluongsp,
-      tenloai: fullProduct.tenloai,
-      tennsx: fullProduct.tennsx,
-      ttct: fullProduct.ttct,
-      km: fullProduct.km,
-      makm: fullProduct.makm,
-      tenkm: fullProduct.tenkm,
-      thoigianbatdaukm: fullProduct.thoigianbatdaukm,
-      thoigianketthuckm: fullProduct.thoigianketthuckm,
-      ...(fullProduct.mabienthe && fullProduct.mabienthe && { mabienthe: fullProduct.mabienthe }),
-      ...(fullProduct.mathuoctinh && fullProduct.thuoc_tinh && { mathuoctinh: fullProduct.mathuoctinh }),
-    };
-    onAddToCart(productToAdd);
-  };
-  console.log('Selected Product:', selectedProduct);
+  // const handleAddToCart = (product, e) => {
+  //   const fullProduct = products.find(p => p.masp === product.masp) || product;
+  //   const productToAdd = {
+  //     masp: fullProduct.masp,
+  //     tensp: fullProduct.tensp,
+  //     gia: fullProduct.gia,
+  //     hinhanh: fullProduct.hinhanh,
+  //     maloai: fullProduct.maloai,
+  //     mansx: fullProduct.mansx,
+  //     soluong: 1,
+  //     soluongsp: fullProduct.soluongsp,
+  //     tenloai: fullProduct.tenloai,
+  //     tennsx: fullProduct.tennsx,
+  //     ttct: fullProduct.ttct,
+  //     km: fullProduct.km,
+  //     makm: fullProduct.makm,
+  //     tenkm: fullProduct.tenkm,
+  //     thoigianbatdaukm: fullProduct.thoigianbatdaukm,
+  //     thoigianketthuckm: fullProduct.thoigianketthuckm,
+  //     ...(fullProduct.mabienthe && fullProduct.mabienthe && { mabienthe: fullProduct.mabienthe }),
+  //     ...(fullProduct.mathuoctinh && fullProduct.thuoc_tinh && { mathuoctinh: fullProduct.mathuoctinh }),
+  //   };
+  //   onAddToCart(productToAdd);
+  // };
+ 
   const handleAddCartSelect = () => {
     if (!selectedVariant && variants.length > 0) return; // Prevent adding if variant required but not selected
     const productToAdd = {
@@ -124,6 +125,10 @@ export default function AllProduct() {
       ...(selectedVariant && selectedVariant.thuoc_tinh && { thuoctinh: selectedVariant.thuoc_tinh }),
     };
     onAddToCart(productToAdd);
+    toast.success(
+    `${selectedProduct.tensp} đã được thêm vào giỏ hàng`,
+    { duration: 3000 }
+  );
     closeModal();
 
   };
@@ -295,20 +300,28 @@ useEffect(() => {
                   </div>
                 )}
                 <p className="text-gray-600 text-sm">{selectedProduct.ttct}</p>
-                <div className="mt-16 flex justify-center space-x-8">
-                  <button
-                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-150"
-                    onClick={closeModal}
-                  >
-                    Đóng
-                  </button>
+                <div className="mt-8 text-sm flex justify-center items-center flex-col ">
+                 <div className='flex justify-between items-center space-x-6 mb-4'>
+                   <Link
+                     to={`/products/detail/${selectedProduct.masp}`}
+                     className="bg-blue-400 text-white px-3 w-32 text-center items-center py-1 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
+                   >
+                     Xem chi tiết
+                   </Link>
                   <button
                     onClick={handleAddCartSelect}
-                    className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
+                    className="bg-pink-400 w-32 items-center text-white px-3 py-1 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
                     aria-label={`Add ${selectedProduct.tensp} to cart`}
                     disabled={!selectedVariant && variants.length > 0 || (selectedVariant?.soluongtonkho === 0)}
                   >
-                    Mua ngay
+                    Thêm giỏ hàng
+                  </button>
+</div>
+                   <button
+                    className="bg-gray-400 text-white px-3 py-1 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
+                    onClick={closeModal}
+                  >
+                    Đóng
                   </button>
                 </div>
               </div>

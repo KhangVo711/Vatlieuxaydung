@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 06, 2025 at 03:11 PM
+-- Generation Time: Oct 19, 2025 at 12:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,6 +24,40 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cacbienthe`
+--
+
+CREATE TABLE `cacbienthe` (
+  `mabienthe` varchar(50) NOT NULL,
+  `masp` varchar(50) NOT NULL,
+  `gia` float NOT NULL,
+  `soluongtonkho` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cacbienthe`
+--
+
+INSERT INTO `cacbienthe` (`mabienthe`, `masp`, `gia`, `soluongtonkho`) VALUES
+('I0972', 'SL23981364', 168000, 0),
+('I3423', 'SL23981364', 168000, 0),
+('I4682', 'SL23981364', 158000, 0),
+('I5128', 'SL23981364', 168000, 0),
+('I5362', 'SL23981364', 168000, 0),
+('l8112', 'SL23981364', 178000, 0),
+('p6127', 'SB052736412', 189000, 0),
+('p6182', 'SB052736412', 189000, 0),
+('p7192', 'SB052736412', 189000, 0),
+('R-6372', 'SM75414127', 75000, 3),
+('R-6883', 'SM75414127', 72000, 3),
+('R-9732', 'SM75414127', 78000, 5),
+('V-3645', 'VZ092736451', 46000, 10),
+('V-8945', 'VZ092736451', 54000, 0),
+('V-9382', 'VZ092736451', 68000, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `calam`
 --
 
@@ -34,35 +68,28 @@ CREATE TABLE `calam` (
   `thuong` float NOT NULL,
   `chiphiphatsinh` float NOT NULL,
   `giovaoca` datetime NOT NULL,
-  `gioraca` datetime NOT NULL
+  `gioraca` datetime NOT NULL,
+  `soluongCheckin` int(11) DEFAULT NULL,
+  `soluongCheckout` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `calam`
 --
 
-INSERT INTO `calam` (`maca`, `tenca`, `luongmoica`, `thuong`, `chiphiphatsinh`, `giovaoca`, `gioraca`) VALUES
-('CA_0097125b', 'Ca Chiều', 15000, 0, 0, '2025-03-27 12:00:00', '2025-03-27 17:00:00'),
-('CA_0a9851d9', 'Ca Tối', 15000, 0, 0, '2025-03-27 17:00:00', '2025-03-27 22:00:00'),
-('CA_2eba58fa', 'Ca Tối', 15000, 0, 0, '2025-03-30 17:00:00', '2025-03-30 22:00:00'),
-('CA_3be679e1', 'Ca Sáng', 15000, 0, 0, '2025-03-27 06:00:00', '2025-03-27 12:00:00'),
-('CA_8010d8a8', 'Ca Chiều', 15000, 0, 0, '2025-03-28 12:00:00', '2025-03-28 17:00:00'),
-('CA_826af730', 'Ca Tối', 15000, 0, 0, '2025-03-25 17:00:00', '2025-03-25 22:00:00'),
-('CA_97a88dfa', 'Ca Sáng', 15000, 0, 0, '2025-03-30 06:00:00', '2025-03-30 12:00:00'),
-('CA_9906de44', 'Ca Chiều', 15000, 0, 0, '2025-03-26 12:00:00', '2025-03-26 17:00:00'),
-('CA_9bda898a', 'Ca Tối', 15000, 0, 0, '2025-03-31 17:00:00', '2025-03-31 22:00:00'),
-('CA_bdb50fef', 'Ca Chiều', 15000, 0, 0, '2025-03-25 12:00:00', '2025-03-25 17:00:00'),
-('CA_c23ca526', 'Ca Chiều', 15000, 0, 0, '2025-03-31 12:00:00', '2025-03-31 17:00:00'),
-('CA_c6909afc', 'Ca Sáng', 15000, 0, 0, '2025-03-31 06:00:00', '2025-03-31 12:00:00'),
-('CA_c99fb7a7', 'Ca Chiều', 15000, 0, 0, '2025-03-30 12:00:00', '2025-03-30 17:00:00'),
-('CA_d368cea9', 'Ca Sáng', 15000, 0, 0, '2025-03-25 06:00:00', '2025-03-25 12:00:00'),
-('CA_ddb21c78', 'Ca Sáng', 15000, 0, 0, '2025-03-29 06:00:00', '2025-03-29 12:00:00'),
-('CA_df374302', 'Ca Sáng', 15000, 0, 0, '2025-03-26 06:00:00', '2025-03-26 12:00:00'),
-('CA_e2be116f', 'Ca Sáng', 15000, 0, 0, '2025-03-28 06:00:00', '2025-03-28 12:00:00'),
-('CA_e5e10661', 'Ca Tối', 15000, 0, 0, '2025-03-29 17:00:00', '2025-03-29 22:00:00'),
-('CA_f0411dfb', 'Ca Tối', 15000, 0, 0, '2025-03-28 17:00:00', '2025-03-28 22:00:00'),
-('CA_fc921094', 'Ca Tối', 15000, 0, 0, '2025-03-26 17:00:00', '2025-03-26 22:00:00'),
-('CA_fef942c5', 'Ca Chiều', 15000, 0, 0, '2025-03-29 12:00:00', '2025-03-29 17:00:00');
+INSERT INTO `calam` (`maca`, `tenca`, `luongmoica`, `thuong`, `chiphiphatsinh`, `giovaoca`, `gioraca`, `soluongCheckin`, `soluongCheckout`) VALUES
+('CA_269f62fa', 'Ca Sáng', 15000, 0, 0, '2025-07-11 06:00:00', '2025-07-11 12:00:00', 0, 0),
+('CA_3c97b454', 'Ca Chiều', 15000, 0, 0, '2025-07-11 12:00:00', '2025-07-11 17:00:00', 0, 0),
+('CA_49f66aa1', 'Ca Tối', 15000, 0, 0, '2025-10-02 17:00:00', '2025-10-02 22:00:00', 2, 8),
+('CA_656e87e6', 'Ca Sáng', 15000, 0, 0, '2025-07-09 06:00:00', '2025-07-09 12:00:00', 0, 0),
+('CA_67c7c133', 'Ca Tối', 15000, 0, 0, '2025-09-12 17:00:00', '2025-09-12 22:00:00', 1, 1),
+('CA_6872cea8', 'Ca Tối', 15000, 0, 0, '2025-07-01 17:00:00', '2025-07-01 22:00:00', 0, 0),
+('CA_763c1fe7', 'Ca Tối', 15000, 0, 0, '2025-07-09 17:00:00', '2025-07-09 22:00:00', 0, 0),
+('CA_8f26ef81', 'Ca Sáng', 150000, 0, 0, '2025-10-15 06:00:00', '2025-10-15 12:00:00', 2, 1),
+('CA_b0f0be9d', 'Ca Tối', 15000, 0, 0, '2025-07-11 17:00:00', '2025-07-11 22:00:00', 0, 0),
+('CA_b9dc0aee', 'Ca Chiều', 15000, 0, 0, '2025-07-09 12:00:00', '2025-07-09 17:00:00', 0, 0),
+('CA_ec84247c', 'Ca Sáng', 15000, 0, 0, '2025-07-01 06:00:00', '2025-07-01 12:00:00', 0, 0),
+('CA_f2e15657', 'Ca Chiều', 15000, 0, 0, '2025-07-01 12:00:00', '2025-07-01 17:00:00', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -91,73 +118,52 @@ INSERT INTO `chinhanh` (`id`, `tencuahang`, `diachi`, `kinhdo`, `vido`, `giohoat
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `chitietchamcong`
+--
+
+CREATE TABLE `chitietchamcong` (
+  `id` int(11) NOT NULL,
+  `manv` varchar(50) NOT NULL,
+  `maca` varchar(50) NOT NULL,
+  `checkin` datetime NOT NULL,
+  `checkout` datetime DEFAULT NULL,
+  `giolam` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chitietchamcong`
+--
+
+INSERT INTO `chitietchamcong` (`id`, `manv`, `maca`, `checkin`, `checkout`, `giolam`) VALUES
+(4, 'NV-001', 'CA_49f66aa1', '2025-10-02 18:34:14', '2025-10-02 21:34:43', 3.01),
+(9, 'KS-005', 'CA_8f26ef81', '2025-10-15 07:17:44', NULL, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `chitietdonhang`
 --
 
 CREATE TABLE `chitietdonhang` (
   `madh` varchar(50) NOT NULL,
   `masp` varchar(50) NOT NULL,
+  `mabienthe` varchar(50) DEFAULT NULL,
   `soluongsanpham` int(11) NOT NULL,
   `km` float NOT NULL,
-  `dongia` float NOT NULL
+  `dongia` float NOT NULL,
+  `thanhtien` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `chitietdonhang`
 --
 
-INSERT INTO `chitietdonhang` (`madh`, `masp`, `soluongsanpham`, `km`, `dongia`) VALUES
-('OD17427322261342', 'RC83943432', 3, 12, 224400),
-('OD17427322261342', 'SG62587431', 2, 7, 130200),
-('OD17427322261342', 'UC62194372', 1, 0, 85000),
-('OD17427330741295', 'SG62587431', 3, 7, 130200),
-('OD17427330741295', 'ST65523738', 1, 0, 309000),
-('OD17427330741295', 'TC97412232', 1, 20, 168000),
-('OD17427330741295', 'TD47237523', 2, 0, 132000),
-('OD17427331558154', 'GP65237653', 2, 0, 135000),
-('OD17427331558154', 'RM98723245', 1, 0, 83000),
-('OD17427331558154', 'UC62194372', 1, 0, 85000),
-('OD17427333463520', 'BT87230912', 2, 0, 58000),
-('OD17427333463520', 'CB28365738', 1, 0, 340000),
-('OD17427333463520', 'KL32639864', 1, 0, 199000),
-('OD17427333777796', 'KL32639864', 1, 0, 199000),
-('OD17427333777796', 'NH09812527', 1, 0, 425000),
-('OD17427333777796', 'ST56383818', 3, 0, 72000),
-('OD17427333777796', 'UE84463029', 2, 0, 130000),
-('OD17427334173275', 'KL32639864', 1, 0, 199000),
-('OD17427334173275', 'RC83943432', 1, 12, 224400),
-('OD17427334173275', 'SK35467745', 1, 10, 292500),
-('OD17427334173275', 'ST65523738', 1, 0, 309000),
-('OD17427334173275', 'TD47237523', 1, 0, 132000),
-('OD17427334173275', 'UC62194372', 1, 0, 85000),
-('OD17427345537678', 'BT87230912', 2, 0, 58000),
-('OD17427345537678', 'GP65237653', 1, 0, 135000),
-('OD17427345537678', 'RM98723245', 1, 0, 83000),
-('OD17427345537678', 'ST65523738', 2, 0, 309000),
-('OD17427364262312', 'CB28365738', 1, 0, 340000),
-('OD17427364262312', 'EC45263431', 2, 0, 435000),
-('OD17427364262312', 'NH09812527', 1, 0, 425000),
-('OD17427364262312', 'ST56383818', 1, 0, 72000),
-('OD17427365044512', 'BG65772325', 1, 0, 55000),
-('OD17427365044512', 'KL32639864', 1, 0, 199000),
-('OD17427365044512', 'KN66424567', 1, 25, 194250),
-('OD17427365044512', 'TC97412232', 1, 20, 168000),
-('OD17427365044512', 'TD47237523', 2, 0, 132000),
-('OD17427403643267', 'KN66424567', 2, 25, 194250),
-('OD17427403643267', 'RC83943432', 4, 12, 224400),
-('OD17427403643267', 'RM98723245', 3, 0, 83000),
-('OD17427403643267', 'SG62587431', 3, 7, 130200),
-('OD17427403643267', 'SK35467745', 3, 10, 292500),
-('OD17427403643267', 'TC97412232', 2, 20, 168000),
-('OD17427403643267', 'UC62194372', 2, 0, 85000),
-('OD17427410449087', 'GP65237653', 2, 0, 135000),
-('OD17427410449087', 'SG62587431', 2, 7, 130200),
-('OD17427410449087', 'TC97412232', 1, 20, 168000),
-('OD17427410449087', 'TD47237523', 3, 0, 132000),
-('OD17427979055732', 'SK35467745', 9, 10, 292500),
-('OD17427982690481', 'SK35467745', 1, 10, 292500),
-('OD17433400064511', 'SG62587431', 2, 7, 130200),
-('OD17433400064511', 'SK35467745', 1, 10, 292500);
+INSERT INTO `chitietdonhang` (`madh`, `masp`, `mabienthe`, `soluongsanpham`, `km`, `dongia`, `thanhtien`) VALUES
+('17594022001131', 'BT89102384', NULL, 1, 0, 15000, 15000),
+('17594022887937', 'BT89102384', NULL, 1, 0, 15000, 15000),
+('17594029634091', 'BT89102384', NULL, 2, 0, 15000, 30000),
+('17594030403047', 'BT89102384', NULL, 2, 0, 15000, 30000),
+('17594766647532', 'CR37462789', NULL, 1, 0, 320000, 320000);
 
 -- --------------------------------------------------------
 
@@ -181,8 +187,9 @@ CREATE TABLE `chitiethoadon` (
 CREATE TABLE `chitietphieunhap` (
   `mapn` varchar(50) NOT NULL,
   `masp` varchar(50) NOT NULL,
-  `soluong` int(11) NOT NULL,
-  `dongia` float NOT NULL,
+  `mabienthe` varchar(50) DEFAULT NULL,
+  `soluongnhap` int(11) NOT NULL,
+  `gianhap` float NOT NULL,
   `tennsx` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -190,27 +197,19 @@ CREATE TABLE `chitietphieunhap` (
 -- Dumping data for table `chitietphieunhap`
 --
 
-INSERT INTO `chitietphieunhap` (`mapn`, `masp`, `soluong`, `dongia`, `tennsx`) VALUES
-('17416195974997', 'BG65772325', 255, 15000, 'Vacosi'),
-('17416195974997', 'BT87230912', 135, 22000, 'Vacosi'),
-('17416195974997', 'CB28365738', 45, 165000, 'Vacosi'),
-('17416198026875', 'EC45263431', 85, 145000, '3CE'),
-('17416193638471', 'GP65237653', 50, 52000, 'SVR'),
-('17416198026875', 'KL32639864', 25, 65000, 'Focallure'),
-('17416198026875', 'KN66424567', 95, 75000, 'Catrice'),
-('17416194804432', 'NH09812527', 80, 115000, 'Tesori DOriente'),
-('17427311071102', 'RC83943432', 120, 31000, 'DHC'),
-('17416193638471', 'RM98723245', 70, 33000, 'Hada Labo'),
-('17416193638471', 'SG62587431', 120, 46000, 'SVR'),
-('17427311071102', 'SK35467745', 65, 39000, '3CE'),
-('17416198026875', 'SR65478231', 105, 105000, 'Black Rouge'),
-('17416194804432', 'ST56383818', 75, 35000, 'Tesori DOriente'),
-('17427311071102', 'ST65523738', 75, 36000, 'Black Rouge'),
-('17416193638471', 'TC97412232', 55, 52000, 'DrCeutics'),
-('17427311071102', 'TD47237523', 105, 27000, 'DHC'),
-('17416193638471', 'TT75643232', 120, 48000, 'DrCeutics'),
-('17416198805948', 'UC62194372', 350, 20000, 'DHC'),
-('17416198805948', 'UE84463029', 315, 30000, 'DHC');
+INSERT INTO `chitietphieunhap` (`mapn`, `masp`, `mabienthe`, `soluongnhap`, `gianhap`, `tennsx`) VALUES
+('17517945560296', 'BT89102384', NULL, 2, 5000, 'Focallure'),
+('17517945560296', 'SM75414127', 'R-9732', 2, 20000, '3CE'),
+('17517948144814', 'BT89102384', NULL, 1, 5000, 'Focallure'),
+('17517948144814', 'SM75414127', 'R-6883', 2, 25000, '3CE'),
+('17517953907691', 'BT89102384', NULL, 1, 5000, 'Focallure'),
+('17517955103991', 'BT89102384', NULL, 1, 5000, 'Focallure'),
+('17517955103991', 'SM75414127', 'R-6372', 3, 25000, '3CE'),
+('17517955103991', 'SM75414127', 'R-9732', 3, 20000, '3CE'),
+('17517955103991', 'SM75414127', 'R-6883', 3, 25000, '3CE'),
+('17523342839159', 'VZ092736451', 'V-3645', 10, 26000, 'DHC'),
+('17526568248217', 'SM28364812', NULL, 15, 35000, 'Hada Labo'),
+('17526568248217', 'SM15414124', NULL, 10, 65000, 'SVR');
 
 -- --------------------------------------------------------
 
@@ -248,28 +247,21 @@ CREATE TABLE `donhang` (
   `tonggia` int(11) NOT NULL,
   `madvvc` varchar(50) NOT NULL,
   `maform` varchar(50) DEFAULT NULL,
-  `quangduong` float NOT NULL
+  `quangduong` float NOT NULL,
+  `hinhthucthanhtoan` varchar(255) NOT NULL,
+  `trangthaithanhtoan` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `donhang`
 --
 
-INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `trangthai`, `tonggia`, `madvvc`, `maform`, `quangduong`) VALUES
-('OD17427322261342', 'KHI5NCFJFF', '2025-03-23 19:17:00', 'Đã xác nhận', 1039588, 'NHS-146', NULL, 4.664),
-('OD17427330741295', 'KHEQCH0YQU', '2025-03-23 19:31:00', 'Đã xác nhận', 1137357, 'GHT-812', NULL, 2.87834),
-('OD17427331558154', 'KHEQCH0YQU', '2025-03-23 19:32:00', 'Đã xác nhận', 450953, 'NHS-146', NULL, 2.87834),
-('OD17427333463520', 'KHUHSHLE73', '2025-03-23 19:35:00', 'Đã xác nhận', 664184, 'GHT-812', NULL, 4.59176),
-('OD17427333777796', 'KHUHSHLE73', '2025-03-23 19:36:00', 'Đã xác nhận', 1113775, 'EXP-787', NULL, 4.59176),
-('OD17427334173275', 'KHUHSHLE73', '2025-03-25 19:36:00', 'Đã xác nhận', 1262563, 'NHS-146', NULL, 4.59176),
-('OD17427345537678', 'KHM7V08AMM', '2025-03-23 19:55:00', 'Đã xác nhận', 982000, 'EXP-787', NULL, 73.8454),
-('OD17427364262312', 'KHONUVAZ7W', '2025-03-25 20:27:00', 'Đã xác nhận', 1737000, 'NHS-146', NULL, 73.1965),
-('OD17427365044512', 'KHONUVAZ7W', '2025-03-23 20:28:00', 'Đã xác nhận', 910250, 'GHT-812', NULL, 73.1965),
-('OD17427403643267', 'KHONUVAZ7W', '2025-03-23 21:32:00', 'Đã xác nhận', 3339200, 'EXP-787', NULL, 73.1965),
-('OD17427410449087', 'KHI5NCFJFF', '2025-03-23 21:44:00', 'Đã xác nhận', 1115388, 'NHS-146', NULL, 4.664),
-('OD17427979055732', NULL, '2025-03-24 13:31:00', 'Đã xác nhận', 2662500, 'EXP-787', 'FO17427978586483', 104.2),
-('OD17427982690481', 'KHR26SAV0Y', '2025-03-24 13:37:00', 'Đã xác nhận', 322500, 'NHS-146', NULL, 1135.75),
-('OD17433400064511', 'KHM7V08AMM', '2025-03-30 20:06:00', 'Đã xác nhận', 582900, 'NHS-146', NULL, 73.8454);
+INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `trangthai`, `tonggia`, `madvvc`, `maform`, `quangduong`, `hinhthucthanhtoan`, `trangthaithanhtoan`) VALUES
+('17594022001131', 'KHI5NCFJFF', '2025-10-02 17:50:00', 'Đã xác nhận', 32679, 'EXP-787', NULL, 5.89315, 'qr', 'Đã thanh toán'),
+('17594022887937', NULL, '2025-10-02 17:51:00', 'Chờ xác nhận', 27665, 'NHS-146', 'FO17594022649426', 2.81443, 'qr', 'Đã thanh toán'),
+('17594029634091', NULL, '2025-10-02 18:02:00', 'Chờ xác nhận', 38443, 'EXP-787', 'FO17594029471987', 2.81443, 'cod', 'Chưa thanh toán'),
+('17594030403047', NULL, '2025-10-02 18:04:00', 'Đã xác nhận', 35629, 'GHT-812', 'FO17594030147983', 2.81443, 'qr', 'Đã thanh toán'),
+('17594766647532', 'KHI5NCFJFF', '2025-10-03 14:31:00', 'Chờ xác nhận', 337679, 'EXP-787', NULL, 5.89315, 'cod', 'Chưa thanh toán');
 
 -- --------------------------------------------------------
 
@@ -312,7 +304,20 @@ CREATE TABLE `formdathang` (
 --
 
 INSERT INTO `formdathang` (`maform`, `tenkh`, `sdt`, `diachi`, `email`) VALUES
-('FO17427978586483', 'Hoàng Gia Nghiêm', '0668799645', 'Châu Đốc, An Giang', 'nghiemgia@gmail.com');
+('FO17522108558797', 'Khang', '0123456789', 'Cần Thơ', 'khangvvo0711@gmail.com'),
+('FO17522110987167', 'Hung', '0963741852', 'Cà Mau', 'hunh@gmail.com'),
+('FO17522302303450', 'khang', '0963741853', 'Cần Thơ', 'Khang@gmail.com'),
+('FO17583812603295', 'Khang', '0123456789', '15 Bùi Hữu Nghĩa, Bình Thủy, Cần Thơ', 'khangvvo0711@gmail.com'),
+('FO17584521312014', 'Khang', '0886005451', '15 Bùi Hữu Nghĩa, Bình Thủy, Cần Thơ', 'khangvvo0711@gmail.com'),
+('FO17584525719945', 'Khang', '0123456789', 'Cần Thơ', 'khangvvo0711@gmail.com'),
+('FO17593985089658', 'VO HUYNH MINH KHANG', '0123456789', 'Cần Thơ', 'khangvo0711@gmail.com'),
+('FO17593985762055', 'MINH KHANG', '0983251652', 'Bình Thủy, Cần Thơ', 'vokhang123@gmail.com'),
+('FO17593988849141', 'Khang', '0983251654', 'Can Tho', 'vokhang123@gmail.com'),
+('FO17594010038779', 'Khang', '0147258369', 'Cần Thơ', 'vokhang123@gmail.com'),
+('FO17594011025557', 'VO HUYNH MINH KHANG', '0983251652', 'Cần Thơ', 'vokhang123@gmail.com'),
+('FO17594022649426', 'Khang Vo', '0983251652', 'Cần Thơ', 'vokhang123@gmail.com'),
+('FO17594029471987', 'VO HUYNH MINH KHANG', '0123456789', 'can tho', 'khangvvo0711@gmail.com'),
+('FO17594030147983', 'VO HUYNH MINH KHANG', '0123456789', 'Can Tho', 'khangvvo0711@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -330,27 +335,18 @@ CREATE TABLE `giaonhanca` (
 --
 
 INSERT INTO `giaonhanca` (`manv`, `maca`) VALUES
-('BV-009', 'CA_3be679e1'),
-('BV-009', 'CA_8010d8a8'),
-('BV-009', 'CA_826af730'),
-('BV-009', 'CA_c6909afc'),
-('BV-009', 'CA_e5e10661'),
-('KS-005', 'CA_0097125b'),
-('KS-005', 'CA_97a88dfa'),
-('KS-005', 'CA_bdb50fef'),
-('KS-005', 'CA_c23ca526'),
-('KS-005', 'CA_df374302'),
-('KS-005', 'CA_f0411dfb'),
-('NV-001', 'CA_0a9851d9'),
-('NV-001', 'CA_9906de44'),
-('NV-001', 'CA_9bda898a'),
-('NV-001', 'CA_c99fb7a7'),
-('NV-001', 'CA_d368cea9'),
-('NV-001', 'CA_ddb21c78'),
-('QL-003', 'CA_2eba58fa'),
-('QL-003', 'CA_e2be116f'),
-('QL-003', 'CA_fc921094'),
-('QL-003', 'CA_fef942c5');
+('BV-009', 'CA_763c1fe7'),
+('BV-009', 'CA_f2e15657'),
+('KS-005', 'CA_3c97b454'),
+('KS-005', 'CA_6872cea8'),
+('KS-005', 'CA_8f26ef81'),
+('NV-001', 'CA_269f62fa'),
+('NV-001', 'CA_49f66aa1'),
+('NV-001', 'CA_656e87e6'),
+('NV-001', 'CA_67c7c133'),
+('NV-001', 'CA_ec84247c'),
+('QL-003', 'CA_b0f0be9d'),
+('QL-003', 'CA_b9dc0aee');
 
 -- --------------------------------------------------------
 
@@ -368,78 +364,49 @@ CREATE TABLE `hinhanhsanpham` (
 --
 
 INSERT INTO `hinhanhsanpham` (`masp`, `hinhanh`) VALUES
-('BG65772325', 'BongGiotNuoc1.png'),
-('BG65772325', 'BongGiotNuoc2.png'),
-('BT87230912', 'BongMakeupVcs1.png'),
-('BT87230912', 'BongMakeupVcs2.png'),
-('CB28365738', 'BoCoVCS1.png'),
-('CB28365738', 'BoCoVCS2.png'),
-('EC45263431', 'Son3CE1.png'),
-('EC45263431', 'Son3CE2.png'),
-('EC45263431', 'Son3CE3.png'),
-('EC45263431', 'Son3CE4.png'),
-('EC45263431', 'Son3CE5.png'),
-('GP65237653', 'svgPink1.png'),
-('GP65237653', 'svgPink2.png'),
-('GP65237653', 'svgPink3.png'),
-('KL32639864', 'KemlotFoca1.png'),
-('KL32639864', 'KemlotFoca2.png'),
-('KL32639864', 'KemlotFoca3.png'),
-('KN66424567', 'Kemnen1.png'),
-('KN66424567', 'Kemnen2.png'),
-('KN66424567', 'Kemnen3.png'),
-('KN66424567', 'Kemnen4.png'),
-('NH09812527', 'NuochoaD\'O1.png'),
-('NH09812527', 'NuochoaD\'O2.png'),
-('NH09812527', 'NuochoaD\'O3.png'),
-('RC83943432', 'Vienuongraucu1.png'),
-('RC83943432', 'Vienuongraucu2.png'),
-('RM98723245', 'srmhdlb1.png'),
-('RM98723245', 'srmhdlb2.png'),
-('RM98723245', 'srmhdlb3.png'),
-('SG62587431', 'svgGreen1.png'),
-('SG62587431', 'svgGreen2.png'),
-('SG62587431', 'svgGreen3.png'),
-('SK35467745', 'Sonk3CE1.png'),
-('SK35467745', 'Sonk3CE2.png'),
-('SK35467745', 'Sonk3CE3.png'),
-('SK35467745', 'Sonk3CE4.png'),
-('SK35467745', 'Sonk3CE5.png'),
-('SK35467745', 'Sonk3CE6.png'),
-('SK35467745', 'Sonk3CE7.png'),
-('SK35467745', 'Sonk3CE8.png'),
-('SK35467745', 'Sonk3CE9.png'),
-('SR65478231', 'SonmoiBR1.png'),
-('SR65478231', 'SonmoiBR2.png'),
-('SR65478231', 'SonmoiBR3.png'),
-('SR65478231', 'SonmoiBR4.png'),
-('SR65478231', 'SonmoiBR5.png'),
-('SR65478231', 'SonmoiBR6.png'),
-('SR65478231', 'SonmoiBR7.png'),
-('ST56383818', 'SuatamTL1.png'),
-('ST56383818', 'SuatamTL2.png'),
-('ST56383818', 'SuatamTL3.png'),
-('ST65523738', 'SonbongBR1.png'),
-('ST65523738', 'SonbongBR2.png'),
-('ST65523738', 'SonbongBR3.png'),
-('ST65523738', 'SonbongBR4.png'),
-('ST65523738', 'SonbongBR5.png'),
-('ST65523738', 'SonbongBR6.png'),
-('ST65523738', 'SonbongBR7.png'),
-('ST65523738', 'SonbongBR8.png'),
-('TC97412232', 'Loaibotebaochet1.png'),
-('TC97412232', 'Loaibotebaochet2.png'),
-('TC97412232', 'Loaibotebaochet3.png'),
-('TD47237523', 'Vienuongtrangda1.png'),
-('TD47237523', 'Vienuongtrangda2.png'),
-('TT75643232', 'DrC1.png'),
-('TT75643232', 'DrC2.png'),
-('UC62194372', 'BSVitaminC1.png'),
-('UC62194372', 'BSVitaminC2.png'),
-('UC62194372', 'BSVitaminC3.png'),
-('UE84463029', 'BSVitaminE1.png'),
-('UE84463029', 'BSVitaminE2.png'),
-('UE84463029', 'BSVitaminE3.png');
+('SM75414127', 'Son3CE1.png'),
+('SM75414127', 'Son3CE2.png'),
+('SM75414127', 'Son3CE3.png'),
+('SM75414127', 'Son3CE4.png'),
+('SM75414127', 'Son3CE5.png'),
+('BT89102384', 'BongGiotNuoc1.png'),
+('BT89102384', 'BongGiotNuoc2.png'),
+('VZ092736451', 'BSVitaminC1.png'),
+('VZ092736451', 'BSVitaminC2.png'),
+('VZ092736451', 'BSVitaminC3.png'),
+('SM28364812', 'srmhdlb2.png'),
+('SM28364812', 'srmhdlb3.png'),
+('SM28364812', 'srmhdlb1.png'),
+('SM15414124', 'svgGreen2.png'),
+('SM15414124', 'svgGreen3.png'),
+('SM15414124', 'svgGreen1.png'),
+('CR37462789', 'cerave1.jpg'),
+('CR37462789', 'cerave3.jpg'),
+('CR37462789', 'cerave2.jpg'),
+('SB052736412', 'SonbongBR1.png'),
+('SB052736412', 'SonbongBR2.png'),
+('SB052736412', 'SonbongBR3.png'),
+('SB052736412', 'SonbongBR4.png'),
+('SB052736412', 'SonbongBR5.png'),
+('SB052736412', 'SonbongBR6.png'),
+('SB052736412', 'SonbongBR7.png'),
+('SB052736412', 'SonbongBR8.png'),
+('SL23981364', 'sonLilybyred6.jpg'),
+('SL23981364', 'sonLilybyred7.jpg'),
+('SL23981364', 'sonLilybyred8.jpg'),
+('SL23981364', 'sonLilybyred9.jpg'),
+('SL23981364', 'sonLilybyred10.jpg'),
+('SL23981364', 'sonLilybyred11.jpg'),
+('SL23981364', 'sonLilybyred12.jpg'),
+('SL23981364', 'sonLilybyred13.jpg'),
+('SL23981364', 'sonLilybyred14.jpg'),
+('SL23981364', 'sonLilybyred1.jpg'),
+('SL23981364', 'sonLilybyred2.jpg'),
+('SL23981364', 'sonLilybyred3.jpg'),
+('SL23981364', 'sonLilybyred4.jpg'),
+('SL23981364', 'sonLilybyred5.jpg'),
+('CN76782423', 'kcn_nangtone_espoir1.jpg'),
+('CN76782423', 'kcn_nangtone_espoir2.jpg');
 
 -- --------------------------------------------------------
 
@@ -481,6 +448,7 @@ CREATE TABLE `khachhang` (
 INSERT INTO `khachhang` (`tenkh`, `makh`, `email`, `sdt`, `diachi`, `matkhau`) VALUES
 ('Nguyễn Văn Hoàng', 'KHEQCH0YQU', 'hoangvan@gmail.com', '0897005658', '9 Đ. Nguyễn Văn Quá, Tân Thới Hiệp, Quận 12, Hồ Chí Minh', '$2b$10$X8EmvRiTmElyQ.mgvaMWJO6hrylppR6cItn68QOYbfpHg.e37vElm'),
 ('Võ Huỳnh Minh Khang', 'KHI5NCFJFF', 'vokhang123@gmail.com', '0983251652', '15 Bùi Hữu Nghĩa, Bình Thủy, Cần Thơ', '$2b$10$GSND6KV.mIWXw5/l3NN1QOEQLZR0o8vUYBUbuUxOaVBqjTuKLOBDq'),
+('Khang', 'KHJQBFOFDP', 'kv@gmail.com', '0983251654', 'Cần Thơ', '$2b$10$3aI1OhzHTNVKDBUOBa6u/.TjsehFnY0.3O8jCYwW3mKhydEekMeJi'),
 ('Lý Thi Mai', 'KHM7V08AMM', 'maithi@gmail.com', '0987654321', '236 Mạc Cửu, Vĩnh Thanh, Rạch Giá, Kiên Giang', '$2b$10$w1LeJsoWvo0GrhaxxoE4yuaKyTnHcH4vLdFfXE6LGqJTpDNIA0p9y'),
 ('Trần Khánh Nam', 'KHONUVAZ7W', 'khanhnam@gmail.com', '0123456789', '40 Nguyễn Văn Cừ, TT. Tân Phú, Đồng Phú, Bình Phước', '$2b$10$sgCkY8KGj4y9ixVzs4DQmOeG8C3w7gWWycoq2d2T1Tujv2xl.9o9O'),
 ('Ngô Gia Minh', 'KHR26SAV0Y', 'minhgia@gmail.com', '0227789675', 'Hà Nội', '$2b$10$KtEAm.oQN7TsjgZ4QaQlbu/wNrshkPVXtUfRdUWvidg0e74Fi0jmi'),
@@ -514,17 +482,6 @@ CREATE TABLE `khuyenmai` (
   `masp` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `khuyenmai`
---
-
-INSERT INTO `khuyenmai` (`makm`, `tenkm`, `km`, `thoigianbatdaukm`, `thoigianketthuckm`, `masp`) VALUES
-('KM-108', 'Giảm 27%', 27, '2025-04-06 20:02:00', '2025-04-30 20:02:00', 'TD47237523'),
-('KM-426', 'Giảm 12%', 12, '0000-00-00 00:00:00', '2025-04-25 20:03:00', 'SG62587431'),
-('KM-562', 'Giảm 9%', 9, '2025-04-06 20:04:00', '2025-04-23 20:05:00', 'ST56383818'),
-('KM-781', 'Giảm 5%', 5, '2025-04-06 20:01:00', '2025-04-28 20:02:00', 'RM98723245'),
-('KM-972', 'Giảm 33%', 33, '0000-00-00 00:00:00', '2025-04-27 20:03:00', 'GP65237653');
-
 -- --------------------------------------------------------
 
 --
@@ -548,7 +505,8 @@ INSERT INTO `lienhe` (`malienhe`, `hoten`, `email`, `sodienthoai`, `chude`, `noi
 ('FO17439412499539', 'Trần Bảo Thanh', 'baothanh@gmail.com', '0123456789', 'Sản phẩm lỗi', 'Sản phẩm tôi nhận được hiện tại có dung tích thấp hơn trên bao bì ghi'),
 ('FO17439415218054', 'Nguyễn Hà An', 'haan@gmail.com', '0963741852', 'Giao hàng sai', 'Sản phẩm được giao không đúng sản phẩm mà tôi đã đặt'),
 ('FO17439416362117', 'Vũ Thành Nam', 'thnam@gmail.com', '0147258369', 'Thiếu sản phẩm', 'Hàng giao đến hiện không đủ các sản phẩm mà tôi đã đặt\n'),
-('FO17439417613942', 'Hà Uyên', 'hauyen@gmail.com', '0546789123', 'Hàng chưa đến', 'Đã hơn khoảng thời gian dự kiến nhưng vẫn chưa thấy hàng được giao đến');
+('FO17439417613942', 'Hà Uyên', 'hauyen@gmail.com', '0546789123', 'Hàng chưa đến', 'Đã hơn khoảng thời gian dự kiến nhưng vẫn chưa thấy hàng được giao đến'),
+('FO17594749543658', 'VO HUYNH MINH KHANG', 'tonycenvip@gmail.com', '0983251652', 'Sản phẩm lỗi', 'Báo');
 
 -- --------------------------------------------------------
 
@@ -595,8 +553,8 @@ CREATE TABLE `nhanvien` (
 
 INSERT INTO `nhanvien` (`manv`, `tennv`, `sdtnv`, `emailnv`, `diachinv`, `chucvunv`, `tongluong`, `matkhau`) VALUES
 ('BV-009', 'Trần Vĩ Gia Thành', '0987456321', 'giathanh@gmail.com', '589 Trần Phú, Phường 7, Bạc Liêu', 'Nhân viên', 0, '$2b$10$oZzxDV3grsFI37r3TJxA5..fHvXmvhuSWSb/dNXHCYO.SCrsm1cx2'),
-('KS-005', 'Đinh Thị Ngọc Hân', '0852456973', 'ngochan@gmail.com', '10 Lưu Hữu Phước, Phường 8, Cà Mau', 'Nhân viên', 0, '$2b$10$vMnn6AnwBCVArHcb67hjReVZkdBKpHQ7rXWfIBbY2fDipGFYli49u'),
-('NV-001', 'Nguyễn Trúc Mai', '0976431258', 'trucmai@gmail.com', '208A, Khóm 3, H. Lai Vung, Đồng Tháp', 'Nhân viên', 0, '$2b$10$O.Uo900vWkEwng0/Ap68ge4OnTRoj.3PZmKK8bIfBpxdZQBOpHoAO'),
+('KS-005', 'Đinh Thị Ngọc Hân', '0852456973', 'ngochan@gmail.com', '10 Lưu Hữu Phước, Phường 8, Cà Mau', 'Nhân viên', 156000, '$2b$10$vMnn6AnwBCVArHcb67hjReVZkdBKpHQ7rXWfIBbY2fDipGFYli49u'),
+('NV-001', 'Nguyễn Trúc Mai', '0976431258', 'trucmai@gmail.com', '208A, Khóm 3, H. Lai Vung, Đồng Tháp', 'Nhân viên', 124000, '$2b$10$O.Uo900vWkEwng0/Ap68ge4OnTRoj.3PZmKK8bIfBpxdZQBOpHoAO'),
 ('QL-003', 'Lý Ngọc Ngân', '0963258741', 'ngocngan@gmail.com', '22 Đường Mạc Tử Hoàng, Bình San, Kiên Giang', 'Nhân viên', 0, '$2b$10$47YccxVNbkIYzUTGYu2W7.gT9TtNRF8kS5YtklsltIHgZ1ZAULpYi');
 
 -- --------------------------------------------------------
@@ -620,10 +578,13 @@ INSERT INTO `nhasanxuat` (`mansx`, `tennsx`, `email`, `diachi`) VALUES
 ('BR563283', 'Black Rouge', 'Blackrouge@gmail.com', '43 Phan Đình Phùng, Hải Phòng'),
 ('CE567824', '3CE', '3CE@gmail.com', '52 Trần Phú, Quận 12, Hồ Chí Minh'),
 ('CT325671', 'Catrice', 'catrice@gmail.com', '51 Phạm Thái Học, Quận 5, Hồ Chí Minh'),
+('CV602871', 'CeraVe', 'CeraVe@gmail.com', '78 Cao Bá Quát, Hoàn Kiếm, Hà Nội'),
 ('DC456782', 'DHC', 'DHC@gmail.com', '95 Trần Phú, Quận 1, Hồ Chí Minh'),
+('ES216821', 'Espoir', 'espoir@gmail.com', '71 Lý Thường Kiệt, An Thới, Đà Nẵng'),
 ('FC125768', 'Focallure', 'Focall@gmail.com', '23 Võ Văn Kiệt, Đà Nẵng'),
 ('HJ354107', 'DrCeutics', 'DrCeutics241@gmail.com', '298 Đồng Khởi, Hoàn Kiếm, Hà Nội'),
-('HL213276', 'Hada Labo', 'Hadalabo@gmail.com', '67 Trần Hưng Đạo, Bình Dương, Hồ Chí Minh'),
+('HL213276', 'Hadalabo', 'Hadalabo@gmail.com', '67 Trần Hưng Đạo, Bình Dương, Hồ Chí Minh'),
+('LY837221', 'Lilybyred', 'lilybyred@gmail.com', '72/2A Trường Định Của, An Hòa, Ninh Kiều, Cần Thơ'),
 ('SV657632', 'SVR', 'SVR@gmail.com', '73 Trần Hoàng Na, Ninh Kiều, Cần Thơ'),
 ('TL842324', 'Tesori DOriente', 'TesDorite@gmail.com', '94 Trần Bạch Đằng, An Khánh, Ninh Kiều, Cần Thơ'),
 ('VS630289', 'Vacosi', 'vacosi@gmail.com', '67 Nam Kỳ Khởi Nghĩa, An Hòa, Đồng Nai');
@@ -652,20 +613,21 @@ CREATE TABLE `phieunhap` (
   `tenpn` varchar(50) NOT NULL,
   `ngaylap` datetime NOT NULL,
   `maql` varchar(50) DEFAULT NULL,
-  `manv` varchar(50) DEFAULT NULL
+  `manv` varchar(50) DEFAULT NULL,
+  `tonggia` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `phieunhap`
 --
 
-INSERT INTO `phieunhap` (`mapn`, `tenpn`, `ngaylap`, `maql`, `manv`) VALUES
-('17416193638471', 'Chăm sóc da mặt', '2025-03-10 22:09:00', 'RPA67S', NULL),
-('17416194804432', 'Chăm sóc cơ thể', '2025-03-10 22:11:00', 'RPA67S', NULL),
-('17416195974997', 'Phụ kiện', '2025-03-10 22:13:00', 'RPA67S', NULL),
-('17416198026875', 'Trang điểm', '2025-03-10 22:16:00', 'RPA67S', NULL),
-('17416198805948', 'Thực phẩm chức năng', '2025-03-10 22:18:00', 'RPA67S', NULL),
-('17427311071102', 'Mỹ phẩm và thực phẩm chức năng', '2025-03-23 18:58:00', 'RPA67S', NULL);
+INSERT INTO `phieunhap` (`mapn`, `tenpn`, `ngaylap`, `maql`, `manv`, `tonggia`) VALUES
+('17517945560296', 'Mỹ phẩm', '2025-07-06 16:35:00', 'RPA67S', NULL, 50000),
+('17517948144814', 'Nhập hàng test', '2025-07-06 16:40:00', 'RPA67S', NULL, 55000),
+('17517953907691', 'TH', '2025-07-06 16:49:00', 'RPA67S', NULL, 5000),
+('17517955103991', 'Mỹ phẩm mới', '2025-07-06 16:51:00', 'RPA67S', NULL, 215000),
+('17523342839159', 'Viên uống', '2025-07-12 22:31:00', 'RPA67S', NULL, 260000),
+('17526568248217', 'SRM', '2025-07-16 16:07:00', 'RPA67S', NULL, 1175000);
 
 -- --------------------------------------------------------
 
@@ -700,36 +662,27 @@ CREATE TABLE `sanpham` (
   `tensp` varchar(50) NOT NULL,
   `maloai` varchar(50) NOT NULL,
   `ttct` varchar(500) NOT NULL,
-  `soluongsp` int(11) NOT NULL,
-  `gia` int(11) NOT NULL,
-  `mansx` varchar(50) NOT NULL
+  `mansx` varchar(50) NOT NULL,
+  `loaibienthe` varchar(50) DEFAULT NULL,
+  `cobienthe` tinyint(1) NOT NULL,
+  `gia` float DEFAULT NULL,
+  `soluongsp` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `sanpham`
 --
 
-INSERT INTO `sanpham` (`masp`, `tensp`, `maloai`, `ttct`, `soluongsp`, `gia`, `mansx`) VALUES
-('BG65772325', 'Bông giọt nước', 'PK637124', 'Mềm gấp 2.3 lần chỉ trong 5s ngậm nước bông hoạt động hoàn hảo với mọi chất liệu nền (kem, lỏng, phấn), ít hút kem nền', 254, 55000, 'VS630289'),
-('BT87230912', 'Set 3 bông makeup', 'PK637124', 'Cải tiến từ chất liệu Latex-free theo công nghệ Bouncyx2 Blender giúp bông hoạt động hoàn hảo với mọi chất liệu nền', 131, 58000, 'VS630289'),
-('CB28365738', 'Bộ cọ và Bóp da', 'PK637124', 'Được thiết kế chuyên biệt với nhiều kích thước và công dụng khác nhau, dễ dàng sử dụng tùy theo mục đích trang điểm', 43, 340000, 'VS630289'),
-('EC45263431', 'Son kem siêu lì', 'TD902642', 'Với 8 gam màu bắt kịp xu hướng làm đẹp của chị em, sẵn sàng đốn tim nàng từ cái nhìn đầu tiên', 83, 435000, 'CE567824'),
-('GP65237653', 'Gel rửa mặt dưỡng ẩm', 'CS874523', 'Làm mềm da và giúp duy trì làn da luôn sạch khỏe và tràn đầy sức sống; giúp giảm cảm giác da khô căng khó chịu', 41, 135000, 'SV657632'),
-('KL32639864', 'Kem lót', 'TD902642', 'Hiệu chỉnh làm đều màu da, sáng da đồng thời cấp ẩm giúp da bạn sẵn sàng trước khi đi tới bước tán kem nền', 20, 199000, 'FC125768'),
-('KN66424567', 'Kem nền che phủ', 'TD902642', 'Độ che phủ cao nhưng nền lại cực kì mỏng nhẹ, chúng ta không thể bỏ qua hãng Catrice đã rất thành công với kem nền dạng lỏng', 92, 259000, 'CT325671'),
-('NH09812527', 'Nước hoa Tesori', 'CT368716', 'Hương thơm quyến rũ, gợi cảm của xạ hương và gỗ đàn hương, hương vani và hổ phách ấm áp, cuốn hút', 77, 425000, 'TL842324'),
-('RC83943432', 'Viên uống rau củ Nhật', 'TP378676', 'Viên uống DHC Perfect Vegetable Premium giúp bạn dễ dàng cung cấp vitamin, khoáng chất và chất xơ cần thiết cho cơ thể', 112, 255000, 'DC456782'),
-('RM98723245', 'Kem rửa mặt', 'CS874523', 'Kem tạo bọt mịn, giúp nhẹ nhàng len lỏi sâu vào bên trong từng lỗ chân lông để loại bỏ bụi bẩn, bã nhờn bên trong da', 64, 83000, 'HL213276'),
-('SG62587431', 'Gel rửa mặt cho da dầu', 'CS874523', 'Tạo bọt mịn sẽ nhẹ nhàng đánh bay những tác nhân gây hại sâu bên trong lỗ chân lông, trả lại cho bạn làn da sạch đẹp', 106, 140000, 'SV657632'),
-('SK35467745', 'Son kem 3CE', 'TD902642', 'Sở hữu chất gel nước mềm mịn, có chứa các dưỡng chất giúp cung cấp độ ẩm cũng như tạo một lớp son lì trên môi', 50, 325000, 'CE567824'),
-('SR65478231', 'Son kem Airfit Velvet', 'TD902642', 'Các sắc đỏ trendy đã tạo nên một làn sóng cho các cô gái đam mê son Hàn với thiết kế sang chảnh cùng bảng màu siêu đẹp. ', 105, 299000, 'BR563283'),
-('ST56383818', 'Sữa tắm nước hoa', 'CT368716', 'Hương cao cấp độc đáo, mà thường chỉ áp dụng để sản xuất nước hoa cao cấp, và có khả năng lưu hương 6 tiếng trên da.', 68, 72000, 'TL842324'),
-('ST65523738', 'Son Tint bóng', 'TD902642', 'Chia thành 3 concept Original - Rose - Soy. Mỗi concept sẽ cho một phong cách trang điểm khác nhau với những màu son khác nhau', 71, 309000, 'BR563283'),
-('TC97412232', 'Tẩy tế bào chết', 'CS874523', 'Chiết xuất rau má, rau sam và diếp cá giúp làm sạch tế bào chết, giảm dầu thừa và hỗ trợ giảm mụn trứng cá, ngăn mụn tái phát', 49, 210000, 'HJ354107'),
-('TD47237523', 'Viên uống trắng da', 'TP378676', 'Hoàn toàn phù hợp cho mọi đối tượng, kể cả những người có làn da cực kỳ nhạy cảm, da mụn, da vừa trị liệu', 94, 132000, 'DC456782'),
-('TT75643232', 'Nước tẩy trang', 'CS874523', 'Làm dịu da, dưỡng ẩm cho da từ cây olive vô cùng lành tính giúp làm sạch sâu cho làn da một cách nhanh chóng', 120, 170000, 'HJ354107'),
-('UC62194372', 'Viên Uống Bổ Sung Vitamin C', 'TP378676', 'Giúp bảo vệ da khỏi tác hại của môi trường, đồng thời mang đến làn da đều màu, căng mịn và khỏe mạnh', 344, 85000, 'DC456782'),
-('UE84463029', 'Viên bổ sung Vitamin E', 'TP378676', 'Làm chậm quá trình lão hóa và mang lại làn da sáng mịn. Đã đến lúc bạn khám phá bí quyết của vẻ đẹp bền vững', 311, 130000, 'DC456782');
+INSERT INTO `sanpham` (`masp`, `tensp`, `maloai`, `ttct`, `mansx`, `loaibienthe`, `cobienthe`, `gia`, `soluongsp`) VALUES
+('BT89102384', 'Bông Makeup', 'PK637124', 'Dùng makeup', 'FC125768', NULL, 0, 15000, 1),
+('CN76782423', 'Kem chống nắng', 'CS874523', 'Kem Chống Nắng hỗ trợ nâng tone tự nhiên Espoir Water Splash Sun Cream SPF50+ PA++++ vừa dưỡng ẩm tốt cho da khô, da bình thường, vừa bảo vệ làn da dưới tác động của ánh nắng có thể sử dụng như lớp kem lót, giúp da thêm rạng rỡ.', 'ES216821', NULL, 0, 265000, 0),
+('CR37462789', 'Sữa rửa mặt CeraVe', 'CS874523', 'Với làn da dầu, nhạy cảm, sữa rửa mặt giúp làm sạch sâu, giúp loại bỏ dầu thừa, bụi bẩn mà không phá vỡ cấu trúc hàng rào bảo vệ tự nhiên của da.', 'CV602871', NULL, 0, 320000, 0),
+('SB052736412', 'Son Bóng Black Rouge', 'TD902642', 'Son Bóng Black Rouge với độ bóng cực cao giúp môi căng mọng như jelly cùng lớp phủ màu trong trẻo phù hợp với da ngâm, da sáng và môi khô, môi mỏng, sống động tạo hiệu ứng 3D ấn tượng mang đến một đôi môi căng.', 'BR563283', 'Màu sắc', 1, NULL, NULL),
+('SL23981364', 'Son Tint Lilybyred', 'TD902642', 'Son Tint Lilybyred có công thức tint nước, lỏng nhẹ cho phép bạn dễ dàng điều chỉnh màu cũng như lượng son thích hợp khi trang điểm cho làn da bình thường, da sáng và các loại môi bình thường, môi thâm và môi dày. Cho đôi môi trong veo mọng nước, son lên môi đều màu, bên ngoài được phủ một lớp màng bóng tăng sự quyến rũ cho phái đẹp.', 'LY837221', 'Màu sắc', 1, NULL, NULL),
+('SM15414124', 'Sữa rửa mặt SVR', 'CS874523', 'Chuyên dùng cho da dầu và da nhiều mụn giúp làm sạch tốt lỗ chân lông', 'SV657632', NULL, 0, 225000, 10),
+('SM28364812', 'Sữa rửa mặt Hadalabo', 'CS874523', 'Làm sạch sâu tốt phù hợp cho da nhạy cảm', 'HL213276', NULL, 0, 95000, 15),
+('SM75414127', 'Son kem lì 3CE ', 'TD902642', 'Son kem lì 3CE Velvet Lip là dòng son nổi tiếng từ Hàn Quốc với chất son mềm mịn như nhung, phù hợp với môi khô, da sáng. Son có độ bám màu tầm 4–6 tiếng, mùi dịu nhẹ, dễ chịu.\r\n', 'CE567824', 'Màu sắc', 1, NULL, NULL),
+('VZ092736451', 'Viên uống Vitamin C', 'TP378676', 'Bổ sung Vitamin C', 'DC456782', 'Số viên', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -745,9 +698,51 @@ CREATE TABLE `thanhtoan` (
   `makh` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `thuoctinhbienthe`
+--
+
+CREATE TABLE `thuoctinhbienthe` (
+  `mathuoctinh` varchar(50) NOT NULL,
+  `mabienthe` varchar(50) NOT NULL,
+  `loaithuoctinh` varchar(50) NOT NULL,
+  `thuoc_tinh` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `thuoctinhbienthe`
+--
+
+INSERT INTO `thuoctinhbienthe` (`mathuoctinh`, `mabienthe`, `loaithuoctinh`, `thuoc_tinh`) VALUES
+('I0972_1753782812229', 'I0972', 'Màu sắc', 'Đỏ hồng'),
+('I3423_1753782812269', 'I3423', 'Màu sắc', 'Nâu đất'),
+('I4682_1753782812286', 'I4682', 'Màu sắc', 'Nâu đỏ'),
+('I5128_1753782812240', 'I5128', 'Màu sắc', 'Đỏ đất'),
+('I5362_1753782812256', 'I5362', 'Màu sắc', 'Cam đất'),
+('l8112_1753782812221', 'l8112', 'Màu sắc', 'Hồng đào'),
+('p6127_1753718269464', 'p6127', 'Màu sắc', 'Đỏ đất'),
+('p6182_1753718269471', 'p6182', 'Màu sắc', 'Đỏ hồng'),
+('p7192_1753718269455', 'p7192', 'Màu sắc', 'Hồng đào'),
+('R-6372_1751551414471', 'R-6372', 'Màu sắc', 'Đỏ đô'),
+('R-6883_1751551414481', 'R-6883', 'Màu sắc', 'Đỏ tía'),
+('R-9732_1751551414475', 'R-9732', 'Màu sắc', 'Đỏ thẩm'),
+('V-3645_1752333614899', 'V-3645', 'Số viên', '30'),
+('V-8945_1752333614890', 'V-8945', 'Số viên', '60'),
+('V-9382_1752333614911', 'V-9382', 'Số viên', '90');
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `cacbienthe`
+--
+ALTER TABLE `cacbienthe`
+  ADD PRIMARY KEY (`mabienthe`),
+  ADD KEY `mabienthe` (`mabienthe`,`masp`),
+  ADD KEY `masp` (`masp`);
 
 --
 -- Indexes for table `calam`
@@ -756,12 +751,19 @@ ALTER TABLE `calam`
   ADD PRIMARY KEY (`maca`);
 
 --
+-- Indexes for table `chitietchamcong`
+--
+ALTER TABLE `chitietchamcong`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `manv` (`manv`),
+  ADD KEY `maca` (`maca`);
+
+--
 -- Indexes for table `chitietdonhang`
 --
 ALTER TABLE `chitietdonhang`
-  ADD PRIMARY KEY (`madh`,`masp`),
-  ADD KEY `madh` (`madh`),
-  ADD KEY `masp` (`masp`);
+  ADD KEY `madh` (`madh`,`masp`,`mabienthe`),
+  ADD KEY `mabienthe` (`mabienthe`);
 
 --
 -- Indexes for table `chitiethoadon`
@@ -773,9 +775,9 @@ ALTER TABLE `chitiethoadon`
 -- Indexes for table `chitietphieunhap`
 --
 ALTER TABLE `chitietphieunhap`
-  ADD PRIMARY KEY (`masp`,`mapn`),
-  ADD KEY `masp` (`masp`),
-  ADD KEY `mapn` (`mapn`);
+  ADD KEY `mabienthe` (`mabienthe`),
+  ADD KEY `mapn` (`mapn`,`mabienthe`,`masp`) USING BTREE,
+  ADD KEY `masp` (`masp`);
 
 --
 -- Indexes for table `donhang`
@@ -810,7 +812,7 @@ ALTER TABLE `giaonhanca`
 -- Indexes for table `hinhanhsanpham`
 --
 ALTER TABLE `hinhanhsanpham`
-  ADD KEY `masp` (`masp`,`hinhanh`);
+  ADD KEY `masp` (`masp`);
 
 --
 -- Indexes for table `hoadon`
@@ -905,15 +907,46 @@ ALTER TABLE `thanhtoan`
   ADD KEY `makh` (`makh`);
 
 --
+-- Indexes for table `thuoctinhbienthe`
+--
+ALTER TABLE `thuoctinhbienthe`
+  ADD PRIMARY KEY (`mathuoctinh`),
+  ADD KEY `mathuoctinh` (`mathuoctinh`,`mabienthe`),
+  ADD KEY `mabienthe` (`mabienthe`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `chitietchamcong`
+--
+ALTER TABLE `chitietchamcong`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `cacbienthe`
+--
+ALTER TABLE `cacbienthe`
+  ADD CONSTRAINT `cacbienthe_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
+
+--
+-- Constraints for table `chitietchamcong`
+--
+ALTER TABLE `chitietchamcong`
+  ADD CONSTRAINT `chitietchamcong_ibfk_1` FOREIGN KEY (`manv`) REFERENCES `nhanvien` (`manv`),
+  ADD CONSTRAINT `chitietchamcong_ibfk_2` FOREIGN KEY (`maca`) REFERENCES `calam` (`maca`);
 
 --
 -- Constraints for table `chitietdonhang`
 --
 ALTER TABLE `chitietdonhang`
   ADD CONSTRAINT `chitietdonhang_ibfk_1` FOREIGN KEY (`madh`) REFERENCES `donhang` (`madh`),
-  ADD CONSTRAINT `chitietdonhang_ibfk_2` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
+  ADD CONSTRAINT `chitietdonhang_ibfk_2` FOREIGN KEY (`mabienthe`) REFERENCES `cacbienthe` (`mabienthe`);
 
 --
 -- Constraints for table `chitiethoadon`
@@ -925,8 +958,9 @@ ALTER TABLE `chitiethoadon`
 -- Constraints for table `chitietphieunhap`
 --
 ALTER TABLE `chitietphieunhap`
-  ADD CONSTRAINT `chitietphieunhap_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`),
-  ADD CONSTRAINT `chitietphieunhap_ibfk_2` FOREIGN KEY (`mapn`) REFERENCES `phieunhap` (`mapn`);
+  ADD CONSTRAINT `chitietphieunhap_ibfk_1` FOREIGN KEY (`mapn`) REFERENCES `phieunhap` (`mapn`),
+  ADD CONSTRAINT `chitietphieunhap_ibfk_2` FOREIGN KEY (`mabienthe`) REFERENCES `cacbienthe` (`mabienthe`),
+  ADD CONSTRAINT `chitietphieunhap_ibfk_3` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
 
 --
 -- Constraints for table `donhang`
@@ -983,6 +1017,12 @@ ALTER TABLE `sanpham`
 --
 ALTER TABLE `thanhtoan`
   ADD CONSTRAINT `thanhtoan_ibfk_1` FOREIGN KEY (`makh`) REFERENCES `khachhang` (`makh`);
+
+--
+-- Constraints for table `thuoctinhbienthe`
+--
+ALTER TABLE `thuoctinhbienthe`
+  ADD CONSTRAINT `thuoctinhbienthe_ibfk_1` FOREIGN KEY (`mabienthe`) REFERENCES `cacbienthe` (`mabienthe`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

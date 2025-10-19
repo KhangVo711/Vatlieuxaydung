@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext } from "react";
+import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 
@@ -43,27 +44,59 @@ const ContextProvider = ({ children }) => {
   const [loadProduct, setLoadProduct] = useState(true);
   const [loadDataInvoice, setLoadDataInvoice] = useState(true);
   const [loadStatus, setLoadStatus] = useState(true);
+const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
-
-
-  const [cartItems, setCartItems] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const onAddToCart = (product) => {
-  setCartItems((prevCart) => {
-    const existingProduct = prevCart.find(
-      (item) => item.masp === product.masp && item.mabienthe === product.mabienthe
-    );
-    if (existingProduct) {
-      return prevCart.map((item) =>
-        item.masp === product.masp && item.mabienthe === product.mabienthe
-          ? { ...item, soluong: item.soluong + 1 }
-          : item
-      );
+useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      return;
     }
-    return [...prevCart, { ...product, soluong: 1 }];
+
+    const delayDebounce = setTimeout(async () => {
+      try {
+        const res = await axios.get(`http://localhost:5001/search?keyword=${encodeURIComponent(searchQuery)}`);
+        setSearchResults(res.data || []);
+      } catch (err) {
+        console.error("Lỗi khi tìm kiếm:", err);
+      }
+    }, 400); // debounce 0.4s
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
+
+  const [cartItems, setCartItems] = useState(() => {
+    // Lấy dữ liệu từ localStorage khi khởi tạo
+    const savedCart = localStorage.getItem("cartItems");
+    return savedCart ? JSON.parse(savedCart) : [];
   });
-};
+
+ 
+
+  // Chỉ ghi localStorage khi cartItems thay đổi (không ảnh hưởng lúc khởi tạo)
+  useEffect(() => {
+    if (cartItems.length >= 0) {
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    }
+  }, [cartItems]);
+
+  // --- Các hàm thêm, tăng, giảm, xóa ---
+  const onAddToCart = (product) => {
+    setCartItems((prevCart) => {
+      const existingProduct = prevCart.find(
+        (item) => item.masp === product.masp && item.mabienthe === product.mabienthe
+      );
+      if (existingProduct) {
+        return prevCart.map((item) =>
+          item.masp === product.masp && item.mabienthe === product.mabienthe
+            ? { ...item, soluong: item.soluong + 1 }
+            : item
+        );
+      }
+      return [...prevCart, { ...product, soluong: 1 }];
+    });
+  };
+
   const decreaseQuantity = (productId) => {
     setCartItems((prevCart) =>
       prevCart
@@ -75,15 +108,14 @@ const ContextProvider = ({ children }) => {
         .filter((item) => item.soluong > 0)
     );
   };
+
   const increaseQuantity = (productId) => {
     setCartItems((prevCart) =>
-      prevCart
-        .map((item) =>
-          item.masp === productId
-            ? { ...item, soluong: item.soluong + 1}
-            : item
-        )
-        .filter((item) => item.soluong > 0)
+      prevCart.map((item) =>
+        item.masp === productId
+          ? { ...item, soluong: item.soluong + 1 }
+          : item
+      )
     );
   };
 
@@ -122,7 +154,8 @@ const ContextProvider = ({ children }) => {
         loadStaff, setLoadStaff,
         loadDelivery, setLoadDelivery,
         loadPromo, setLoadPromo,
-        loadBranch, setLoadBranch
+        loadBranch, setLoadBranch,
+        searchResults, setSearchResults
       }}
     >
       {children}

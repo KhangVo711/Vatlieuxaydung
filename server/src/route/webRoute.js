@@ -51,7 +51,8 @@ const initWebRoute = (app) => {
     router.post('/deleteProduct', auth.authMiddleware, product.deleteProduct)
     router.post('/detailProduct', product.detailProduct)
     router.get('/recommendations', product.getRecommendations);
-    router.get('/productImages/:masp', product.getProductImages)
+    router.get('/productImages/:masp', product.getProductImages);
+    router.get('/search', product.searchProducts);
 
     router.post('/addInvoice', invoice.insertInvoice)
     router.post('/addInvoiceDetail', invoice.insertDetailInvoice)

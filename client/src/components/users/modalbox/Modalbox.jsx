@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import axios from "axios";
-import { formatCurrency } from "../../../utils/currency"; // Điều chỉnh đường dẫn theo cấu trúc dự án
+import { formatCurrency } from "../../../utils/currency"; 
 import ReactModal from "react-modal";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -8,7 +8,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Context } from "../../Context.jsx";
 
-// Bind modal to app element (required for accessibility)
 ReactModal.setAppElement("#root");
 
 const ModalBox = ({ isOpen, onClose, product: initialProduct }) => {
@@ -56,7 +55,7 @@ const ModalBox = ({ isOpen, onClose, product: initialProduct }) => {
   }, [isOpen, initialProduct, fetchProductDetails]);
 
   const handleAddCartSelect = () => {
-    if (!selectedVariant && variants.length > 0) return; // Prevent adding if variant required but not selected
+    if (!selectedVariant && variants.length > 0) return; 
     const productToAdd = {
       masp: selectedProduct.masp,
       tensp: selectedProduct.tensp,

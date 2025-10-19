@@ -1,5 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Navigate } from 'react-router'
+import { Toaster } from "react-hot-toast";
+
 import Header from './components/users/header/Header.jsx';
 import Footer from './components/users/footer/Footer.jsx';
 import HeaderAdmin from './components/admin/headerAdmin/HeaderAdmin.jsx';
@@ -29,8 +31,29 @@ function App() {
   }, [isLocationStaff])
 
   return !isAdmin && !isStaff ? (
+    
     <>
       <ContextProvider>
+        <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            marginTop: "75px",
+            background: "#fff",
+            color: "#333",
+            borderRadius: "10px",
+            padding: "10px 16px",
+            fontSize: "15px",
+            boxShadow: "0 4px 14px rgba(0,0,0,0.1)",
+          },
+          success: {
+            iconTheme: {
+              primary: "#ec4899", 
+              secondary: "#fff",
+            },
+          },
+        }}
+      />
         <Header />
         <Chatbot />
         <Outlet />

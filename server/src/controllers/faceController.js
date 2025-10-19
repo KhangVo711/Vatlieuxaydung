@@ -110,7 +110,7 @@ const faceRecognize = async (req, res) => {
       if (chitiet.checkout !== null) {
         return res.json({
           success: false,
-          message: "❌ Bạn đã checkout ca này rồi, không thể chấm thêm",
+          message: "Bạn đã checkout ca này rồi, không thể chấm thêm",
         });
       }
 
@@ -143,15 +143,23 @@ const faceRecognize = async (req, res) => {
         const [luong] = await connectDB.execute(
           `SELECT c.luongmoica, ct.giolam,
             CASE 
-              WHEN (c.luongmoica * ct.giolam) % 1000 >= 500 
-                THEN CEIL((c.luongmoica * ct.giolam) / 1000) * 1000 
-                ELSE FLOOR((c.luongmoica * ct.giolam) / 1000) * 1000 
+            WHEN (c.luongmoica * ct.giolam) % 1000 >= 500 
+            THEN CEIL((c.luongmoica * ct.giolam) / 1000) * 1000 
+            ELSE FLOOR((c.luongmoica * ct.giolam) / 1000) * 1000 
             END AS tongluong
-           FROM calam c 
-           JOIN chitietchamcong ct ON c.maca = ct.maca AND ct.manv = ?
-           WHERE c.maca = ?`,
+            FROM calam c 
+            JOIN chitietchamcong ct 
+            ON c.maca = ct.maca 
+            AND ct.manv = ? 
+            AND ct.maca = ?`,
           [manvRecognized, ca.maca]
         );
+
+
+        if (!luong[0]) {
+          console.warn("Không tìm thấy thông tin lương ca cho nhân viên này.");
+          return;
+        }
 
         console.log("[LUONG MOI CA]", luong[0].tongluong);
 
@@ -163,7 +171,7 @@ const faceRecognize = async (req, res) => {
         return res.json({
           success: true,
           type: "checkout",
-          message: `✅ Checkout thành công cho ca ${ca.tenca}`,
+          message: `Checkout thành công cho ca ${ca.tenca}`,
           manv: manvRecognized,
           maca: ca.maca,
           giolam,

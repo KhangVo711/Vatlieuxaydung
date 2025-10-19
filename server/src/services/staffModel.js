@@ -125,7 +125,6 @@ const addShift = async (maca, tenca, luongmoca, thuong, chiphaphatsinh, giovao, 
     return rows;
 }
 
-// Thêm mối quan hệ nhân viên - ca làm việc vào bảng trung gian
 const addStaffToShift = async (manv, maca) => {
     const query = 'INSERT INTO giaonhanca (manv, maca) VALUES (?, ?)';
     const [result] = await connectDB.execute(query, [manv, maca]);

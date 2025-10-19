@@ -3,6 +3,7 @@ import Cookie from 'js-cookie';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 import { ToastContainer, toast } from 'react-toastify';
+import { formatCurrency } from '../../../utils/currency';
 import 'react-toastify/dist/ReactToastify.css';
 import { Context } from '../../Context.jsx';
 import { ArrowRightEndOnRectangleIcon, UserIcon, Cog6ToothIcon, DevicePhoneMobileIcon } from "@heroicons/react/24/solid";
@@ -50,7 +51,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { isData, setIsData } = useContext(Context);
   const {cartItems} = useContext(Context);
-  console.log(isData);
+
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const toggleDropdown = () => {
@@ -370,11 +371,17 @@ const products = [
     }
   }
 
-  const { setSearchQuery } = useContext(Context);
+  const { searchQuery, setSearchQuery, searchResults, setSearchResults } = useContext(Context);
 
-    const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
-    };
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSelectProduct = (masp) => {
+    setSearchQuery("");
+    setSearchResults([]);
+    navigate(`/products/detail/${masp}`);
+  };
 
     const scrollPosition = useRef(0); // Lưu vị trí cuộn trước khi điều hướng
 
@@ -479,20 +486,63 @@ const products = [
             {location.pathname === '/contact' ? <hr className='bg-black h-0.5 w-1/2' /> : ''} 
           </Link>
 
-          <div className={`flex items-center ${location.pathname === '/products' || isLocation ? 'border-gray-300 bg-white border shadow-sm' : ''} rounded-full p-2 xl:w-80 lg:w-64`}>
- {location.pathname === '/products' || isLocation ? (
-            <>
-            <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
-            <input
-              type="text"
-              placeholder="Tìm kiếm"
-              className="ml-2 outline-none w-full text-sm"
-              onChange={handleSearch}
-            />
-            {/* <div className="w-0.5 h-5 bg-gray-300 mr-2"></div> */}
-            {/* <MicrophoneIcon className="h-5 w-5 text-gray-700" /> */}
-            </>) : null}
+          <div className="relative">
+      <div className="flex items-center border-gray-300 bg-white border shadow-sm rounded-full p-2 xl:w-80 lg:w-64">
+        <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
+        <input
+          type="text"
+          placeholder="Tìm kiếm sản phẩm..."
+          className="ml-2 outline-none w-full text-sm"
+          value={searchQuery}
+          onChange={handleSearch}
+        />
+        <div className="w-0.5 h-5 bg-gray-300 mr-2"></div>
+        <MicrophoneIcon className="h-5 w-5 text-gray-700" />
+      </div>
+
+      {/* Dropdown kết quả */}
+      {searchQuery && (
+  <div className="absolute top-full left-0 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-2xl z-50 max-h-96 overflow-y-auto backdrop-blur-sm">
+    {searchResults.length > 0 ? (
+      <>
+        <p className="px-4 py-2 text-gray-500 text-xs font-medium border-b bg-gray-50">
+          Kết quả tìm kiếm ({searchResults.length})
+        </p>
+        {searchResults.map((item) => (
+          <div
+            key={item.masp}
+            onClick={() => handleSelectProduct(item.masp)}
+            className="flex items-center gap-3 px-4 py-3 hover:bg-pink-50 transition-all duration-150 cursor-pointer border-b last:border-b-0"
+          >
+            <div className="w-12 h-12 flex-shrink-0 overflow-hidden rounded-md border bg-gray-50">
+              <img
+                src={`http://localhost:5001/uploads/${item.masp}/${item.tenhinhanh}`}
+                alt={item.tensp}
+                className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-gray-800 truncate">
+                {item.tensp}
+              </p>
+              {/* <p className="text-xs text-pink-600 font-medium mt-0.5">
+                {item.gia
+                  ? formatCurrency(item.gia)
+                  : "Giá đang cập nhật"}
+              </p> */}
+            </div>
           </div>
+        ))}
+      </>
+    ) : (
+      <div className="text-gray-500 text-sm p-4 text-center">
+        Không tìm thấy sản phẩm
+      </div>
+    )}
+  </div>
+)}
+
+    </div>
           <Link to='cart' id='cart-icon' className="text-sm font-semibold leading-6  relative">
             <ShoppingCartIcon className={`h-7 w-7 ${location.pathname === '/cart' ? 'text-gray-900' : 'text-gray-500'} hover:text-gray-900 transition duration-150 `} />
             <span className="absolute -top-0.5 -right-1 bg-red-500 text-white rounded-full text-xs w-3.5 h-3.5 flex items-center justify-center">

@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+ import { createBrowserRouter } from 'react-router-dom';
 import App from '../App.jsx';
 import Login from '../components/users/auth/Login.jsx';
 import Register from '../components/users/auth/Register.jsx';
@@ -33,6 +33,7 @@ import FaceCheckin from '../components/staff/timekeeping/faceCheckin/FaceCheckin
 import FaceRegister from '../components/staff/timekeeping/faceRegister/FaceRegister.jsx';
 import PaymentSuccess from '../components/users/cart/payment/PaymentSuccess.jsx';
 import PaymentCancel from '../components/users/cart/payment/PaymentCancel.jsx';
+import ProductDetail from '../components/users/products/product_detail/ProductDetail.jsx';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -52,6 +53,10 @@ export const router = createBrowserRouter([
         path: "products/*",
         element:
           <Product />
+      },
+      {
+        path: "products/detail/:id",
+        element: <ProductDetail />
       },
       {
         path: "cart",

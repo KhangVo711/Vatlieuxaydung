@@ -10,6 +10,29 @@ import { getSession, clearSession } from '../../middleware/sessionStore.js';
 import { hasEnoughCriteria } from "../../utils/criteriaHelper.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const searchProducts = async (req, res) => {
+  try {
+    const keyword = req.query.keyword || "";
+    const [rows] = await connectDB.execute(
+      `SELECT 
+          sp.masp, 
+          sp.tensp, 
+          sp.gia, 
+          MIN(hsp.hinhanh) AS tenhinhanh
+       FROM sanpham sp
+       LEFT JOIN hinhanhsanpham hsp ON sp.masp = hsp.masp
+       WHERE sp.tensp LIKE ?
+       GROUP BY sp.masp, sp.tensp, sp.gia
+       LIMIT 10`,
+      [`%${keyword}%`]
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Lỗi truy vấn dữ liệu" });
+  }
+}
 // Loai
 const getCategory = async (req, res) => {
   try {
@@ -777,6 +800,7 @@ const chatbot = async (req, res) => {
     console.error('Chatbot error:', error);
     return res.status(500).json({ reply: "Lỗi hệ thống. Vui lòng thử lại sau." });
   }
+
 };
 
 
@@ -804,5 +828,5 @@ export default {
   getRecommendations,
   getProductOfCategory,
   getProduct_Hot8,
-  chatbot
+  chatbot, searchProducts
 }
