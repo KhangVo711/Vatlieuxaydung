@@ -178,7 +178,39 @@ export default function Cart() {
           <div className="p-6 border-b">
             <h1 className="text-xl font-bold">Giỏ Hàng</h1>
           </div>
+        <div className="grid grid-cols-4 sm:grid-cols-12 items-center p-4 border-b gap-1">
+      {/* Hình ảnh và tên sản phẩm */}
+      <div className="col-span-4 sm:col-span-3 pl-5 flex items-center justify-center gap-2">
+        <p className=" text-right outline-none font-bold">Sản phẩm</p>
+      </div>
+     
+      {/* Đơn giá */}
+      <p className="hidden sm:block col-span-1 text-right text-gray-800 font-bold">
+                <p className="text-center outline-none">Giá</p>
 
+      </p>
+ {/* Khuyến mãi */}
+ <p className="hidden sm:block col-span-2 text-center font-bold">
+        <p className="text-center outline-none">Khuyến mãi</p>
+
+      </p>
+
+      {/* Số lượng */}
+      <div className="hidden sm:flex col-span-3 justify-center items-center gap-1">
+        <p className="text-center outline-none font-bold">Số lượng</p>
+      </div>
+
+      {/* Thành tiền */}
+      <p className="hidden sm:block col-span-1 gap-1 text-right font-bold">
+                <p className="w-24 text-center outline-none font-bold">Thành tiền</p>
+
+      </p>
+
+      {/* Thao tác */}
+      <div className="col-span-2 sm:col-span-2 text-center flex justify-center flex-col">
+        <p className="text-center outline-none font-bold">Thao tác</p>
+      </div>
+    </div>
           {/* Items */}
           {cartItems.map((cartItem) => (
             <CartItem key={cartItem.masp} cartItem={cartItem} />

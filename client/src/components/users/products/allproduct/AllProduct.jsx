@@ -144,9 +144,9 @@ useEffect(() => {
     return () => { document.body.style.overflow = 'auto'; };
   }, [isModalOpen]);
 
-  const filteredProducts = products.filter(product =>
-    product.tensp.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // const filteredProducts = products.filter(product =>
+  //   product.tensp.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   return (
     <>
@@ -155,9 +155,18 @@ useEffect(() => {
           <h2 className="w-full text-center lg:text-3xl text-xl tracking-wide font-bold uppercase">Sản phẩm</h2>
         </Popover>
         <div className="container mx-auto grid md:grid-cols-3 xl:grid-cols-4 grid-cols-2 gap-5 pt-4 pb-12">
-          {filteredProducts.map(product => (
+          {products.map(product => (
             <article key={product.masp} className="w-full relative shadow-md lg:h-[350px] h-[250px] flex p-2 flex-col items-center rounded-md">
-              {product.tenkm && product.km ? (
+              {product.tongsoluong <= 0 ? (
+                <div className="absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md">
+                  Hết hàng
+                </div>
+              ) :
+              product.tenkm && product.km && product.tongsoluong <= 0 ? (
+                <div className="absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md">
+                  Hết hàng
+                </div>
+              ) : product.tenkm && product.km && product.tongsoluong > 0 ? (
                 <div className="absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md">
                   {product.tenkm}
                 </div>

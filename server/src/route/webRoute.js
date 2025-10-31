@@ -14,6 +14,7 @@ import repo from '../controllers/repoController.js'
 import contact from '../controllers/contactController.js'
 import uploadMiddleware from '../../middleware/upload.js'
 import auth from '../../middleware/jwt.js'
+import review from '../controllers/reviewCotroller.js';
 const router = express.Router()
 const initWebRoute = (app) => {
 
@@ -122,6 +123,9 @@ const initWebRoute = (app) => {
     router.post('/chatbot', product.chatbot);
     router.post('/face_register', faceController.faceRegister);
     router.post('/face_recognize', faceController.faceRecognize);
+
+    router.post('/reviews/add', auth.authMiddleware, review.addReview);
+    router.get('/reviews/:masp', review.getReviewsByProductId);
     return app.use('/', router)
 }
 export default initWebRoute

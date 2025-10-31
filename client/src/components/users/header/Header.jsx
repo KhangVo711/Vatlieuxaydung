@@ -394,7 +394,52 @@ const products = [
     useEffect(() => {
       window.scrollTo(0, scrollPosition.current); // Khôi phục vị trí cuộn
     }, [location.pathname]); // Chạy lại khi đường dẫn thay đổi
-    
+    const [isListening, setIsListening] = useState(false);
+  const [recognition, setRecognition] = useState(null);
+
+  useEffect(() => {
+    // Kiểm tra hỗ trợ Web Speech API
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+      const recog = new SpeechRecognition();
+      recog.lang = "vi-VN"; // 🇻🇳 Nhận diện tiếng Việt
+      recog.continuous = false;
+      recog.interimResults = false;
+
+      recog.onstart = () => setIsListening(true);
+      recog.onend = () => setIsListening(false);
+      recog.onerror = (e) => {
+        console.error("Speech recognition error:", e);
+        setIsListening(false);
+      };
+
+      recog.onresult = (e) => {
+        const transcript = e.results[0][0].transcript;
+        console.log("Voice detected:", transcript);
+        setSearchQuery(transcript); // 🪄 Gán từ giọng nói vào ô tìm kiếm
+      };
+
+      setRecognition(recog);
+    } else {
+      console.warn("Trình duyệt không hỗ trợ nhận diện giọng nói.");
+    }
+  }, [setSearchQuery]);
+
+  const handleMicClick = () => {
+    if (!recognition) {
+      alert("Trình duyệt của bạn không hỗ trợ ghi âm tìm kiếm.");
+      return;
+    }
+
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      recognition.start();
+    }
+  };
   return (
     <header className="bg-pink-200 sticky top-0 z-[9999] shadow-md">
       <ToastContainer />
@@ -487,7 +532,7 @@ const products = [
           </Link>
 
           <div className="relative">
-      <div className="flex items-center border-gray-300 bg-white border shadow-sm rounded-full p-2 xl:w-80 lg:w-64">
+      <div className="flex items-center border-gray-300 bg-white border shadow-sm rounded-full py-1.5 px-2 xl:w-80 lg:w-64">
         <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
         <input
           type="text"
@@ -497,7 +542,21 @@ const products = [
           onChange={handleSearch}
         />
         <div className="w-0.5 h-5 bg-gray-300 mr-2"></div>
-        <MicrophoneIcon className="h-5 w-5 text-gray-700" />
+        {/* Microphone icon */}
+      <button
+        onClick={handleMicClick}
+        className={`p-1 rounded-full transition ${
+          isListening ? "bg-pink-100 text-pink-600" : "hover:bg-gray-100 text-gray-700"
+        }`}
+        title="Tìm kiếm bằng giọng nói"
+      >
+        <MicrophoneIcon className="h-4 w-4" />
+      </button>
+
+      {/* Hiệu ứng ghi âm */}
+      {isListening && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+      )}
       </div>
 
       {/* Dropdown kết quả */}

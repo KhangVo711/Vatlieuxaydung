@@ -36,6 +36,7 @@
     "react-select": "^5.8.3",
     "react-toastify": "^10.0.6",
     "react-webcam": "^7.2.0",
+    "recharts": "^3.3.0",
     "swiper": "^11.2.10",
     "tailwind-scrollbar-hide": "^4.0.0",
     "uuid": "^11.1.0"

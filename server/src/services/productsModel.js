@@ -43,24 +43,30 @@ const deleteNSX = async (mansx) => {
 const getAllProduct = async () => {
   const query = `
     SELECT 
-      sp.*, 
-      km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
-      lsp.tenloai, nsx.tennsx,
-      (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
-      GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
-      GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
-      CASE 
-          WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia -- No variants, use base price
-          ELSE MIN(cb.gia) -- Use the minimum price when there are variants
-      END AS gia_range
-    FROM sanpham sp
-    JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
-    JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
-    LEFT JOIN khuyenmai km ON sp.masp = km.masp
-    LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
-    LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
-    GROUP BY sp.masp, sp.tensp, sp.gia, sp.soluongsp, sp.ttct, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
-             lsp.tenloai, nsx.tennsx; 
+    sp.*, 
+    km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+    lsp.tenloai, nsx.tennsx,
+    (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
+    GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
+    GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
+    CASE 
+        WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia
+        ELSE MIN(cb.gia)
+    END AS gia_range,
+    CASE 
+        WHEN COUNT(cb.mabienthe) = 0 THEN sp.soluongsp
+        ELSE SUM(cb.soluongtonkho)
+    END AS tongsoluong
+FROM sanpham sp
+JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+LEFT JOIN khuyenmai km ON sp.masp = km.masp
+LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
+LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+GROUP BY 
+    sp.masp, sp.tensp, sp.gia, sp.soluongsp, sp.ttct, 
+    km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+    lsp.tenloai, nsx.tennsx; 
   `;
   const [rows] = await connectDB.execute(query);
   return rows;
