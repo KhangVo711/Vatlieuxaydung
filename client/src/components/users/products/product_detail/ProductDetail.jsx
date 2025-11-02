@@ -119,6 +119,9 @@ setRatingStats({ count: starCount, percent: starPercent, total });
     );
   };
   const handleSubmitComment = async () => {
+    if(!isData.fullname) {
+      return toast.error("Vui lòng đăng nhập để gửi bình luận!");
+    }
     if (!rating) return toast.error("Vui lòng chọn số sao!");
     if (!comment.trim()) return toast.error("Vui lòng nhập nội dung bình luận!");
 
@@ -346,7 +349,7 @@ setRatingStats({ count: starCount, percent: starPercent, total });
 <div className="mt-16 border-t pt-10">
   <h3 className="text-2xl font-semibold mb-6 text-gray-800">Đánh giá & Bình luận</h3>
 
-  {/* ⭐ Tổng quan đánh giá */}
+  {/* Tổng quan đánh giá */}
   {totalReviews > 0 && (
     <div className="bg-white p-6 rounded-lg shadow-sm mb-10">
       <div className="flex flex-col md:flex-row md:items-center gap-6">
@@ -460,60 +463,79 @@ setRatingStats({ count: starCount, percent: starPercent, total });
   {/* Danh sách bình luận */}
   <div>
   {reviews.length > 0 ? (
-    <>
-      {reviews
-        .slice(0, showAllReviews ? reviews.length : 4)
-        .map((r, i) => (
-          <div key={i} className="border-b py-4">
-            <div className="flex items-center justify-between">
-              <span className="font-semibold text-gray-800">
-                {r.tenkh || "Ẩn danh"}
-              </span>
-              <div className="flex">
-                {[...Array(5)].map((_, idx) => (
-                  <svg
-                    key={idx}
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill={idx < r.sosao ? "#f59e0b" : "none"}
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-5 h-5 text-yellow-500"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.117 
+  <>
+    {reviews
+      .filter((r) => r.trangthai === "hiển thị")
+      .slice(0, showAllReviews ? reviews.length : 4)
+      .map((r, i) => (
+        <div key={i} className="border-b py-4 ">
+          <div className="flex items-center justify-between">
+            <span className="font-semibold text-gray-800">
+              {r.tenkh || "Ẩn danh"}
+            </span>
+            <div className="flex">
+              {[...Array(5)].map((_, idx) => (
+                <svg
+                  key={idx}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill={idx < r.sosao ? "#f59e0b" : "none"}
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5 text-yellow-500"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.117 
                       5.541.403a.562.562 0 01.316.98l-4.21 3.637 
                       1.293 5.41a.562.562 0 01-.837.61L12 
                       17.347l-4.748 2.31a.562.562 0 
                       01-.837-.61l1.293-5.41-4.21-3.637a.562.562 
                       0 01.316-.98l5.541-.403L11.48 3.5z"
-                    />
-                  </svg>
-                ))}
-              </div>
+                  />
+                </svg>
+              ))}
             </div>
-            <p className="text-gray-700 mt-2 break-words whitespace-pre-wrap">
-              {r.noidung}
-            </p>
-            <p className="text-gray-400 text-sm mt-1">
-              {new Date(r.ngaydang).toLocaleString()}
-            </p>
           </div>
+          <div className="flex justify-between">
+          <p className="text-gray-700 mt-2 break-words text-sm whitespace-pre-wrap">
+            {r.noidung}
+          </p>
+          <p className="text-gray-400 text-sm mt-1">
+            {new Date(r.ngaydang).toLocaleString()}
+          </p>
+          </div>
+
+          {/* ✅ Thêm phần phản hồi admin */}
+          {r.phanhoi && (
+            <div className="bg-pink-50 border-l-4 border-pink-400 p-3 mt-3 rounded-md">
+              <p className="text-gray-800 text-sm">
+                <span className="font-semibold text-pink-600">
+                  {r.ten_admin || "Admin"} phản hồi:
+                </span>{" "}
+                {r.phanhoi}
+              </p>
+              <p className="text-gray-400 text-xs mt-1">
+                {new Date(r.ngaytraloi).toLocaleString()}
+              </p>
+            </div>
+          )}
+        </div>
         ))}
 
       {/* Nút Xem thêm / Thu gọn */}
-      {reviews.length > 3 && (
-        <div className="text-center mt-4">
-          <button
-            onClick={() => setShowAllReviews(!showAllReviews)}
-            className="text-pink-500 font-medium hover:underline"
-          >
-            {showAllReviews ? "Thu gọn" : "Xem thêm"}
-          </button>
-        </div>
-      )}
+      {reviews.filter((r) => r.trangthai === "hiển thị").length > 4 && (
+  <div className="text-center mt-4">
+    <button
+      onClick={() => setShowAllReviews(!showAllReviews)}
+      className="text-pink-500 font-medium hover:underline"
+    >
+      {showAllReviews ? "Thu gọn" : "Xem thêm"}
+    </button>
+  </div>
+)}
+
     </>
   ) : (
     <p className="text-gray-500 italic">Chưa có bình luận nào.</p>

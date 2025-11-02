@@ -34,6 +34,7 @@ import FaceRegister from '../components/staff/timekeeping/faceRegister/FaceRegis
 import PaymentSuccess from '../components/users/cart/payment/PaymentSuccess.jsx';
 import PaymentCancel from '../components/users/cart/payment/PaymentCancel.jsx';
 import ProductDetail from '../components/users/products/product_detail/ProductDetail.jsx';
+import ReplyReview from '../components/admin/replyreview/ReplyReview.jsx';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -229,6 +230,13 @@ export const router = createBrowserRouter([
             <FaceRegister />
           </PrivateRouterAdmin>
       },
+      {
+        path: "replyreview",
+        element:
+          <PrivateRouterAdmin>
+            <ReplyReview />
+          </PrivateRouterAdmin>
+      },
     ]
   },
   {
@@ -323,6 +331,13 @@ export const router = createBrowserRouter([
             <FaceCheckin />
           </PrivateRouterStaff>
       },
+      {
+        path: "replyreview",
+        element:
+          <PrivateRouterStaff>
+            <ReplyReview />
+          </PrivateRouterStaff>
+      }
     ]
   },
 ]);

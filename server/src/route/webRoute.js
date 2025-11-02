@@ -126,6 +126,9 @@ const initWebRoute = (app) => {
 
     router.post('/reviews/add', auth.authMiddleware, review.addReview);
     router.get('/reviews/:masp', review.getReviewsByProductId);
+    router.get('/admin/reviews', auth.authMiddleware, review.getReview);
+    router.put('/admin/reviews/:id/status', auth.authMiddleware, review.updateStatusReview);
+    router.post('/admin/reviews/:id/reply', auth.authMiddleware, review.replyReview);
     return app.use('/', router)
 }
 export default initWebRoute
