@@ -1,119 +1,212 @@
-import {formatCurrency} from '../../../../utils/currency.jsx';
-import { useState} from 'react';
+import { useState, useMemo } from 'react';
 import ReactPaginate from 'react-paginate';
+import Select from 'react-select';
+import * as XLSX from 'xlsx';
+import PropTypes from 'prop-types';
 
-export default function TableRepo({repo}) {
+export default function TableRepo({ repo, months, onFilterChange }) {
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 6; 
+  const [search, setSearch] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState('');
 
-  
+  const itemsPerPage = 6;
+
+  // Khi chọn tháng: chỉ gửi lên cha, không lọc frontend
+  const handleMonthChange = (selectedOption) => {
+    const value = selectedOption?.value || '';
+    setSelectedMonth(value);
+    onFilterChange((prev) => ({ ...prev, month: value }));
+  };
+
+  // Khi chọn sản phẩm: gửi từ khóa tìm kiếm lên cha
+  const handleSearchChange = (selectedOption) => {
+    setSearch(selectedOption);
+    onFilterChange((prev) => ({ ...prev, search: selectedOption?.value || '' }));
+  };
+
+  // Lọc frontend chỉ theo tìm kiếm (không theo tháng)
+  const filteredRepo = useMemo(() => {
+    return repo.filter((item) => {
+      if (search) {
+        const q = (search.value || search).toString().toLowerCase();
+        const match = (item.tensp || '').toLowerCase().includes(q);
+        if (!match) return false;
+      }
+      return true;
+    });
+  }, [repo, search]);
+
+  // Phân trang
   const offset = currentPage * itemsPerPage;
-  const currentRepo = repo.slice(offset, offset + itemsPerPage);
-  const pageCount = Math.ceil(repo.length / itemsPerPage);
+  const currentRepo = filteredRepo.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(filteredRepo.length / itemsPerPage);
 
- // Logic tính toán các trang hiển thị
- const getPageNumbers = () => {
-  const maxDisplay = 3; // Hiển thị tối đa 3 trang
-  let startPage = Math.max(0, currentPage - 1); // Bắt đầu từ trang trước trang hiện tại
-  let endPage = Math.min(pageCount, startPage + maxDisplay); // Kết thúc sau 3 trang
+  const getPageNumbers = () => {
+    const maxDisplay = 3;
+    let startPage = Math.max(0, currentPage - 1);
+    let endPage = Math.min(pageCount, startPage + maxDisplay);
+    if (endPage - startPage < maxDisplay && startPage > 0) {
+      startPage = Math.max(0, endPage - maxDisplay);
+    }
+    const pages = [];
+    for (let i = startPage; i < endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+  const pageNumbers = getPageNumbers();
 
-  // Điều chỉnh nếu gần cuối
-  if (endPage - startPage < maxDisplay && startPage > 0) {
-    startPage = Math.max(0, endPage - maxDisplay);
-  }
+  // Tổng cộng
+  const totals = useMemo(() => {
+    return filteredRepo.reduce(
+      (acc, item) => ({
+        import: acc.import + Number(item.total_import || 0),
+        export: acc.export + Number(item.total_export || 0),
+        importValue: acc.importValue + Number(item.import_value || 0),
+        revenue: acc.revenue + Number(item.revenue_value || 0),
+        profit: acc.profit + Number(item.profit_value || 0),
+      }),
+      { import: 0, export: 0, importValue: 0, revenue: 0, profit: 0 }
+    );
+  }, [filteredRepo]);
 
-  const pages = [];
-  for (let i = startPage; i < endPage; i++) {
-    pages.push(i);
-  }
-  return pages;
-};
+  // Xuất Excel
+  const exportToExcel = () => {
+    const dataToExport = filteredRepo.map((r) => ({
+      masp: r.masp,
+      tensp: r.tensp,
+      mabienthe: r.mabienthe || '',
+      chitietbienthe: r.chitietbienthe || '',
+      total_import: r.total_import || 0,
+      total_export: r.total_export || 0,
+      import_value: r.import_value || 0,
+      revenue_value: r.revenue_value || 0,
+      profit_value: r.profit_value || 0,
+    }));
 
-const handlePageChange = (page) => {
-  setCurrentPage(page);
-};
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Kho');
+    XLSX.writeFile(wb, 'BaoCaoKho.xlsx');
+  };
 
-const pageNumbers = getPageNumbers();
-    return(
-        <>
+  return (
+    <>
+      {/* --- Bộ lọc --- */}
+      <div className="flex flex-wrap gap-3 mb-4 items-center">
+        {/* Lọc sản phẩm (chỉ theo tên, không hiện biến thể) */}
+        <div className="w-1/3">
+          <Select
+            placeholder="Tìm sản phẩm..."
+            options={Array.from(
+              new Set(repo.map((r) => r.tensp))
+            ).map((name) => ({
+              value: name,
+              label: name,
+            }))}
+            onChange={handleSearchChange}
+            isClearable
+          />
+        </div>
+
+        {/* Dropdown tháng (tự động lấy từ prop `months`) */}
+        <div className="w-1/5">
+          <Select
+            placeholder="Chọn tháng..."
+            options={(months || []).map((m) => ({ value: m, label: m }))}
+            value={selectedMonth ? { value: selectedMonth, label: selectedMonth } : null}
+            onChange={handleMonthChange}
+            isClearable
+          />
+        </div>
+
+        <button
+          onClick={exportToExcel}
+          className="ml-auto bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+        >
+          Xuất Excel
+        </button>
+      </div>
+
+      {/* --- Bảng dữ liệu --- */}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-pink-100 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-  <th scope="col" className="px-3 py-3">
-    Mã sản phẩm
-  </th>
-  <th scope="col" className="px-20 py-3">
-    Tên sản phẩm
-  </th>
-  <th scope="col" className="px-10 text-center py-3">
-    Tổng số lượng nhập kho
-  </th>
-  {/* <th scope="col" className="px-1 py-3">
-    Năm
-  </th> */}
-  
-  
-</tr>
-
+        <table className="w-full text-sm text-left text-gray-600">
+          <thead className="text-xs text-gray-700 uppercase bg-pink-100">
+            <tr>
+              <th className="px-3 py-3">Mã SP</th>
+              <th className="px-20 py-3">Tên sản phẩm</th>
+              <th className="px-20 py-3">Biến thể</th>
+              <th className="px-10 text-center py-3">SL nhập</th>
+              <th className="px-10 text-center py-3">SL xuất</th>
+              <th className="px-10 text-center py-3">Giá trị nhập</th>
+              <th className="px-10 text-center py-3">Giá trị doanh thu</th>
+              <th className="px-10 text-center py-3">Tiền lời</th>
+            </tr>
           </thead>
           <tbody>
             {currentRepo.map((item, index) => (
-              <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-3 py-3" >
-                  {item.masp}
-                </th>
-                <td className="px-20 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {item.tensp}
+              <tr key={index} className="bg-white border-b">
+                <td className="px-3 py-3">{item.masp}</td>
+                <td className="px-20 py-3">{item.tensp}</td>
+                <td className="px-20 py-3">{item.chitietbienthe || '—'}</td>
+                <td className="text-center">{Number(item.total_import ?? 0)}</td>
+                <td className="text-center">{Number(item.total_export ?? 0)}</td>
+                <td className="text-center">
+                  {Number(item.import_value ?? 0).toLocaleString()}
                 </td>
-                <td className="px-10 font-medium text-center text-gray-900 whitespace-nowrap dark:text-white py-3 ">
-                  {item.total_quantity}
+                <td className="text-center">
+                  {Number(item.revenue_value ?? 0).toLocaleString()}
                 </td>
-                {/* <td className="px-1 py-3">
-                  {item.year}
-                </td> */}
-                
-               
+                <td className="text-center font-semibold text-green-700">
+                  {Number(item.profit_value ?? 0).toLocaleString()}
+                </td>
               </tr>
             ))}
+
+            {/* --- Dòng tổng cộng --- */}
+            <tr className="bg-gray-100 font-bold border-t">
+              <td colSpan={3} className="text-right pr-3">
+                Tổng cộng:
+              </td>
+              <td className="text-center">{totals.import}</td>
+              <td className="text-center">{totals.export}</td>
+              <td className="text-center">{totals.importValue.toLocaleString()}</td>
+              <td className="text-center">{totals.revenue.toLocaleString()}</td>
+              <td className="text-center text-green-700">
+                {totals.profit.toLocaleString()}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
-      {/* Phân trang tùy chỉnh */}
-      <div className="flex justify-center mt-4 space-x-2 fixed bottom-5 left-1/2 p-2 rounded-md">
-        {/* Nút Trước */}
-        <button
-          onClick={() => handlePageChange(Math.max(0, currentPage - 1))}
-          className="text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          disabled={currentPage === 0}
-        >
-          ← Trước
-        </button>
 
-        {/* Các số trang */}
+      {/* --- Phân trang --- */}
+      <div className="flex justify-center mt-4 space-x-2">
         {pageNumbers.map((page) => (
           <button
             key={page}
-            onClick={() => handlePageChange(page)}
-            className={`mx-1 px-3 py-1 rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-200 transition-all duration-200 cursor-pointer ${
-              currentPage === page ? 'font-bold !bg-gray-800 text-white' : ''
+            onClick={() => setCurrentPage(page)}
+            className={`px-3 py-1 rounded-md border ${
+              currentPage === page ? 'bg-gray-800 text-white' : 'bg-white'
             }`}
           >
             {page + 1}
           </button>
         ))}
-
-        {/* Nút Sau */}
-        <button
-          onClick={() => handlePageChange(Math.min(pageCount - 1, currentPage + 1))}
-          className="text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          disabled={currentPage === pageCount - 1}
-        >
-          Sau →
-        </button>
       </div>
-
-
-      </>
-    )
+    </>
+  );
 }
+
+/* ===== PropTypes ===== */
+TableRepo.propTypes = {
+  repo: PropTypes.arrayOf(PropTypes.object),
+  months: PropTypes.arrayOf(PropTypes.string),
+  onFilterChange: PropTypes.func.isRequired,
+};
+
+TableRepo.defaultProps = {
+  repo: [],
+  months: [],
+  onFilterChange: () => {},
+};

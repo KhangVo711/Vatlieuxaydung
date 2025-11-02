@@ -1,23 +1,24 @@
-import express from "express";
 import repoModel from "../services/repoModel.js";
 
-const getRepoMonthCurrent = async (req, res) => {
-    try {
-        const repo = await repoModel.getRepoMonthCurrent();
-        res.status(200).send({ repo: repo });
-    }
-    catch (error) {
-        res.status(500).send({ message: "Đã xảy ra lỗi khi lấy dữ liệu" });
-    }
-}
-const getRepoSumAllMonth = async (req, res) => {
-    try {
-        const repo = await repoModel.getRepoSumAllMonth();
-        res.status(200).send({ repo: repo });
-    }
-    catch (error) {
-        res.status(500).send({ message: "Đã xảy ra lỗi khi lấy dữ liệu" });
-    }
-}
+const getRepo = async (req, res) => {
+  try {
+    const { month } = req.query;
+    const data = await repoModel.getRepo(month); // ✅ Gọi hàm model đúng cách
+    res.status(200).json({ repo: data });
+  } catch (err) {
+    console.error("Lỗi trong getRepo:", err);
+    res.status(500).json({ message: "Lỗi truy vấn kho hàng!" });
+  }
+};
 
-export default { getRepoMonthCurrent, getRepoSumAllMonth };
+const getMonths = async (req, res) => {
+  try {
+    const months = await repoModel.getAvailableMonths(); // ✅ Gọi đúng model
+    res.status(200).json({ months });
+  } catch (err) {
+    console.error("Lỗi trong getMonths:", err);
+    res.status(500).json({ message: "Lỗi lấy danh sách tháng!" });
+  }
+};
+
+export default { getRepo, getMonths };

@@ -98,8 +98,8 @@ const initWebRoute = (app) => {
     router.get('/getPromotions', promo.getActivePromos)
 
 
-    // router.get('/getRepoMonthCurrent', repo.getRepoMonthCurrent)
-    router.get('/getRepoSumAllMonth', repo.getRepoSumAllMonth)
+    router.get('/getRepo', repo.getRepo)
+    router.get('/getAvailableMonths', repo.getMonths);
 
     router.post('/submitReview', rating.createRatingStore)
     router.get('/getReview', rating.getRatingStore)
