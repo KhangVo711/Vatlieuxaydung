@@ -32,7 +32,7 @@ export default function ProductDetail() {
   total: 0
 });
   const { onAddToCart, isData } = useContext(Context);
-  console.log(totalReviews)
+  console.log(reviews)
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
@@ -113,6 +113,28 @@ setRatingStats({ count: starCount, percent: starPercent, total });
     };
 
     onAddToCart(newItem);
+    toast.success(
+      `${product.tensp} đã được thêm vào giỏ hàng`,
+      { duration: 3000 }
+    );
+  };
+  const handleBuyToCart = () => {
+    // if (!selectedVariant && variants.length > 0) {
+    //   alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
+    //   return;
+    // }
+
+    const newItem = {
+      masp: product.masp,
+      tensp: product.tensp,
+      hinhanh: product.hinhanh,
+      gia: selectedVariant ? selectedVariant.gia : product.gia,
+      mabienthe: selectedVariant?.mabienthe || null,
+      thuoc_tinh: selectedVariant?.thuoc_tinh || null,
+    };
+
+    onAddToCart(newItem);
+    navigate("/cart");
     toast.success(
       `${product.tensp} đã được thêm vào giỏ hàng`,
       { duration: 3000 }
@@ -217,7 +239,8 @@ setRatingStats({ count: starCount, percent: starPercent, total });
 
 
         {/* Thông tin sản phẩm */}
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/2 flex flex-col justify-between">
+        <div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">{product.tensp}</h2>
           {totalReviews > 0 && (
             <div className="flex items-center gap-2 mb-2">
@@ -256,13 +279,13 @@ setRatingStats({ count: starCount, percent: starPercent, total });
 
           {/* Giá */}
           <div className="my-4 flex items-center gap-3">
-            <span className={`text-2xl font-semibold ${product.km ? "text-gray-400 line-through" : "text-pink-600"}`}>
+            <span className={`text-xl font-semibold ${product.km ? "text-gray-400 line-through" : "text-pink-600"}`}>
               {selectedVariant
                 ? formatCurrency(selectedVariant.gia)
                 : formatCurrency(product.gia)}
             </span>
             {product.km && (
-              <span className="text-3xl text-pink-600 font-bold">
+              <span className="text-xl text-pink-600 font-bold">
                 {selectedVariant
                   ? formatCurrency(selectedVariant.gia * (1 - product.km / 100))
                   : formatCurrency(product.gia * (1 - product.km / 100))}
@@ -319,18 +342,19 @@ setRatingStats({ count: starCount, percent: starPercent, total });
               </div>
             </div>
           )}
-
+          <h3 className="font-semibold">Công dụng:</h3>
           {/* Mô tả */}
           <p className="text-gray-700 mb-6 leading-relaxed">{product.ttct}</p>
-
           {/* Nút hành động */}
+          </div>
+          <div>
           <div className="flex gap-4">
-            <button className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-md font-medium text-lg transition">
+            <button onClick={handleBuyToCart} className="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1.5 rounded-md font-medium text-lg transition">
               Mua ngay
             </button>
             <button
               onClick={handleAddToCart}
-              className={`border border-pink-500 text-pink-500 hover:bg-pink-50 px-6 py-3 rounded-md font-medium text-lg transition
+              className={`border border-pink-500 text-pink-500 hover:bg-pink-50 px-3 py-1.5 rounded-md font-medium text-lg transition
     ${(selectedVariant?.soluongtonkho === 0 || (!selectedVariant && product.soluongtonkho === 0))
                   ? "opacity-50 cursor-not-allowed" : ""
                 }`}
@@ -341,7 +365,7 @@ setRatingStats({ count: starCount, percent: starPercent, total });
             >
               Thêm vào giỏ hàng
             </button>
-
+</div>
           </div>
         </div>
       </div>
@@ -507,7 +531,7 @@ setRatingStats({ count: starCount, percent: starPercent, total });
           </p>
           </div>
 
-          {/* ✅ Thêm phần phản hồi admin */}
+          {/* Thêm phần phản hồi admin */}
           {r.phanhoi && (
             <div className="bg-pink-50 border-l-4 border-pink-400 p-3 mt-3 rounded-md">
               <p className="text-gray-800 text-sm">

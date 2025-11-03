@@ -8,7 +8,7 @@ const getReview = async (masp) => {
             hasp.hinhanh, 
             t.noidung AS phanhoi, 
             t.ten_admin, 
-            t.ngaytraloi,
+            t.ngaytraloi
      FROM binhluan b
      JOIN sanpham sp ON sp.masp = b.masp
      JOIN hinhanhsanpham hasp ON hasp.masp = sp.masp

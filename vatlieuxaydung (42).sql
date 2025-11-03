@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 19, 2025 at 12:42 PM
+-- Generation Time: Nov 03, 2025 at 04:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,35 @@ SET time_zone = "+00:00";
 --
 -- Database: `vatlieuxaydung`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `binhluan`
+--
+
+CREATE TABLE `binhluan` (
+  `id` int(11) NOT NULL,
+  `masp` varchar(50) NOT NULL,
+  `tenkh` varchar(255) NOT NULL,
+  `sosao` varchar(50) NOT NULL,
+  `noidung` varchar(255) NOT NULL,
+  `ngaydang` datetime NOT NULL,
+  `trangthai` enum('chờ duyệt','hiển thị','ẩn') NOT NULL DEFAULT 'hiển thị'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `binhluan`
+--
+
+INSERT INTO `binhluan` (`id`, `masp`, `tenkh`, `sosao`, `noidung`, `ngaydang`, `trangthai`) VALUES
+(1, 'BT89102384', 'Võ Huỳnh Minh Khang', '4', 'Tốt', '2025-10-31 00:00:00', 'hiển thị'),
+(2, 'BT89102384', 'Võ Huỳnh Minh Khang', '5', 'Good\n', '2025-10-31 19:47:19', 'hiển thị'),
+(3, 'BT89102384', 'Võ Huỳnh Minh Khang', '3', 'Sản phẩm ổn', '2025-10-31 21:52:04', 'hiển thị'),
+(4, 'BT89102384', 'Võ Huỳnh Minh Khang', '2', 'Lỗi', '2025-10-31 21:52:14', 'ẩn'),
+(5, 'BT89102384', 'Võ Huỳnh Minh Khang', '1', 'Sản phẩm lỗi', '2025-10-31 21:54:07', 'ẩn'),
+(6, 'BT89102384', 'Võ Huỳnh Minh Khang', '5', 'Sản phẩm rất tốt', '2025-10-31 21:58:42', 'hiển thị'),
+(7, 'CN76782423', 'Trần Khánh Nam', '3', 'Sản phẩm dùng tạm được', '2025-11-02 18:21:16', 'hiển thị');
 
 -- --------------------------------------------------------
 
@@ -209,7 +238,10 @@ INSERT INTO `chitietphieunhap` (`mapn`, `masp`, `mabienthe`, `soluongnhap`, `gia
 ('17517955103991', 'SM75414127', 'R-6883', 3, 25000, '3CE'),
 ('17523342839159', 'VZ092736451', 'V-3645', 10, 26000, 'DHC'),
 ('17526568248217', 'SM28364812', NULL, 15, 35000, 'Hada Labo'),
-('17526568248217', 'SM15414124', NULL, 10, 65000, 'SVR');
+('17526568248217', 'SM15414124', NULL, 10, 65000, 'SVR'),
+('17621834635787', 'CR37462789', NULL, 10, 30000, 'CeraVe'),
+('17621834635787', 'SM28364812', NULL, 25, 27000, 'Hadalabo'),
+('17621834635787', 'SM15414124', NULL, 5, 22000, 'SVR');
 
 -- --------------------------------------------------------
 
@@ -457,19 +489,6 @@ INSERT INTO `khachhang` (`tenkh`, `makh`, `email`, `sdt`, `diachi`, `matkhau`) V
 -- --------------------------------------------------------
 
 --
--- Table structure for table `khohang`
---
-
-CREATE TABLE `khohang` (
-  `makho` int(11) NOT NULL,
-  `ngaynhap` int(11) NOT NULL,
-  `tongnhap` int(11) NOT NULL,
-  `tongxuat` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `khuyenmai`
 --
 
@@ -481,6 +500,13 @@ CREATE TABLE `khuyenmai` (
   `thoigianketthuckm` datetime NOT NULL,
   `masp` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `khuyenmai`
+--
+
+INSERT INTO `khuyenmai` (`makm`, `tenkm`, `km`, `thoigianbatdaukm`, `thoigianketthuckm`, `masp`) VALUES
+('KM-781', 'Giảm 5%', 5, '2025-10-31 13:58:00', '2025-11-05 13:58:00', 'BT89102384');
 
 -- --------------------------------------------------------
 
@@ -627,7 +653,8 @@ INSERT INTO `phieunhap` (`mapn`, `tenpn`, `ngaylap`, `maql`, `manv`, `tonggia`) 
 ('17517953907691', 'TH', '2025-07-06 16:49:00', 'RPA67S', NULL, 5000),
 ('17517955103991', 'Mỹ phẩm mới', '2025-07-06 16:51:00', 'RPA67S', NULL, 215000),
 ('17523342839159', 'Viên uống', '2025-07-12 22:31:00', 'RPA67S', NULL, 260000),
-('17526568248217', 'SRM', '2025-07-16 16:07:00', 'RPA67S', NULL, 1175000);
+('17526568248217', 'SRM', '2025-07-16 16:07:00', 'RPA67S', NULL, 1175000),
+('17621834635787', 'Sữa rửa mặt', '2025-11-03 22:24:00', 'RPA67S', NULL, 1085000);
 
 -- --------------------------------------------------------
 
@@ -676,11 +703,11 @@ CREATE TABLE `sanpham` (
 INSERT INTO `sanpham` (`masp`, `tensp`, `maloai`, `ttct`, `mansx`, `loaibienthe`, `cobienthe`, `gia`, `soluongsp`) VALUES
 ('BT89102384', 'Bông Makeup', 'PK637124', 'Dùng makeup', 'FC125768', NULL, 0, 15000, 1),
 ('CN76782423', 'Kem chống nắng', 'CS874523', 'Kem Chống Nắng hỗ trợ nâng tone tự nhiên Espoir Water Splash Sun Cream SPF50+ PA++++ vừa dưỡng ẩm tốt cho da khô, da bình thường, vừa bảo vệ làn da dưới tác động của ánh nắng có thể sử dụng như lớp kem lót, giúp da thêm rạng rỡ.', 'ES216821', NULL, 0, 265000, 0),
-('CR37462789', 'Sữa rửa mặt CeraVe', 'CS874523', 'Với làn da dầu, nhạy cảm, sữa rửa mặt giúp làm sạch sâu, giúp loại bỏ dầu thừa, bụi bẩn mà không phá vỡ cấu trúc hàng rào bảo vệ tự nhiên của da.', 'CV602871', NULL, 0, 320000, 0),
+('CR37462789', 'Sữa rửa mặt CeraVe', 'CS874523', 'Với làn da dầu, nhạy cảm, sữa rửa mặt giúp làm sạch sâu, giúp loại bỏ dầu thừa, bụi bẩn mà không phá vỡ cấu trúc hàng rào bảo vệ tự nhiên của da.', 'CV602871', NULL, 0, 320000, 10),
 ('SB052736412', 'Son Bóng Black Rouge', 'TD902642', 'Son Bóng Black Rouge với độ bóng cực cao giúp môi căng mọng như jelly cùng lớp phủ màu trong trẻo phù hợp với da ngâm, da sáng và môi khô, môi mỏng, sống động tạo hiệu ứng 3D ấn tượng mang đến một đôi môi căng.', 'BR563283', 'Màu sắc', 1, NULL, NULL),
 ('SL23981364', 'Son Tint Lilybyred', 'TD902642', 'Son Tint Lilybyred có công thức tint nước, lỏng nhẹ cho phép bạn dễ dàng điều chỉnh màu cũng như lượng son thích hợp khi trang điểm cho làn da bình thường, da sáng và các loại môi bình thường, môi thâm và môi dày. Cho đôi môi trong veo mọng nước, son lên môi đều màu, bên ngoài được phủ một lớp màng bóng tăng sự quyến rũ cho phái đẹp.', 'LY837221', 'Màu sắc', 1, NULL, NULL),
-('SM15414124', 'Sữa rửa mặt SVR', 'CS874523', 'Chuyên dùng cho da dầu và da nhiều mụn giúp làm sạch tốt lỗ chân lông', 'SV657632', NULL, 0, 225000, 10),
-('SM28364812', 'Sữa rửa mặt Hadalabo', 'CS874523', 'Làm sạch sâu tốt phù hợp cho da nhạy cảm', 'HL213276', NULL, 0, 95000, 15),
+('SM15414124', 'Sữa rửa mặt SVR', 'CS874523', 'Chuyên dùng cho da dầu và da nhiều mụn giúp làm sạch tốt lỗ chân lông', 'SV657632', NULL, 0, 225000, 15),
+('SM28364812', 'Sữa rửa mặt Hadalabo', 'CS874523', 'Làm sạch sâu tốt phù hợp cho da nhạy cảm', 'HL213276', NULL, 0, 95000, 40),
 ('SM75414127', 'Son kem lì 3CE ', 'TD902642', 'Son kem lì 3CE Velvet Lip là dòng son nổi tiếng từ Hàn Quốc với chất son mềm mịn như nhung, phù hợp với môi khô, da sáng. Son có độ bám màu tầm 4–6 tiếng, mùi dịu nhẹ, dễ chịu.\r\n', 'CE567824', 'Màu sắc', 1, NULL, NULL),
 ('VZ092736451', 'Viên uống Vitamin C', 'TP378676', 'Bổ sung Vitamin C', 'DC456782', 'Số viên', 1, NULL, NULL);
 
@@ -732,9 +759,38 @@ INSERT INTO `thuoctinhbienthe` (`mathuoctinh`, `mabienthe`, `loaithuoctinh`, `th
 ('V-8945_1752333614890', 'V-8945', 'Số viên', '60'),
 ('V-9382_1752333614911', 'V-9382', 'Số viên', '90');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `traloi_binhluan`
+--
+
+CREATE TABLE `traloi_binhluan` (
+  `id` int(11) NOT NULL,
+  `id_binhluan` int(11) NOT NULL,
+  `ten_admin` varchar(255) NOT NULL,
+  `noidung` varchar(255) NOT NULL,
+  `ngaytraloi` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `traloi_binhluan`
+--
+
+INSERT INTO `traloi_binhluan` (`id`, `id_binhluan`, `ten_admin`, `noidung`, `ngaytraloi`) VALUES
+(1, 7, 'Admin', 'Cảm ơn bạn', '2025-11-02 19:01:44'),
+(5, 6, 'Admin', 'Shop cảm ơn', '2025-11-02 19:42:50');
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `binhluan`
+--
+ALTER TABLE `binhluan`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `masp` (`masp`,`tenkh`);
 
 --
 -- Indexes for table `cacbienthe`
@@ -833,12 +889,6 @@ ALTER TABLE `khachhang`
   ADD UNIQUE KEY `sdt` (`sdt`);
 
 --
--- Indexes for table `khohang`
---
-ALTER TABLE `khohang`
-  ADD PRIMARY KEY (`makho`);
-
---
 -- Indexes for table `khuyenmai`
 --
 ALTER TABLE `khuyenmai`
@@ -915,8 +965,22 @@ ALTER TABLE `thuoctinhbienthe`
   ADD KEY `mabienthe` (`mabienthe`);
 
 --
+-- Indexes for table `traloi_binhluan`
+--
+ALTER TABLE `traloi_binhluan`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`,`id_binhluan`),
+  ADD KEY `id_binhluan` (`id_binhluan`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `binhluan`
+--
+ALTER TABLE `binhluan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `chitietchamcong`
@@ -925,8 +989,20 @@ ALTER TABLE `chitietchamcong`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT for table `traloi_binhluan`
+--
+ALTER TABLE `traloi_binhluan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `binhluan`
+--
+ALTER TABLE `binhluan`
+  ADD CONSTRAINT `binhluan_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
 
 --
 -- Constraints for table `cacbienthe`
@@ -1023,6 +1099,12 @@ ALTER TABLE `thanhtoan`
 --
 ALTER TABLE `thuoctinhbienthe`
   ADD CONSTRAINT `thuoctinhbienthe_ibfk_1` FOREIGN KEY (`mabienthe`) REFERENCES `cacbienthe` (`mabienthe`);
+
+--
+-- Constraints for table `traloi_binhluan`
+--
+ALTER TABLE `traloi_binhluan`
+  ADD CONSTRAINT `traloi_binhluan_ibfk_1` FOREIGN KEY (`id_binhluan`) REFERENCES `binhluan` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

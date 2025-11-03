@@ -221,20 +221,20 @@ export default function Cart() {
             <div className="w-full flex flex-col items-center justify-center">
               <h2 className="text-xl font-semibold mb-2 uppercase mt-5">Thông tin đặt hàng</h2>
               {message && <p className="text-red-500 text-sm">{message}</p>}
-              {["fullname", "email", "phone", "address"].map((field, idx) => (
+              {["Họ và tên", "Email", "Số điện thoại", "Địa chỉ"].map((field, idx) => (
                 <div key={idx} className='w-full flex justify-center items-center mb-4'>
                   <div className='w-1/3 flex flex-col justify-center'>
                     <label className="block text-sm mb-1 font-medium text-gray-700">
-                      {field === "fullname" ? "Họ và tên" :
-                        field === "email" ? "Email" :
-                          field === "phone" ? "Số điện thoại" : "Địa chỉ"}
+                      {field === "Họ và tên" ? "Họ và tên" :
+                        field === "Email" ? "Email" :
+                          field === "Số điện thoại" ? "Số điện thoại" : "Địa chỉ"}
                     </label>
                     <input
                       type="text"
                       name={field}
                       value={formData[field]}
                       onChange={handleChange}
-                      className="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+                      className="w-full px-2 py-1.5 border border-gray-300 rounded-md placeholder:text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
                       placeholder={field}
                     />
                   </div>

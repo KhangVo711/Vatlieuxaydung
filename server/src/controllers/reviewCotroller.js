@@ -3,6 +3,7 @@ import reviewsModel from "../services/reviewsModel.js";
 // Lấy tất cả đánh giá của 1 sản phẩm
 const getReviewsByProductId = async (req, res) => {
   const { masp } = req.params;
+  console.log(masp);
   try {
     const reviews = await reviewsModel.getReview(masp);
     res.status(200).json(reviews);

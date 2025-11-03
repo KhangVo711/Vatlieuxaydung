@@ -15,7 +15,7 @@ export default function ReplyReview() {
   const [currentReview, setCurrentReview] = useState(null);
   const [replyContent, setReplyContent] = useState("");
 
-  // 🔹 Lấy danh sách đánh giá + phản hồi
+  // Lấy danh sách đánh giá + phản hồi
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -34,13 +34,13 @@ export default function ReplyReview() {
         );
         setProducts(uniqueProducts);
       } catch (err) {
-        toast.error("❌ Lỗi tải danh sách đánh giá!");
+        toast.error("Lỗi tải danh sách đánh giá!");
       }
     };
     fetchReviews();
   }, []);
 
-  // 🔹 Lọc dữ liệu theo sản phẩm và số sao
+  // Lọc dữ liệu theo sản phẩm và số sao
   useEffect(() => {
     let data = [...reviews];
     if (selectedProduct?.value) data = data.filter(r => r.masp === selectedProduct.value);
@@ -48,7 +48,7 @@ export default function ReplyReview() {
     setFiltered(data);
   }, [selectedProduct, selectedStar, reviews]);
 
-  // 🔹 Cập nhật trạng thái
+  // Cập nhật trạng thái
   const handleStatus = async (id, newStatus) => {
     const token = Cookies.get("admin") || Cookies.get("staff");
     try {
@@ -64,14 +64,14 @@ export default function ReplyReview() {
     }
   };
 
-  // 🔹 Mở modal phản hồi
+  //Mở modal phản hồi
   const openReplyModal = (review) => {
     setCurrentReview(review);
     setReplyContent(review.phanhoi || "");
     setIsModalOpen(true);
   };
 
-  // 🔹 Gửi phản hồi admin
+  //Gửi phản hồi admin
   const submitReply = async () => {
     const token = Cookies.get("admin") || Cookies.get("staff");
     if (!replyContent.trim()) {
@@ -92,13 +92,13 @@ export default function ReplyReview() {
         )
       );
       setIsModalOpen(false);
-      toast.success("💬 Đã phản hồi thành công!");
+      toast.success("Đã phản hồi thành công!");
     } catch {
-      toast.error("❌ Lỗi khi gửi phản hồi!");
+      toast.error("Lỗi khi gửi phản hồi!");
     }
   };
 
-  // 🔹 Style react-select
+  //Style react-select
   const customSelect = {
     control: (base) => ({
       ...base,
