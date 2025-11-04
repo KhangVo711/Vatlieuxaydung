@@ -98,47 +98,66 @@ setRatingStats({ count: starCount, percent: starPercent, total });
 
   if (!product) return <div className="text-center py-20 text-lg">Đang tải...</div>;
   const handleAddToCart = () => {
-    // if (!selectedVariant && variants.length > 0) {
-    //   alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
-    //   return;
-    // }
-
-    const newItem = {
+    if (!selectedVariant && variants.length > 0) return; // Prevent adding if variant required but not selected
+    const productToAdd = {
       masp: product.masp,
       tensp: product.tensp,
-      hinhanh: product.hinhanh,
       gia: selectedVariant ? selectedVariant.gia : product.gia,
-      mabienthe: selectedVariant?.mabienthe || null,
-      thuoc_tinh: selectedVariant?.thuoc_tinh || null,
+      hinhanh: product.hinhanh,
+      maloai: product.maloai,
+      mansx: product.mansx,
+      soluong: 1,
+      soluongsp: selectedVariant ? selectedVariant.soluongtonkho : product.soluongsp,
+      tenloai: product.tenloai,
+      tennsx: product.tennsx,
+      ttct: product.ttct,
+      km: product.km,
+      makm: product.makm,
+      tenkm: product.tenkm,
+      thoigianbatdaukm: product.thoigianbatdaukm,
+      thoigianketthuckm: product.thoigianketthuckm,
+      ...(selectedVariant && selectedVariant.mabienthe && { mabienthe: selectedVariant.mabienthe }),
+      ...(selectedVariant && selectedVariant.thuoc_tinh && { thuoctinh: selectedVariant.thuoc_tinh }),
     };
 
-    onAddToCart(newItem);
+    onAddToCart(productToAdd);
     toast.success(
       `${product.tensp} đã được thêm vào giỏ hàng`,
       { duration: 3000 }
     );
   };
   const handleBuyToCart = () => {
-    // if (!selectedVariant && variants.length > 0) {
-    //   alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
-    //   return;
-    // }
-
-    const newItem = {
+    if (!selectedVariant && variants.length > 0) return; // Prevent adding if variant required but not selected
+    const productToAdd = {
       masp: product.masp,
       tensp: product.tensp,
-      hinhanh: product.hinhanh,
       gia: selectedVariant ? selectedVariant.gia : product.gia,
-      mabienthe: selectedVariant?.mabienthe || null,
-      thuoc_tinh: selectedVariant?.thuoc_tinh || null,
+      hinhanh: product.hinhanh,
+      maloai: product.maloai,
+      mansx: product.mansx,
+      soluong: 1,
+      soluongsp: selectedVariant ? selectedVariant.soluongtonkho : product.soluongsp,
+      tenloai: product.tenloai,
+      tennsx: product.tennsx,
+      ttct: product.ttct,
+      km: product.km,
+      makm: product.makm,
+      tenkm: product.tenkm,
+      thoigianbatdaukm: product.thoigianbatdaukm,
+      thoigianketthuckm: product.thoigianketthuckm,
+      ...(selectedVariant && selectedVariant.mabienthe && { mabienthe: selectedVariant.mabienthe }),
+      ...(selectedVariant && selectedVariant.thuoc_tinh && { thuoctinh: selectedVariant.thuoc_tinh }),
     };
 
-    onAddToCart(newItem);
-    navigate("/cart");
+    onAddToCart(productToAdd);
     toast.success(
-      `${product.tensp} đã được thêm vào giỏ hàng`,
-      { duration: 3000 }
-    );
+        `${product.tensp} đã được thêm vào giỏ hàng`,
+        { duration: 3000 }
+      );
+    setTimeout(() => {
+      navigate('/cart');
+      
+    }, 1000);
   };
   const handleSubmitComment = async () => {
     if(!isData.fullname) {
@@ -349,22 +368,28 @@ setRatingStats({ count: starCount, percent: starPercent, total });
           </div>
           <div>
           <div className="flex gap-4">
-            <button onClick={handleBuyToCart} className="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1.5 rounded-md font-medium text-lg transition">
+            <button onClick={handleBuyToCart} className={`border border-pink-500 bg-pink-500 text-white hover:bg-pink-300 px-3 py-1.5 rounded-md font-medium text-lg transition
+    ${
+      ((selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0)
+        ? "cursor-not-allowed"
+        : ""
+    }`}
+  disabled={(selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0}
+>
               Mua ngay
             </button>
             <button
-              onClick={handleAddToCart}
-              className={`border border-pink-500 text-pink-500 hover:bg-pink-50 px-3 py-1.5 rounded-md font-medium text-lg transition
-    ${(selectedVariant?.soluongtonkho === 0 || (!selectedVariant && product.soluongtonkho === 0))
-                  ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              disabled={
-                selectedVariant?.soluongtonkho === 0 ||
-                (!selectedVariant && product.soluongtonkho === 0)
-              }
-            >
-              Thêm vào giỏ hàng
-            </button>
+  onClick={handleAddToCart}
+  className={`border border-pink-500 text-pink-500 hover:bg-pink-50 px-3 py-1.5 rounded-md font-medium text-lg transition
+    ${
+      ((selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0)
+        ? "cursor-not-allowed"
+        : ""
+    }`}
+  disabled={(selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0}
+>
+  Thêm vào giỏ hàng
+</button>
 </div>
           </div>
         </div>

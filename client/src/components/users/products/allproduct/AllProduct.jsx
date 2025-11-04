@@ -61,7 +61,7 @@ export default function AllProduct() {
 
   const fetchProductDetails = async (product) => {
     try {
-      const response = await axios.post('http://localhost:5001/detailProduct', 
+      const response = await axios.post('http://localhost:5001/detailProduct',
         { masp: product.masp, maloai: product.maloai, mansx: product.mansx },
         { headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, withCredentials: true }
       );
@@ -101,7 +101,7 @@ export default function AllProduct() {
   //   };
   //   onAddToCart(productToAdd);
   // };
- 
+
   const handleAddCartSelect = () => {
     if (!selectedVariant && variants.length > 0) return; // Prevent adding if variant required but not selected
     const productToAdd = {
@@ -121,14 +121,15 @@ export default function AllProduct() {
       tenkm: selectedProduct.tenkm,
       thoigianbatdaukm: selectedProduct.thoigianbatdaukm,
       thoigianketthuckm: selectedProduct.thoigianketthuckm,
-      ...(selectedVariant && selectedVariant.mabienthe && {mabienthe: selectedVariant.mabienthe}),
+      ...(selectedVariant && selectedVariant.mabienthe && { mabienthe: selectedVariant.mabienthe }),
       ...(selectedVariant && selectedVariant.thuoc_tinh && { thuoctinh: selectedVariant.thuoc_tinh }),
     };
+
     onAddToCart(productToAdd);
     toast.success(
-    `${selectedProduct.tensp} đã được thêm vào giỏ hàng`,
-    { duration: 3000 }
-  );
+      `${selectedProduct.tensp} đã được thêm vào giỏ hàng`,
+      { duration: 3000 }
+    );
     closeModal();
 
   };
@@ -139,7 +140,7 @@ export default function AllProduct() {
     setVariants([]);
     setSelectedVariant(null);
   };
-useEffect(() => {
+  useEffect(() => {
     document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
     return () => { document.body.style.overflow = 'auto'; };
   }, [isModalOpen]);
@@ -147,7 +148,9 @@ useEffect(() => {
   // const filteredProducts = products.filter(product =>
   //   product.tensp.toLowerCase().includes(searchQuery.toLowerCase())
   // );
-
+const isOutOfStock = selectedProduct?.cobienthe
+  ? !selectedVariant || selectedVariant.soluongtonkho === 0
+  : selectedProduct?.soluongsp === 0;
   return (
     <>
       <div className="flex flex-col">
@@ -162,15 +165,15 @@ useEffect(() => {
                   Hết hàng
                 </div>
               ) :
-              product.tenkm && product.km && product.tongsoluong <= 0 ? (
-                <div className="absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md">
-                  Hết hàng
-                </div>
-              ) : product.tenkm && product.km && product.tongsoluong > 0 ? (
-                <div className="absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md">
-                  {product.tenkm}
-                </div>
-              ) : null}
+                product.tenkm && product.km && product.tongsoluong <= 0 ? (
+                  <div className="absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md">
+                    Hết hàng
+                  </div>
+                ) : product.tenkm && product.km && product.tongsoluong > 0 ? (
+                  <div className="absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md">
+                    {product.tenkm}
+                  </div>
+                ) : null}
               <div>
                 <img
                   onClick={() => handleViewProductClick(product)}
@@ -189,13 +192,13 @@ useEffect(() => {
                 <p className={`${product.tenkm ? 'line-through' : null} mr-5`}>
                   {product.gia && product.gia
                     ? formatCurrency(product.gia)
-                    : product.gia_range ? formatCurrency(product.gia_range)  + ' +' : formatCurrency(product.gia)}
+                    : product.gia_range ? formatCurrency(product.gia_range) + ' +' : formatCurrency(product.gia)}
                 </p>
                 {product.km ? (
                   <p className="text-red-600 font-semibold">
-                    {product.gia && product.gia 
+                    {product.gia && product.gia
                       ? `${formatCurrency(parseInt(product.gia) * (1 - product.km / 100))}`
-                      : product.gia_range 
+                      : product.gia_range
                         ? `Chỉ từ ${formatCurrency(parseInt(product.gia_range) * (1 - product.km / 100))} +`
                         : formatCurrency(product.gia - (product.gia * (product.km / 100)))
                     }
@@ -206,6 +209,7 @@ useEffect(() => {
           ))}
         </div>
         <ReactModal
+        key={selectedProduct?.masp}
           isOpen={isModalOpen}
           onRequestClose={closeModal}
           contentLabel="Chi tiết sản phẩm"
@@ -267,17 +271,17 @@ useEffect(() => {
                       <p className="text-md font-semibold flex text-gray-800 mb-2">
                         <span className="font-bold mr-2">Giá:</span>
                         <p className={`${selectedProduct.tenkm ? 'line-through' : null} mr-3`}>
-                          {selectedVariant ? formatCurrency(selectedVariant.gia) : 
-                            selectedProduct.gia_range && selectedProduct.gia_range 
+                          {selectedVariant ? formatCurrency(selectedVariant.gia) :
+                            selectedProduct.gia_range && selectedProduct.gia_range
                               ? formatCurrency(selectedProduct.gia_range) + ' +'
                               : selectedProduct.gia_range ? selectedProduct.gia_range : formatCurrency(selectedProduct.gia)}
                         </p>
                         {selectedProduct.km ? (
                           <p className="text-red-600 font-semibold">
                             {selectedVariant ? formatCurrency(selectedVariant.gia * (1 - selectedProduct.km / 100)) :
-                              selectedProduct.gia_range && selectedProduct.gia_range 
+                              selectedProduct.gia_range && selectedProduct.gia_range
                                 ? `${formatCurrency(parseInt(selectedProduct.gia_range) * (1 - selectedProduct.km / 100))} +`
-                                : selectedProduct.gia_range 
+                                : selectedProduct.gia_range
                                   ? `${formatCurrency(parseInt(selectedProduct.gia_range) * (1 - selectedProduct.km / 100))}}`
                                   : formatCurrency(selectedProduct.gia - (selectedProduct.gia * (selectedProduct.km / 100)))
                             }
@@ -310,23 +314,28 @@ useEffect(() => {
                 )}
                 <p className="text-gray-600 text-sm">{selectedProduct.ttct}</p>
                 <div className="mt-8 text-sm flex justify-center items-center flex-col ">
-                 <div className='flex justify-between items-center space-x-6 mb-4'>
-                   <Link
-                     to={`/products/detail/${selectedProduct.masp}`}
-                     className="bg-blue-400 text-white px-3 w-32 text-center items-center py-1 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
-                   >
-                     Xem chi tiết
-                   </Link>
+                  <div className='flex justify-between items-center space-x-6 mb-4'>
+                    <Link
+                      to={`/products/detail/${selectedProduct.masp}`}
+                      className="bg-blue-400 text-white px-3 w-32 text-center items-center py-1 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
+                    >
+                      Xem chi tiết
+                    </Link>
+                    {/* {console.log('Selected Variant:', selectedVariant.soluongtonkho)} */}
+                    {console.log("variantQty:", selectedVariant?.soluongtonkho, "productQty:", selectedProduct?.soluongsp)}
+                    <button
+              onClick={handleAddCartSelect}
+              disabled={isOutOfStock}
+              className={`w-32 bg-pink-400  text-white px-3 py-1 rounded transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md ${
+                isOutOfStock
+                  ? "cursor-not-allowed"
+                  : "hover:scale-105"
+              }`}
+            >
+              Thêm giỏ hàng
+            </button>
+                  </div>
                   <button
-                    onClick={handleAddCartSelect}
-                    className="bg-pink-400 w-32 items-center text-white px-3 py-1 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
-                    aria-label={`Add ${selectedProduct.tensp} to cart`}
-                    disabled={!selectedVariant && variants.length > 0 || (selectedVariant?.soluongtonkho === 0)}
-                  >
-                    Thêm giỏ hàng
-                  </button>
-</div>
-                   <button
                     className="bg-gray-400 text-white px-3 py-1 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
                     onClick={closeModal}
                   >
