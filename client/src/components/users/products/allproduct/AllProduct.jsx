@@ -12,7 +12,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import PreFooter from '../prefooter/PreFooter';
-import CosmeticsProductCard from '../cosmeticsproductcard/CosmeticsProductCard';
+import CosmeticsProductCard from '../cosmeticsproductcard/CosmeticsProductCard.jsx';
 import { Link, useLocation } from 'react-router-dom';
 
 ReactModal.setAppElement('#root');

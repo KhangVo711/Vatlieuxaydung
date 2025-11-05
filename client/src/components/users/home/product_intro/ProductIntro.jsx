@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import { Context } from '../../../../components/Context';
 import axios from 'axios';
 import ReactModal from 'react-modal';
+import { useNavigate } from "react-router-dom";
 
 // Bind modal to app element (required for accessibility)
 ReactModal.setAppElement('#root');
@@ -16,6 +17,7 @@ export default function ProductIntro() {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { onAddToCart } = useContext(Context);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get('http://localhost:5001/getProduct5')
@@ -28,86 +30,73 @@ export default function ProductIntro() {
   }, []);
 
   const handleAddToCart = (product, e) => {
-    const productCard = e.target.closest('.product-card');
-    if (!productCard) {
-      console.error('Product card not found');
-      onAddToCart(product);
-      return;
-    }
+  const productCard = e.target.closest('.product-card');
+  const imgElement = productCard?.querySelector('img');
+  const cartElement = document.querySelector('#cart-icon');
 
-    const imgElement = productCard.querySelector('img');
-    const cartElement = document.querySelector('#cart-icon');
+  // Nếu có biến thể -> mở modal chọn biến thể
+  const hasVariants = product.mabienthe_list && product.mabienthe_list.split(',').length > 1;
+  if (hasVariants) return handleViewProductClick(product);
 
-    // Kiểm tra nếu có biến thể
-    const hasVariants = product.mabienthe_list && product.mabienthe_list.split(',').length > 1;
-    if (hasVariants) {
-      handleViewProductClick(product); // Mở modal để chọn biến thể
-      return;
-    }
-
-    const fullProduct = productsale.find((p) => p.masp === product.masp) || product;
-    const productToAdd = {
-      masp: fullProduct.masp,
-      tensp: fullProduct.tensp,
-      gia: fullProduct.gia,
-      hinhanh: fullProduct.hinhanh,
-      maloai: fullProduct.maloai,
-      mansx: fullProduct.mansx,
-      soluong: 1,
-      soluongsp: fullProduct.soluongsp,
-      tenloai: fullProduct.tenloai,
-      tennsx: fullProduct.tennsx,
-      ttct: fullProduct.ttct,
-      km: fullProduct.km,
-      makm: fullProduct.makm,
-      tenkm: fullProduct.tenkm,
-      thoigianbatdaukm: fullProduct.thoigianbatdaukm,
-      thoigianketthuckm: fullProduct.thoigianketthuckm,
-      ...(fullProduct.mabienthe_list && { mabienthe: fullProduct.mabienthe_list.split(',')[0] || null }),
-      ...(fullProduct.thuoc_tinh_list && { thuoctinh: fullProduct.thuoc_tinh_list.split(',')[0] || null }),
-    };
-
-    if (fullProduct.soluongsp <= 0) {
-      console.warn('Product out of stock, cannot add to cart');
-      return;
-    }
-
-    if (!imgElement || !cartElement) {
-      console.warn('Image or cart icon not found, adding to cart without animation');
-      onAddToCart(productToAdd);
-      return;
-    }
-
-    const imgRect = imgElement.getBoundingClientRect();
-    const cartRect = cartElement.getBoundingClientRect();
-
-    const cloneImg = imgElement.cloneNode(true);
-    document.body.appendChild(cloneImg);
-
-    Object.assign(cloneImg.style, {
-      position: 'absolute',
-      top: `${imgRect.top + window.scrollY}px`,
-      left: `${imgRect.left + window.scrollX}px`,
-      width: `${imgRect.width}px`,
-      height: `${imgRect.height}px`,
-      zIndex: 1000,
-      pointerEvents: 'none',
-    });
-
-    gsap.to(cloneImg, {
-      duration: 0.7,
-      ease: 'power2.inOut',
-      x: cartRect.left + window.scrollX - imgRect.left - window.scrollX,
-      y: cartRect.top + window.scrollY - imgRect.top - window.scrollY,
-      width: 20,
-      height: 20,
-      opacity: 0.5,
-      onComplete: () => {
-        cloneImg.remove();
-        onAddToCart(productToAdd);
-      },
-    });
+  const fullProduct = productsale.find((p) => p.masp === product.masp) || product;
+  const productToAdd = {
+    masp: fullProduct.masp,
+    tensp: fullProduct.tensp,
+    gia: fullProduct.gia,
+    hinhanh: fullProduct.hinhanh,
+    maloai: fullProduct.maloai,
+    mansx: fullProduct.mansx,
+    soluong: 1,
+    soluongsp: fullProduct.soluongsp,
+    tenloai: fullProduct.tenloai,
+    tennsx: fullProduct.tennsx,
+    ttct: fullProduct.ttct,
+    km: fullProduct.km,
+    makm: fullProduct.makm,
+    tenkm: fullProduct.tenkm,
+    thoigianbatdaukm: fullProduct.thoigianbatdaukm,
+    thoigianketthuckm: fullProduct.thoigianketthuckm,
   };
+
+  if (fullProduct.soluongsp <= 0) return;
+
+  if (!imgElement || !cartElement) {
+    onAddToCart(productToAdd);
+    setTimeout(() => navigate('/cart'), 500);
+    return;
+  }
+
+  const imgRect = imgElement.getBoundingClientRect();
+  const cartRect = cartElement.getBoundingClientRect();
+  const cloneImg = imgElement.cloneNode(true);
+  document.body.appendChild(cloneImg);
+
+  Object.assign(cloneImg.style, {
+    position: 'absolute',
+    top: `${imgRect.top + window.scrollY}px`,
+    left: `${imgRect.left + window.scrollX}px`,
+    width: `${imgRect.width}px`,
+    height: `${imgRect.height}px`,
+    zIndex: 1000,
+    pointerEvents: 'none',
+  });
+
+  gsap.to(cloneImg, {
+    duration: 0.7,
+    ease: 'power2.inOut',
+    x: cartRect.left + window.scrollX - imgRect.left - window.scrollX,
+    y: cartRect.top + window.scrollY - imgRect.top - window.scrollY,
+    width: 20,
+    height: 20,
+    opacity: 0.4,
+    onComplete: () => {
+      cloneImg.remove();
+      onAddToCart(productToAdd);
+      setTimeout(() => navigate('/cart'), 500);
+    },
+  });
+};
+
 
   const handleViewProductClick = async (product) => {
     try {
@@ -134,30 +123,33 @@ export default function ProductIntro() {
   };
 
   const handleAddCartSelect = () => {
-    if (!selectedVariant && variants.length > 0) return;
-    const productToAdd = {
-      masp: selectedProduct.masp,
-      tensp: selectedProduct.tensp,
-      gia: selectedVariant ? selectedVariant.gia : selectedProduct.gia,
-      hinhanh: selectedProduct.hinhanh,
-      maloai: selectedProduct.maloai,
-      mansx: selectedProduct.mansx,
-      soluong: 1,
-      soluongsp: selectedVariant ? selectedVariant.soluongtonkho : selectedProduct.soluongsp,
-      tenloai: selectedProduct.tenloai,
-      tennsx: selectedProduct.tennsx,
-      ttct: selectedProduct.ttct,
-      km: selectedProduct.km,
-      makm: selectedProduct.makm,
-      tenkm: selectedProduct.tenkm,
-      thoigianbatdaukm: selectedProduct.thoigianbatdaukm,
-      thoigianketthuckm: selectedProduct.thoigianketthuckm,
-      ...(selectedVariant && selectedVariant.mabienthe && { mabienthe: selectedVariant.mabienthe }),
-      ...(selectedVariant && selectedVariant.thuoc_tinh && { thuoctinh: selectedVariant.thuoc_tinh }),
-    };
-    onAddToCart(productToAdd);
-    closeModal();
+  if (!selectedVariant && variants.length > 0) return;
+
+  const productToAdd = {
+    masp: selectedProduct.masp,
+    tensp: selectedProduct.tensp,
+    gia: selectedVariant ? selectedVariant.gia : selectedProduct.gia,
+    hinhanh: selectedProduct.hinhanh,
+    maloai: selectedProduct.maloai,
+    mansx: selectedProduct.mansx,
+    soluong: 1,
+    soluongsp: selectedVariant ? selectedVariant.soluongtonkho : selectedProduct.soluongsp,
+    tenloai: selectedProduct.tenloai,
+    tennsx: selectedProduct.tennsx,
+    ttct: selectedProduct.ttct,
+    km: selectedProduct.km,
+    makm: selectedProduct.makm,
+    tenkm: selectedProduct.tenkm,
+    thoigianbatdaukm: selectedProduct.thoigianbatdaukm,
+    thoigianketthuckm: selectedProduct.thoigianketthuckm,
+    ...(selectedVariant && { mabienthe: selectedVariant.mabienthe, thuoctinh: selectedVariant.thuoc_tinh }),
   };
+
+  onAddToCart(productToAdd);
+  closeModal();
+  setTimeout(() => navigate('/cart'), 500);
+};
+
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -316,14 +308,14 @@ export default function ProductIntro() {
               <p className="text-gray-600 text-sm">{selectedProduct.ttct}</p>
               <div className="mt-16 flex justify-center space-x-8">
                 <button
-                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-150"
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-150 sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
                   onClick={closeModal}
                 >
                   Đóng
                 </button>
                 <button
                   onClick={handleAddCartSelect}
-                  className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out"
+                  className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
                   aria-label={`Add ${selectedProduct.tensp} to cart`}
                   disabled={!selectedVariant && variants.length > 0 || (selectedVariant?.soluongtonkho === 0) || (!selectedVariant && selectedProduct.soluongsp === 0)}
                 >

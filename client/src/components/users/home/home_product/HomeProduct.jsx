@@ -3,6 +3,8 @@ import axios from 'axios';
 import { FunnelIcon, BarsArrowDownIcon, BarsArrowUpIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { gsap } from 'gsap';
 import { formatCurrency } from '../../../../utils/currency';
+import toast from "react-hot-toast";
+
 import { Context } from '../../../../components/Context';
 import ReactModal from 'react-modal';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
@@ -10,7 +12,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 ReactModal.setAppElement('#root');
 
@@ -31,7 +33,7 @@ export default function HomeProduct() {
       try {
         const endpoint = isProductCategory
           ? `http://localhost:5001/getProductOfCategory/${category}`
-          : 'http://localhost:5001/getProduct12';
+          : 'http://localhost:5001/getProduct';
         const response = await axios.get(endpoint);
         setProducts(response.data.product);
       } catch (error) {
@@ -58,7 +60,7 @@ export default function HomeProduct() {
 
   const fetchProductDetails = async (product) => {
     try {
-      const response = await axios.post('http://localhost:5001/detailProduct', 
+      const response = await axios.post('http://localhost:5001/detailProduct',
         { masp: product.masp, maloai: product.maloai, mansx: product.mansx },
         { headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, withCredentials: true }
       );
@@ -74,31 +76,31 @@ export default function HomeProduct() {
     }
   };
 
-  const handleAddToCart = (product, e) => {
-    const fullProduct = products.find(p => p.masp === product.masp) || product;
-    const productToAdd = {
-      masp: fullProduct.masp,
-      tensp: fullProduct.tensp,
-      gia: fullProduct.gia,
-      hinhanh: fullProduct.hinhanh,
-      maloai: fullProduct.maloai,
-      mansx: fullProduct.mansx,
-      soluong: 1,
-      soluongsp: fullProduct.soluongsp,
-      tenloai: fullProduct.tenloai,
-      tennsx: fullProduct.tennsx,
-      ttct: fullProduct.ttct,
-      km: fullProduct.km,
-      makm: fullProduct.makm,
-      tenkm: fullProduct.tenkm,
-      thoigianbatdaukm: fullProduct.thoigianbatdaukm,
-      thoigianketthuckm: fullProduct.thoigianketthuckm,
-      ...(fullProduct.mabienthe && fullProduct.mabienthe && { mabienthe: fullProduct.mabienthe }),
-      ...(fullProduct.mathuoctinh && fullProduct.thuoc_tinh && { mathuoctinh: fullProduct.mathuoctinh }),
-    };
-    onAddToCart(productToAdd);
-  };
-  console.log('Selected Product:', selectedProduct);
+  // const handleAddToCart = (product, e) => {
+  //   const fullProduct = products.find(p => p.masp === product.masp) || product;
+  //   const productToAdd = {
+  //     masp: fullProduct.masp,
+  //     tensp: fullProduct.tensp,
+  //     gia: fullProduct.gia,
+  //     hinhanh: fullProduct.hinhanh,
+  //     maloai: fullProduct.maloai,
+  //     mansx: fullProduct.mansx,
+  //     soluong: 1,
+  //     soluongsp: fullProduct.soluongsp,
+  //     tenloai: fullProduct.tenloai,
+  //     tennsx: fullProduct.tennsx,
+  //     ttct: fullProduct.ttct,
+  //     km: fullProduct.km,
+  //     makm: fullProduct.makm,
+  //     tenkm: fullProduct.tenkm,
+  //     thoigianbatdaukm: fullProduct.thoigianbatdaukm,
+  //     thoigianketthuckm: fullProduct.thoigianketthuckm,
+  //     ...(fullProduct.mabienthe && fullProduct.mabienthe && { mabienthe: fullProduct.mabienthe }),
+  //     ...(fullProduct.mathuoctinh && fullProduct.thuoc_tinh && { mathuoctinh: fullProduct.mathuoctinh }),
+  //   };
+  //   onAddToCart(productToAdd);
+  // };
+
   const handleAddCartSelect = () => {
     if (!selectedVariant && variants.length > 0) return; // Prevent adding if variant required but not selected
     const productToAdd = {
@@ -118,10 +120,15 @@ export default function HomeProduct() {
       tenkm: selectedProduct.tenkm,
       thoigianbatdaukm: selectedProduct.thoigianbatdaukm,
       thoigianketthuckm: selectedProduct.thoigianketthuckm,
-      ...(selectedVariant && selectedVariant.mabienthe && {mabienthe: selectedVariant.mabienthe}),
+      ...(selectedVariant && selectedVariant.mabienthe && { mabienthe: selectedVariant.mabienthe }),
       ...(selectedVariant && selectedVariant.thuoc_tinh && { thuoctinh: selectedVariant.thuoc_tinh }),
     };
+
     onAddToCart(productToAdd);
+    toast.success(
+      `${selectedProduct.tensp} đã được thêm vào giỏ hàng`,
+      { duration: 3000 }
+    );
     closeModal();
 
   };
@@ -132,15 +139,17 @@ export default function HomeProduct() {
     setVariants([]);
     setSelectedVariant(null);
   };
-useEffect(() => {
+  useEffect(() => {
     document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
     return () => { document.body.style.overflow = 'auto'; };
   }, [isModalOpen]);
 
-  const filteredProducts = products.filter(product =>
-    product.tensp.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
+  // const filteredProducts = products.filter(product =>
+  //   product.tensp.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
+const isOutOfStock = selectedProduct?.cobienthe
+  ? !selectedVariant || selectedVariant.soluongtonkho === 0
+  : selectedProduct?.soluongsp === 0;
   return (
     <>
       <div className="flex flex-col">
@@ -148,13 +157,22 @@ useEffect(() => {
           <h2 className="w-full text-center lg:text-3xl text-xl tracking-wide font-bold uppercase">Sản phẩm</h2>
         </Popover>
         <div className="container mx-auto grid md:grid-cols-3 xl:grid-cols-4 grid-cols-2 gap-5 pt-4 pb-12">
-          {filteredProducts.map(product => (
+          {products.map(product => (
             <article key={product.masp} className="w-full relative shadow-md lg:h-[350px] h-[250px] flex p-2 flex-col items-center rounded-md">
-              {product.tenkm && product.km ? (
+              {product.tongsoluong <= 0 ? (
                 <div className="absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md">
-                  {product.tenkm}
+                  Hết hàng
                 </div>
-              ) : null}
+              ) :
+                product.tenkm && product.km && product.tongsoluong <= 0 ? (
+                  <div className="absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md">
+                    Hết hàng
+                  </div>
+                ) : product.tenkm && product.km && product.tongsoluong > 0 ? (
+                  <div className="absolute top-0 right-0 bg-red-700/80 w-24 z-10 text-sm flex items-center justify-center h-10 text-white px-2 py-1 rounded-tr-md rounded-bl-md">
+                    {product.tenkm}
+                  </div>
+                ) : null}
               <div>
                 <img
                   onClick={() => handleViewProductClick(product)}
@@ -173,13 +191,13 @@ useEffect(() => {
                 <p className={`${product.tenkm ? 'line-through' : null} mr-5`}>
                   {product.gia && product.gia
                     ? formatCurrency(product.gia)
-                    : product.gia_range ? formatCurrency(product.gia_range)  + ' +' : formatCurrency(product.gia)}
+                    : product.gia_range ? formatCurrency(product.gia_range) + ' +' : formatCurrency(product.gia)}
                 </p>
                 {product.km ? (
                   <p className="text-red-600 font-semibold">
-                    {product.gia && product.gia 
+                    {product.gia && product.gia
                       ? `${formatCurrency(parseInt(product.gia) * (1 - product.km / 100))}`
-                      : product.gia_range 
+                      : product.gia_range
                         ? `Chỉ từ ${formatCurrency(parseInt(product.gia_range) * (1 - product.km / 100))} +`
                         : formatCurrency(product.gia - (product.gia * (product.km / 100)))
                     }
@@ -190,6 +208,7 @@ useEffect(() => {
           ))}
         </div>
         <ReactModal
+        key={selectedProduct?.masp}
           isOpen={isModalOpen}
           onRequestClose={closeModal}
           contentLabel="Chi tiết sản phẩm"
@@ -251,17 +270,17 @@ useEffect(() => {
                       <p className="text-md font-semibold flex text-gray-800 mb-2">
                         <span className="font-bold mr-2">Giá:</span>
                         <p className={`${selectedProduct.tenkm ? 'line-through' : null} mr-3`}>
-                          {selectedVariant ? formatCurrency(selectedVariant.gia) : 
-                            selectedProduct.gia_range && selectedProduct.gia_range 
+                          {selectedVariant ? formatCurrency(selectedVariant.gia) :
+                            selectedProduct.gia_range && selectedProduct.gia_range
                               ? formatCurrency(selectedProduct.gia_range) + ' +'
                               : selectedProduct.gia_range ? selectedProduct.gia_range : formatCurrency(selectedProduct.gia)}
                         </p>
                         {selectedProduct.km ? (
                           <p className="text-red-600 font-semibold">
                             {selectedVariant ? formatCurrency(selectedVariant.gia * (1 - selectedProduct.km / 100)) :
-                              selectedProduct.gia_range && selectedProduct.gia_range 
+                              selectedProduct.gia_range && selectedProduct.gia_range
                                 ? `${formatCurrency(parseInt(selectedProduct.gia_range) * (1 - selectedProduct.km / 100))} +`
-                                : selectedProduct.gia_range 
+                                : selectedProduct.gia_range
                                   ? `${formatCurrency(parseInt(selectedProduct.gia_range) * (1 - selectedProduct.km / 100))}}`
                                   : formatCurrency(selectedProduct.gia - (selectedProduct.gia * (selectedProduct.km / 100)))
                             }
@@ -293,20 +312,33 @@ useEffect(() => {
                   </div>
                 )}
                 <p className="text-gray-600 text-sm">{selectedProduct.ttct}</p>
-                <div className="mt-16 flex justify-center space-x-8">
+                <div className="mt-8 text-sm flex justify-center items-center flex-col ">
+                  <div className='flex justify-between items-center space-x-6 mb-4'>
+                    <Link
+                      to={`/products/detail/${selectedProduct.masp}`}
+                      className="bg-blue-400 text-white px-3 w-32 text-center items-center py-1 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
+                    >
+                      Xem chi tiết
+                    </Link>
+                    {/* {console.log('Selected Variant:', selectedVariant.soluongtonkho)} */}
+                    {console.log("variantQty:", selectedVariant?.soluongtonkho, "productQty:", selectedProduct?.soluongsp)}
+                    <button
+              onClick={handleAddCartSelect}
+              disabled={isOutOfStock}
+              className={`w-32 bg-pink-400  text-white px-3 py-1 rounded transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md ${
+                isOutOfStock
+                  ? "cursor-not-allowed"
+                  : "hover:scale-105"
+              }`}
+            >
+              Thêm giỏ hàng
+            </button>
+                  </div>
                   <button
-                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-150"
+                    className="bg-gray-400 text-white px-3 py-1 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
                     onClick={closeModal}
                   >
                     Đóng
-                  </button>
-                  <button
-                    onClick={handleAddCartSelect}
-                    className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
-                    aria-label={`Add ${selectedProduct.tensp} to cart`}
-                    disabled={!selectedVariant && variants.length > 0 || (selectedVariant?.soluongtonkho === 0)}
-                  >
-                    Mua ngay
                   </button>
                 </div>
               </div>

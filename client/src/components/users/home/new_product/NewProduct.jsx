@@ -22,101 +22,81 @@ export default function NewProduct() {
       .catch((error) => console.error('Error fetching products:', error));
   }, []);
 
-  // const handleAddToCart = (product, e) => {
-  //   const productCard = e.target.closest('.product-card');
-  //   if (!productCard) {
-  //     onAddToCart(product);
-  //     return;
-  //   }
+ const handleAddToCart = (product, e) => {
+  const productCard = e.target.closest('.product-card');
+  if (!productCard) {
+    onAddToCart(product);
+    return;
+  }
 
-  //   const imgElement = productCard.querySelector('img');
-  //   const cartElement = document.querySelector('#cart-icon');
+  const imgElement = productCard.querySelector('img');
+  const cartElement = document.querySelector('#cart-icon');
 
-  //   const fullProduct = products.find((p) => p.masp === product.masp) || product;
-  //   const productToAdd = {
-  //     masp: fullProduct.masp,
-  //     tensp: fullProduct.tensp,
-  //     gia: fullProduct.gia,
-  //     hinhanh: fullProduct.hinhanh,
-  //     maloai: fullProduct.maloai,
-  //     mansx: fullProduct.mansx,
-  //     soluong: 1,
-  //     soluongsp: fullProduct.soluongsp,
-  //     tenloai: fullProduct.tenloai,
-  //     tennsx: fullProduct.tennsx,
-  //     ttct: fullProduct.ttct,
-  //     km: fullProduct.km,
-  //     makm: fullProduct.makm,
-  //     tenkm: fullProduct.tenkm,
-  //     thoigianbatdaukm: fullProduct.thoigianbatdaukm,
-  //     thoigianketthuckm: fullProduct.thoigianketthuckm,
-  //   };
-
-  //   if (fullProduct.soluongsp <= 0) return;
-
-  //   if (!imgElement || !cartElement) {
-  //     onAddToCart(productToAdd);
-  //     return;
-  //   }
-
-  //   const imgRect = imgElement.getBoundingClientRect();
-  //   const cartRect = cartElement.getBoundingClientRect();
-
-  //   const cloneImg = imgElement.cloneNode(true);
-  //   document.body.appendChild(cloneImg);
-
-  //   Object.assign(cloneImg.style, {
-  //     position: 'absolute',
-  //     top: `${imgRect.top + window.scrollY}px`,
-  //     left: `${imgRect.left + window.scrollX}px`,
-  //     width: `${imgRect.width}px`,
-  //     height: `${imgRect.height}px`,
-  //     zIndex: 1000,
-  //     pointerEvents: 'none',
-  //   });
-
-  //   gsap.to(cloneImg, {
-  //     duration: 0.7,
-  //     ease: 'power2.inOut',
-  //     x: cartRect.left - imgRect.left,
-  //     y: cartRect.top - imgRect.top,
-  //     width: 20,
-  //     height: 20,
-  //     opacity: 0.5,
-  //     onComplete: () => {
-  //       cloneImg.remove();
-  //       onAddToCart(productToAdd);
-  //     },
-  //   });
-  // };
-
-  const handleBuyNow = (product, e) => {
-    e.preventDefault();
-    const fullProduct = products.find((p) => p.masp === product.masp) || product;
-
-    const productToAdd = {
-      masp: fullProduct.masp,
-      tensp: fullProduct.tensp,
-      gia: fullProduct.gia,
-      hinhanh: fullProduct.hinhanh,
-      maloai: fullProduct.maloai,
-      mansx: fullProduct.mansx,
-      soluong: 1,
-      soluongsp: fullProduct.soluongsp,
-      tenloai: fullProduct.tenloai,
-      tennsx: fullProduct.tennsx,
-      ttct: fullProduct.ttct,
-      km: fullProduct.km,
-      makm: fullProduct.makm,
-      tenkm: fullProduct.tenkm,
-      thoigianbatdaukm: fullProduct.thoigianbatdaukm,
-      thoigianketthuckm: fullProduct.thoigianketthuckm,
-    };
-
-    onAddToCart(productToAdd);
-    toast.success(`${fullProduct.tensp} đã được thêm vào giỏ hàng`, { duration: 3000 });
-    setTimeout(() => navigate('/cart'), 1000);
+  const fullProduct = products.find((p) => p.masp === product.masp) || product;
+  const productToAdd = {
+    masp: fullProduct.masp,
+    tensp: fullProduct.tensp,
+    gia: fullProduct.gia,
+    hinhanh: fullProduct.hinhanh,
+    maloai: fullProduct.maloai,
+    mansx: fullProduct.mansx,
+    soluong: 1,
+    soluongsp: fullProduct.soluongsp,
+    tenloai: fullProduct.tenloai,
+    tennsx: fullProduct.tennsx,
+    ttct: fullProduct.ttct,
+    km: fullProduct.km,
+    makm: fullProduct.makm,
+    tenkm: fullProduct.tenkm,
+    thoigianbatdaukm: fullProduct.thoigianbatdaukm,
+    thoigianketthuckm: fullProduct.thoigianketthuckm,
   };
+
+  if (fullProduct.soluongsp <= 0) return;
+
+  if (!imgElement || !cartElement) {
+    onAddToCart(productToAdd);
+    setTimeout(() => {
+      navigate("/cart");
+    }, 500);
+    return;
+  }
+
+  const imgRect = imgElement.getBoundingClientRect();
+  const cartRect = cartElement.getBoundingClientRect();
+
+  const cloneImg = imgElement.cloneNode(true);
+  document.body.appendChild(cloneImg);
+
+  Object.assign(cloneImg.style, {
+    position: 'absolute',
+    top: `${imgRect.top + window.scrollY}px`,
+    left: `${imgRect.left + window.scrollX}px`,
+    width: `${imgRect.width}px`,
+    height: `${imgRect.height}px`,
+    zIndex: 1000,
+    pointerEvents: 'none',
+  });
+
+  gsap.to(cloneImg, {
+    duration: 0.7,
+    ease: 'power2.inOut',
+    x: cartRect.left + window.scrollX - imgRect.left - window.scrollX,
+    y: cartRect.top + window.scrollY - imgRect.top - window.scrollY,
+    width: 20,
+    height: 20,
+    opacity: 0.5,
+    onComplete: () => {
+      cloneImg.remove();
+     onAddToCart(productToAdd);
+
+    setTimeout(() => {
+      navigate("/cart");
+    }, 500);
+    },
+  });
+};
+
 
   return (
     <div>
@@ -149,7 +129,7 @@ export default function NewProduct() {
               <p className="line-clamp-3 text-sm text-gray-600">{product.ttct}</p>
               <div className="flex justify-between mt-4">
                 <button
-                  onClick={(e) => handleBuyNow(product, e)}
+                  onClick={(e) => handleAddToCart(product, e)}
                   className="bg-pink-400 text-white px-4 py-2 rounded hover:scale-105 uppercase transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
                   aria-label={`Add ${product.tensp} to cart`}
                 >

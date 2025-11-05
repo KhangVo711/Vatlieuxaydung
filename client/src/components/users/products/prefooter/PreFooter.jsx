@@ -8,6 +8,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { formatCurrency } from '../../../../utils/currency';
 import { Context } from '../../../../components/Context';
+import { useNavigate } from "react-router-dom";
+
 
 const PreFooter = ({ selectedProduct }) => {
   const [products, setProducts] = useState([]);
@@ -20,6 +22,8 @@ const PreFooter = ({ selectedProduct }) => {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [error, setError] = useState(null);
   const { onAddToCart } = useContext(Context);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     axios
@@ -175,12 +179,12 @@ const PreFooter = ({ selectedProduct }) => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="py-3 flex justify-between px-2">
+                  <div className="py-2 flex flex-col justify-between px-2">
                     <div>
                     <div className="text-xs text-gray-500 mb-1">{product.tennsx}</div>
                     <h3 className="font-medium text-sm truncate">{product.tensp}</h3>
                     </div>
-                    <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center justify-end mt-2">
                       {/* <p className="text-gray-800 font-semibold mt-1">
                         {product.tenkm && product.km ? (
                           <span className="line-through mr-2">{product.gia_range ? formatCurrency(product.gia_range) : product.gia_range}</span>
@@ -196,13 +200,12 @@ const PreFooter = ({ selectedProduct }) => {
                           </span>
                         ) : null}
                       </p> */}
-                      <button
-                        onClick={() => handleViewProductClick(product)}
-                        className="bg-pink-400 text-white px-0.5 py-0.5 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-2 sm:py-1 md:px-3 md:py-1.5 lg:px-4 lg:py-2 sm:text-xs md:text-sm lg:text-md"
-                        aria-label={`View details of ${product.tensp}`}
-                      >
-                        Chi tiết
-                      </button>
+             <button
+  onClick={() => setTimeout(() => navigate(`/products/detail/${product.masp}`), 300)}
+  className="bg-pink-400 text-white px-0.5 py-0.5 rounded hover:scale-105 transition duration-200 ease-in-out sm:px-1 sm:py-0.5 md:px-1.5 md:py-1 lg:px-2 lg:py-1 sm:text-xs md:text-xs lg:text-sm"
+>
+  Chi tiết
+</button>
                     </div>
                   </div>
                 </div>
