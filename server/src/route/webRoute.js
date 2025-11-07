@@ -15,6 +15,7 @@ import contact from '../controllers/contactController.js'
 import uploadMiddleware from '../../middleware/upload.js'
 import auth from '../../middleware/jwt.js'
 import review from '../controllers/reviewCotroller.js';
+import discount from '../controllers/discountController.js';
 const router = express.Router()
 const initWebRoute = (app) => {
 
@@ -61,6 +62,8 @@ const initWebRoute = (app) => {
     router.get('/getInvoice/:mapn', invoice.showDetailInvoice)
 
     router.post('/createCart', cart.insertCart)
+    router.get('/getUserDiscounts', discount.getUserDiscounts);
+    router.post('/checkDiscount', discount.checkDiscount);
     router.post("/payos/webhook", cart.payOSWebhook);
     router.get("/orders/get-order-status/:id", cart.getOrderStatus);
     router.post("/orders/create-payos-order", cart.createPayOSOrder);

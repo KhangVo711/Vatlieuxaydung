@@ -11,6 +11,8 @@ import DeliveryMap from './deliveryMap/DeliveryMap';
 export default function Cart() {
   const navigate = useNavigate();
   const { isData, loadDelivery, setLoadDelivery, cartItems, setCartItems } = useContext(Context);
+const [discountList, setDiscountList] = useState([]);
+const [showDiscountModal, setShowDiscountModal] = useState(false);
 
   const generateOrderId = () => `${Date.now()}${Math.floor(Math.random() * 10)}`;
   const generateFormId = () => `FO${Date.now()}${Math.floor(Math.random() * 10)}`;
@@ -28,7 +30,10 @@ export default function Cart() {
     email: '',
     phone: '',
     address: '',
-    paymentMethod: "cod"
+    paymentMethod: "cod",
+    discountAmount: 0,
+    discountCode: "",
+    percent: 0,
   });
   const [distance, setDistance] = useState(null);
   const [feeShip, setFeeShip] = useState(0);
@@ -75,7 +80,7 @@ export default function Cart() {
     setIsProcessing(true);
 
     const orderId = generateOrderId();
-    const totalAmount = total + feeShip;
+    const totalAmount = total - discountAmount + feeShip;
     const makhachhang = isData?.id ?? null;
     const maformid = (makhachhang === null) ? formData.maform : null;
 
@@ -83,6 +88,7 @@ export default function Cart() {
       madh: orderId,
       makh: makhachhang,
       ngaydat: getCurrentDate(),
+      magiamgia: formData.discountCode || null,
       trangthai: "Chờ xác nhận",
       tonggia: totalAmount,
       madvvc: selectedDelivery.madvvc,
@@ -169,6 +175,52 @@ export default function Cart() {
       }, 2500);
     }
   }, [isSuccess]);
+
+  const fetchDiscountList = async () => {
+  try {
+    const res = await axios.get("http://localhost:5001/getUserDiscounts", {
+      params: { userId: isData?.id || null }
+    });
+    if (res.status === 200) setDiscountList(res.data.discounts);
+  } catch (err) {
+    console.error("Lỗi lấy mã giảm giá:", err);
+  }
+};
+
+// Hàm áp dụng mã giảm giá
+// Hàm áp dụng mã giảm giá
+const handleApplyDiscount = async () => {
+  if (!formData.discountCode) {
+    return setMessage("Vui lòng nhập mã giảm giá!");
+  }
+
+  try {
+    const res = await axios.post("http://localhost:5001/checkDiscount", {
+      code: formData.discountCode,
+      total: total,
+      userId: isData?.id || null
+    });
+
+    if (res.data.valid) {
+      // Giảm giá chỉ áp dụng trên tổng hàng, không ảnh hưởng phí ship
+      const discountAmount = res.data.discountAmount;
+      setFormData(prev => ({
+        ...prev,
+        discountAmount, // lưu lại để tính tổng cuối
+        percent: res.data.percent
+      }));
+      setMessage(`Giảm ${res.data.percent}% (${formatCurrency(discountAmount)})`);
+    } else {
+      setMessage(res.data.message || "Mã không hợp lệ hoặc đã hết lượt sử dụng.");
+      setFormData(prev => ({ ...prev, discountAmount: 0 }));
+    }
+  } catch (err) {
+    console.error(err);
+    setMessage("Lỗi kiểm tra mã giảm giá!");
+  }
+};
+
+const discountAmount = formData.discountAmount || 0;
 
   return (
     <>
@@ -316,9 +368,47 @@ export default function Cart() {
 
           {/* Total + submit */}
           <div className="p-4 border-t">
+            <div className="p-4 bg-gray-50 border-t">
+  {!isData?.id && (
+    <p className="text-sm text-pink-500 mb-3">
+      🎁 <span className="font-medium">Đăng ký tài khoản lần đầu tiên</span> sẽ nhận được nhiều <span className="font-bold">mã giảm giá hấp dẫn!</span>
+    </p>
+  )}
+
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Mã giảm giá:
+  </label>
+  <div className="flex gap-2">
+    <input
+      type="text"
+      placeholder="Nhập mã giảm giá"
+      value={formData.discountCode || ""}
+      onChange={(e) => setFormData({ ...formData, discountCode: e.target.value })}
+      className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+    />
+    <button
+      type="button"
+      onClick={handleApplyDiscount}
+      className="px-4 py-2 bg-pink-400 text-white rounded-md hover:bg-pink-500"
+    >
+      Áp dụng
+    </button>
+    <button
+    type="button"
+    onClick={() => {
+      fetchDiscountList(); // gọi API lấy danh sách
+      setShowDiscountModal(true);
+    }}
+    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+  >
+    Xem mã
+  </button>
+  </div>
+  {message && <p className="text-sm mt-2 text-red-500">{message}</p>}
+</div>
             <div className="flex justify-between items-center">
               <p className="text-sm font-medium">Tổng thanh toán ({cartItems.length} sản phẩm):</p>
-              <p className="text-lg font-bold text-red-500">{formatCurrency(total + (feeShip || 0))}</p>
+              <p className="text-lg font-bold text-red-500">{formatCurrency(total - discountAmount + (feeShip || 0))}</p>
             </div>
             <form onSubmit={handleSubmit} className='w-full flex items-center justify-center'>
               <button className="mt-4 bg-pink-400 text-white py-2 px-8 rounded-md hover:bg-pink-500 text-md">
@@ -357,6 +447,48 @@ export default function Cart() {
           </div>
         </div>
       )}
+      {/* Modal xem mã giảm giá */}
+{showDiscountModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-[9999]">
+    <div className="bg-white w-96 rounded-lg p-5 shadow-lg">
+      <h2 className="text-lg font-bold mb-4 text-center">🎁 Mã giảm giá của bạn</h2>
+
+      {discountList.length > 0 ? (
+        <div className="space-y-3 max-h-64 overflow-y-auto">
+          {discountList.map((code, index) => (
+            <div
+              key={index}
+              onClick={() => {
+                setFormData({ ...formData, discountCode: code.magiamgia });
+                setShowDiscountModal(false);
+                handleApplyDiscount();
+              }}
+              className="border rounded-lg p-3 cursor-pointer hover:bg-pink-50 transition"
+            >
+              <p className="font-semibold text-pink-600">{code.magiamgia}</p>
+              <p className="text-sm text-gray-600">
+                Giảm {code.phantramgiam}% cho đơn từ {formatCurrency(code.dieukien)}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">Còn lại: {code.soluongconlai}</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-center text-gray-500">Không có mã giảm giá nào</p>
+      )}
+
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={() => setShowDiscountModal(false)}
+          className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+        >
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </>
   );
 }

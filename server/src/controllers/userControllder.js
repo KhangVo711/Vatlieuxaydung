@@ -4,6 +4,7 @@ import userModel from '../services/userModel.js';
 import JWTAction from '../../middleware/jwt.js';
 import jwt from 'jsonwebtoken';
 
+
 // ----------------------------------------------------
 
 // Đăng ký tài khoản
@@ -48,8 +49,9 @@ const insertUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         await userModel.insertUser(fullname, id, emailValue, phoneValue, hashedPassword);
+        const discountCodes = await userModel.createDefaultDiscounts(id);
 
-        res.status(200).json({ message: 'Đăng kí thành công' });
+        res.status(200).json({ message: 'Đăng kí thành công', discountCodes: discountCodes.map((d) => d.code) });
     } catch (error) {
         res.status(500).json({ message: 'Lỗi server', error: error.message });
     }

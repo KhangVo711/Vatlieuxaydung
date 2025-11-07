@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2025 at 04:25 PM
+-- Generation Time: Nov 07, 2025 at 12:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -192,7 +192,14 @@ INSERT INTO `chitietdonhang` (`madh`, `masp`, `mabienthe`, `soluongsanpham`, `km
 ('17594022887937', 'BT89102384', NULL, 1, 0, 15000, 15000),
 ('17594029634091', 'BT89102384', NULL, 2, 0, 15000, 30000),
 ('17594030403047', 'BT89102384', NULL, 2, 0, 15000, 30000),
-('17594766647532', 'CR37462789', NULL, 1, 0, 320000, 320000);
+('17594766647532', 'CR37462789', NULL, 1, 0, 320000, 320000),
+('17625143558904', 'BT89102384', NULL, 2, 5, 14250, 27075),
+('17625143558904', 'CR37462789', NULL, 2, 0, 320000, 640000),
+('17625143558904', 'VZ092736451', 'V-3645', 2, 10, 41400, 74520),
+('17625143558904', 'SM15414124', NULL, 2, 0, 225000, 450000),
+('17625159887263', 'SM75414127', 'R-6372', 1, 0, 75000, 75000),
+('17625160891003', 'SM75414127', 'R-6372', 4, 0, 75000, 300000),
+('17625160891003', 'CR37462789', NULL, 8, 0, 320000, 2560000);
 
 -- --------------------------------------------------------
 
@@ -275,6 +282,7 @@ CREATE TABLE `donhang` (
   `madh` varchar(50) NOT NULL,
   `makh` varchar(50) DEFAULT NULL,
   `ngaydat` datetime NOT NULL,
+  `magiamgia` varchar(50) DEFAULT NULL,
   `trangthai` varchar(50) NOT NULL,
   `tonggia` int(11) NOT NULL,
   `madvvc` varchar(50) NOT NULL,
@@ -288,12 +296,15 @@ CREATE TABLE `donhang` (
 -- Dumping data for table `donhang`
 --
 
-INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `trangthai`, `tonggia`, `madvvc`, `maform`, `quangduong`, `hinhthucthanhtoan`, `trangthaithanhtoan`) VALUES
-('17594022001131', 'KHI5NCFJFF', '2025-10-02 17:50:00', 'Đã xác nhận', 32679, 'EXP-787', NULL, 5.89315, 'qr', 'Đã thanh toán'),
-('17594022887937', NULL, '2025-10-02 17:51:00', 'Chờ xác nhận', 27665, 'NHS-146', 'FO17594022649426', 2.81443, 'qr', 'Đã thanh toán'),
-('17594029634091', NULL, '2025-10-02 18:02:00', 'Chờ xác nhận', 38443, 'EXP-787', 'FO17594029471987', 2.81443, 'cod', 'Chưa thanh toán'),
-('17594030403047', NULL, '2025-10-02 18:04:00', 'Đã xác nhận', 35629, 'GHT-812', 'FO17594030147983', 2.81443, 'qr', 'Đã thanh toán'),
-('17594766647532', 'KHI5NCFJFF', '2025-10-03 14:31:00', 'Chờ xác nhận', 337679, 'EXP-787', NULL, 5.89315, 'cod', 'Chưa thanh toán');
+INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `magiamgia`, `trangthai`, `tonggia`, `madvvc`, `maform`, `quangduong`, `hinhthucthanhtoan`, `trangthaithanhtoan`) VALUES
+('17594022001131', 'KHI5NCFJFF', '2025-10-02 17:50:00', NULL, 'Đã xác nhận', 32679, 'EXP-787', NULL, 5.89315, 'qr', 'Đã thanh toán'),
+('17594022887937', NULL, '2025-10-02 17:51:00', NULL, 'Chờ xác nhận', 27665, 'NHS-146', 'FO17594022649426', 2.81443, 'qr', 'Đã thanh toán'),
+('17594029634091', NULL, '2025-10-02 18:02:00', NULL, 'Chờ xác nhận', 38443, 'EXP-787', 'FO17594029471987', 2.81443, 'cod', 'Chưa thanh toán'),
+('17594030403047', NULL, '2025-10-02 18:04:00', NULL, 'Đã xác nhận', 35629, 'GHT-812', 'FO17594030147983', 2.81443, 'qr', 'Đã thanh toán'),
+('17594766647532', 'KHI5NCFJFF', '2025-10-03 14:31:00', NULL, 'Chờ xác nhận', 337679, 'EXP-787', NULL, 5.89315, 'cod', 'Chưa thanh toán'),
+('17625143558904', 'KHQMMV3J60', '2025-11-07 18:19:00', NULL, 'Chờ xác nhận', 857058, 'EXP-787', NULL, 5.38277, 'cod', 'Chưa thanh toán'),
+('17625159887263', 'KHQMMV3J60', '2025-11-07 18:46:00', NULL, 'Chờ xác nhận', 91148, 'EXP-787', NULL, 5.38277, 'cod', 'Chưa thanh toán'),
+('17625160891003', 'KHQMMV3J60', '2025-11-07 18:48:00', 'NEW50KHQMMV3J60', 'Chờ xác nhận', 1446148, 'EXP-787', NULL, 5.38277, 'cod', 'Chưa thanh toán');
 
 -- --------------------------------------------------------
 
@@ -350,6 +361,32 @@ INSERT INTO `formdathang` (`maform`, `tenkh`, `sdt`, `diachi`, `email`) VALUES
 ('FO17594022649426', 'Khang Vo', '0983251652', 'Cần Thơ', 'vokhang123@gmail.com'),
 ('FO17594029471987', 'VO HUYNH MINH KHANG', '0123456789', 'can tho', 'khangvvo0711@gmail.com'),
 ('FO17594030147983', 'VO HUYNH MINH KHANG', '0123456789', 'Can Tho', 'khangvvo0711@gmail.com');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `giamgia`
+--
+
+CREATE TABLE `giamgia` (
+  `magiamgia` varchar(20) NOT NULL,
+  `makh` varchar(50) NOT NULL,
+  `phantramgiam` int(11) NOT NULL,
+  `dieukien` int(11) NOT NULL,
+  `soluongconlai` int(11) NOT NULL,
+  `mota` varchar(255) NOT NULL,
+  `ngaytao` datetime NOT NULL,
+  `ngayketthuc` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `giamgia`
+--
+
+INSERT INTO `giamgia` (`magiamgia`, `makh`, `phantramgiam`, `dieukien`, `soluongconlai`, `mota`, `ngaytao`, `ngayketthuc`) VALUES
+('NEW10KHQMMV3J60', 'KHQMMV3J60', 10, 500000, 0, 'Giảm 10% cho đơn hàng trên 500.000đ', '2025-11-07 18:03:46', '2025-11-14 18:03:46'),
+('NEW30KHQMMV3J60', 'KHQMMV3J60', 30, 1200000, 0, 'Giảm 30% cho đơn hàng trên 1.200.000đ', '2025-11-07 18:03:46', '2025-11-14 18:03:46'),
+('NEW50KHQMMV3J60', 'KHQMMV3J60', 50, 2500000, 0, 'Giảm 50% cho đơn hàng trên 2.500.000đ', '2025-11-07 18:03:46', '2025-11-14 18:03:46');
 
 -- --------------------------------------------------------
 
@@ -483,6 +520,7 @@ INSERT INTO `khachhang` (`tenkh`, `makh`, `email`, `sdt`, `diachi`, `matkhau`) V
 ('Khang', 'KHJQBFOFDP', 'kv@gmail.com', '0983251654', 'Cần Thơ', '$2b$10$3aI1OhzHTNVKDBUOBa6u/.TjsehFnY0.3O8jCYwW3mKhydEekMeJi'),
 ('Lý Thi Mai', 'KHM7V08AMM', 'maithi@gmail.com', '0987654321', '236 Mạc Cửu, Vĩnh Thanh, Rạch Giá, Kiên Giang', '$2b$10$w1LeJsoWvo0GrhaxxoE4yuaKyTnHcH4vLdFfXE6LGqJTpDNIA0p9y'),
 ('Trần Khánh Nam', 'KHONUVAZ7W', 'khanhnam@gmail.com', '0123456789', '40 Nguyễn Văn Cừ, TT. Tân Phú, Đồng Phú, Bình Phước', '$2b$10$sgCkY8KGj4y9ixVzs4DQmOeG8C3w7gWWycoq2d2T1Tujv2xl.9o9O'),
+('Hoàng', 'KHQMMV3J60', 'huyHoang@gmail.com', '0741852963', '15 Bùi Hữu Nghĩa, phường Bình Thủy, quận Bình Thủy, Thành phố Cần Thơ', '$2b$10$hcRjC6H0Htky5M0JsqkVIekNGYt1Kn4cLvmDMTWpszjvW4t/F8XBm'),
 ('Ngô Gia Minh', 'KHR26SAV0Y', 'minhgia@gmail.com', '0227789675', 'Hà Nội', '$2b$10$KtEAm.oQN7TsjgZ4QaQlbu/wNrshkPVXtUfRdUWvidg0e74Fi0jmi'),
 ('Trần Thị Thanh Xuân', 'KHUHSHLE73', 'thanhxuantran@gmail.com', '0775221459', '44 Đ. Quang Trung, Phường 11, Gò Vấp, Hồ Chí Minh', '$2b$10$AFdfMcASK9V6ht9TCNhxD.aEJIwB7RvbGc9HCMm961WmGW3YYNf4i');
 
@@ -506,7 +544,8 @@ CREATE TABLE `khuyenmai` (
 --
 
 INSERT INTO `khuyenmai` (`makm`, `tenkm`, `km`, `thoigianbatdaukm`, `thoigianketthuckm`, `masp`) VALUES
-('KM-781', 'Giảm 5%', 5, '2025-10-31 13:58:00', '2025-11-05 13:58:00', 'BT89102384');
+('KM-081', 'Giảm 10%', 10, '2025-11-05 16:07:00', '2025-11-22 16:08:00', 'VZ092736451'),
+('KM-871', 'Giảm 5%', 5, '2025-11-05 16:06:00', '2025-11-20 16:07:00', 'BT89102384');
 
 -- --------------------------------------------------------
 
@@ -857,6 +896,13 @@ ALTER TABLE `formdathang`
   ADD PRIMARY KEY (`maform`);
 
 --
+-- Indexes for table `giamgia`
+--
+ALTER TABLE `giamgia`
+  ADD KEY `magiamgia` (`magiamgia`,`makh`),
+  ADD KEY `makh` (`makh`);
+
+--
 -- Indexes for table `giaonhanca`
 --
 ALTER TABLE `giaonhanca`
@@ -1045,6 +1091,12 @@ ALTER TABLE `donhang`
   ADD CONSTRAINT `donhang_ibfk_1` FOREIGN KEY (`makh`) REFERENCES `khachhang` (`makh`),
   ADD CONSTRAINT `donhang_ibfk_3` FOREIGN KEY (`madvvc`) REFERENCES `donvivanchuyen` (`madvvc`),
   ADD CONSTRAINT `donhang_ibfk_4` FOREIGN KEY (`maform`) REFERENCES `formdathang` (`maform`);
+
+--
+-- Constraints for table `giamgia`
+--
+ALTER TABLE `giamgia`
+  ADD CONSTRAINT `giamgia_ibfk_1` FOREIGN KEY (`makh`) REFERENCES `khachhang` (`makh`);
 
 --
 -- Constraints for table `giaonhanca`

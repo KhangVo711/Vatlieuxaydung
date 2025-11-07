@@ -1,16 +1,17 @@
 import connectDB from "../configs/connectDB.js";
 
 // CART
-const insertCart = async (madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong, hinhthucthanhtoan, trangthaithanhtoan) => {
+const insertCart = async (madh, makh, ngaydat, magiamgia, trangthai, tonggia, madvvc, maform, quangduong, hinhthucthanhtoan, trangthaithanhtoan) => {
     const sql = `
       INSERT INTO donhang 
-      (madh, makh, ngaydat, trangthai, tonggia, madvvc, maform, quangduong, hinhthucthanhtoan, trangthaithanhtoan) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (madh, makh, ngaydat, magiamgia, trangthai, tonggia, madvvc, maform, quangduong, hinhthucthanhtoan, trangthaithanhtoan) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     await connectDB.execute(sql, [
       madh,
       makh,
       ngaydat,
+      magiamgia,
       trangthai,
       tonggia,
       madvvc,

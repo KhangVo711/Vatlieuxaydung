@@ -93,7 +93,38 @@ const getAllUsers = async () => {
     );
     return rows;
 }
+const createDefaultDiscounts = async (makh) => {
+  const defaultDiscounts = [
+    {
+      code: `NEW10${makh}`,
+      percent: 10,
+      min: 500000,
+      note: "Giảm 10% cho đơn hàng trên 500.000đ"
+    },
+    {
+      code: `NEW30${makh}`,
+      percent: 30,
+      min: 1200000,
+      note: "Giảm 30% cho đơn hàng trên 1.200.000đ"
+    },
+    {
+      code: `NEW50${makh}`,
+      percent: 50,
+      min: 2500000,
+      note: "Giảm 50% cho đơn hàng trên 2.500.000đ"
+    }
+  ];
 
+  for (const d of defaultDiscounts) {
+    await connectDB.execute(
+      `INSERT INTO giamgia (magiamgia, makh, phantramgiam, dieukien, soluongconlai, mota, ngaytao, ngayketthuc)
+       VALUES (?, ?, ?, ?, 1, ?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY))`,
+      [d.code, makh, d.percent, d.min, d.note]
+    );
+  }
 
-export default {getUser, insertUser, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers};
+  return defaultDiscounts;
+};
+
+export default {getUser, insertUser, createDefaultDiscounts, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers};
 

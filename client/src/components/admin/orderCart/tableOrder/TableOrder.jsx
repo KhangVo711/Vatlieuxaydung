@@ -47,72 +47,84 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
     return (
         <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-pink-100 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-4 py-3">
-                Mã đơn hàng
-              </th>
-              <th scope="col" className="px-8 py-3">
-                Mã khách hàng / Mã form
-              </th>
-              <th scope="col" className="px-4 py-3">
-                Đơn vị vận chuyển
-              </th>
-              <th scope="col" className="px-4 py-3">
-                Thời gian đặt
-              </th>
+  <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <thead className="text-xs text-gray-700 uppercase bg-pink-100 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th scope="col" className="px-4 py-3">Mã đơn hàng</th>
+        <th scope="col" className="px-8 py-3">Mã khách hàng / Mã form</th>
+        <th scope="col" className="px-4 py-3">Đơn vị vận chuyển</th>
+        <th scope="col" className="px-4 py-3">Thời gian đặt</th>
+        <th scope="col" className="px-4 py-3 text-right">Tổng giá</th>
 
-              <th scope="col" className="px-4 py-3 text-right">
-                Tổng giá
-              </th>
-              <th scope="col" className="px-4 py-3 text-right">
-                Trạng thái
-              </th>
-              <th scope="col" className="px-4 py-3 text-right">
-                Thanh toán
-              </th>
-              <th scope="col" className="text-center px-6 py-3 ">
-                Hành động
-              </th>
-              
-            </tr>
-          </thead>
-          <tbody>
-            {currentOrder.map((item, index) => (
-              <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" className="px-4 py-4" >
-                  {item.madh}
-                </th>
-                <td className="px-8 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {item.makh ? item.makh : item.maform}
-                </td>
-                <td className="px-4 py-3 font-medium whitespace-nowrap dark:text-white">
-                  {item.tendvvc}
-                </td>
-                <td className="px-4 py-3">
-                  {formatDateTime(item.ngaydat)}
-                </td>
-            
-                <td className="px-4 py-3 text-right">
-                  {formatCurrency(item.tonggia)}
-                </td>
-                <td className="px-2.5 py-3 text-right">
-                  {item.trangthai}
-                </td>
-                <td className="px-2.5 py-3 text-right">
-                  {item.trangthaithanhtoan}
-                </td>
-            
-                <td className="items-center justify-center px-6 py-4 flex">
-                  <button onClick={() => handleViewClick(item)} className="transition duration-200 ease-out "><EyeIcon className="h-5 w-5 text-gray-500 dark:text-white hover:text-gray-400" /></button>
-                  <button onClick={()=>handleEditClick(item)} className="transition duration-200 ease-out mx-2"><PencilSquareIcon className="h-5 w-5 text-blue-600 dark:text-blue-500 hover:text-blue-400" /></button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+        {/* Thêm cột Mã giảm giá */}
+        <th scope="col" className="px-4 py-3 text-right">Mã giảm giá</th>
+
+        <th scope="col" className="px-4 py-3 text-right">Trạng thái</th>
+
+        {/* Thêm cột Hình thức thanh toán */}
+        <th scope="col" className="px-4 py-3 text-right">Hình thức thanh toán</th>
+
+        <th scope="col" className="px-4 py-3 text-right">Thanh toán</th>
+
+        <th scope="col" className="text-center px-6 py-3">Hành động</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {currentOrder.map((item, index) => (
+        <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+          <th scope="row" className="px-4 py-4">{item.madh}</th>
+          <td className="px-8 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            {item.makh ? item.makh : item.maform}
+          </td>
+          <td className="px-4 py-3 font-medium whitespace-nowrap dark:text-white">
+            {item.tendvvc}
+          </td>
+          <td className="px-4 py-3">
+            {formatDateTime(item.ngaydat)}
+          </td>
+          <td className="px-4 py-3 text-right">
+            {formatCurrency(item.tonggia)}
+          </td>
+
+          {/* Cột Mã giảm giá */}
+          <td className="px-4 py-3 text-center">
+            {item.magiamgia ? item.magiamgia : <span className="text-gray-400 italic">—</span>}
+          </td>
+
+          <td className="px-2.5 py-3 text-right">
+            {item.trangthai}
+          </td>
+
+          {/* Cột Hình thức thanh toán */}
+          <td className="px-2.5 py-3 text-right">
+            {item.hinhthucthanhtoan || "—"}
+          </td>
+
+          <td className="px-2.5 py-3 text-right">
+            {item.trangthaithanhtoan}
+          </td>
+
+          <td className="items-center justify-center px-6 py-4 flex">
+            <button
+              onClick={() => handleViewClick(item)}
+              className="transition duration-200 ease-out"
+            >
+              <EyeIcon className="h-5 w-5 text-gray-500 dark:text-white hover:text-gray-400" />
+            </button>
+            <button
+              onClick={() => handleEditClick(item)}
+              className="transition duration-200 ease-out mx-2"
+            >
+              <PencilSquareIcon className="h-5 w-5 text-blue-600 dark:text-blue-500 hover:text-blue-400" />
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
       <ReactPaginate
         previousLabel={"← Trước"}
         nextLabel={"Sau →"}
