@@ -236,28 +236,7 @@ export default function About() {
                 </div>
             </section>
 
-            {/* Testimonials */}
-            <section className="py-16 bg-pink-50">
-  <div className="container mx-auto px-4">
-    <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">Khách hàng nói gì về chúng tôi</h2>
-    <div className="grid md:grid-cols-3 gap-8">
-  {rating.map((review, index) => (
-    <div key={index} className="bg-white p-6 rounded-lg shadow">
-      <div className="flex items-center mb-2">
-        <img src="https://img3.thuthuatphanmem.vn/uploads/2019/10/17/anh-bong-hoa-dao-png_102501764.png" alt="Avatar" className="rounded-full w-14 h-14" />
-        <div className="ml-4">
-          <h4 className="font-semibold text-gray-800">{review.name}</h4>
-          <div className="flex text-yellow-400">
-            {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
-          </div>
-        </div>
-      </div>
-      <p className="text-gray-600 italic">"{review.comment}"</p>
-    </div>
-  ))}
-</div>
-    </div>
-</section>
+            
 
             {/* CTA */}
             <section className="py-24" style={{ backgroundImage: `url('https://hali.vn/wp-content/uploads/2020/07/thiet-ke-banner-my-pham37.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -274,78 +253,7 @@ export default function About() {
         </Link>
     </div>
 </section>
- {/* Form gửi đánh giá */}
- <section className="py-16 bg-pink-50">
- <div className=" bg-white p-6 rounded-lg shadow max-w-2xl mx-auto">
-      <h3 className="text-2xl font-bold text-center mb-6 text-gray-800 uppercase tracking-wider ">Đánh giá của bạn</h3>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
-            Họ và tên
-          </label>
-          {isData && isData?.fullname ? (
-            <>
-            <p className="w-full p-2 border rounded-lg focus:outline-none" >{isData?.fullname}</p>
-            <input
-            type="hidden"
-            id="name"
-            name="name"
-            placeholder="Nhập họ và tên của bạn"
-            value={isData?.fullname}
-          />
-          </>
-          ) : (
-            <input
-            type="text"
-            id="name"
-            name="name"
-            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            placeholder="Nhập họ và tên của bạn"
-            required
-          />
-          )}
-          
-        </div>
-        <div className="mb-4">
-          <label htmlFor="rating" className="block text-gray-700 font-medium mb-2">
-            Đánh giá sao
-          </label>
-          <select
-            id="rating"
-            name="rating"
-            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            required
-          >
-            <option value="">Chọn số sao</option>
-            <option value="5">★★★★★ (5 sao)</option>
-            <option value="4">★★★★☆ (4 sao)</option>
-            <option value="3">★★★☆☆ (3 sao)</option>
-            <option value="2">★★☆☆☆ (2 sao)</option>
-            <option value="1">★☆☆☆☆ (1 sao)</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label htmlFor="comment" className="block text-gray-700 font-medium mb-2">
-            Nhận xét của bạn
-          </label>
-          <textarea
-            id="comment"
-            name="comment"
-            rows="4"
-            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            placeholder="Chia sẻ cảm nhận của bạn về MyPhamHTCT..."
-            required
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-pink-500 text-white font-semibold py-2 rounded-lg hover:bg-pink-600 transition duration-150 ease-in-out"
-        >
-          Gửi đánh giá
-        </button>
-      </form>
-    </div>
-</section>
+ 
         </div>
         <div className='flex items-center'>
           <div className='w-1/4 h-[calc(100vh-280px)] pl-8 flex flex-col justify-between'>

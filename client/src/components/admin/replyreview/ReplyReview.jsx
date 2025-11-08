@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Select from "react-select";
+import { Context } from '../../../components/Context.jsx';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,7 +15,7 @@ export default function ReplyReview() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentReview, setCurrentReview] = useState(null);
   const [replyContent, setReplyContent] = useState("");
-
+  const { isDataAdmin, isDataStaff } = useContext(Context);
   // Lấy danh sách đánh giá + phản hồi
   useEffect(() => {
     const fetchReviews = async () => {
@@ -81,17 +82,18 @@ export default function ReplyReview() {
     try {
       await axios.post(
         `http://localhost:5001/admin/reviews/${currentReview.id}/reply`,
-        { ten_admin: "Admin", noidung: replyContent },
+        { maql: isDataAdmin?.maql || null, manv: isDataStaff?.manv || null, noidung: replyContent },
         { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
       );
       setReviews(prev =>
         prev.map(r =>
           r.id === currentReview.id
-            ? { ...r, phanhoi: replyContent, ten_admin: "Admin" }
+            ? { ...r, phanhoi: replyContent, maql: isDataAdmin?.maql || null, manv: isDataStaff?.manv || null}
             : r
         )
       );
       setIsModalOpen(false);
+      setReplyContent("");
       toast.success("Đã phản hồi thành công!");
     } catch {
       toast.error("Lỗi khi gửi phản hồi!");
@@ -182,12 +184,16 @@ export default function ReplyReview() {
 
             {r.phanhoi && (
               <div className="bg-pink-100 border-l-4 border-pink-400 p-2 rounded mt-2">
-                <p className="text-sm text-gray-800">
-                  <span className="font-semibold text-pink-700">
-                    {r.ten_admin || "Admin"} phản hồi:
-                  </span>{" "}
-                  {r.phanhoi}
-                </p>
+                <p className="text-gray-800 text-sm">
+                          <span className="font-semibold text-pink-600">
+                            {r.manv !== null && r.manv !== undefined
+                              ? `(Nhân viên) ${r.ten_nguoi_tra_loi}`
+                              : r.maql !== null && r.maql !== undefined
+                                ? `(Quản lý) ${r.ten_nguoi_tra_loi}`
+                                : ""}:
+                          </span>{" "}
+                          {r.phanhoi}
+                        </p>
                 <p className="text-xs text-gray-500">
                   {r.ngaytraloi ? new Date(r.ngaytraloi).toLocaleString() : ""}
                 </p>

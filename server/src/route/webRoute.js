@@ -6,7 +6,6 @@ import invoice from '../controllers/invoiceController.js'
 import ship from '../controllers/shipController.js'
 import promo from '../controllers/promoController.js'
 import cart from '../controllers/cartController.js'
-import rating from "../controllers/ratingController.js";
 import branch from "../controllers/branchController.js";
 import statistic from "../controllers/statisticController.js";
 import faceController from '../controllers/faceController.js'
@@ -103,9 +102,6 @@ const initWebRoute = (app) => {
 
     router.get('/getRepo', repo.getRepo)
     router.get('/getAvailableMonths', repo.getMonths);
-
-    router.post('/submitReview', rating.createRatingStore)
-    router.get('/getReview', rating.getRatingStore)
 
     router.get('/getBranch', branch.getBranch);
     router.post('/addBranch', auth.authMiddleware, branch.insertBranch);

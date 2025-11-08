@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Context } from '../../../../components/Context';
+import { Context } from '../../../../components/Context.jsx';
 import { useParams, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs, FreeMode } from "swiper/modules";
@@ -27,10 +27,12 @@ export default function ProductDetail() {
   const [totalReviews, setTotalReviews] = useState(0);
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [ratingStats, setRatingStats] = useState({
-  count: {},
-  percent: {},
-  total: 0
-});
+    count: {},
+    percent: {},
+    total: 0
+  });
+  const [hoverRating, setHoverRating] = useState(0);
+
   const { onAddToCart, isData } = useContext(Context);
   console.log(reviews)
   useEffect(() => {
@@ -71,21 +73,21 @@ export default function ProductDetail() {
           setTotalReviews(0);
         }
         // Đếm số lượng từng sao (1→5)
-const starCount = [1, 2, 3, 4, 5].reduce((acc, star) => {
-  acc[star] = dataReviews.filter(r => Number(r.sosao) === star).length;
-  return acc;
-}, {});
+        const starCount = [1, 2, 3, 4, 5].reduce((acc, star) => {
+          acc[star] = dataReviews.filter(r => Number(r.sosao) === star).length;
+          return acc;
+        }, {});
 
-// Tổng số đánh giá hợp lệ
-const total = Object.values(starCount).reduce((a, b) => a + b, 0);
+        // Tổng số đánh giá hợp lệ
+        const total = Object.values(starCount).reduce((a, b) => a + b, 0);
 
-// Tính phần trăm từng mức sao
-const starPercent = {};
-for (let i = 1; i <= 5; i++) {
-  starPercent[i] = total > 0 ? ((starCount[i] / total) * 100).toFixed(1) : 0;
-}
+        // Tính phần trăm từng mức sao
+        const starPercent = {};
+        for (let i = 1; i <= 5; i++) {
+          starPercent[i] = total > 0 ? ((starCount[i] / total) * 100).toFixed(1) : 0;
+        }
 
-setRatingStats({ count: starCount, percent: starPercent, total });
+        setRatingStats({ count: starCount, percent: starPercent, total });
         const firstAvailable =
           response.data.variants?.find((v) => v.soluongtonkho > 0) || null;
         setSelectedVariant(firstAvailable);
@@ -151,16 +153,16 @@ setRatingStats({ count: starCount, percent: starPercent, total });
 
     onAddToCart(productToAdd);
     toast.success(
-        `${product.tensp} đã được thêm vào giỏ hàng`,
-        { duration: 3000 }
-      );
+      `${product.tensp} đã được thêm vào giỏ hàng`,
+      { duration: 3000 }
+    );
     setTimeout(() => {
       navigate('/cart');
-      
+
     }, 1000);
   };
   const handleSubmitComment = async () => {
-    if(!isData.fullname) {
+    if (!isData.id) {
       return toast.error("Vui lòng đăng nhập để gửi bình luận!");
     }
     if (!rating) return toast.error("Vui lòng chọn số sao!");
@@ -169,9 +171,9 @@ setRatingStats({ count: starCount, percent: starPercent, total });
     try {
       await axios.post("http://localhost:5001/reviews/add", {
         masp: product.masp,
+        makh: isData.id,
         sosao: rating,
         noidung: comment,
-        tenkh: isData.fullname
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -181,8 +183,8 @@ setRatingStats({ count: starCount, percent: starPercent, total });
       });
 
       toast.success("Đã gửi bình luận!");
-      setComment("");
       setRating(0);
+      setComment("");
 
       // Tải lại bình luận mới
       const resCmt = await axios.get(`http://localhost:5001/reviews/${masp.id}`);
@@ -259,76 +261,76 @@ setRatingStats({ count: starCount, percent: starPercent, total });
 
         {/* Thông tin sản phẩm */}
         <div className="w-full lg:w-1/2 flex flex-col justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">{product.tensp}</h2>
-          {totalReviews > 0 && (
-            <div className="flex items-center gap-2 mb-2">
-              <div className="flex">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <svg
-                    key={star}
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill={star <= Math.round(avgRating) ? "#f59e0b" : "none"}
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-5 h-5 text-yellow-500"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.117 5.541.403a.562.562 0 01.316.98l-4.21 3.637 1.293 5.41a.562.562 0 01-.837.61L12 17.347l-4.748 2.31a.562.562 0 01-.837-.61l1.293-5.41-4.21-3.637a.562.562 0 01.316-.98l5.541-.403L11.48 3.5z"
-                    />
-                  </svg>
-                ))}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">{product.tensp}</h2>
+            {totalReviews > 0 && (
+              <div className="flex items-center gap-2 mb-2">
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <svg
+                      key={star}
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill={star <= Math.round(avgRating) ? "#f59e0b" : "none"}
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5 text-yellow-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.117 5.541.403a.562.562 0 01.316.98l-4.21 3.637 1.293 5.41a.562.562 0 01-.837.61L12 17.347l-4.748 2.31a.562.562 0 01-.837-.61l1.293-5.41-4.21-3.637a.562.562 0 01.316-.98l5.541-.403L11.48 3.5z"
+                      />
+                    </svg>
+                  ))}
+                </div>
+                <span className="text-gray-700 font-medium">
+                  {avgRating} / 5 ({totalReviews} đánh giá)
+                </span>
               </div>
-              <span className="text-gray-700 font-medium">
-                {avgRating} / 5 ({totalReviews} đánh giá)
+            )}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="bg-pink-100 text-pink-600 px-2 py-1 text-xs rounded">
+                {product.tenloai}
+              </span>
+              <span className="bg-gray-100 text-gray-600 px-2 py-1 text-xs rounded">
+                {product.tennsx}
               </span>
             </div>
-          )}
-          <div className="flex items-center gap-2 mb-3">
-            <span className="bg-pink-100 text-pink-600 px-2 py-1 text-xs rounded">
-              {product.tenloai}
-            </span>
-            <span className="bg-gray-100 text-gray-600 px-2 py-1 text-xs rounded">
-              {product.tennsx}
-            </span>
-          </div>
 
-          {/* Giá */}
-          <div className="my-4 flex items-center gap-3">
-            <span className={`text-xl font-semibold ${product.km ? "text-gray-400 line-through" : "text-pink-600"}`}>
-              {selectedVariant
-                ? formatCurrency(selectedVariant.gia)
-                : formatCurrency(product.gia)}
-            </span>
-            {product.km && (
-              <span className="text-xl text-pink-600 font-bold">
+            {/* Giá */}
+            <div className="my-4 flex items-center gap-3">
+              <span className={`text-xl font-semibold ${product.km ? "text-gray-400 line-through" : "text-pink-600"}`}>
                 {selectedVariant
-                  ? formatCurrency(selectedVariant.gia * (1 - product.km / 100))
-                  : formatCurrency(product.gia * (1 - product.km / 100))}
+                  ? formatCurrency(selectedVariant.gia)
+                  : formatCurrency(product.gia)}
               </span>
-            )}
-          </div>
-          {/* Tình trạng sản phẩm */}
-          <div className="mb-4">
-            <span className="font-semibold">Tình trạng: </span>
-            {selectedVariant || product ? (
-              selectedVariant?.soluongtonkho || product.soluongsp > 0 ? (
+              {product.km && (
+                <span className="text-xl text-pink-600 font-bold">
+                  {selectedVariant
+                    ? formatCurrency(selectedVariant.gia * (1 - product.km / 100))
+                    : formatCurrency(product.gia * (1 - product.km / 100))}
+                </span>
+              )}
+            </div>
+            {/* Tình trạng sản phẩm */}
+            <div className="mb-4">
+              <span className="font-semibold">Tình trạng: </span>
+              {selectedVariant || product ? (
+                selectedVariant?.soluongtonkho || product.soluongsp > 0 ? (
+                  <span className="text-green-600 font-medium">Còn hàng</span>
+                ) : (
+                  <span className="text-red-500 font-medium">Hết hàng</span>
+                )
+              ) : product.soluongtonkho > 0 ? (
                 <span className="text-green-600 font-medium">Còn hàng</span>
               ) : (
                 <span className="text-red-500 font-medium">Hết hàng</span>
-              )
-            ) : product.soluongtonkho > 0 ? (
-              <span className="text-green-600 font-medium">Còn hàng</span>
-            ) : (
-              <span className="text-red-500 font-medium">Hết hàng</span>
-            )}
-          </div>
+              )}
+            </div>
 
-          {/* Mã khuyến mãi */}
-          {/* <div className="flex gap-3 mb-4 flex-wrap">
+            {/* Mã khuyến mãi */}
+            {/* <div className="flex gap-3 mb-4 flex-wrap">
             <div className="border border-pink-400 text-pink-500 px-3 py-1 rounded text-sm font-medium">
               Giảm ngay 20K • <span className="text-gray-700">T10GIAM20K</span>
             </div>
@@ -340,114 +342,113 @@ setRatingStats({ count: starCount, percent: starPercent, total });
             </div>
           </div> */}
 
-          {/* Biến thể */}
-          {variants.length > 0 && (
-            <div className="mb-4">
-              <p className="font-semibold mb-2">{product.loaibienthe}:</p>
-              <div className="flex gap-2 flex-wrap">
-                {variants.map((variant) => (
-                  <button
-                    key={variant.mabienthe}
-                    onClick={() => setSelectedVariant(variant)}
-                    className={`px-4 py-1 border rounded-md text-sm transition ${selectedVariant?.mabienthe === variant.mabienthe
-                      ? "bg-pink-500 text-white border-pink-500"
-                      : "bg-gray-100 text-gray-700 hover:border-pink-400"
-                      } ${variant.soluongtonkho === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
-                    disabled={variant.soluongtonkho === 0}
-                  >
-                    {variant.thuoc_tinh}
-                  </button>
-                ))}
+            {/* Biến thể */}
+            {variants.length > 0 && (
+              <div className="mb-4">
+                <p className="font-semibold mb-2">{product.loaibienthe}:</p>
+                <div className="flex gap-2 flex-wrap">
+                  {variants.map((variant) => (
+                    <button
+                      key={variant.mabienthe}
+                      onClick={() => setSelectedVariant(variant)}
+                      className={`px-4 py-1 border rounded-md text-sm transition ${selectedVariant?.mabienthe === variant.mabienthe
+                        ? "bg-pink-500 text-white border-pink-500"
+                        : "bg-gray-100 text-gray-700 hover:border-pink-400"
+                        } ${variant.soluongtonkho === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                      disabled={variant.soluongtonkho === 0}
+                    >
+                      {variant.thuoc_tinh}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-          <h3 className="font-semibold">Công dụng:</h3>
-          {/* Mô tả */}
-          <p className="text-gray-700 mb-6 leading-relaxed">{product.ttct}</p>
-          {/* Nút hành động */}
+            )}
+            <h3 className="font-semibold">Công dụng:</h3>
+            {/* Mô tả */}
+            <p className="text-gray-700 mb-6 leading-relaxed">{product.ttct}</p>
+            {/* Nút hành động */}
           </div>
           <div>
-          <div className="flex gap-4">
-            <button onClick={handleBuyToCart} className={`border border-pink-500 bg-pink-500 text-white hover:bg-pink-300 px-3 py-1.5 rounded-md font-medium text-lg transition
-    ${
-      ((selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0)
-        ? "cursor-not-allowed"
-        : ""
-    }`}
-  disabled={(selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0}
->
-              Mua ngay
-            </button>
-            <button
-  onClick={handleAddToCart}
-  className={`border border-pink-500 text-pink-500 hover:bg-pink-50 px-3 py-1.5 rounded-md font-medium text-lg transition
-    ${
-      ((selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0)
-        ? "cursor-not-allowed"
-        : ""
-    }`}
-  disabled={(selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0}
->
-  Thêm vào giỏ hàng
-</button>
-</div>
+            <div className="flex gap-4">
+              <button onClick={handleBuyToCart} className={`border border-pink-500 bg-pink-500 text-white hover:bg-pink-300 px-3 py-1.5 rounded-md font-medium text-lg transition
+    ${((selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0)
+                  ? "cursor-not-allowed"
+                  : ""
+                }`}
+                disabled={(selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0}
+              >
+                Mua ngay
+              </button>
+              <button
+                onClick={handleAddToCart}
+                className={`border border-pink-500 text-pink-500 hover:bg-pink-50 px-3 py-1.5 rounded-md font-medium text-lg transition
+    ${((selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0)
+                    ? "cursor-not-allowed"
+                    : ""
+                  }`}
+                disabled={(selectedVariant?.soluongtonkho ?? product.soluongsp) <= 0}
+              >
+                Thêm vào giỏ hàng
+              </button>
+            </div>
           </div>
         </div>
       </div>
       {/* --- Bình luận & đánh giá --- */}
-<div className="mt-16 border-t pt-10">
-  <h3 className="text-2xl font-semibold mb-6 text-gray-800">Đánh giá & Bình luận</h3>
+      <div className="mt-16 border-t pt-10">
+        <h3 className="text-2xl font-semibold mb-6 text-gray-800">Đánh giá & Bình luận</h3>
 
-  {/* Tổng quan đánh giá */}
-  {totalReviews > 0 && (
-    <div className="bg-white p-6 rounded-lg shadow-sm mb-10">
-      <div className="flex flex-col md:flex-row md:items-center gap-6">
-        {/* Trung bình sao */}
-        <div className="text-center md:w-1/4">
-          <div className="text-5xl font-bold text-gray-800">{avgRating}</div>
-          <div className="flex justify-center my-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <svg
-                key={star}
-                xmlns="http://www.w3.org/2000/svg"
-                fill={star <= Math.round(avgRating) ? "#facc15" : "none"}
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 text-yellow-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.117 5.541.403a.562.562 0 01.316.98l-4.21 3.637 1.293 5.41a.562.562 0 01-.837.61L12 17.347l-4.748 2.31a.562.562 0 01-.837-.61l1.293-5.41-4.21-3.637a.562.562 0 01.316-.98l5.541-.403L11.48 3.5z"
-                />
-              </svg>
-            ))}
-          </div>
-          <p className="text-gray-600 text-sm">{totalReviews} lượt đánh giá</p>
-        </div>
-
-        {/* Thanh progress thống kê sao */}
-        <div className="flex-1 space-y-2">
-          {[5, 4, 3, 2, 1].map((star) => (
-            <div key={star} className="flex items-center gap-2">
-              <span className="w-10 text-sm text-gray-700">{star} ⭐</span>
-              <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  className="h-3 bg-yellow-400 rounded-full"
-                  style={{ width: `${ratingStats.percent[star]}%` }}
-                ></div>
+        {/* Tổng quan đánh giá */}
+        {totalReviews > 0 && (
+          <div className="bg-white p-6 rounded-lg shadow-sm mb-10">
+            <div className="flex flex-col md:flex-row md:items-center gap-6">
+              {/* Trung bình sao */}
+              <div className="text-center md:w-1/4">
+                <div className="text-5xl font-bold text-gray-800">{avgRating}</div>
+                <div className="flex justify-center my-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <svg
+                      key={star}
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill={star <= Math.round(avgRating) ? "#facc15" : "none"}
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6 text-yellow-500"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.117 5.541.403a.562.562 0 01.316.98l-4.21 3.637 1.293 5.41a.562.562 0 01-.837.61L12 17.347l-4.748 2.31a.562.562 0 01-.837-.61l1.293-5.41-4.21-3.637a.562.562 0 01.316-.98l5.541-.403L11.48 3.5z"
+                      />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-600 text-sm">{totalReviews} lượt đánh giá</p>
               </div>
-              <span className="w-12 text-sm text-gray-600 text-right">
-                {ratingStats.percent[star]}%
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Biểu đồ Recharts */}
-      {/* <div className="mt-8 h-56">
+              {/* Thanh progress thống kê sao */}
+              <div className="flex-1 space-y-2">
+                {[5, 4, 3, 2, 1].map((star) => (
+                  <div key={star} className="flex items-center gap-2">
+                    <span className="w-10 text-sm text-gray-700">{star} ⭐</span>
+                    <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-3 bg-yellow-400 rounded-full"
+                        style={{ width: `${ratingStats.percent?.[star] || 0}%` }}
+
+                      ></div>
+                    </div>
+                    <span className="w-12 text-sm text-gray-600 text-right">
+                      {ratingStats.percent[star]}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Biểu đồ Recharts */}
+            {/* <div className="mt-8 h-56">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={[5, 4, 3, 2, 1].map((star) => ({
@@ -462,135 +463,150 @@ setRatingStats({ count: starCount, percent: starPercent, total });
           </BarChart>
         </ResponsiveContainer>
       </div> */}
-    </div>
-  )}
+          </div>
+        )}
 
-  {/* Form thêm bình luận */}
-  <div className="bg-gray-50 p-6 rounded-lg mb-8">
-    <p className="font-medium mb-2">Bình luận của bạn:</p>
+        {/* Form thêm bình luận */}
+        <div className="bg-gray-50 p-6 rounded-lg mb-8">
+          <p className="font-medium mb-2">Bình luận của bạn:</p>
 
-    {/* Đánh giá sao */}
-    <div className="flex items-center mb-4">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <svg
-          key={star}
-          onClick={() => setRating(star)}
-          xmlns="http://www.w3.org/2000/svg"
-          fill={star <= rating ? "#f59e0b" : "none"}
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-7 h-7 cursor-pointer text-yellow-500"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.117 5.541.403a.562.562 0 01.316.98l-4.21 3.637 1.293 5.41a.562.562 0 01-.837.61L12 17.347l-4.748 2.31a.562.562 0 01-.837-.61l1.293-5.41-4.21-3.637a.562.562 0 01.316-.98l5.541-.403L11.48 3.5z"
+          {/* Đánh giá sao */}
+          <div className="flex items-center mb-4">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <svg
+                key={star}
+                onClick={() => setRating(star)}
+                onMouseEnter={() => setHoverRating(star)}
+                onMouseLeave={() => setHoverRating(0)}
+                xmlns="http://www.w3.org/2000/svg"
+                fill={star <= (hoverRating || rating) ? "#f59e0b" : "none"}
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-7 h-7 cursor-pointer text-yellow-500  transition duration-200 ease-in-out"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.117 
+        5.541.403a.562.562 0 01.316.98l-4.21 3.637 
+        1.293 5.41a.562.562 0 01-.837.61L12 
+        17.347l-4.748 2.31a.562.562 0 
+        01-.837-.61l1.293-5.41-4.21-3.637a.562.562 
+        0 01.316-.98l5.541-.403L11.48 3.5z"
+                />
+              </svg>
+            ))}
+          </div>
+
+          {/* Nội dung bình luận */}
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Nhập bình luận của bạn..."
+            className="w-full border rounded-md p-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
+            rows="4"
           />
-        </svg>
-      ))}
-    </div>
+          <div className="flex justify-center">
+            <button
+              onClick={handleSubmitComment}
+              className="mt-4 bg-pink-500 hover:bg-pink-600 text-white px-5 py-2 rounded-md font-medium"
+            >
+              Gửi đánh giá
+            </button>
+          </div>
+        </div>
 
-    {/* Nội dung bình luận */}
-    <textarea
-      value={comment}
-      onChange={(e) => setComment(e.target.value)}
-      placeholder="Nhập bình luận của bạn..."
-      className="w-full border rounded-md p-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
-      rows="4"
-    />
-  <div className="flex justify-center">
-    <button
-      onClick={handleSubmitComment}
-      className="mt-4 bg-pink-500 hover:bg-pink-600 text-white px-5 py-2 rounded-md font-medium"
-    >
-      Gửi đánh giá
-    </button>
-    </div>
-  </div>
-
-  {/* Danh sách bình luận */}
-  <div>
-  {reviews.length > 0 ? (
-  <>
-    {reviews
-      .filter((r) => r.trangthai === "hiển thị")
-      .slice(0, showAllReviews ? reviews.length : 4)
-      .map((r, i) => (
-        <div key={i} className="border-b py-4 ">
-          <div className="flex items-center justify-between">
-            <span className="font-semibold text-gray-800">
-              {r.tenkh || "Ẩn danh"}
-            </span>
-            <div className="flex">
-              {[...Array(5)].map((_, idx) => (
-                <svg
-                  key={idx}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill={idx < r.sosao ? "#f59e0b" : "none"}
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5 text-yellow-500"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.117 
+        {/* Danh sách bình luận */}
+        <div>
+          {reviews.length > 0 ? (
+            <>
+              {reviews
+                .filter((r) => r.trangthai === "hiển thị")
+                .slice(0, showAllReviews ? reviews.length : 4)
+                .map((r, i) => (
+                  <div key={i} className="border-b py-4 ">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-gray-800">
+                        {r.tenkh || "Ẩn danh"}
+                      </span>
+                      <div className="flex">
+                        {[...Array(5)].map((_, idx) => (
+                          <svg
+                            key={idx}
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill={idx < r.sosao ? "#f59e0b" : "none"}
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-5 h-5 text-yellow-500"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.117 
                       5.541.403a.562.562 0 01.316.98l-4.21 3.637 
                       1.293 5.41a.562.562 0 01-.837.61L12 
                       17.347l-4.748 2.31a.562.562 0 
                       01-.837-.61l1.293-5.41-4.21-3.637a.562.562 
                       0 01.316-.98l5.541-.403L11.48 3.5z"
-                  />
-                </svg>
-              ))}
-            </div>
-          </div>
-          <div className="flex justify-between">
-          <p className="text-gray-700 mt-2 break-words text-sm whitespace-pre-wrap">
-            {r.noidung}
-          </p>
-          <p className="text-gray-400 text-sm mt-1">
-            {new Date(r.ngaydang).toLocaleString()}
-          </p>
-          </div>
+                            />
+                          </svg>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="text-gray-700 mt-2 break-words text-sm whitespace-pre-wrap">
+                        {r.noidung}
+                      </p>
+                      <p className="text-gray-400 text-sm mt-1 text-right">
+                        {new Date(r.ngaydang).toLocaleString()}
+                      </p>
+                    </div>
 
-          {/* Thêm phần phản hồi admin */}
-          {r.phanhoi && (
-            <div className="bg-pink-50 border-l-4 border-pink-400 p-3 mt-3 rounded-md">
-              <p className="text-gray-800 text-sm">
-                <span className="font-semibold text-pink-600">
-                  {r.ten_admin || "Admin"} phản hồi:
-                </span>{" "}
-                {r.phanhoi}
-              </p>
-              <p className="text-gray-400 text-xs mt-1">
-                {new Date(r.ngaytraloi).toLocaleString()}
-              </p>
-            </div>
+                    {/* Thêm phần phản hồi admin */}
+                    {r.phanhoi && (
+                      <div className="bg-pink-50 border-l-4 border-pink-400 p-3 mt-3 rounded-md">
+                        <p className="text-gray-800 text-sm">
+                          <span className="font-semibold text-pink-600">
+                            {r.manv !== null && r.manv !== undefined
+                              ? `(Nhân viên) ${r.ten_nguoi_tra_loi}`
+                              : r.maql !== null && r.maql !== undefined
+                                ? `(Quản lý) ${r.ten_nguoi_tra_loi}`
+                                : ""}:
+                          </span>{" "}
+                          {r.phanhoi}
+                        </p>
+                        <p className="text-gray-400 text-xs mt-1">
+                          {r.ngaytraloi && (
+                            <p className="text-gray-400 text-xs mt-1">
+                              {new Date(r.ngaytraloi).toLocaleString()}
+                            </p>
+                          )}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+              {/* Nút Xem thêm / Thu gọn */}
+              {reviews.filter((r) => r.trangthai === "hiển thị").length > 4 && (
+                <div className="text-center mt-4">
+                  <button
+                    onClick={() => setShowAllReviews(!showAllReviews)}
+                    className="text-pink-500 font-medium hover:underline"
+                  >
+                    {showAllReviews ? "Thu gọn" : "Xem thêm"}
+                  </button>
+                </div>
+              )}
+
+            </>
+          ) : (
+            <p className="text-gray-500 italic">Chưa có bình luận nào.</p>
           )}
         </div>
-        ))}
-
-      {/* Nút Xem thêm / Thu gọn */}
-      {reviews.filter((r) => r.trangthai === "hiển thị").length > 4 && (
-  <div className="text-center mt-4">
-    <button
-      onClick={() => setShowAllReviews(!showAllReviews)}
-      className="text-pink-500 font-medium hover:underline"
-    >
-      {showAllReviews ? "Thu gọn" : "Xem thêm"}
-    </button>
-  </div>
-)}
-
-    </>
-  ) : (
-    <p className="text-gray-500 italic">Chưa có bình luận nào.</p>
-  )}
-</div>
-</div>
+      </div>
 
       <PreFooter selectedProduct={product} />
     </div>

@@ -143,7 +143,7 @@ const getTotalReviews = async () => {
         SELECT 
             COUNT(*) AS total_reviews
         FROM 
-            danhgiacuahang
+            binhluan
     `);
     return rows[0].total_reviews || 0; // Trả về 0 nếu không có dữ liệu
 };
