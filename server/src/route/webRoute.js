@@ -15,6 +15,7 @@ import uploadMiddleware from '../../middleware/upload.js'
 import auth from '../../middleware/jwt.js'
 import review from '../controllers/reviewCotroller.js';
 import discount from '../controllers/discountController.js';
+import sendmail from '../controllers/sendmailController.js'
 const router = express.Router()
 const initWebRoute = (app) => {
 
@@ -128,6 +129,10 @@ const initWebRoute = (app) => {
     router.get('/admin/reviews', auth.authMiddleware, review.getReview);
     router.put('/admin/reviews/:id/status', auth.authMiddleware, review.updateStatusReview);
     router.post('/admin/reviews/:id/reply', auth.authMiddleware, review.replyReview);
+
+    router.post("/send-mail", sendmail.sendMail);
+
+
     return app.use('/', router)
 }
 export default initWebRoute
