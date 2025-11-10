@@ -20,6 +20,9 @@ const router = express.Router()
 const initWebRoute = (app) => {
 
     router.post('/loginAdmin', user.loginAdmin)
+    router.get('/admin/get/:maql', user.getAdminInfo)
+    router.post("/admin/update/:maql", user.updateInfoAdmin);
+    router.post("/admin/change-password/:maql", user.changePasswordAdmin);
 
     router.post('/login', user.getUser)
     router.post('/updateInf/:id', user.updateInf)
@@ -86,6 +89,10 @@ const initWebRoute = (app) => {
     router.post('/updateShiftStaff', staff.updateShiftStaff);
     router.post('/removeStaffFromShift', staff.removeStaffFromShift);
     router.get('/getStaffByShift/:manv', staff.getShifts);
+
+    router.get('/staff/get/:manv', staff.getStaffByMail)
+    router.post("/staff/update/:manv", staff.updateInfoStaff);
+    router.post("/staff/change-password/:manv", staff.changePasswordStaff);
 
     router.post('/addDelivery', auth.authMiddleware, ship.addShip)
     router.get('/getDelivery', ship.getAllShip)

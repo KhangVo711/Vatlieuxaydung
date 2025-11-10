@@ -146,4 +146,21 @@ const deleteStaff = async (manv) => {
     return rows;
 }
 
-export default {addStaff, updateStaff, addStaffToShift, getShifts, deleteShift, updateShift, getStaffByShift, removeAllStaffFromShift, getAllStaff, getAllShifts, addShift, deleteStaff, getStaffByPhone, getStaffByEmail, getStaffById, getShiftById, removeStaffFromShift};
+const updateStaffInfo = async (manv, tennv, sdtnv, diachinv, emailnv) => {
+  await connectDB.execute(
+    "UPDATE nhanvien SET tennv = ?, sdtnv = ?, diachinv = ?, emailnv = ? WHERE manv = ?",
+    [tennv, sdtnv, diachinv, emailnv, manv]
+  );
+};
+
+const updateStaffPassword = async (manv, hashedPassword) => {
+  await connectDB.execute("UPDATE nhanvien SET matkhau = ? WHERE manv = ?", [hashedPassword, manv]);
+};
+
+const getStaffByMail = async (manv) => {
+  const [rows] = await connectDB.execute("SELECT * FROM nhanvien WHERE manv = ?", [manv]);
+  return rows[0];
+};
+
+
+export default {updateStaffInfo, updateStaffPassword, getStaffByMail, addStaff, updateStaff, addStaffToShift, getShifts, deleteShift, updateShift, getStaffByShift, removeAllStaffFromShift, getAllStaff, getAllShifts, addShift, deleteStaff, getStaffByPhone, getStaffByEmail, getStaffById, getShiftById, removeStaffFromShift};

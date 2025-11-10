@@ -17,16 +17,16 @@ const ContextProvider = ({ children }) => {
     }
   }, [token]);
 
-  const [isDataAdmin, setIsDataAdmin] = useState({});
+  const [isDataAdmin, setIsDataAdmin] = useState(null);
   const tokenAdmin = Cookies.get('admin');
-  const [isDataStaff, setIsDataStaff] = useState({});
+  const [isDataStaff, setIsDataStaff] = useState(null);
   const tokenStaff = Cookies.get('staff');
   useEffect(() => {
     if (tokenAdmin) {
       const decodedToken = jwtDecode(tokenAdmin);
       setIsDataAdmin(decodedToken);
     } else {
-      setIsDataAdmin({});
+      setIsDataAdmin(null);
     }
   }, [tokenAdmin]);
 
@@ -35,7 +35,7 @@ const ContextProvider = ({ children }) => {
       const decodedToken = jwtDecode(tokenStaff);
       setIsDataStaff(decodedToken);
     } else {
-      setIsDataStaff({});
+      setIsDataStaff(null);
     }
   }, [tokenStaff]);
 

@@ -8,7 +8,6 @@ import bcrypt, { hash } from "bcrypt";
 const addStaff = async (req, res) => {
     try {
         const { manv, tennv, sdtnv, emailnv, diachinv, chucvunv, matkhau, tongluong } = req.body;
-        console.log(req.body);
 
         if (!manv || !tennv || !sdtnv || !emailnv || !diachinv || !chucvunv || !matkhau) {
             return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin' });
@@ -273,4 +272,48 @@ const updateShiftStaff  = async (req, res) => {
         return res.status(500).json({ message: 'Lỗi xảy ra bên server' });
     }
 }
-export default { loginStaff, addStaff, getAllStaff, editStaff, getShifts, deleteStaff, getAllShifts, addShift, removeStaffFromShift, updateShiftStaff };
+
+const updateInfoStaff = async (req, res) => {
+  try {
+    const { manv } = req.params;
+    const { name, phone, address, email } = req.body;
+    console.log(req.body);
+
+    await staffModel.updateStaffInfo(manv, name, phone, address, email);
+    res.json({ message: "Cập nhật thành công" });
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+const getStaffByMail = async (req, res) => {
+  try {
+    const { manv } = req.params;
+    console.log(manv);
+    const staff = await staffModel.getStaffByMail(manv);
+    if (!staff) return res.status(404).json({ message: "Không tìm thấy nhân viên" });
+    res.json(staff);
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi server" });
+  }
+}
+
+// Đổi mật khẩu
+const changePasswordStaff = async (req, res) => {
+  try {
+    const { manv } = req.params;
+    const { oldPassword, newPassword } = req.body;
+    const staff = await staffModel.getStaffByMail(manv);
+    if (!staff) return res.status(404).json({ message: "Không tìm thấy nhân viên" });
+
+    const match = await bcrypt.compare(oldPassword, staff.matkhau);
+    if (!match) return res.status(400).json({ message: "Mật khẩu cũ không đúng" });
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await staffModel.updateStaffPassword(manv, hashed);
+    res.json({ message: "Đổi mật khẩu thành công" });
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+export default { loginStaff, addStaff, getAllStaff, editStaff, getShifts, deleteStaff, getAllShifts, addShift, removeStaffFromShift, updateShiftStaff, updateInfoStaff, getStaffByMail, changePasswordStaff };

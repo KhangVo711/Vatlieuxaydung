@@ -294,4 +294,49 @@ const getAllUsers = async (req, res) => {
     }
 }
 
-export default { getInf, insertUser, getUser, updateInf, changePassword, loginAdmin, getAllUsers };
+const updateInfoAdmin = async (req, res) => {
+  try {
+    const { maql } = req.params;
+    const { name, phone, address, email } = req.body;
+    console.log(req.body);
+
+    await userModel.updateAdminInfo(maql, name, phone, address, email);
+    res.json({ message: "Cập nhật thành công" });
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+const getAdminInfo = async (req, res) => {
+  try {
+    const { maql } = req.params;
+    const admin = await userModel.getAdminById(maql);
+    if (!admin) return res.status(404).json({ message: "Không tìm thấy quản lý" });
+    res.json(admin);
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi server" });
+  }
+}
+
+// Đổi mật khẩu
+const changePasswordAdmin = async (req, res) => {
+  try {
+    const { maql } = req.params;
+    const { oldPassword, newPassword } = req.body;
+    const admin = await userModel.getAdminById(maql);
+
+    if (!admin) return res.status(404).json({ message: "Không tìm thấy quản lý" });
+
+    const match = await bcrypt.compare(oldPassword, admin.matkhau);
+    if (!match) return res.status(400).json({ message: "Mật khẩu cũ không đúng" });
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await userModel.updateAdminPassword(maql, hashed);
+    res.json({ message: "Đổi mật khẩu thành công" });
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+
+export default { getInf, insertUser, getUser, updateInf, changePassword, loginAdmin, getAllUsers, updateInfoAdmin, changePasswordAdmin, getAdminInfo };

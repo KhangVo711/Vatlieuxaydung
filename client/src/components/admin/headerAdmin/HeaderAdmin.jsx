@@ -1,82 +1,354 @@
-import { useState } from 'react';
+import { useEffect, useState, useContext } from "react";
+import Modal from "react-modal";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { Context } from "../../Context.jsx";
 
-export default function HeaderAdmin() {
+export default function HeaderUser() {
   const [dropDownOpen, setDropDownOpen] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalChangePass, setModalChangePass] = useState(false);
+  const [modalUpdate, setModalUpdate] = useState(false);
+  const [formChangePass, setFormChangePass] = useState({
+    oldPassword: "",
+    newPassword: "",
+    renewPassword: "",
+  });
+  const [formData, setFormData] = useState({});
+  const [message, setMessage] = useState("");
+  const [colorMsg, setColorMsg] = useState("");
 
-  const toggleDropdown = () => {
-    setDropDownOpen(!dropDownOpen);
+  // ✅ Context
+  const { isDataAdmin, isDataStaff } = useContext(Context);
+
+
+  // ✅ Xác định loại người dùng
+  const isAdmin = Boolean(isDataAdmin);
+  const isStaff = Boolean(isDataStaff);
+  const userData = isAdmin ? isDataAdmin : isDataStaff;
+  const token = Cookies.get(isAdmin ? "admin" : "staff");
+  const id = isAdmin ? userData.maql : userData.manv;
+  console.log("isAdmin:", isAdmin);
+
+  // ✅ Lấy dữ liệu thông tin tài khoản
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const url = `http://localhost:5001/${isAdmin ? "admin" : "staff"}/get/${id}`;
+        const res = await axios.get(url, {
+           'Content-Type': 'application/json',
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        });
+
+        const data = res.data;
+
+        setFormData({
+          name: isAdmin ? data.tenql : data.tennv,
+          email: isAdmin ? data.email : data.emailnv,
+          phone: isAdmin ? data.sdt : data.sdtnv,
+          address: isAdmin ? data.diachi : data.diachinv,
+          position: isAdmin ? "Quản lý" : data.chucvunv,
+          tongluong: isAdmin ? "" : data.tongluong,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    if (id && token) fetchUser();
+  }, [id, token, isAdmin]);
+
+  console.log("Form Data:", formData);
+
+  const toggleDropdown = () => setDropDownOpen(!dropDownOpen);
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setModalUpdate(false);
   };
+  const closeChangePass = () => {
+    setModalChangePass(false);
+    setFormChangePass({ oldPassword: "", newPassword: "", renewPassword: "" });
+  };
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChangePass = (e) =>
+    setFormChangePass({ ...formChangePass, [e.target.name]: e.target.value });
+
+  // ✅ Cập nhật thông tin
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const isChanged =
+      formData.name !== (isAdmin ? isDataAdmin.tenql : isDataStaff.tennv) ||
+      formData.phone !== (isAdmin ? isDataAdmin.sdt : isDataStaff.sdtnv) ||
+      formData.address !== (isAdmin ? isDataAdmin.diachi : isDataStaff.diachinv);
+
+    if (!isChanged) {
+      setMessage("Không có thay đổi nào để cập nhật!");
+      setColorMsg("text-yellow-600");
+      setModalUpdate(false);
+      return;
+    }
+
+    try {
+      const url = `http://localhost:5001/${isAdmin ? "admin" : "staff"}/update/${id}`;
+      await axios.post(
+        url,
+        {
+          name: formData.name,
+          phone: formData.phone,
+          address: formData.address,
+          email: formData.email,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      setMessage("Cập nhật thành công!");
+      setColorMsg("text-green-600");
+      setTimeout(() => {
+        setMessage("");
+        setModalUpdate(false);
+      }, 800);
+    } catch (err) {
+      console.error(err);
+      setMessage("Lỗi khi cập nhật!");
+      setColorMsg("text-red-600");
+    }
+  };
+
+  // ✅ Đổi mật khẩu
+  const handleSubmitChangePass = async (e) => {
+    e.preventDefault();
+    const { oldPassword, newPassword, renewPassword } = formChangePass;
+
+    if (newPassword !== renewPassword) {
+      setMessage("Mật khẩu mới không khớp!");
+      setColorMsg("text-red-600");
+      return;
+    }
+
+    try {
+      const url = `http://localhost:5001/${isAdmin ? "admin" : "staff"}/change-password/${id}`;
+      await axios.post(
+        url,
+        { oldPassword, newPassword },
+        { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
+      );
+      setMessage("Đổi mật khẩu thành công!");
+      setColorMsg("text-green-600");
+      setFormChangePass({ oldPassword: "", newPassword: "", renewPassword: "" });
+    } catch (err) {
+      console.error(err);
+      setMessage("Lỗi khi đổi mật khẩu!");
+      setColorMsg("text-red-600");
+    }
+  };
+
+  if (!isAdmin && !isStaff) return null;
 
   return (
     <div className="sticky top-0 z-40 w-full">
-      <div className="w-full h-16 px-3 bg-gray-50 border-b flex items-center justify-between">
-        
-        {/* Left navbar */}
-        <div className="flex">
-          {/* Mobile hamburger */}
-          {/* <div className=" lg:hidden flex items-center mr-4">
-            <button className="hover:text-blue-500 focus:outline-none" onClick={toggleDropdown}>
-              <svg className="h-5 w-5" style={{ fill: 'black' }} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <title>Menu</title>
-                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-              </svg>
-            </button>
-          </div> */}
-
-          {/* Search bar */}
-          {/* <div className="relative text-gray-600">
-            <input
-              type="text"
-              name="search"
-              placeholder="Tìm kiếm sản phẩm..."
-              className="bg-white h-10 w-full lg:w-96 xl:w-[500px] px-5 rounded-xl border text-sm focus:outline-none"
-            />
-            <button type="submit" className="absolute right-0 top-0 mt-3 mr-4">
-              <svg
-                className="h-4 w-4 fill-current"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 56.966 56.966"
-                width="512px"
-                height="512px"
+      <div className="w-full h-16 px-3 bg-gray-50 border-b flex items-center justify-end">
+        <div className="flex items-center relative mr-5">
+          <img
+            onClick={toggleDropdown}
+            src="https://cdn.pixabay.com/photo/2024/10/15/02/12/cat-9121108_640.jpg"
+            className="w-12 h-12 rounded-full cursor-pointer ml-4"
+          />
+          {dropDownOpen && (
+            <div className="absolute right-0 top-14 bg-white border rounded-lg shadow-lg w-48">
+              <a onClick={() => setModalIsOpen(true)} className="block px-4 py-2 hover:bg-gray-100">
+                Tài khoản
+              </a>
+              <a
+                onClick={() => setModalChangePass(true)}
+                className="block px-4 py-2 hover:bg-gray-100"
               >
-                <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
-              </svg>
-            </button>
-          </div> */}
+                Đổi mật khẩu
+              </a>
+              <a
+                href="#"
+                className="block px-4 py-2 hover:bg-gray-100"
+                onClick={() => Cookies.remove(isAdmin ? "admin" : "staff")}
+              >
+                Đăng xuất
+              </a>
+            </div>
+          )}
         </div>
-
-        {/* Right navbar */}
-        <div className="flex items-center relative">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24"
-            viewBox="0 0 24 24"
-            width="24"
-            className="fill-current mr-3 hover:text-blue-500"
-          >
-            <path d="M0 0h24v24H0z" fill="none" />
-            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
-          </svg>   
-            <img onClick={toggleDropdown} src="https://cdn.pixabay.com/photo/2024/10/15/02/12/cat-9121108_640.jpg" alt="ATV" className="w-12 h-12 rounded-full shadow-lg cursor-pointer ml-4" />
-        </div>
-
       </div>
 
-      {/* Dropdown menu */}
-      {dropDownOpen && (
-        // <div className="absolute bg-gray-50 border border-t-1 shadow-xl top-14 text-gray-700 rounded-b-lg w-48 h-[120px] bottom-10 right-0 mr-6">
-        //   <a href="#" className="block px-4 py-2 hover:bg-gray-200">
-        //     Tài khoản
-        //   </a>
-        //   <a href="#" className="block px-4 py-2 hover:bg-gray-200">
-        //     Cài đặt
-        //   </a>
-        //   <a href="#" className="block px-4 py-2 hover:bg-gray-200">
-        //     Đăng suất
-        //   </a>
-        // </div>
-        <></>
-      )}
+      {/* Modal tài khoản */}
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+        className="bg-white w-96 p-6 rounded-lg shadow-lg"
+      >
+        <div className="text-center">
+          <img
+            src="https://cdn.pixabay.com/photo/2024/10/15/02/12/cat-9121108_640.jpg"
+            className="w-20 h-20 rounded-full mx-auto mb-4"
+          />
+          {message && <p className={`${colorMsg} text-center text-sm`}>{message}</p>}
+          <h2 className="text-xl font-semibold mb-2">Thông tin tài khoản</h2>
+          <p className="text-gray-500 mb-4">
+            {isAdmin ? "Mã quản lý" : "Mã nhân viên"}:{" "}
+            <span className="text-gray-700">{id}</span>
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              {isAdmin ? "Tên quản lý" : "Tên nhân viên"}
+            </label>
+            {modalUpdate ? (
+              <input
+                type="text"
+                name="name"
+                className="w-full p-2 border rounded-md"
+                value={formData.name}
+                onChange={handleChange}
+              />
+            ) : (
+              <p className="w-full p-2 border rounded-md">{formData.name}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="text"
+              name="email"
+              className="w-full p-2 border rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
+              value={formData.email}
+              readOnly
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Số điện thoại</label>
+            {modalUpdate ? (
+              <input
+                type="text"
+                name="phone"
+                className="w-full p-2 border rounded-md"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+            ) : (
+              <p className="w-full p-2 border rounded-md">{formData.phone}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Địa chỉ</label>
+            {modalUpdate ? (
+              <input
+                type="text"
+                name="address"
+                className="w-full p-2 border rounded-md"
+                value={formData.address}
+                onChange={handleChange}
+              />
+            ) : (
+              <p className="w-full p-2 border rounded-md">{formData.address}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Tổng lương</label>
+            {modalUpdate ? (
+              <input
+                type="text"
+                name="tongluong"
+                className="w-full p-2 border rounded-md bg-gray-100 text-gray-500 cursor-not-allowed"
+                value={formData.tongluong}
+                readOnly
+              />
+            ) : (
+              <p className="w-full p-2 border rounded-md bg-gray-100 text-gray-500 cursor-not-allowed">{formData.tongluong}</p>
+            )}
+          </div>
+
+          {modalUpdate ? (
+            <button
+              type="submit"
+              className="w-full py-2 mt-4 bg-pink-500 text-white rounded-md hover:bg-pink-600"
+            >
+              Lưu thay đổi
+            </button>
+          ) : (
+            <div
+              onClick={() => setModalUpdate(true)}
+              className="w-full py-2 mt-4 bg-pink-500 text-white text-center rounded-md hover:bg-pink-600 cursor-pointer"
+            >
+              Cập nhật
+            </div>
+          )}
+        </form>
+      </Modal>
+
+      {/* Modal đổi mật khẩu */}
+      <Modal
+        isOpen={modalChangePass}
+        onRequestClose={closeChangePass}
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+        className="bg-white w-96 p-6 rounded-lg shadow-lg"
+      >
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2">Đổi mật khẩu</h2>
+          <p className="text-gray-500 mb-4">
+            {isAdmin ? "Mã quản lý" : "Mã nhân viên"}:{" "}
+            <span className="text-gray-700">{id}</span>
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmitChangePass} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Mật khẩu cũ</label>
+            <input
+              type="password"
+              name="oldPassword"
+              className="w-full p-2 border rounded-md"
+              value={formChangePass.oldPassword}
+              onChange={handleChangePass}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Mật khẩu mới</label>
+            <input
+              type="password"
+              name="newPassword"
+              className="w-full p-2 border rounded-md"
+              value={formChangePass.newPassword}
+              onChange={handleChangePass}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Nhập lại mật khẩu mới</label>
+            <input
+              type="password"
+              name="renewPassword"
+              className="w-full p-2 border rounded-md"
+              value={formChangePass.renewPassword}
+              onChange={handleChangePass}
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full py-2 mt-4 bg-pink-500 text-white rounded-md hover:bg-pink-600"
+          >
+            Đồng ý
+          </button>
+        </form>
+      </Modal>
     </div>
   );
 }

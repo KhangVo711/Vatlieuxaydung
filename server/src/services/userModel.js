@@ -126,5 +126,24 @@ const createDefaultDiscounts = async (makh) => {
   return defaultDiscounts;
 };
 
-export default {getUser, insertUser, createDefaultDiscounts, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers};
+
+
+const getAdminById = async (maql) => {
+  const [rows] = await connectDB.execute("SELECT * FROM quanly WHERE maql = ?", [maql]);
+  return rows[0];
+};
+
+const updateAdminInfo = async (maql, tenql, sdt, diachi, email) => {
+  await connectDB.execute(
+    "UPDATE quanly SET tenql = ?, sdt = ?, diachi = ?, email = ? WHERE maql = ?",
+    [tenql, sdt, diachi, email, maql]
+  );
+};
+
+const updateAdminPassword = async (maql, hashedPassword) => {
+  await connectDB.execute("UPDATE quanly SET matkhau = ? WHERE maql = ?", [hashedPassword, maql]);
+};
+
+
+export default {getUser, getAdminById, updateAdminInfo, updateAdminPassword, insertUser, createDefaultDiscounts, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers};
 

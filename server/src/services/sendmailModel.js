@@ -1,5 +1,6 @@
 import connectDB from "../configs/connectDB.js";
 
+
 const ContactModel = {
 
   getById: async (id) => {
@@ -14,6 +15,21 @@ const ContactModel = {
     );
     return { success: true };
   },
+  getAll: async () => {
+    const [rows] = await connectDB.execute("SELECT * FROM lienhe ORDER BY malienhe DESC");
+    return rows;
+  },
+
+  saveResponse: async ({ malienhe, email, chude, noidung, maql = null, manv = null }) => {
+    await connectDB.execute(
+      `INSERT INTO phanhoi (malienhe, email, chude, noidung, maql, manv, ngaygui)
+       VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+      [malienhe, email, chude, noidung, maql, manv]
+    );
+    return { success: true };
+  }
 };
+
+
 
 export default ContactModel;

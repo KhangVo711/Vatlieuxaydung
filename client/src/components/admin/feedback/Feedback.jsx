@@ -1,18 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect , useContext} from "react";
 import axios from "axios";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
+import {Context} from "../../Context.jsx"
+import Cookies from "js-cookie";
 
 export default function Feedback() {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { isDataAdmin, isDataStaff } = useContext(Context);
 
   // Thêm các state cho modal gửi mail
-  const [selectedEmail, setSelectedEmail] = useState("");
+  const [selectedContact, setSelectedContact] = useState(null);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
-
+    const isAdmin = Boolean(isDataAdmin);
+  const isStaff = Boolean(isDataStaff);
+const token = Cookies.get(isAdmin ? "admin" : "staff");
   useEffect(() => {
     const fetchContacts = async () => {
       try {
@@ -31,20 +36,30 @@ export default function Feedback() {
   }, []);
 
   const handleSendMail = async () => {
-    try {
-      await axios.post("http://localhost:5001/send-mail", {
-        email: selectedEmail,
-        subject,
-        message,
-      });
-      alert("Gửi mail thành công!");
-      setShowModal(false);
-      setSubject("");
-      setMessage("");
-    } catch (err) {
-      alert("Gửi mail thất bại!");
-    }
-  };
+
+  try {
+    await axios.post("http://localhost:5001/send-mail", {
+      email: selectedContact.email,
+      subject,
+      message,
+      maql: isAdmin ? isDataAdmin.maql : null,
+      manv: isStaff ? isDataStaff.manv : null 
+    },
+  {
+      headers: {
+        'Content-Type': 'application/json',   
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    });
+    alert("Gửi mail thành công!");
+    setShowModal(false);
+    setSubject("");
+    setMessage("");
+  } catch (err) {
+    alert("Gửi mail thất bại!");
+  }
+};
 
   if (loading) return <p>Đang tải dữ liệu...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -78,14 +93,14 @@ export default function Feedback() {
                   <td className="px-3 py-2">{item.noidung}</td>
                   <td className="px-3 py-2 text-center">
                     <button
-                      onClick={() => {
-                        setSelectedEmail(item.email);
-                        setShowModal(true);
-                      }}
-                      className="bg-pink-500 text-white text-sm px-2 py-1.5 rounded hover:bg-pink-600"
-                    >
-                      Phản hồi
-                    </button>
+  onClick={() => {
+    setSelectedContact(item); // lưu cả thông tin contact
+    setShowModal(true);
+  }}
+  className="bg-pink-500 text-white text-sm px-2 py-1.5 rounded hover:bg-pink-600"
+>
+  Phản hồi
+</button>
                   </td>
                 </tr>
               ))}
@@ -114,7 +129,7 @@ export default function Feedback() {
         </label>
         <input
           type="email"
-          value={selectedEmail}
+          value={selectedContact.email}
           disabled
           className="w-full bg-gray-100 text-gray-700 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none cursor-not-allowed"
         />
