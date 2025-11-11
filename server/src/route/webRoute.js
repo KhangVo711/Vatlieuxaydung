@@ -16,6 +16,7 @@ import auth from '../../middleware/jwt.js'
 import review from '../controllers/reviewCotroller.js';
 import discount from '../controllers/discountController.js';
 import sendmail from '../controllers/sendmailController.js'
+import uploadAvatarMiddleware from "../../middleware/uploadAvatarMiddleware.js";
 const router = express.Router()
 const initWebRoute = (app) => {
 
@@ -25,10 +26,10 @@ const initWebRoute = (app) => {
     router.post("/admin/change-password/:maql", user.changePasswordAdmin);
 
     router.post('/login', user.getUser)
-    router.post('/updateInf/:id', user.updateInf)
+    router.post('/updateInf/:id', auth.authMiddleware , user.updateInf)
     router.get('/getInf/:id', user.getInf)
     router.post('/register/:id', user.insertUser)
-    router.post('/changePassword/:id', user.changePassword)
+    router.post('/changePassword/:id', auth.authMiddleware, user.changePassword)
     router.get('/getAllUsers', user.getAllUsers)
 
     router.post('/addCategory', auth.authMiddleware, product.insertCategory)
@@ -138,7 +139,7 @@ const initWebRoute = (app) => {
     router.post('/admin/reviews/:id/reply', auth.authMiddleware, review.replyReview);
 
     router.post("/send-mail", sendmail.sendMail);
-
+    router.post("/upload-avatar/:id", uploadAvatarMiddleware, user.uploadAvatar);
 
     return app.use('/', router)
 }

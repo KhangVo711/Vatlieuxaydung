@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import Cookie from 'js-cookie';
+import Cookies from 'js-cookie';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 import { ToastContainer, toast } from 'react-toastify';
@@ -53,6 +53,7 @@ export default function Header() {
   const {cartItems} = useContext(Context);
 
   const [dropDownOpen, setDropDownOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const dropdownRef = useRef(null);
   const toggleDropdown = () => {
     setDropDownOpen(!dropDownOpen);
@@ -203,10 +204,11 @@ const products = [
         email: `${emails()}`,
         phone: `${phones()}`,
         address: `${addresss()}`,
+        avatar: `${isData.avatar || ''}`
       });
     }
   }, [isData]);
-  console.log(formData);
+
   const handleChange = (e) => {
     setMessage('');
     const { name, value } = e.target;
@@ -229,10 +231,11 @@ const products = [
     }
     try {
       const response = await axios.post(`http://localhost:5001/updateInf/${isData.id}`, formData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+"Authorization": `Bearer ${Cookies.get("user")}`
+          },
         withCredentials: true
       });
       if (response.status === 200) {
@@ -258,6 +261,7 @@ const products = [
       handleError();
     }
   };
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -269,6 +273,7 @@ const products = [
             email: response.data.infomation.email,
             phone: response.data.infomation.sdt,
             address: response.data.infomation.diachi,
+            avatar: response.data.infomation.anhdaidien
           }
           );
           if(!response.data.infomation.email || !response.data.infomation.sdt || !response.data.infomation.diachi){
@@ -308,7 +313,7 @@ const products = [
   const navigate = useNavigate();
   const logout = () => {
     setIsData({});
-    Cookie.remove('jwt');
+    Cookies.remove('jwt');
     navigate('/login');
   };
 
@@ -339,7 +344,8 @@ const products = [
       const response = await axios.post(`http://localhost:5001/changePassword/${isData.id}`, formChangePass, {
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          "Authorization": `Bearer ${Cookies.get("user")}`
         },
         withCredentials: true
       });
@@ -440,6 +446,47 @@ const products = [
       recognition.start();
     }
   };
+
+const handleAvatarChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formDataUpload = new FormData();
+  formDataUpload.append("avatar", file);
+  formDataUpload.append("role", "customer");
+
+  setUploading(true);
+  try {
+    const res = await axios.post(
+      `http://localhost:5001/upload-avatar/${isData.id}`,
+      formDataUpload,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    // Cập nhật lại ảnh đại diện trong formData
+    setFormData((prev) => ({
+      ...prev,
+      avatar: res.data.anhdaidien,
+    }));
+
+    setMessage("Cập nhật ảnh thành công!");
+    setColorMsg("text-green-600");
+    setTimeout(() => {
+      setMessage("");
+    }, 1500);
+  } catch (err) {
+    console.error(err);
+    setMessage("Lỗi khi cập nhật ảnh!");
+    setColorMsg("text-red-600");
+  } finally {
+    setUploading(false);
+  }
+};
+console.log("Form Data:", formData);
   return (
     <header className="bg-pink-200 sticky top-0 z-[9999] shadow-md">
       <ToastContainer />
@@ -620,7 +667,11 @@ const products = [
             <div className="hidden lg:flex lg:flex-1 lg:justify-end relative">
               <img
                 onClick={toggleDropdown}
-                src="https://cdn.pixabay.com/photo/2024/10/15/02/12/cat-9121108_640.jpg"
+                src={
+      formData.avatar
+        ? `http://localhost:5001${formData.avatar}`
+        : "https://cdn.pixabay.com/photo/2024/10/15/02/12/cat-9121108_640.jpg"
+    }
                 alt="ATV"
                 className="w-12 h-12 rounded-full shadow-lg cursor-pointer ml-4"
               />
@@ -667,11 +718,50 @@ const products = [
         closeTimeoutMS={350}
       >
         <div className="text-center">
-          <img
-            src="https://cdn.pixabay.com/photo/2024/10/15/02/12/cat-9121108_640.jpg"
-            alt="Profile"
-            className="w-20 h-20 rounded-full mx-auto mb-4"
-          />
+          <div className="relative group w-fit mx-auto mb-4">
+  <img
+    onClick={() => document.getElementById("avatarInput").click()}
+    src={
+      formData.avatar
+        ? `http://localhost:5001${formData.avatar}`
+        : "https://cdn.pixabay.com/photo/2024/10/15/02/12/cat-9121108_640.jpg"
+    }
+    alt="Avatar"
+    className="w-20 h-20 rounded-full border-2 border-gray-300 cursor-pointer transition-transform duration-200 group-hover:scale-105 group-hover:opacity-70"
+  />
+
+  <div
+    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
+    onClick={() => document.getElementById("avatarInput").click()}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6 text-white bg-black bg-opacity-50 p-1 rounded-full"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M3 7h4l2-3h6l2 3h4a1 1 0 011 1v11a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1zm9 3a4 4 0 100 8 4 4 0 000-8z"
+      />
+    </svg>
+  </div>
+
+  <input
+    type="file"
+    id="avatarInput"
+    accept="image/*"
+    className="hidden"
+    onChange={handleAvatarChange}
+  />
+</div>
+
+{uploading && (
+  <p className="text-gray-400 text-sm text-center">Đang tải ảnh lên...</p>
+)}
           {message && <p className={`${colorMsg} text-center text-sm`}>{message}</p>}
 
           <h2 className="text-xl font-semibold mb-2">Thông tin tài khoản</h2>

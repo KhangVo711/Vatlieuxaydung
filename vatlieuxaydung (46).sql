@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 07, 2025 at 12:57 PM
+-- Generation Time: Nov 11, 2025 at 11:13 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `binhluan` (
   `id` int(11) NOT NULL,
+  `makh` varchar(50) NOT NULL,
   `masp` varchar(50) NOT NULL,
-  `tenkh` varchar(255) NOT NULL,
   `sosao` varchar(50) NOT NULL,
   `noidung` varchar(255) NOT NULL,
   `ngaydang` datetime NOT NULL,
@@ -41,14 +41,9 @@ CREATE TABLE `binhluan` (
 -- Dumping data for table `binhluan`
 --
 
-INSERT INTO `binhluan` (`id`, `masp`, `tenkh`, `sosao`, `noidung`, `ngaydang`, `trangthai`) VALUES
-(1, 'BT89102384', 'Võ Huỳnh Minh Khang', '4', 'Tốt', '2025-10-31 00:00:00', 'hiển thị'),
-(2, 'BT89102384', 'Võ Huỳnh Minh Khang', '5', 'Good\n', '2025-10-31 19:47:19', 'hiển thị'),
-(3, 'BT89102384', 'Võ Huỳnh Minh Khang', '3', 'Sản phẩm ổn', '2025-10-31 21:52:04', 'hiển thị'),
-(4, 'BT89102384', 'Võ Huỳnh Minh Khang', '2', 'Lỗi', '2025-10-31 21:52:14', 'ẩn'),
-(5, 'BT89102384', 'Võ Huỳnh Minh Khang', '1', 'Sản phẩm lỗi', '2025-10-31 21:54:07', 'ẩn'),
-(6, 'BT89102384', 'Võ Huỳnh Minh Khang', '5', 'Sản phẩm rất tốt', '2025-10-31 21:58:42', 'hiển thị'),
-(7, 'CN76782423', 'Trần Khánh Nam', '3', 'Sản phẩm dùng tạm được', '2025-11-02 18:21:16', 'hiển thị');
+INSERT INTO `binhluan` (`id`, `makh`, `masp`, `sosao`, `noidung`, `ngaydang`, `trangthai`) VALUES
+(8, 'KHI5NCFJFF', 'BT89102384', '3', 'Sản phẩm tốt\n', '2025-11-08 15:23:22', 'hiển thị'),
+(9, 'KHI5NCFJFF', 'BT89102384', '5', 'Sản phẩm dùng rất ok\nỦng hộ shop nhiều', '2025-11-08 19:26:44', 'hiển thị');
 
 -- --------------------------------------------------------
 
@@ -249,28 +244,6 @@ INSERT INTO `chitietphieunhap` (`mapn`, `masp`, `mabienthe`, `soluongnhap`, `gia
 ('17621834635787', 'CR37462789', NULL, 10, 30000, 'CeraVe'),
 ('17621834635787', 'SM28364812', NULL, 25, 27000, 'Hadalabo'),
 ('17621834635787', 'SM15414124', NULL, 5, 22000, 'SVR');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `danhgiacuahang`
---
-
-CREATE TABLE `danhgiacuahang` (
-  `name` varchar(50) NOT NULL,
-  `rating` varchar(50) NOT NULL,
-  `comment` varchar(255) NOT NULL,
-  `date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `danhgiacuahang`
---
-
-INSERT INTO `danhgiacuahang` (`name`, `rating`, `comment`, `date`) VALUES
-('Võ Huỳnh Minh Khang', '5', 'Dịch vụ chăm sóc khách hàng tuyệt vời, sản phẩm đúng như mô tả. Rất đáng để thử!', '2025-03-17'),
-('Nguyễn Thị Hương', '5', 'Sản phẩm chất lượng, giao hàng nhanh. Tôi đã trở thành khách hàng thân thiết của MyPhamHTCT được 2 năm và chưa bao giờ thất vọng.', '2025-03-17'),
-('Lê Văn Hùng', '4', 'Sản phẩm tốt, nhưng tôi mong có thêm nhiều ưu đãi cho khách hàng mới.', '2025-03-17');
 
 -- --------------------------------------------------------
 
@@ -507,22 +480,23 @@ CREATE TABLE `khachhang` (
   `email` varchar(255) DEFAULT NULL,
   `sdt` varchar(50) DEFAULT NULL,
   `diachi` varchar(255) DEFAULT NULL,
-  `matkhau` varchar(255) NOT NULL
+  `matkhau` varchar(255) NOT NULL,
+  `anhdaidien` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `khachhang`
 --
 
-INSERT INTO `khachhang` (`tenkh`, `makh`, `email`, `sdt`, `diachi`, `matkhau`) VALUES
-('Nguyễn Văn Hoàng', 'KHEQCH0YQU', 'hoangvan@gmail.com', '0897005658', '9 Đ. Nguyễn Văn Quá, Tân Thới Hiệp, Quận 12, Hồ Chí Minh', '$2b$10$X8EmvRiTmElyQ.mgvaMWJO6hrylppR6cItn68QOYbfpHg.e37vElm'),
-('Võ Huỳnh Minh Khang', 'KHI5NCFJFF', 'vokhang123@gmail.com', '0983251652', '15 Bùi Hữu Nghĩa, Bình Thủy, Cần Thơ', '$2b$10$GSND6KV.mIWXw5/l3NN1QOEQLZR0o8vUYBUbuUxOaVBqjTuKLOBDq'),
-('Khang', 'KHJQBFOFDP', 'kv@gmail.com', '0983251654', 'Cần Thơ', '$2b$10$3aI1OhzHTNVKDBUOBa6u/.TjsehFnY0.3O8jCYwW3mKhydEekMeJi'),
-('Lý Thi Mai', 'KHM7V08AMM', 'maithi@gmail.com', '0987654321', '236 Mạc Cửu, Vĩnh Thanh, Rạch Giá, Kiên Giang', '$2b$10$w1LeJsoWvo0GrhaxxoE4yuaKyTnHcH4vLdFfXE6LGqJTpDNIA0p9y'),
-('Trần Khánh Nam', 'KHONUVAZ7W', 'khanhnam@gmail.com', '0123456789', '40 Nguyễn Văn Cừ, TT. Tân Phú, Đồng Phú, Bình Phước', '$2b$10$sgCkY8KGj4y9ixVzs4DQmOeG8C3w7gWWycoq2d2T1Tujv2xl.9o9O'),
-('Hoàng', 'KHQMMV3J60', 'huyHoang@gmail.com', '0741852963', '15 Bùi Hữu Nghĩa, phường Bình Thủy, quận Bình Thủy, Thành phố Cần Thơ', '$2b$10$hcRjC6H0Htky5M0JsqkVIekNGYt1Kn4cLvmDMTWpszjvW4t/F8XBm'),
-('Ngô Gia Minh', 'KHR26SAV0Y', 'minhgia@gmail.com', '0227789675', 'Hà Nội', '$2b$10$KtEAm.oQN7TsjgZ4QaQlbu/wNrshkPVXtUfRdUWvidg0e74Fi0jmi'),
-('Trần Thị Thanh Xuân', 'KHUHSHLE73', 'thanhxuantran@gmail.com', '0775221459', '44 Đ. Quang Trung, Phường 11, Gò Vấp, Hồ Chí Minh', '$2b$10$AFdfMcASK9V6ht9TCNhxD.aEJIwB7RvbGc9HCMm961WmGW3YYNf4i');
+INSERT INTO `khachhang` (`tenkh`, `makh`, `email`, `sdt`, `diachi`, `matkhau`, `anhdaidien`) VALUES
+('Nguyễn Văn Hoàng', 'KHEQCH0YQU', 'hoangvan@gmail.com', '0897005658', '9 Đ. Nguyễn Văn Quá, Tân Thới Hiệp, Quận 12, Hồ Chí Minh', '$2b$10$X8EmvRiTmElyQ.mgvaMWJO6hrylppR6cItn68QOYbfpHg.e37vElm', NULL),
+('Võ Huỳnh Minh Khang', 'KHI5NCFJFF', 'vokhang123@gmail.com', '0983251652', '15 Bùi Hữu Nghĩa, Bình Thủy, Cần Thơ', '$2b$10$GSND6KV.mIWXw5/l3NN1QOEQLZR0o8vUYBUbuUxOaVBqjTuKLOBDq', NULL),
+('Khang', 'KHJQBFOFDP', 'kv@gmail.com', '0983251654', 'Cần Thơ', '$2b$10$3aI1OhzHTNVKDBUOBa6u/.TjsehFnY0.3O8jCYwW3mKhydEekMeJi', NULL),
+('Lý Thi Mai', 'KHM7V08AMM', 'maithi@gmail.com', '0987654321', '236 Mạc Cửu, Vĩnh Thanh, Rạch Giá, Kiên Giang', '$2b$10$w1LeJsoWvo0GrhaxxoE4yuaKyTnHcH4vLdFfXE6LGqJTpDNIA0p9y', NULL),
+('Trần Khánh Nam', 'KHONUVAZ7W', 'khanhnam@gmail.com', '0123456789', '40 Nguyễn Văn Cừ, TT. Tân Phú, Đồng Phú, Bình Phước', '$2b$10$sgCkY8KGj4y9ixVzs4DQmOeG8C3w7gWWycoq2d2T1Tujv2xl.9o9O', NULL),
+('Hoàng', 'KHQMMV3J60', 'huyHoang@gmail.com', '0741852963', '15 Bùi Hữu Nghĩa, phường Bình Thủy, quận Bình Thủy, Thành phố Cần Thơ', '$2b$10$hcRjC6H0Htky5M0JsqkVIekNGYt1Kn4cLvmDMTWpszjvW4t/F8XBm', NULL),
+('Ngô Gia Minh', 'KHR26SAV0Y', 'minhgia@gmail.com', '0227789675', 'Hà Nội', '$2b$10$KtEAm.oQN7TsjgZ4QaQlbu/wNrshkPVXtUfRdUWvidg0e74Fi0jmi', NULL),
+('Trần Thị Thanh Xuân', 'KHUHSHLE73', 'thanhxuantran@gmail.com', '0775221459', '44 Đ. Quang Trung, Phường 11, Gò Vấp, Hồ Chí Minh', '$2b$10$AFdfMcASK9V6ht9TCNhxD.aEJIwB7RvbGc9HCMm961WmGW3YYNf4i', NULL);
 
 -- --------------------------------------------------------
 
@@ -609,18 +583,19 @@ CREATE TABLE `nhanvien` (
   `diachinv` varchar(200) NOT NULL,
   `chucvunv` varchar(50) NOT NULL,
   `tongluong` float NOT NULL,
-  `matkhau` varchar(255) NOT NULL
+  `matkhau` varchar(255) NOT NULL,
+  `anhdaidien` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nhanvien`
 --
 
-INSERT INTO `nhanvien` (`manv`, `tennv`, `sdtnv`, `emailnv`, `diachinv`, `chucvunv`, `tongluong`, `matkhau`) VALUES
-('BV-009', 'Trần Vĩ Gia Thành', '0987456321', 'giathanh@gmail.com', '589 Trần Phú, Phường 7, Bạc Liêu', 'Nhân viên', 0, '$2b$10$oZzxDV3grsFI37r3TJxA5..fHvXmvhuSWSb/dNXHCYO.SCrsm1cx2'),
-('KS-005', 'Đinh Thị Ngọc Hân', '0852456973', 'ngochan@gmail.com', '10 Lưu Hữu Phước, Phường 8, Cà Mau', 'Nhân viên', 156000, '$2b$10$vMnn6AnwBCVArHcb67hjReVZkdBKpHQ7rXWfIBbY2fDipGFYli49u'),
-('NV-001', 'Nguyễn Trúc Mai', '0976431258', 'trucmai@gmail.com', '208A, Khóm 3, H. Lai Vung, Đồng Tháp', 'Nhân viên', 124000, '$2b$10$O.Uo900vWkEwng0/Ap68ge4OnTRoj.3PZmKK8bIfBpxdZQBOpHoAO'),
-('QL-003', 'Lý Ngọc Ngân', '0963258741', 'ngocngan@gmail.com', '22 Đường Mạc Tử Hoàng, Bình San, Kiên Giang', 'Nhân viên', 0, '$2b$10$47YccxVNbkIYzUTGYu2W7.gT9TtNRF8kS5YtklsltIHgZ1ZAULpYi');
+INSERT INTO `nhanvien` (`manv`, `tennv`, `sdtnv`, `emailnv`, `diachinv`, `chucvunv`, `tongluong`, `matkhau`, `anhdaidien`) VALUES
+('BV-009', 'Trần Vĩ Gia Thành', '0987456321', 'giathanh@gmail.com', '589 Trần Phú, Phường 7, Bạc Liêu', 'Nhân viên', 0, '$2b$10$oZzxDV3grsFI37r3TJxA5..fHvXmvhuSWSb/dNXHCYO.SCrsm1cx2', NULL),
+('KS-005', 'Đinh Thị Ngọc Hân', '0852456973', 'ngochan@gmail.com', '10 Lưu Hữu Phước, Phường 8, Cà Mau', 'Nhân viên', 156000, '$2b$10$vMnn6AnwBCVArHcb67hjReVZkdBKpHQ7rXWfIBbY2fDipGFYli49u', NULL),
+('NV-001', 'Nguyễn Trúc Mai', '0887552431', 'trucmai@gmail.com', '208A, Khóm 3, H. Lai Vung, Đồng Tháp', 'Nhân viên', 124000, '$2b$10$8q.VPmXee/XFtknBy7SmWeXy1Cqwc1MWBZq6DGixkgv9k4OuDrf7S', '/uploads/avatar/1762855717837.jpg'),
+('QL-003', 'Lý Ngọc Ngân', '0963258741', 'ngocngan@gmail.com', '22 Đường Mạc Tử Hoàng, Bình San, Kiên Giang', 'Nhân viên', 0, '$2b$10$47YccxVNbkIYzUTGYu2W7.gT9TtNRF8kS5YtklsltIHgZ1ZAULpYi', NULL);
 
 -- --------------------------------------------------------
 
@@ -661,10 +636,14 @@ INSERT INTO `nhasanxuat` (`mansx`, `tennsx`, `email`, `diachi`) VALUES
 --
 
 CREATE TABLE `phanhoi` (
-  `maphanhoi` varchar(255) NOT NULL,
-  `malienhe` varchar(255) NOT NULL,
-  `manv` varchar(50) NOT NULL,
-  `noidungphanhoi` varchar(255) NOT NULL
+  `maphanhoi` int(11) NOT NULL,
+  `malienhe` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `chude` varchar(255) NOT NULL,
+  `noidung` varchar(255) NOT NULL,
+  `maql` varchar(50) DEFAULT NULL,
+  `manv` varchar(50) DEFAULT NULL,
+  `ngaygui` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -707,15 +686,16 @@ CREATE TABLE `quanly` (
   `sdt` varchar(11) NOT NULL,
   `diachi` varchar(255) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `matkhau` varchar(255) NOT NULL
+  `matkhau` varchar(255) NOT NULL,
+  `anhdaidien` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `quanly`
 --
 
-INSERT INTO `quanly` (`maql`, `tenql`, `sdt`, `diachi`, `email`, `matkhau`) VALUES
-('RPA67S', 'Admin', '0123456789', 'Cần Thơ', 'admin@gmail.com', '$2b$10$.DnoP4yZALr4L7XJ1UatuOlIPE8ywCprE2ursg20LYVlW0mku.8CS');
+INSERT INTO `quanly` (`maql`, `tenql`, `sdt`, `diachi`, `email`, `matkhau`, `anhdaidien`) VALUES
+('RPA67S', 'Admin111', '01112111', 'Cần Thơ 111', 'admin@gmail.com', '$2b$10$riEGDktK2p8/xl6hDStPBuuqLTgluMpAUprpbeaSetq9M/bQ1z8Fy', '/uploads/avatar/1762855639758.jpg');
 
 -- --------------------------------------------------------
 
@@ -807,7 +787,8 @@ INSERT INTO `thuoctinhbienthe` (`mathuoctinh`, `mabienthe`, `loaithuoctinh`, `th
 CREATE TABLE `traloi_binhluan` (
   `id` int(11) NOT NULL,
   `id_binhluan` int(11) NOT NULL,
-  `ten_admin` varchar(255) NOT NULL,
+  `maql` varchar(50) DEFAULT NULL,
+  `manv` varchar(50) DEFAULT NULL,
   `noidung` varchar(255) NOT NULL,
   `ngaytraloi` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -816,9 +797,9 @@ CREATE TABLE `traloi_binhluan` (
 -- Dumping data for table `traloi_binhluan`
 --
 
-INSERT INTO `traloi_binhluan` (`id`, `id_binhluan`, `ten_admin`, `noidung`, `ngaytraloi`) VALUES
-(1, 7, 'Admin', 'Cảm ơn bạn', '2025-11-02 19:01:44'),
-(5, 6, 'Admin', 'Shop cảm ơn', '2025-11-02 19:42:50');
+INSERT INTO `traloi_binhluan` (`id`, `id_binhluan`, `maql`, `manv`, `noidung`, `ngaytraloi`) VALUES
+(2, 9, 'RPA67S', NULL, 'Cảm ơn bạn đã tin tưởng và ủng hộ shop', '2025-11-08 19:35:22'),
+(4, 8, NULL, 'NV-001', 'Cảm ơn bạn\n', '2025-11-08 19:37:57');
 
 --
 -- Indexes for dumped tables
@@ -828,8 +809,9 @@ INSERT INTO `traloi_binhluan` (`id`, `id_binhluan`, `ten_admin`, `noidung`, `nga
 -- Indexes for table `binhluan`
 --
 ALTER TABLE `binhluan`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `masp` (`masp`,`tenkh`);
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD KEY `masp` (`masp`,`makh`,`id`) USING BTREE,
+  ADD KEY `makh` (`makh`);
 
 --
 -- Indexes for table `cacbienthe`
@@ -970,8 +952,8 @@ ALTER TABLE `nhasanxuat`
 --
 ALTER TABLE `phanhoi`
   ADD PRIMARY KEY (`maphanhoi`),
-  ADD KEY `phanhoi` (`maphanhoi`,`malienhe`,`manv`),
-  ADD KEY `malienhe` (`malienhe`);
+  ADD KEY `maql` (`maql`,`manv`,`malienhe`) USING BTREE,
+  ADD KEY `manv` (`manv`);
 
 --
 -- Indexes for table `phieunhap`
@@ -1015,8 +997,11 @@ ALTER TABLE `thuoctinhbienthe`
 --
 ALTER TABLE `traloi_binhluan`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id` (`id`,`id_binhluan`),
-  ADD KEY `id_binhluan` (`id_binhluan`);
+  ADD UNIQUE KEY `id_2` (`id`,`id_binhluan`,`manv`),
+  ADD KEY `id` (`id`,`id_binhluan`,`maql`),
+  ADD KEY `id_binhluan` (`id_binhluan`),
+  ADD KEY `maql` (`maql`),
+  ADD KEY `manv` (`manv`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -1026,7 +1011,7 @@ ALTER TABLE `traloi_binhluan`
 -- AUTO_INCREMENT for table `binhluan`
 --
 ALTER TABLE `binhluan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `chitietchamcong`
@@ -1035,10 +1020,16 @@ ALTER TABLE `chitietchamcong`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT for table `phanhoi`
+--
+ALTER TABLE `phanhoi`
+  MODIFY `maphanhoi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `traloi_binhluan`
 --
 ALTER TABLE `traloi_binhluan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -1048,7 +1039,8 @@ ALTER TABLE `traloi_binhluan`
 -- Constraints for table `binhluan`
 --
 ALTER TABLE `binhluan`
-  ADD CONSTRAINT `binhluan_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
+  ADD CONSTRAINT `binhluan_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`),
+  ADD CONSTRAINT `binhluan_ibfk_2` FOREIGN KEY (`makh`) REFERENCES `khachhang` (`makh`);
 
 --
 -- Constraints for table `cacbienthe`
@@ -1127,6 +1119,13 @@ ALTER TABLE `khuyenmai`
   ADD CONSTRAINT `khuyenmai_ibfk_2` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
 
 --
+-- Constraints for table `phanhoi`
+--
+ALTER TABLE `phanhoi`
+  ADD CONSTRAINT `phanhoi_ibfk_1` FOREIGN KEY (`manv`) REFERENCES `nhanvien` (`manv`),
+  ADD CONSTRAINT `phanhoi_ibfk_2` FOREIGN KEY (`maql`) REFERENCES `quanly` (`maql`);
+
+--
 -- Constraints for table `phieunhap`
 --
 ALTER TABLE `phieunhap`
@@ -1156,7 +1155,9 @@ ALTER TABLE `thuoctinhbienthe`
 -- Constraints for table `traloi_binhluan`
 --
 ALTER TABLE `traloi_binhluan`
-  ADD CONSTRAINT `traloi_binhluan_ibfk_1` FOREIGN KEY (`id_binhluan`) REFERENCES `binhluan` (`id`);
+  ADD CONSTRAINT `traloi_binhluan_ibfk_3` FOREIGN KEY (`id_binhluan`) REFERENCES `binhluan` (`id`),
+  ADD CONSTRAINT `traloi_binhluan_ibfk_4` FOREIGN KEY (`maql`) REFERENCES `quanly` (`maql`),
+  ADD CONSTRAINT `traloi_binhluan_ibfk_5` FOREIGN KEY (`manv`) REFERENCES `nhanvien` (`manv`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

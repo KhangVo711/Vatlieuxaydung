@@ -144,6 +144,61 @@ const updateAdminPassword = async (maql, hashedPassword) => {
   await connectDB.execute("UPDATE quanly SET matkhau = ? WHERE maql = ?", [hashedPassword, maql]);
 };
 
+const updateAvatar = async (role, id, avatarPath) => {
+  let table, column;
 
-export default {getUser, getAdminById, updateAdminInfo, updateAdminPassword, insertUser, createDefaultDiscounts, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers};
+  switch (role) {
+    case "admin":
+      table = "quanly";
+      column = "maql";
+      break;
+    case "staff":
+      table = "nhanvien";
+      column = "manv";
+      break;
+    case "customer":
+      table = "khachhang";
+      column = "makh";
+      break;
+    default:
+      return res.status(400).json({ message: "Role không hợp lệ" });
+  }
+
+  const [result] = await connectDB.execute(
+    `UPDATE ${table} SET anhdaidien = ? WHERE ${column} = ?`,
+    [avatarPath, id]
+  );
+
+  return result;
+};
+
+const getUserById = async (role, id) => {
+  let table, column;
+
+  switch (role) {
+    case "admin":
+      table = "quanly";
+      column = "maql";
+      break;
+    case "staff":
+      table = "nhanvien";
+      column = "manv";
+      break;
+    case "customer":
+      table = "khachhang";
+      column = "makh";
+      break;
+    default:
+      return res.status(400).json({ message: "Role không hợp lệ" });
+  }
+
+  const [rows] = await connectDB.execute(
+    `SELECT * FROM ${table} WHERE ${column} = ?`,
+    [id]
+  );
+
+  return rows[0];
+};
+
+export default {getUser, getAdminById, updateAdminInfo, updateAdminPassword, insertUser, createDefaultDiscounts, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers, updateAvatar, getUserById};
 

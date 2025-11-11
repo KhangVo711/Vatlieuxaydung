@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 // Image data array
 const images= [
   {
-    src: 'https://topprint.vn/wp-content/uploads/2021/07/banner-my-pham-dep-9.jpg',
+    src: 'https://hali.vn/wp-content/uploads/2020/07/thiet-ke-banner-my-pham36-e1594687703423.jpg',
   },
   {
     src: 'https://hali.vn/wp-content/uploads/2020/07/thiet-ke-banner-my-pham34-e1594687755631.jpg',

@@ -338,5 +338,29 @@ const changePasswordAdmin = async (req, res) => {
   }
 };
 
+const uploadAvatar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
 
-export default { getInf, insertUser, getUser, updateInf, changePassword, loginAdmin, getAllUsers, updateInfoAdmin, changePasswordAdmin, getAdminInfo };
+    if (!req.file) {
+      return res.status(400).json({ message: "Vui lòng chọn ảnh để tải lên!" });
+    }
+
+    const avatarPath = `/uploads/avatar/${req.file.filename}`;
+    
+    await userModel.updateAvatar(role, id, avatarPath);
+
+    const updatedUser = await userModel.getUserById(role, id);
+    res.json({
+      message: "Cập nhật ảnh đại diện thành công!",
+      anhdaidien: updatedUser.anhdaidien,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi khi cập nhật ảnh đại diện!" });
+  }
+};
+
+
+export default { getInf, insertUser, getUser, updateInf, changePassword, loginAdmin, getAllUsers, updateInfoAdmin, changePasswordAdmin, getAdminInfo, uploadAvatar };
