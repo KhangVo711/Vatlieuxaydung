@@ -40,6 +40,7 @@ const [showDiscountModal, setShowDiscountModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [message, setMessage] = useState('');
+  const [messageQuantity, setMessageQuantity] = useState([]);
 
   // Effect: Lấy đơn vị vận chuyển
   useEffect(() => {
@@ -74,9 +75,41 @@ const [showDiscountModal, setShowDiscountModal] = useState(false);
     return acc + price * item.soluong;
   }, 0);
 
+const checkInventory = async () => {
+  try {
+    const res = await axios.post("http://localhost:5001/check-before-order", {
+      cartItems: cartItems.map(item => ({
+        masp: item.masp,
+        mabienthe: item.mabienthe || null,
+        quantity: item.soluong
+      }))
+    });
+
+    return res.data;
+
+  } catch (err) {
+    if (err.response?.data?.errors) {
+      return {
+        success: false,
+        errors: err.response.data.errors
+      };
+    }
+    return { success: false, errors: ["Không thể kết nối server"] };
+  }
+};
+
+
   // Submit
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+  const check = await checkInventory();
+  console.log("Inventory check:", check);
+
+ if (!check.success) {
+  setMessageQuantity(check.errors); 
+  return;
+}
     setIsProcessing(true);
 
     const orderId = generateOrderId();
@@ -481,6 +514,32 @@ const discountAmount = formData.discountAmount || 0;
         <button
           onClick={() => setShowDiscountModal(false)}
           className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+        >
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+{messageQuantity && messageQuantity.length > 0 && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
+    <div className="bg-white w-96 rounded-lg p-6 shadow-xl">
+      <h2 className="text-lg font-bold text-red-600 mb-3 text-center">
+        ⚠️ Không đủ số lượng
+      </h2>
+
+      <ul className="space-y-2 text-sm text-gray-700 max-h-60 overflow-y-auto">
+        {messageQuantity.map((msg, i) => (
+          <li key={i} className="p-2 bg-red-50 border border-red-200 rounded">
+            {msg}
+          </li>
+        ))}
+      </ul>
+
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={() => setMessageQuantity([])}
+          className="px-4 py-2 bg-pink-500 text-white rounded-md hover:bg-pink-600"
         >
           Đóng
         </button>

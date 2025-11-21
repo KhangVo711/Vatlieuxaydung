@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 11, 2025 at 11:13 AM
+-- Generation Time: Nov 21, 2025 at 05:44 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -128,16 +128,17 @@ CREATE TABLE `chinhanh` (
   `kinhdo` varchar(255) NOT NULL,
   `vido` varchar(255) NOT NULL,
   `giohoatdong` varchar(50) NOT NULL,
-  `created_at` date NOT NULL
+  `created_at` date NOT NULL,
+  `maql` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `chinhanh`
 --
 
-INSERT INTO `chinhanh` (`id`, `tencuahang`, `diachi`, `kinhdo`, `vido`, `giohoatdong`, `created_at`) VALUES
-('CH-6623', 'MyPhamHTCT 1', '225 Đ. 3 Tháng 2, Hưng Lợi, Ninh Kiều, Cần Thơ', '105.765794', '10.022291', '07:30 - 22:00', '2025-03-21'),
-('CN-8732', 'MyPhamHTCT 2', '46 Đ. Trường Chinh, Tân Thới Nhất, Quận 12, Hồ Chí Minh', '106.616308', '10.840561', '08:00 - 22:00', '2025-03-21');
+INSERT INTO `chinhanh` (`id`, `tencuahang`, `diachi`, `kinhdo`, `vido`, `giohoatdong`, `created_at`, `maql`) VALUES
+('CH-6623', 'MyPhamHTCT 1', '225 Đ. 3 Tháng 2, Hưng Lợi, Ninh Kiều, Cần Thơ', '105.765794', '10.022291', '07:30 - 22:00', '2025-03-21', 'RPA67S'),
+('CN-8732', 'MyPhamHTCT 2', '46 Đ. Trường Chinh, Tân Thới Nhất, Quận 12, Hồ Chí Minh', '106.616308', '10.840561', '08:00 - 22:00', '2025-03-21', 'RPA67S');
 
 -- --------------------------------------------------------
 
@@ -194,7 +195,11 @@ INSERT INTO `chitietdonhang` (`madh`, `masp`, `mabienthe`, `soluongsanpham`, `km
 ('17625143558904', 'SM15414124', NULL, 2, 0, 225000, 450000),
 ('17625159887263', 'SM75414127', 'R-6372', 1, 0, 75000, 75000),
 ('17625160891003', 'SM75414127', 'R-6372', 4, 0, 75000, 300000),
-('17625160891003', 'CR37462789', NULL, 8, 0, 320000, 2560000);
+('17625160891003', 'CR37462789', NULL, 8, 0, 320000, 2560000),
+('17637411078595', 'BT89102384', NULL, 5, 0, 15000, 75000),
+('17637411078595', 'SM75414127', 'R-6372', 20, 0, 75000, 1500000),
+('17637427679356', 'BT89102384', NULL, 1, 0, 15000, 15000),
+('17637427679356', 'SM75414127', 'R-6372', 2, 0, 75000, 150000);
 
 -- --------------------------------------------------------
 
@@ -277,7 +282,9 @@ INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `magiamgia`, `trangthai`, `ton
 ('17594766647532', 'KHI5NCFJFF', '2025-10-03 14:31:00', NULL, 'Chờ xác nhận', 337679, 'EXP-787', NULL, 5.89315, 'cod', 'Chưa thanh toán'),
 ('17625143558904', 'KHQMMV3J60', '2025-11-07 18:19:00', NULL, 'Chờ xác nhận', 857058, 'EXP-787', NULL, 5.38277, 'cod', 'Chưa thanh toán'),
 ('17625159887263', 'KHQMMV3J60', '2025-11-07 18:46:00', NULL, 'Chờ xác nhận', 91148, 'EXP-787', NULL, 5.38277, 'cod', 'Chưa thanh toán'),
-('17625160891003', 'KHQMMV3J60', '2025-11-07 18:48:00', 'NEW50KHQMMV3J60', 'Chờ xác nhận', 1446148, 'EXP-787', NULL, 5.38277, 'cod', 'Chưa thanh toán');
+('17625160891003', 'KHQMMV3J60', '2025-11-07 18:48:00', 'NEW50KHQMMV3J60', 'Chờ xác nhận', 1446148, 'EXP-787', NULL, 5.38277, 'cod', 'Chưa thanh toán'),
+('17637411078595', 'KHI5NCFJFF', '2025-11-21 23:05:00', NULL, 'Đã hủy', 1592679, 'EXP-787', NULL, 5.89315, 'cod', 'Chưa thanh toán'),
+('17637427679356', 'KHI5NCFJFF', '2025-11-21 23:32:00', NULL, 'Đã hủy', 182679, 'EXP-787', NULL, 5.89315, 'cod', 'Chưa thanh toán');
 
 -- --------------------------------------------------------
 
@@ -518,8 +525,7 @@ CREATE TABLE `khuyenmai` (
 --
 
 INSERT INTO `khuyenmai` (`makm`, `tenkm`, `km`, `thoigianbatdaukm`, `thoigianketthuckm`, `masp`) VALUES
-('KM-081', 'Giảm 10%', 10, '2025-11-05 16:07:00', '2025-11-22 16:08:00', 'VZ092736451'),
-('KM-871', 'Giảm 5%', 5, '2025-11-05 16:06:00', '2025-11-20 16:07:00', 'BT89102384');
+('KM-081', 'Giảm 10%', 10, '2025-11-05 16:07:00', '2025-11-22 16:08:00', 'VZ092736451');
 
 -- --------------------------------------------------------
 
@@ -720,7 +726,7 @@ CREATE TABLE `sanpham` (
 --
 
 INSERT INTO `sanpham` (`masp`, `tensp`, `maloai`, `ttct`, `mansx`, `loaibienthe`, `cobienthe`, `gia`, `soluongsp`) VALUES
-('BT89102384', 'Bông Makeup', 'PK637124', 'Dùng makeup', 'FC125768', NULL, 0, 15000, 1),
+('BT89102384', 'Bông Makeup', 'PK637124', 'Dùng makeup', 'FC125768', NULL, 0, 15000, 10),
 ('CN76782423', 'Kem chống nắng', 'CS874523', 'Kem Chống Nắng hỗ trợ nâng tone tự nhiên Espoir Water Splash Sun Cream SPF50+ PA++++ vừa dưỡng ẩm tốt cho da khô, da bình thường, vừa bảo vệ làn da dưới tác động của ánh nắng có thể sử dụng như lớp kem lót, giúp da thêm rạng rỡ.', 'ES216821', NULL, 0, 265000, 0),
 ('CR37462789', 'Sữa rửa mặt CeraVe', 'CS874523', 'Với làn da dầu, nhạy cảm, sữa rửa mặt giúp làm sạch sâu, giúp loại bỏ dầu thừa, bụi bẩn mà không phá vỡ cấu trúc hàng rào bảo vệ tự nhiên của da.', 'CV602871', NULL, 0, 320000, 10),
 ('SB052736412', 'Son Bóng Black Rouge', 'TD902642', 'Son Bóng Black Rouge với độ bóng cực cao giúp môi căng mọng như jelly cùng lớp phủ màu trong trẻo phù hợp với da ngâm, da sáng và môi khô, môi mỏng, sống động tạo hiệu ứng 3D ấn tượng mang đến một đôi môi căng.', 'BR563283', 'Màu sắc', 1, NULL, NULL),
@@ -826,6 +832,13 @@ ALTER TABLE `cacbienthe`
 --
 ALTER TABLE `calam`
   ADD PRIMARY KEY (`maca`);
+
+--
+-- Indexes for table `chinhanh`
+--
+ALTER TABLE `chinhanh`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `maql` (`maql`);
 
 --
 -- Indexes for table `chitietchamcong`
@@ -1047,6 +1060,12 @@ ALTER TABLE `binhluan`
 --
 ALTER TABLE `cacbienthe`
   ADD CONSTRAINT `cacbienthe_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
+
+--
+-- Constraints for table `chinhanh`
+--
+ALTER TABLE `chinhanh`
+  ADD CONSTRAINT `chinhanh_ibfk_1` FOREIGN KEY (`maql`) REFERENCES `quanly` (`maql`);
 
 --
 -- Constraints for table `chitietchamcong`

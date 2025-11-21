@@ -6,10 +6,10 @@ const getBranch = async () => {
     );
     return rows;
 };
-const insertBranch = async (id, tencuahang, diachi, kinhdo, vido, giohoatdong, created_at) => {
+const insertBranch = async (id, tencuahang, diachi, kinhdo, vido, giohoatdong, created_at, maql) => {
     await connectDB.execute(
-        "INSERT INTO `chinhanh` VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [id, tencuahang, diachi, kinhdo, vido, giohoatdong, created_at]
+        "INSERT INTO `chinhanh` VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [id, tencuahang, diachi, kinhdo, vido, giohoatdong, created_at, maql]
     );
 };
 

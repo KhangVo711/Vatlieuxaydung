@@ -12,8 +12,8 @@ const getBranch = async (req, res) => {
 
 const insertBranch = async (req, res) => {
     try {
-        let { id, tencuahang, diachi, kinhdo, vido, giohoatdong, created_at } = req.body;
-        if (!id || !tencuahang || !diachi || !kinhdo || !vido || !giohoatdong || !created_at) {
+        let { id, tencuahang, diachi, kinhdo, vido, giohoatdong, created_at, maql } = req.body;
+        if (!id || !tencuahang || !diachi || !kinhdo || !vido || !giohoatdong || !created_at || !maql) {
             return res.status(400).send({ message: "Thiếu thông tin cửa hàng." });
         }
 
@@ -48,7 +48,7 @@ const insertBranch = async (req, res) => {
             return res.status(400).json({ message: 'Ngày tạo phải có định dạng YYYY-MM-DD.' });
         }
 
-        await branchModel.insertBranch(id, tencuahang, diachi, kinhdo, vido, giohoatdong, created_at);
+        await branchModel.insertBranch(id, tencuahang, diachi, kinhdo, vido, giohoatdong, created_at, maql);
         res.status(200).send({ message: "Thêm cửa hàng thành công!" });
     } catch (error) {
         res.status(500).send({ message: "Đã xảy ra lỗi khi thêm cửa hàng." });

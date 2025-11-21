@@ -404,6 +404,65 @@ const insertProducts = async (req, res) => {
   }
 };
 
+const checkBeforeOrder = async (req, res) => {
+  try {
+    const cartItems = req.body.cartItems;
+    let errors = [];
+
+    for (let item of cartItems) {
+      const { masp, mabienthe, quantity } = item;
+
+      // Nếu có biến thể → kiểm tra bảng thuoctinhbienthe
+      let query = '';
+      let params = [];
+
+      if (mabienthe) {
+        query = `SELECT sp.tensp, cbt.soluongtonkho, ttbt.thuoc_tinh
+FROM thuoctinhbienthe ttbt
+JOIN cacbienthe cbt ON ttbt.mabienthe = cbt.mabienthe
+JOIN sanpham sp ON sp.loaibienthe = ttbt.loaithuoctinh 
+WHERE cbt.mabienthe = ?`;
+        params = [mabienthe];
+      } else {
+        query = `SELECT tensp, soluongsp AS soluongtonkho FROM sanpham WHERE masp = ?`;
+        params = [masp];
+      }
+
+      const [rows] = await connectDB.execute(query, params);
+
+      if (!rows.length) {
+        errors.push(`Sản phẩm ${rows[0].tensp} không tồn tại!`);
+        continue;
+      }
+
+      const stock = rows[0].soluongtonkho;
+
+      if (stock < quantity) {
+        errors.push(
+          mabienthe
+            ? `Sản phẩm ${rows[0].tensp} (${rows[0].thuoc_tinh}) chỉ còn ${stock} sản phẩm`
+            : `Sản phẩm ${rows[0].tensp} chỉ còn ${stock} sản phẩm`
+        );
+      }
+    }
+
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        errors,
+      });
+    }
+
+    return res.json({ success: true });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+
 const getVariant = async (req, res) => {
   const masp = req.params.masp;
   try {
@@ -828,5 +887,6 @@ export default {
   getRecommendations,
   getProductOfCategory,
   getProduct_Hot8,
-  chatbot, searchProducts
+  chatbot, searchProducts,
+  checkBeforeOrder 
 }

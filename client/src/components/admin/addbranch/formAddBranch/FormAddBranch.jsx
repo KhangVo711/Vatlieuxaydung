@@ -6,7 +6,7 @@ import { Context } from '../../../Context.jsx';
 import Cookies from 'js-cookie';
 
 export default function FormAddBranch({ formRef }) {
-    const { setLoadBranch } = useContext(Context); 
+    const { setLoadBranch, isDataAdmin } = useContext(Context); 
 
     const currentDate = new Date().toISOString().split('T')[0];
 
@@ -18,6 +18,7 @@ export default function FormAddBranch({ formRef }) {
         vido: '',
         giohoatdong: '',
         created_at: currentDate, 
+        maql: isDataAdmin.maql
     });
     
     const [message, setMessage] = useState('');

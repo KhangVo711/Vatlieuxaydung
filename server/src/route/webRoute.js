@@ -52,6 +52,7 @@ const initWebRoute = (app) => {
     router.get('/getProduct_Hot8', product.getProduct_Hot8)
     router.get('/getProduct5', product.getProduct5)
     router.get('/getProduct12', product.getProduct12)
+    router.post("/check-before-order", product.checkBeforeOrder)
     router.get('/getVariant/:masp', product.getVariant)
     router.post('/editProduct', auth.authMiddleware, uploadMiddleware, product.editProduct)
     router.post('/deleteProduct', auth.authMiddleware, product.deleteProduct)
