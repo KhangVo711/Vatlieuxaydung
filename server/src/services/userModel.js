@@ -96,20 +96,20 @@ const getAllUsers = async () => {
 const createDefaultDiscounts = async (makh) => {
   const defaultDiscounts = [
     {
-      code: `NEW10${makh}`,
-      percent: 10,
+      code: `NEW03${makh}`,
+      percent: 3,
       min: 500000,
       note: "Giảm 10% cho đơn hàng trên 500.000đ"
     },
     {
-      code: `NEW30${makh}`,
-      percent: 30,
+      code: `NEW05${makh}`,
+      percent: 5,
       min: 1200000,
       note: "Giảm 30% cho đơn hàng trên 1.200.000đ"
     },
     {
-      code: `NEW50${makh}`,
-      percent: 50,
+      code: `NEW10${makh}`,
+      percent: 10,
       min: 2500000,
       note: "Giảm 50% cho đơn hàng trên 2.500.000đ"
     }

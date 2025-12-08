@@ -50,11 +50,31 @@ const getDailyProductSales = async (req, res) => {
         res.status(500).send({ message: "Lỗi khi lấy thông tin sản phẩm bán được theo ngày." });
     }
 };
+const getMonthlyRevenue = async (req, res) => {
+    try {
+        const data = await statisticsModel.getMonthlyRevenue();
+        res.status(200).json({ monthlyRevenue: data });
+    } catch (error) {
+        console.error("Monthly revenue error:", error);
+        res.status(500).json({ message: "Lỗi khi lấy doanh thu theo tháng." });
+    }
+};
 
+const getRevenueByYear = async (req, res) => {
+    try {
+        const data = await statisticsModel.getRevenueByYear();
+        res.status(200).json({ yearlyRevenue: data });
+    } catch (error) {
+        console.error("Year revenue error:", error);
+        res.status(500).json({ message: "Lỗi khi lấy doanh thu theo năm." });
+    }
+};
 export default {
     getReTract,
     getDailyRevenue,
     getDailyProductSales,
     getTotalProductsSold,
-    getTotalReviews
+    getTotalReviews,
+    getMonthlyRevenue, 
+    getRevenueByYear
 };

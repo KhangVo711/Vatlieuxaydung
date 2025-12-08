@@ -125,6 +125,8 @@ const initWebRoute = (app) => {
     router.get('/getDailyProductSales', statistic.getDailyProductSales);
     router.get('/getTotalProductsSold', statistic.getTotalProductsSold);
     router.get('/getTotalReviews', statistic.getTotalReviews);
+    router.get("/getMonthlyRevenue", statistic.getMonthlyRevenue);
+router.get("/getRevenueByYear", statistic.getRevenueByYear);
 
     router.post('/send-contact', contact.insertContact)
     router.get('/get-contact', contact.getContact)

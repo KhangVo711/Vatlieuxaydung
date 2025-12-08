@@ -169,6 +169,9 @@ if __name__ == '__main__':
     load_encodings()
     app.run(port=5000)
 
+
+
+
 # import cv2
 # import dlib
 # import numpy as np

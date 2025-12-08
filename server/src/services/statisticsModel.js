@@ -13,35 +13,19 @@ const getTotalProductsSold = async () => {
 
 const getReTract = async () => {
     const [rows] = await connectDB.execute(`
-        WITH LatestOrders AS (
-            SELECT 
-                dh.madh, 
-                kh.tenkh, 
-                SUM(ctdh.soluongsanpham) AS soluongsp, 
-                dh.tonggia, 
-                dh.ngaydat,
-                ROW_NUMBER() OVER (PARTITION BY kh.makh ORDER BY dh.ngaydat DESC) AS rn
-            FROM 
-                donhang dh
-                INNER JOIN khachhang kh ON dh.makh = kh.makh
-                INNER JOIN chitietdonhang ctdh ON dh.madh = ctdh.madh
-            WHERE dh.trangthai = 'Đã xác nhận'
-            GROUP BY 
-                dh.madh, kh.tenkh, dh.tonggia, dh.ngaydat, kh.makh
-        )
         SELECT 
-            madh, 
-            tenkh, 
-            soluongsp, 
-            tonggia, 
-            ngaydat
-        FROM 
-            LatestOrders
-        WHERE 
-            rn = 1
-        ORDER BY 
-            ngaydat DESC
-        LIMIT 4
+    dh.madh,
+    kh.tenkh,
+    SUM(ctdh.soluongsanpham) AS soluongsp,
+    dh.tonggia,
+    dh.ngaydat
+FROM donhang dh
+INNER JOIN khachhang kh ON dh.makh = kh.makh
+INNER JOIN chitietdonhang ctdh ON dh.madh = ctdh.madh
+WHERE dh.trangthai = 'Đã xác nhận'
+GROUP BY dh.madh, kh.tenkh, dh.tonggia, dh.ngaydat
+ORDER BY dh.ngaydat DESC
+LIMIT 4;
     `);
     return rows;
 };
@@ -148,4 +132,45 @@ const getTotalReviews = async () => {
     return rows[0].total_reviews || 0; // Trả về 0 nếu không có dữ liệu
 };
 
-export default { getReTract, getDailyRevenue, getDailyProductSales, getTotalProductsSold, getTotalReviews };
+const getMonthlyRevenue = async () => {
+    const [rows] = await connectDB.execute(`
+        SELECT 
+            MONTH(ngaydat) AS month,
+            SUM(tonggia) AS total_revenue
+        FROM donhang
+        WHERE trangthai = 'Đã xác nhận' 
+            AND YEAR(ngaydat) = YEAR(CURDATE())
+        GROUP BY MONTH(ngaydat)
+        ORDER BY MONTH(ngaydat)
+    `);
+
+    const months = [
+        "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+    ];
+
+    return months.map((label, index) => {
+        const row = rows.find(r => r.month === index + 1);
+        return {
+            month: label,
+            total_revenue: row ? row.total_revenue : 0
+        };
+    });
+};
+
+
+const getRevenueByYear = async () => {
+    const [rows] = await connectDB.execute(`
+        SELECT 
+            YEAR(ngaydat) AS year,
+            SUM(tonggia) AS total_revenue
+        FROM donhang
+        WHERE trangthai = 'Đã xác nhận'
+        GROUP BY YEAR(ngaydat)
+        ORDER BY YEAR(ngaydat)
+    `);
+    return rows;
+};
+
+export default { getReTract, getDailyRevenue, getDailyProductSales, getTotalProductsSold, getTotalReviews, getMonthlyRevenue, 
+    getRevenueByYear   };

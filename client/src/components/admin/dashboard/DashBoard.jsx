@@ -35,7 +35,8 @@ Chart.register(
 export default function Dashboard() {
   const location = useLocation()
   const isLocation = /^\/admin\/.*/.test(location.pathname);
-
+const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+const [yearlyRevenue, setYearlyRevenue] = useState([]);
   const [orders, setOrders] = useState([]);
   const [productSales, setProductSales] = useState([]);
   const [revenue, setRevenue] = useState([]);
@@ -140,6 +141,25 @@ export default function Dashboard() {
 
     return () => clearInterval(intervalId);
 }, []);
+
+// Doanh thu theo tháng
+const fetchMonthlyRevenue = async () => {
+    const res = await fetch("http://localhost:5001/getMonthlyRevenue");
+    const data = await res.json();
+    console.log(data);
+    setMonthlyRevenue(data.monthlyRevenue);
+};
+
+// Doanh thu theo năm
+const fetchYearlyRevenue = async () => {
+    const res = await fetch("http://localhost:5001/getRevenueByYear");
+    const data = await res.json();
+    setYearlyRevenue(data.yearlyRevenue);
+};
+useEffect(() => {
+  fetchMonthlyRevenue();
+  fetchYearlyRevenue();
+}, []);
   
 
   const getColor = (amount) => {
@@ -147,126 +167,207 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    const buyersChartElement = document.getElementById('buyers-chart');
-    const reviewsChartElement = document.getElementById('reviews-chart');
-    let buyersChartInstance, reviewsChartInstance;
+  const buyersCanvas = document.getElementById("buyers-chart");
+  const revenueCanvas = document.getElementById("reviews-chart");
 
-    if (buyersChartElement && productSales.length > 0) {
-      if (buyersChartInstance) {
-        buyersChartInstance.destroy();
+  let buyersChartInstance = null;
+  let revenueChartInstance = null;
+
+  // --- Biểu đồ Số sản phẩm bán ---
+  if (buyersCanvas && productSales.length > 0) {
+    if (buyersChartInstance) buyersChartInstance.destroy();
+
+    buyersChartInstance = new Chart(buyersCanvas, {
+      type: "line",
+      data: {
+        labels: productSales.map(i => i.day_of_week),
+        datasets: [
+          {
+            label: "Số SP bán",
+            data: productSales.map(i => i.total_products_sold),
+            backgroundColor: "rgba(219, 39, 119, 0.2)",  
+            borderColor: "#f472b6",                      
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: "#f472b6",
+            pointBorderColor: "#fff",
+            pointBorderWidth: 2,
+            pointRadius: 5,
+          }
+        ]
+      },
+      options: {
+        plugins: {
+          legend: { 
+            display: true,
+            labels: { color: "#444" }
+          },
+          title: {
+            display: true,
+            text: "Bán hàng trong ngày",
+            font: { size: 16 }
+          }
+        },
+        scales: {
+          y: {
+            grid: { display: false },
+            title: { display: true, text: "Số sản phẩm" }
+          },
+          x: {
+            grid: { display: false },
+            title: { display: true, text: "Ngày trong tuần" }
+          }
+        }
       }
-      buyersChartInstance = new Chart(buyersChartElement, {
-        type: 'line',
-        data: {
-          labels: productSales.map(item => item.day_of_week),
-          datasets: [
-            {
-              backgroundColor: 'rgba(219, 39, 119, 0.2)',
-              borderColor: '#f472b6',
-              data: productSales.map(item => item.total_products_sold),
-              fill: true,
-              tension: 0.4,
-              pointBackgroundColor: '#f472b6',
-              pointBorderColor: '#fff',
-              pointBorderWidth: 2,
-              pointRadius: 5,
-            },
-          ],
-        },
-        options: {
-          plugins: {
-            legend: {
-              display: false,
-            },
-            title: {
-              display: true,
-              text: 'Bán hàng trong ngày',
-              font: {
-                size: 16,
-              },
-            },
-          },
-          scales: {
-            y: {
-              grid: { display: false },
-              ticks: { display: true },
-              title: {
-                display: true,
-                text: 'Số sản phẩm',
-              },
-            },
-            x: {
-              grid: { display: false },
-              title: {
-                display: true,
-                text: 'Ngày trong tuần',
-              },
-            },
-          },
-        },
-      });
-    }
+    });
+  }
 
-    if (reviewsChartElement && revenue.length > 0) {
-      if (reviewsChartInstance) {
-        reviewsChartInstance.destroy();
+  // --- Biểu đồ Doanh thu ---
+  if (revenueCanvas && revenue.length > 0) {
+    if (revenueChartInstance) revenueChartInstance.destroy();
+
+    revenueChartInstance = new Chart(revenueCanvas, {
+      type: "bar",
+      data: {
+        labels: revenue.map(i => i.day_of_week),
+        datasets: [
+          {
+            label: "Doanh thu (VNĐ)",
+            data: revenue.map(i => i.total_revenue),
+            backgroundColor: "rgba(236, 72, 153, 0.4)",
+            borderColor: "#f472b6",
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        plugins: {
+          legend: { 
+            display: true,
+            labels: { color: "#444" }
+          },
+          title: {
+            display: true,
+            text: "Doanh thu trong ngày",
+            font: { size: 16 }
+          }
+        },
+        scales: {
+          y: {
+            grid: { display: false },
+            ticks: {
+              callback: value =>
+                new Intl.NumberFormat("vi-VN").format(value) + "₫"
+            },
+            title: { display: true, text: "Doanh thu (VNĐ)" }
+          },
+          x: {
+            grid: { display: false },
+            title: { display: true, text: "Ngày trong tuần" }
+          }
+        }
       }
-      reviewsChartInstance = new Chart(reviewsChartElement, {
-        type: 'bar',
-        data: {
-          labels: revenue.map(item => item.day_of_week),
-          datasets: [
-            {
-              backgroundColor: 'rgba(236, 72, 153, 0.4)',
-              borderColor: '#f472b6',
-              data: revenue.map(item => item.total_revenue),
-            },
-          ],
-        },
-        options: {
-          plugins: {
-            legend: {
-              display: false,
-            },
-            title: {
-              display: true,
-              text: 'Doanh thu trong ngày',
-              font: {
-                size: 16,
-              },
-            },
-          },
-          scales: {
-            y: {
-              grid: { display: false },
-              ticks: {
-                display: true,
-                callback: function (value) {
-                  return new Intl.NumberFormat('vi-VN').format(value);
-                },
-              },
-              title: {
-                display: true,
-                text: 'Doanh thu (VNĐ)',
-              },
-            },
-            x: {
-              grid: { display: false },
-              title: {
-                display: true,
-                text: 'Ngày trong tuần',
-              },
-            },
-          },
-        },
-      });
-    }
+    });
+  }
 
-    return () => {
-      if (buyersChartInstance) buyersChartInstance.destroy();
-      if (reviewsChartInstance) reviewsChartInstance.destroy();
-    };
-  }, [productSales, revenue]);
+  return () => {
+    if (buyersChartInstance) buyersChartInstance.destroy();
+    if (revenueChartInstance) revenueChartInstance.destroy();
+  };
+}, [productSales, revenue]);
+
+
+
+  useEffect(() => {
+  const monthChartEl = document.getElementById("month-chart");
+  const yearChartEl = document.getElementById("year-chart");
+
+  let monthChart, yearChart;
+
+  // --- BIỂU ĐỒ DOANH THU THEO THÁNG ---
+  if (monthChartEl && monthlyRevenue.length > 0) {
+    monthChart = new Chart(monthChartEl, {
+      type: "bar",
+      data: {
+        labels: monthlyRevenue.map(m => "T" + m.month),
+        datasets: [
+          {
+            label: "Doanh thu (VNĐ)",
+            data: monthlyRevenue.map(m => m.total_revenue),
+            backgroundColor: "rgba(236, 72, 153, 0.4)",   // **hồng chủ đạo**
+            borderColor: "#f472b6",
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: "Doanh thu theo tháng",
+            font: { size: 16 }
+          },
+          legend: { display: true }  // thêm legend
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: v => v.toLocaleString("vi-VN") + "đ"
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // --- BIỂU ĐỒ DOANH THU THEO NĂM ---
+  if (yearChartEl && yearlyRevenue.length > 0) {
+    yearChart = new Chart(yearChartEl, {
+      type: "line",
+      data: {
+        labels: yearlyRevenue.map(y => y.year),
+        datasets: [
+          {
+            label: "Doanh thu (VNĐ)",
+            data: yearlyRevenue.map(y => y.total_revenue),
+            borderColor: "#f472b6",           // **hồng đậm**
+            backgroundColor: "rgba(219, 39, 119, 0.15)",
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: "#f472b6",
+            pointBorderColor: "#fff",
+            pointBorderWidth: 2,
+            pointRadius: 5
+          }
+        ]
+      },
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: "Doanh thu theo năm",
+            font: { size: 16 }
+          },
+          legend: { display: true } // thêm legend
+        },
+        scales: {
+          y: {
+            ticks: {
+              callback: v => v.toLocaleString("vi-VN") + "đ"
+            }
+          }
+        }
+      }
+    });
+  }
+
+  return () => {
+    if (monthChart) monthChart.destroy();
+    if (yearChart) yearChart.destroy();
+  };
+}, [monthlyRevenue, yearlyRevenue]);
+
 
   return (
     <div id="home" className="p-8 overflow-x-hidden">
@@ -348,6 +449,7 @@ export default function Dashboard() {
             <canvas id="reviews-chart" width="700" height="500"></canvas>
           </div>
         </div>
+        
 
         <div className="w-1/3 px-3">
           <p className="text-xl font-semibold mb-3">Giao dịch gần đây</p>
@@ -373,6 +475,25 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <div className="flex flex-wrap -mx-3 mt-6">
+
+  {/* Biểu đồ doanh thu theo tháng */}
+  <div className="w-full md:w-1/2 px-3 mb-6">
+    <p className="text-xl font-semibold mb-3">Doanh thu theo tháng</p>
+    <div className="bg-white border rounded-lg p-4">
+      <canvas id="month-chart"></canvas>
+    </div>
+  </div>
+
+  {/* Biểu đồ doanh thu theo năm */}
+  <div className="w-full md:w-1/2 px-3 mb-6">
+    <p className="text-xl font-semibold mb-3">Doanh thu theo năm</p>
+    <div className="bg-white border rounded-lg p-4">
+      <canvas id="year-chart"></canvas>
+    </div>
+  </div>
+
+</div>
     </div>
   );
 }

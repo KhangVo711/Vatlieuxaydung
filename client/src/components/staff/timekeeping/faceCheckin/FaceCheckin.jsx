@@ -9,7 +9,8 @@ const FaceCheckin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
   const { isDataStaff } = useContext(Context);
-
+const [message, setMessage] = useState(null);
+const [status, setStatus] = useState(null);
   const capture = async () => {
     if (!webcamRef.current) return;
     const image = webcamRef.current.getScreenshot({
@@ -28,23 +29,30 @@ const FaceCheckin = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:5001/face_recognize", {
-        image,
-        manv: isDataStaff?.manv || null,
-      });
+  const response = await axios.post("http://localhost:5001/face_recognize", {
+    image,
+    manv: isDataStaff?.manv || null,
+  });
 
-      if (response.data.success) {
-        alert(`✅ Chấm công thành công cho: ${response.data.manv}`);
-        setImageSrc(null);
-      } else {
-        setError(response.data.message || "Không nhận diện được khuôn mặt!");
-      }
-    } catch (error) {
-      console.error("Nhận diện lỗi:", error.response?.data || error);
-      setError(error.response?.data?.error || "Nhận diện thất bại. Kiểm tra log.");
-    } finally {
-      setIsLoading(false);
-    }
+  if (response.data.success) {
+    setImageSrc(null);
+    setStatus("success");
+    setMessage(response.data.message || "✔️ Chấm công thành công!");
+  } else {
+    setStatus("error");
+    setMessage(response.data.message || "Không nhận diện được khuôn mặt!");
+  }
+} catch (err) {
+  console.error("Nhận diện lỗi:", err.response?.data || err);
+  setStatus("error");
+  setMessage(
+    err.response?.data?.message ||
+      err.message ||
+      "Nhận diện thất bại. Kiểm tra log."
+  );
+} finally {
+  setIsLoading(false);
+}
   };
 
   const retake = () => {
@@ -248,29 +256,59 @@ const FaceCheckin = () => {
               </div>
 
               {/* Error */}
-              {error && (
-                <div className="mt-6 mx-auto max-w-md">
-                  <div className="bg-red-500/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-4 text-center">
-                    <div className="flex items-center justify-center mb-2">
-                      <svg
-                        className="w-6 h-6 text-red-400 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <span className="text-red-400 font-semibold">Lỗi</span>
-                    </div>
-                    <p className="text-red-300">{error}</p>
-                  </div>
-                </div>
-              )}
+              {message && (
+  <div className="mt-6 mx-auto max-w-md">
+    <div
+      className={`backdrop-blur-sm rounded-xl p-4 text-center border ${
+        status === "success"
+          ? "bg-green-500/20 border-green-500/30"
+          : "bg-red-500/20 border-red-500/30"
+      }`}
+    >
+      <div className="flex items-center justify-center mb-2">
+        {status === "success" ? (
+          <svg
+            className="w-6 h-6 text-green-400 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        ) : (
+          <svg
+            className="w-6 h-6 text-red-400 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        )}
+        <span
+          className={`font-semibold ${
+            status === "success" ? "text-green-400" : "text-red-400"
+          }`}
+        >
+          {status === "success" ? "Thành công" : "Lỗi"}
+        </span>
+      </div>
+      <p className={status === "success" ? "text-green-300" : "text-red-300"}>
+        {message}
+      </p>
+    </div>
+  </div>
+)}
             </div>
 
             {/* Footer */}
