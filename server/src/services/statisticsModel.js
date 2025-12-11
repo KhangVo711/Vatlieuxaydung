@@ -29,7 +29,6 @@ LIMIT 4;
     `);
     return rows;
 };
-
 const getDailyRevenue = async () => {
     const today = new Date();
     const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
@@ -42,7 +41,7 @@ const getDailyRevenue = async () => {
     const [rows] = await connectDB.execute(`
         SELECT 
             DAYNAME(ngaydat) AS day_of_week,
-            SUM(tonggia) AS total_revenue
+            SUM(tonggia + 0) AS total_revenue
         FROM 
             donhang
         WHERE 
@@ -66,14 +65,16 @@ const getDailyRevenue = async () => {
     };
 
     const orderedDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
     return orderedDays.map(day => {
-        const row = rows.find(r => r.day_of_week === day) || { day_of_week: day, total_revenue: 0 };
+        const row = rows.find(r => r.day_of_week === day) || { total_revenue: 0 };
         return {
             day_of_week: dayMapping[day],
-            total_revenue: row.total_revenue
+            total_revenue: Number(row.total_revenue)
         };
     });
 };
+
 
 const getDailyProductSales = async () => {
     const today = new Date();
@@ -136,7 +137,7 @@ const getMonthlyRevenue = async () => {
     const [rows] = await connectDB.execute(`
         SELECT 
             MONTH(ngaydat) AS month,
-            SUM(tonggia) AS total_revenue
+            SUM(tonggia + 0) AS total_revenue
         FROM donhang
         WHERE trangthai = 'Đã xác nhận' 
             AND YEAR(ngaydat) = YEAR(CURDATE())
@@ -153,24 +154,30 @@ const getMonthlyRevenue = async () => {
         const row = rows.find(r => r.month === index + 1);
         return {
             month: label,
-            total_revenue: row ? row.total_revenue : 0
+            total_revenue: row ? Number(row.total_revenue) : 0
         };
     });
 };
+
 
 
 const getRevenueByYear = async () => {
     const [rows] = await connectDB.execute(`
         SELECT 
             YEAR(ngaydat) AS year,
-            SUM(tonggia) AS total_revenue
+            SUM(tonggia + 0) AS total_revenue
         FROM donhang
         WHERE trangthai = 'Đã xác nhận'
         GROUP BY YEAR(ngaydat)
         ORDER BY YEAR(ngaydat)
     `);
-    return rows;
+
+    return rows.map(r => ({
+        year: r.year,
+        total_revenue: Number(r.total_revenue)
+    }));
 };
+
 
 export default { getReTract, getDailyRevenue, getDailyProductSales, getTotalProductsSold, getTotalReviews, getMonthlyRevenue, 
     getRevenueByYear   };

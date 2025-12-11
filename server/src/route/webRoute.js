@@ -26,7 +26,7 @@ const initWebRoute = (app) => {
     router.post("/admin/change-password/:maql", user.changePasswordAdmin);
 
     router.post('/login', user.getUser)
-    router.post('/updateInf/:id', auth.authMiddleware , user.updateInf)
+    router.post('/updateInf/:id', auth.authMiddleware, user.updateInf)
     router.get('/getInf/:id', user.getInf)
     router.post('/register/:id', user.insertUser)
     router.post('/changePassword/:id', auth.authMiddleware, user.changePassword)
@@ -126,7 +126,10 @@ const initWebRoute = (app) => {
     router.get('/getTotalProductsSold', statistic.getTotalProductsSold);
     router.get('/getTotalReviews', statistic.getTotalReviews);
     router.get("/getMonthlyRevenue", statistic.getMonthlyRevenue);
-router.get("/getRevenueByYear", statistic.getRevenueByYear);
+    router.get("/getRevenueByYear", statistic.getRevenueByYear);
+    router.get("/export/daily", statistic.exportDailyRevenue);
+    router.get("/export/monthly", statistic.exportMonthlyRevenue);
+    router.get("/export/yearly", statistic.exportYearRevenue);
 
     router.post('/send-contact', contact.insertContact)
     router.get('/get-contact', contact.getContact)

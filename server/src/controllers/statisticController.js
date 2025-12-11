@@ -1,5 +1,57 @@
 import express from "express";
 import statisticsModel from "../services/statisticsModel.js";
+import ExcelJS from "exceljs";
+// Style cho tiêu đề
+const styleTitle = (sheet, title) => {
+    sheet.mergeCells("A1:B1");
+    const cell = sheet.getCell("A1");
+    cell.value = title;
+    cell.font = { size: 16, bold: true };
+    cell.alignment = { vertical: "middle", horizontal: "center" };
+    cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFECECEC" }
+    };
+    sheet.getRow(1).height = 30;
+};
+
+// Style cho header bảng
+const styleHeader = (sheet) => {
+    const headerRow = sheet.getRow(3);
+    headerRow.eachCell(cell => {
+        cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
+        cell.alignment = { horizontal: "center", vertical: "middle" };
+        cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "FF4A90E2" }
+        };
+        cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" }
+        };
+    });
+};
+
+// Style cho dữ liệu
+const styleDataRows = (sheet, startRow, endRow) => {
+    for (let i = startRow; i <= endRow; i++) {
+        const row = sheet.getRow(i);
+        row.eachCell(cell => {
+            cell.border = {
+                top: { style: "thin" },
+                left: { style: "thin" },
+                bottom: { style: "thin" },
+                right: { style: "thin" }
+            };
+            cell.alignment = { horizontal: "center" };
+        });
+    }
+};
+
 
 const getTotalReviews = async (req, res) => {
     try {
@@ -69,6 +121,181 @@ const getRevenueByYear = async (req, res) => {
         res.status(500).json({ message: "Lỗi khi lấy doanh thu theo năm." });
     }
 };
+
+const exportDailyRevenue = async (req, res) => {
+    try {
+        const rows = await statisticsModel.getDailyRevenue();
+
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet("Doanh_Thu_Ngay");
+
+        styleTitle(sheet, "BÁO CÁO DOANH THU THEO NGÀY");
+
+// Tự xác định dòng header
+const headerRowIndex = sheet.lastRow.number + 1;
+
+// Tạo header
+sheet.spliceRows(headerRowIndex, 1, ["Ngày", "Doanh thu (VNĐ)"]);
+
+// Style header
+const headerRow = sheet.getRow(headerRowIndex);
+headerRow.eachCell(cell => {
+    cell.font = { bold: true, color: { argb: "00000000" } };
+    cell.alignment = { horizontal: "center", vertical: "middle" };
+    cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "DDDDDDDD" }
+    };
+});
+
+// Thêm dữ liệu
+rows.forEach(r => {
+    sheet.addRow([r.day_of_week, r.total_revenue]);
+});
+
+// Format cột doanh thu (cột 2)
+sheet.getColumn(2).numFmt = '#,##0" VNĐ"';
+sheet.getColumn(1).width = 20;
+        sheet.getColumn(2).width = 25;
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=doanh_thu_ngay.xlsx"
+        );
+
+        await workbook.xlsx.write(res);
+        res.end();
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Lỗi export Excel ngày");
+    }
+};
+
+
+const exportMonthlyRevenue = async (req, res) => {
+    try {
+        const rows = await statisticsModel.getMonthlyRevenue();
+
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet("Doanh_Thu_Thang");
+
+        // ====== TITLE ======
+        styleTitle(sheet, "BÁO CÁO DOANH THU THEO THÁNG");
+
+        // Xác định dòng header
+        const headerRowIndex = sheet.lastRow.number + 1;
+
+        // ====== TẠO HEADER ======
+        sheet.spliceRows(headerRowIndex, 1, ["Tháng", "Doanh thu (VNĐ)"]);
+
+        // Style Header
+        const headerRow = sheet.getRow(headerRowIndex);
+        headerRow.eachCell(cell => {
+            cell.font = { bold: true, color: { argb: "00000000" } };
+            cell.alignment = { horizontal: "center", vertical: "middle" };
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: "DDDDDDDD" }
+            };
+        });
+
+        // ====== THÊM DỮ LIỆU ======
+        rows.forEach(r => {
+            sheet.addRow([r.month, r.total_revenue]);
+        });
+
+        // ====== FORMAT CỘT DOANH THU ======
+        sheet.getColumn(2).numFmt = '#,##0" VNĐ"';
+
+        // Set width
+        sheet.getColumn(1).width = 20;
+        sheet.getColumn(2).width = 25;
+
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=doanh_thu_thang.xlsx"
+        );
+
+        await workbook.xlsx.write(res);
+        res.end();
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Lỗi export Excel tháng");
+    }
+};
+
+
+
+
+const exportYearRevenue = async (req, res) => {
+    try {
+        const rows = await statisticsModel.getRevenueByYear();
+
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet("Doanh_Thu_Nam");
+
+        // ====== TITLE ======
+        styleTitle(sheet, "BÁO CÁO DOANH THU THEO NĂM");
+
+        // Xác định dòng header
+        const headerRowIndex = sheet.lastRow.number + 1;
+
+        // ====== HEADER ======
+        sheet.spliceRows(headerRowIndex, 1, ["Năm", "Doanh thu (VNĐ)"]);
+
+        // Style header
+        const headerRow = sheet.getRow(headerRowIndex);
+        headerRow.eachCell(cell => {
+            cell.font = { bold: true, color: { argb: "00000000" } };
+            cell.alignment = { horizontal: "center", vertical: "middle" };
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: "DDDDDDDD" }
+            };
+        });
+
+        // ====== DỮ LIỆU ======
+        rows.forEach(r => {
+            sheet.addRow([r.year, r.total_revenue]);
+        });
+
+        // ====== FORMAT CỘT DOANH THU ======
+        sheet.getColumn(2).numFmt = '#,##0" VNĐ"';
+        sheet.getColumn(1).width = 20;
+        sheet.getColumn(2).width = 25;
+
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=doanh_thu_nam.xlsx"
+        );
+
+        await workbook.xlsx.write(res);
+        res.end();
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Lỗi export Excel năm");
+    }
+};
+
+
+
+
 export default {
     getReTract,
     getDailyRevenue,
@@ -76,5 +303,8 @@ export default {
     getTotalProductsSold,
     getTotalReviews,
     getMonthlyRevenue, 
-    getRevenueByYear
+    getRevenueByYear,
+    exportDailyRevenue,
+    exportMonthlyRevenue,
+    exportYearRevenue
 };

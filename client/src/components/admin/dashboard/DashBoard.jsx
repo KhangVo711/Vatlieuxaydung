@@ -3,6 +3,7 @@ import { formatCurrency } from '../../../utils/currency.jsx';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { Context } from '../../Context.jsx';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 import {
   Chart,
@@ -368,7 +369,79 @@ useEffect(() => {
   };
 }, [monthlyRevenue, yearlyRevenue]);
 
+const exportMonthly = async () => {
+        try {
+            const res = await axios.get(
+                "http://localhost:5001/export/monthly",
+                {
+                    responseType: "blob"  // quan trọng để tải file
+                }
+            );
 
+            const blob = new Blob([res.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            });
+
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "doanh_thu_thang.xlsx";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error(err);
+            alert("Lỗi xuất Excel");
+        }
+    };
+
+    const exportDaily = async () => {
+        try {
+            const res = await axios.get(
+                "http://localhost:5001/export/daily",
+                {
+                    responseType: "blob"  // quan trọng để tải file
+                }
+            );
+
+            const blob = new Blob([res.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            });
+
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "doanh_thu_ngay.xlsx";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error(err);
+            alert("Lỗi xuất Excel");
+        }
+    };
+const exportYearly = async () => {
+        try {
+            const res = await axios.get(
+                "http://localhost:5001/export/yearly",
+                {
+                    responseType: "blob"  // quan trọng để tải file
+                }
+            );
+
+            const blob = new Blob([res.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            });
+
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "doanh_thu_nam.xlsx";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error(err);
+            alert("Lỗi xuất Excel");
+        }
+    };
   return (
     <div id="home" className="p-8 overflow-x-hidden">
       <nav className="text-sm font-semibold mb-3" aria-label="Breadcrumb">
@@ -389,9 +462,20 @@ useEffect(() => {
 
       <div className="lg:flex justify-between items-center mb-4">
         <p className="text-2xl font-semibold mb-2 lg:mb-0">{greeting}</p>
-        <button className="bg-pink-500 hover:bg-pink-600 focus:outline-none rounded-lg px-3 py-2 text-white font-semibold shadow">
-          Nhật ký
+        <div className='w-1/4 flex justify-between'>
+        <button onClick={exportDaily} className="bg-pink-500 hover:bg-pink-600 focus:outline-none rounded-lg px-3 py-2 text-white font-semibold shadow">
+          Excel ngày
         </button>
+        <button onClick={exportMonthly} className="bg-pink-500 px-10 hover:bg-pink-600 focus:outline-none rounded-lg px-3 py-2 text-white font-semibold shadow">
+          Excel tháng
+        </button>
+        <button onClick={exportYearly} className="bg-pink-500 hover:bg-pink-600 focus:outline-none rounded-lg px-3 py-2 text-white font-semibold shadow">
+          Excel năm
+        </button>
+        </div>
+        {/* <button className="bg-pink-500 hover:bg-pink-600 focus:outline-none rounded-lg px-3 py-2 text-white font-semibold shadow">
+          Nhật ký
+        </button> */}
       </div>
 
       <div className="flex flex-wrap -mx-3 mb-4">
