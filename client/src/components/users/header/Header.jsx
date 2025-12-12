@@ -491,10 +491,10 @@ console.log("Form Data:", formData);
     <header className="bg-pink-200 sticky top-0 z-[9999] shadow-md">
       <ToastContainer />
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-8">
-        <div className="flex lg:flex-1">
+        <div className="flex lg:flex-1 ">
           <Link to="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img src="https://png.pngtree.com/png-vector/20220812/ourmid/pngtree-butterfly-logo-template-infinity-template-logotype-vector-png-image_38578402.png" alt="LOGO" className="h-16 w-auto" />
+            <img src="https://gleads.vn/wp-content/uploads/2022/09/thiet-ke-logo-ban-my-pham.jpg.webp" alt="LOGO" className="h-16 w-16 rounded-full" />
           </Link>
         </div>
         <div className="flex lg:hidden">

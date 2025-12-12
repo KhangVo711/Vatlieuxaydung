@@ -1,7 +1,7 @@
 
 export default function DescribeProduct() {
     return (
-        <>
+        <div className="mb-24">
             <div className="w-full h-[350px] xl:h-[450px] mt-8 xl:mt-24 px-10 xl:flex lg:flex items-center hidden">
                 <div className="w-11/12 mx-auto">
                     <div className="grid grid-cols-2 gap-6 items-center justify-center">
@@ -61,6 +61,6 @@ export default function DescribeProduct() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }

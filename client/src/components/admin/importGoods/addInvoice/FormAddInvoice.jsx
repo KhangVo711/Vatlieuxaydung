@@ -165,8 +165,8 @@ const getProductOptions = () => {
     }
 
     const invoiceId = generateInvoiceId();
-    const maql = isDataAdmin.maql || null;
-    const manv = isDataStaff.manv || null;
+    const maql = isDataAdmin?.maql || null;
+    const manv = isDataStaff?.manv || null;
     const formInvoice = {
       mapn: invoiceId,
       maql,
@@ -174,7 +174,6 @@ const getProductOptions = () => {
       ngaylap: getCurrentDate(),
       tenpn: nameInvoice,
     };
-
     try {
       const response = await axios.post('http://localhost:5001/addInvoice', formInvoice, {
         headers: {

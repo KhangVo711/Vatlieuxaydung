@@ -98,20 +98,20 @@ const createDefaultDiscounts = async (makh) => {
     {
       code: `NEW03${makh}`,
       percent: 3,
-      min: 500000,
-      note: "Giảm 10% cho đơn hàng trên 500.000đ"
+      min: 299000,
+      note: "Giảm 3% cho đơn hàng trên 299.000đ"
     },
     {
       code: `NEW05${makh}`,
       percent: 5,
-      min: 1200000,
-      note: "Giảm 30% cho đơn hàng trên 1.200.000đ"
+      min: 599000,
+      note: "Giảm 5% cho đơn hàng trên 599.000đ"
     },
     {
       code: `NEW10${makh}`,
       percent: 10,
-      min: 2500000,
-      note: "Giảm 50% cho đơn hàng trên 2.500.000đ"
+      min: 1599000,
+      note: "Giảm 10% cho đơn hàng trên 1.599.000đ"
     }
   ];
 
