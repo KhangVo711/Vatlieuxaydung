@@ -1,19 +1,38 @@
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
-import { useState} from 'react';
-import ReactPaginate from 'react-paginate';
+import { useState, useEffect} from 'react';
 export default function TableCategory({ category, handleEditProductClick, handleDeleteProductClick }) {
 
-    const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 6; 
-
-  
-  const offset = currentPage * itemsPerPage;
-  const currentCategory = category.slice(offset, offset + itemsPerPage);
-  const pageCount = Math.ceil(category.length / itemsPerPage);
-
-  const handlePageChange = ({ selected }) => {
-    setCurrentPage(selected);
-  };
+   const [currentPage, setCurrentPage] = useState(0);
+     const itemsPerPage = 6;
+   
+     const pageCount = Math.ceil(category.length / itemsPerPage);
+     const offset = currentPage * itemsPerPage;
+     const currentCategory = category.slice(offset, offset + itemsPerPage);
+   
+     const handlePageChange = (page) => {
+       if (page < 0) return;
+       if (page > pageCount - 1) return;
+       setCurrentPage(page);
+     };
+   
+     // Reset về trang đầu khi dữ liệu thay đổi
+     useEffect(() => {
+       setCurrentPage(0);
+     }, [category]);
+   
+     const getPageNumbers = () => {
+       const maxDisplay = 3;
+       let start = Math.max(0, currentPage - 1);
+       let end = Math.min(pageCount, start + maxDisplay);
+   
+       if (end - start < maxDisplay && start > 0) {
+         start = Math.max(0, end - maxDisplay);
+       }
+   
+       return Array.from({ length: end - start }, (_, i) => start + i);
+     };
+   
+     const pageNumbers = getPageNumbers();
     return (
         <>
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -58,31 +77,76 @@ export default function TableCategory({ category, handleEditProductClick, handle
                 </tbody>
             </table>
         </div>
-          {/* React Paginate */}
-          <ReactPaginate
-          previousLabel={"← Trước"}
-          nextLabel={"Sau →"}
-          pageCount={pageCount}
-          onPageChange={handlePageChange}
-          containerClassName={
-            "flex justify-center mt-4 space-x-2 fixed bottom-5 left-1/2 p-2 rounded-md user-select-none"
-          }
-          pageClassName={
-            "mx-1 px-3 py-1 rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          }
-          pageLinkClassName={
-            "block w-full h-full" 
-          }
-          previousClassName={
-            "text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          }
-          nextClassName={
-            "text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          }
-          activeClassName={
-            "font-bold !bg-gray-800 text-white px-3 py-1 rounded-md " 
-          }
-        />
+          {/* Phân trang tùy chỉnh */}
+<div className="flex justify-center mt-4 space-x-2 fixed bottom-5 left-[45%] p-2 rounded-md select-none">
+
+  {/* Trang đầu */}
+  <button
+    onClick={() => handlePageChange(0)}
+    disabled={currentPage === 0}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === 0
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    Trang đầu
+  </button>
+
+  {/* Trước */}
+  <button
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 0}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === 0
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    ← Trước
+  </button>
+
+  {/* Số trang */}
+  {pageNumbers.map((page) => (
+    <button
+      key={page}
+      onClick={() => handlePageChange(page)}
+      className={`mx-1 px-3 py-1 rounded-md border transition-all duration-200
+        ${currentPage === page
+          ? 'bg-gray-800 text-white font-bold'
+          : 'bg-white text-gray-800 hover:bg-gray-200'
+        }`}
+    >
+      {page + 1}
+    </button>
+  ))}
+
+  {/* Sau */}
+  <button
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === pageCount - 1}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === pageCount - 1
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    Sau →
+  </button>
+
+  {/* Trang cuối */}
+  <button
+    onClick={() => handlePageChange(pageCount - 1)}
+    disabled={currentPage === pageCount - 1}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === pageCount - 1
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    Trang cuối
+  </button>
+</div>
         </>
     )
 }

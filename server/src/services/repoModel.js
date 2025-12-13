@@ -1,50 +1,80 @@
 import connectDB from "../configs/connectDB.js";
 
 const getRepo = async (month) => {
-  const monthCondition = month
-    ? `WHERE (DATE_FORMAT(pn.ngaylap, '%Y-%m') = '${month}' OR DATE_FORMAT(dh.ngaydat, '%Y-%m') = '${month}')`
-    : "";
+  const importMonthCond = month
+    ? `WHERE DATE_FORMAT(pn.ngaylap, '%Y-%m') = '${month}'`
+    : '';
+
+  const exportMonthCond = month
+    ? `WHERE DATE_FORMAT(dh.ngaydat, '%Y-%m') = '${month}'`
+    : '';
 
   const [rows] = await connectDB.execute(`
     SELECT 
-        sp.masp,
-        sp.tensp,
-        sp.cobienthe,
-        cb.mabienthe,
-        GROUP_CONCAT(ttb.loaithuoctinh, ': ', ttb.thuoc_tinh SEPARATOR ', ') AS chitietbienthe,
+      sp.masp,
+      sp.tensp,
+      sp.cobienthe,
 
-        COALESCE(SUM(ctpn.soluongnhap), 0) AS total_import,
-        COALESCE(SUM(ctdh.soluongsanpham), 0) AS total_export,
+      cb.mabienthe,
+      GROUP_CONCAT(
+        DISTINCT CONCAT(ttb.loaithuoctinh, ': ', ttb.thuoc_tinh)
+        SEPARATOR ', '
+      ) AS chitietbienthe,
 
-        COALESCE(SUM(ctpn.soluongnhap * ctpn.gianhap), 0) AS import_value,
-        COALESCE(SUM(ctdh.soluongsanpham * ctdh.dongia), 0) AS revenue_value,
+      COALESCE(imp.total_import, 0) AS total_import,
+      COALESCE(exp.total_export, 0) AS total_export,
 
-        COALESCE(SUM(ctpn.soluongnhap), 0) - COALESCE(SUM(ctdh.soluongsanpham), 0) AS current_stock,
+      COALESCE(imp.import_value, 0) AS import_value,
+      COALESCE(exp.revenue_value, 0) AS revenue_value,
 
-        (COALESCE(SUM(ctpn.soluongnhap * ctpn.gianhap), 0) 
-          - COALESCE(SUM(ctdh.soluongsanpham * ctpn.gianhap), 0)) AS stock_value,
+      COALESCE(imp.total_import, 0) - COALESCE(exp.total_export, 0) AS current_stock,
 
-        (COALESCE(SUM(ctdh.soluongsanpham * ctdh.dongia), 0)
-          - COALESCE(SUM(ctdh.soluongsanpham * ctpn.gianhap), 0)) AS profit_value
+      COALESCE(imp.import_value, 0)
+        - COALESCE(exp.total_export * imp.avg_import_price, 0)
+        AS stock_value,
+
+      COALESCE(exp.revenue_value, 0)
+        - COALESCE(exp.total_export * imp.avg_import_price, 0)
+        AS profit_value
 
     FROM sanpham sp
+
+    /* ================= BIẾN THỂ ================= */
     LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
     LEFT JOIN thuoctinhbienthe ttb ON cb.mabienthe = ttb.mabienthe
-    LEFT JOIN chitietphieunhap ctpn 
-      ON (sp.cobienthe = 0 AND ctpn.masp = sp.masp)
-      OR (sp.cobienthe = 1 AND ctpn.mabienthe = cb.mabienthe)
-    LEFT JOIN phieunhap pn ON pn.mapn = ctpn.mapn
-    LEFT JOIN chitietdonhang ctdh 
-      ON (sp.cobienthe = 0 AND ctdh.masp = sp.masp)
-      OR (sp.cobienthe = 1 AND ctdh.mabienthe = cb.mabienthe)
-    LEFT JOIN donhang dh ON dh.madh = ctdh.madh
-    ${monthCondition}
-    GROUP BY sp.masp, sp.tensp, cb.mabienthe, sp.cobienthe
-    ORDER BY sp.masp;
+
+    /* ================= NHẬP KHO ================= */
+    LEFT JOIN (
+      SELECT 
+        COALESCE(ctpn.mabienthe, ctpn.masp) AS key_id,
+        SUM(ctpn.soluongnhap) AS total_import,
+        SUM(ctpn.soluongnhap * ctpn.gianhap) AS import_value,
+        AVG(ctpn.gianhap) AS avg_import_price
+      FROM chitietphieunhap ctpn
+      JOIN phieunhap pn ON pn.mapn = ctpn.mapn
+      ${importMonthCond}
+      GROUP BY COALESCE(ctpn.mabienthe, ctpn.masp)
+    ) imp ON imp.key_id = IF(sp.cobienthe = 1, cb.mabienthe, sp.masp)
+
+    /* ================= XUẤT KHO ================= */
+    LEFT JOIN (
+      SELECT 
+        COALESCE(ctdh.mabienthe, ctdh.masp) AS key_id,
+        SUM(ctdh.soluongsanpham) AS total_export,
+        SUM(ctdh.soluongsanpham * ctdh.dongia) AS revenue_value
+      FROM chitietdonhang ctdh
+      JOIN donhang dh ON dh.madh = ctdh.madh
+      ${exportMonthCond}
+      GROUP BY COALESCE(ctdh.mabienthe, ctdh.masp)
+    ) exp ON exp.key_id = IF(sp.cobienthe = 1, cb.mabienthe, sp.masp)
+
+    GROUP BY sp.masp, cb.mabienthe
+    ORDER BY sp.masp, cb.mabienthe;
   `);
 
   return rows;
 };
+
 
 
 const getAvailableMonths = async () => {

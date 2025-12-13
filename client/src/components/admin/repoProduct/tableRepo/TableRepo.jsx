@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import Select from 'react-select';
 import * as XLSX from 'xlsx';
@@ -8,7 +8,14 @@ export default function TableRepo({ repo, months, onFilterChange }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [search, setSearch] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState('');
-
+useEffect(() => {
+  setCurrentPage(0);
+}, [search, selectedMonth, repo]);
+const handlePageChange = (page) => {
+  if (page < 0) return;
+  if (page > pageCount - 1) return;
+  setCurrentPage(page);
+};
   const itemsPerPage = 6;
 
   // Khi chọn tháng: chỉ gửi lên cha, không lọc frontend
@@ -122,7 +129,7 @@ export default function TableRepo({ repo, months, onFilterChange }) {
 
         <button
           onClick={exportToExcel}
-          className="ml-auto bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+          className="ml-auto bg-pink-400 text-white px-3 py-1 rounded hover:bg-pink-500 transition-colors duration-200"
         >
           Xuất Excel
         </button>
@@ -180,20 +187,76 @@ export default function TableRepo({ repo, months, onFilterChange }) {
         </table>
       </div>
 
-      {/* --- Phân trang --- */}
-      <div className="flex justify-center mt-4 space-x-2">
-        {pageNumbers.map((page) => (
-          <button
-            key={page}
-            onClick={() => setCurrentPage(page)}
-            className={`px-3 py-1 rounded-md border ${
-              currentPage === page ? 'bg-gray-800 text-white' : 'bg-white'
-            }`}
-          >
-            {page + 1}
-          </button>
-        ))}
-      </div>
+      {/* Phân trang tùy chỉnh */}
+<div className="flex justify-center mt-4 space-x-2 fixed bottom-5 left-[45%] p-2 rounded-md select-none">
+
+  {/* Trang đầu */}
+  <button
+    onClick={() => handlePageChange(0)}
+    disabled={currentPage === 0}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === 0
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    Trang đầu
+  </button>
+
+  {/* Trước */}
+  <button
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 0}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === 0
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    ← Trước
+  </button>
+
+  {/* Số trang */}
+  {pageNumbers.map((page) => (
+    <button
+      key={page}
+      onClick={() => handlePageChange(page)}
+      className={`mx-1 px-3 py-1 rounded-md border transition-all duration-200
+        ${currentPage === page
+          ? 'bg-gray-800 text-white font-bold'
+          : 'bg-white text-gray-800 hover:bg-gray-200'
+        }`}
+    >
+      {page + 1}
+    </button>
+  ))}
+
+  {/* Sau */}
+  <button
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === pageCount - 1}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === pageCount - 1
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    Sau →
+  </button>
+
+  {/* Trang cuối */}
+  <button
+    onClick={() => handlePageChange(pageCount - 1)}
+    disabled={currentPage === pageCount - 1}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === pageCount - 1
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    Trang cuối
+  </button>
+</div>
     </>
   );
 }

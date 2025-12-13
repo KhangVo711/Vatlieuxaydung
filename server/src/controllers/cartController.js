@@ -259,8 +259,13 @@ const updateStatus = async (req, res) => {
       await cartModel.updateStatus(trangthai, madh);
       return res.status(400).send({ message: "Đơn hàng đã bị hủy." });
     }
-    if (trangthai === 'Đang giao hàng' || trangthai === 'Đã giao hàng') {
+    if (trangthai === 'Đang giao hàng') {
       await cartModel.updateStatus(trangthai, madh);
+      return res.status(200).send({ message: "Đơn hàng đang được giao." });
+    }
+    if (trangthai === 'Đã giao hàng') {
+      await cartModel.updateStatusEnd(trangthai, 'Đã thanh toán', madh);
+      return res.status(200).send({ message: "Đơn hàng đã được giao thành công." });
     }
 
     // Xử lý trạng thái "Đã xác nhận"

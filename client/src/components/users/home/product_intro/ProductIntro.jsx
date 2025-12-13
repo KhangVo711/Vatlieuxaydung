@@ -175,57 +175,57 @@ export default function ProductIntro() {
       <h2 className="my-12 tracking-wider text-3xl text-center uppercase font-bold">
         Sản phẩm giảm sốc
       </h2>
-      <div className="w-full flex justify-evenly items-center">
-        {productsale.map((product) => (
-          <div
-            key={product.masp}
-            className="w-72 h-fit bg-white border rounded-lg shadow-md overflow-hidden product-card"
-          >
-            <div className="relative p-5">
-              <img
-                src={`http://localhost:5001/uploads/${product.masp}/${product.hinhanh}`}
-                alt={product.tensp}
-                className="w-full lg:h-60 md:h-32 object-cover"
-              />
-              <span className="absolute top-0 right-0 bg-red-600/85 text-white text-sm font-semibold py-2 px-3.5 rounded-bl-lg">
-                {product.tenkm}
-              </span>
-            </div>
-            <div className="px-4 pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <h2 className="text-lg tracking-tight md:text-md font-bold text-gray-900">
-                    {product.tensp}
-                  </h2>
+        <div className="w-full flex justify-evenly items-center">
+          {productsale.map((product) => (
+            <div
+              key={product.masp}
+              className="w-72 bg-white border rounded-lg shadow-md overflow-hidden product-card"
+            >
+              <div className="relative p-5">
+                <img
+                  src={`http://localhost:5001/uploads/${product.masp}/${product.hinhanh}`}
+                  alt={product.tensp}
+                  className="w-full lg:h-60 md:h-32 object-cover"
+                />
+                <span className="absolute top-0 right-0 bg-red-600/85 text-white text-sm font-semibold py-2 px-3.5 rounded-bl-lg">
+                  {product.tenkm}
+                </span>
+              </div>
+              <div className="px-4 pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <h2 className="text-lg tracking-tight md:text-md font-bold text-gray-900">
+                      {product.tensp}
+                    </h2>
+                  </div>
+                </div>
+                {/* <p className="xl:block hidden text-sm md:text-xs text-gray-600 line-clamp-3">
+                  {product.ttct}
+                </p> */}
+                <div className="flex items-center justify-between mt-1.5">
+                  <div className="flex flex-col">
+                    <span className="font-bold text-gray-900 opacity-80 line-through">
+                      {formatCurrency(product.gia_range ? product.gia_range : product.gia)}
+                    </span>
+                    <span className="font-bold text-red-600">
+                      {product.gia && product.gia
+                        ? `${formatCurrency(parseInt(product.gia) * (1 - product.km / 100))}`
+                        : product.gia
+                          ? `${formatCurrency(parseInt(product.gia_range) * (1 - product.km / 100))}`
+                          : formatCurrency(product.gia_range * (1 - product.km / 100)) + ' +'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={(e) => handleAddToCart(product, e)}
+                    className="bg-pink-400 text-white font-semibold py-1.5 px-3 rounded-md xl:block hover:scale-105 transition duration-200 ease-in-out"
+                  >
+                    Mua ngay
+                  </button>
                 </div>
               </div>
-              <p className="xl:block hidden text-sm md:text-xs text-gray-600">
-                {product.ttct}
-              </p>
-              <div className="flex items-center justify-between mt-1.5">
-                <div className="flex flex-col">
-                  <span className="font-bold text-gray-900 opacity-80 line-through">
-                    {formatCurrency(product.gia_range ? product.gia_range : product.gia)}
-                  </span>
-                  <span className="font-bold text-red-600">
-                    {product.gia && product.gia
-                      ? `${formatCurrency(parseInt(product.gia) * (1 - product.km / 100))}`
-                      : product.gia
-                        ? `${formatCurrency(parseInt(product.gia_range) * (1 - product.km / 100))}`
-                        : formatCurrency(product.gia_range * (1 - product.km / 100)) + ' +'}
-                  </span>
-                </div>
-                <button
-                  onClick={(e) => handleAddToCart(product, e)}
-                  className="bg-pink-400 text-white font-semibold py-1.5 px-3 rounded-md xl:block hover:scale-105 transition duration-200 ease-in-out"
-                >
-                  Mua ngay
-                </button>
-              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
       <ReactModal
         isOpen={isModalOpen}
         onRequestClose={closeModal}

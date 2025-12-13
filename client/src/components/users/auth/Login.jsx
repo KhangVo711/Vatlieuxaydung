@@ -92,9 +92,9 @@ export default function Login() {
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <div className="max-w-screen-xl m-0 sm:m-6 bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-          <div className="w-full">
+          {/* <div className="w-full">
             <img src="https://png.pngtree.com/png-vector/20220812/ourmid/pngtree-butterfly-logo-template-infinity-template-logotype-vector-png-image_38578402.png" alt="LOGO" className="h-16 w-auto mx-auto" />
-          </div>
+          </div> */}
           <ToastContainer />
           <div className="mt-12 flex flex-col items-center">
             <h1 className="text-3xl xl:text-4xl font-bold uppercase tracking-wider">Đăng nhập</h1>

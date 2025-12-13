@@ -89,75 +89,76 @@ export default function TableProduct({ product, handleEditProductClick, handleDe
       </div>
 
       {/* Phân trang tùy chỉnh */}
-      <div className="flex justify-center mt-4 space-x-2 fixed bottom-5 left-[45%] p-2 rounded-md user-select-none">
-        {/* Nút Trang đầu */}
-        <button
-          onClick={() => handlePageChange(0)}
-          className="text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          disabled={currentPage === 0}
-        >
-          Trang đầu
-        </button>
+<div className="flex justify-center mt-4 space-x-2 fixed bottom-5 left-[45%] p-2 rounded-md select-none">
 
-        {/* Nút Trước */}
-        <button
-          onClick={() => handlePageChange(Math.max(0, currentPage - 1))}
-          className="text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          disabled={currentPage === 0}
-        >
-          ← Trước
-        </button>
+  {/* Trang đầu */}
+  <button
+    onClick={() => handlePageChange(0)}
+    disabled={currentPage === 0}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === 0
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    Trang đầu
+  </button>
 
-        {/* Các số trang */}
-        {pageNumbers.map((page) => (
-          <button
-            key={page}
-            onClick={() => handlePageChange(page)}
-            className={`mx-1 px-3 py-1 rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-200 transition-all duration-200 cursor-pointer ${
-              currentPage === page ? 'font-bold !bg-gray-800 text-white' : ''
-            }`}
-          >
-            {page + 1}
-          </button>
-        ))}
+  {/* Trước */}
+  <button
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 0}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === 0
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    ← Trước
+  </button>
 
-        {/* Nút Sau */}
-        <button
-          onClick={() => handlePageChange(Math.min(pageCount - 1, currentPage + 1))}
-          className="text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          disabled={currentPage === pageCount - 1}
-        >
-          Sau →
-        </button>
+  {/* Số trang */}
+  {pageNumbers.map((page) => (
+    <button
+      key={page}
+      onClick={() => handlePageChange(page)}
+      className={`mx-1 px-3 py-1 rounded-md border transition-all duration-200
+        ${currentPage === page
+          ? 'bg-gray-800 text-white font-bold'
+          : 'bg-white text-gray-800 hover:bg-gray-200'
+        }`}
+    >
+      {page + 1}
+    </button>
+  ))}
 
-        {/* Nút Trang cuối */}
-        <button
-          onClick={() => handlePageChange(pageCount - 1)}
-          className="text-gray-800 font-medium px-3 py-1 rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          disabled={currentPage === pageCount - 1}
-        >
-          Trang cuối
-        </button>
+  {/* Sau */}
+  <button
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === pageCount - 1}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === pageCount - 1
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    Sau →
+  </button>
 
-        {/* Nhập số trang */}
-        {/* <form onSubmit={handlePageInputSubmit} className="flex items-center ml-4">
-          <input
-            type="number"
-            value={pageInput}
-            onChange={(e) => setPageInput(e.target.value)}
-            placeholder={`1-${pageCount}`}
-            className="w-16 px-2 py-1 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
-            min="1"
-            max={pageCount}
-          />
-          <button
-            type="submit"
-            className="ml-2 px-3 py-1 text-gray-800 font-medium rounded-md bg-white border border-gray-300 hover:bg-gray-200 transition-all duration-200 cursor-pointer"
-          >
-            Đi
-          </button>
-        </form> */}
-      </div>
+  {/* Trang cuối */}
+  <button
+    onClick={() => handlePageChange(pageCount - 1)}
+    disabled={currentPage === pageCount - 1}
+    className={`px-3 py-1 rounded-md font-medium border transition-all duration-200
+      ${currentPage === pageCount - 1
+        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        : 'bg-white text-gray-800 hover:bg-gray-200 cursor-pointer'
+      }`}
+  >
+    Trang cuối
+  </button>
+</div>
+
     </>
   );
 }

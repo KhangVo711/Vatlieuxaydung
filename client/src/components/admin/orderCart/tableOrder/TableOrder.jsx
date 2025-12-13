@@ -52,7 +52,7 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
       <tr>
         <th scope="col" className="px-4 py-3">Mã đơn hàng</th>
         <th scope="col" className="px-8 py-3">Mã khách hàng / Mã form</th>
-        <th scope="col" className="px-4 py-3">Đơn vị vận chuyển</th>
+        {/* <th scope="col" className="px-4 py-3">Đơn vị vận chuyển</th> */}
         <th scope="col" className="px-4 py-3">Thời gian đặt</th>
         <th scope="col" className="px-4 py-3 text-right">Tổng giá</th>
 
@@ -62,7 +62,7 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
         <th scope="col" className="px-4 py-3 text-right">Trạng thái</th>
 
         {/* Thêm cột Hình thức thanh toán */}
-        <th scope="col" className="px-4 py-3 text-right">Hình thức thanh toán</th>
+        <th scope="col" className="px-4 py-3 text-right">Hình thức</th>
 
         <th scope="col" className="px-4 py-3 text-right">Thanh toán</th>
 
@@ -77,9 +77,9 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
           <td className="px-8 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             {item.makh ? item.makh : item.maform}
           </td>
-          <td className="px-4 py-3 font-medium whitespace-nowrap dark:text-white">
+          {/* <td className="px-4 py-3 font-medium whitespace-nowrap dark:text-white">
             {item.tendvvc}
-          </td>
+          </td> */}
           <td className="px-4 py-3">
             {formatDateTime(item.ngaydat)}
           </td>
@@ -92,12 +92,12 @@ export default function TableOrder({handleEditClick, handleViewClick}) {
             {item.magiamgia ? item.magiamgia : <span className="text-gray-400 italic">—</span>}
           </td>
 
-          <td className="px-2.5 py-3 text-right">
+          <td className="px-2.5 py-3 text-center">
             {item.trangthai}
           </td>
 
           {/* Cột Hình thức thanh toán */}
-          <td className="px-2.5 py-3 text-right">
+          <td className="px-2.5 py-3 text-center">
             {item.hinhthucthanhtoan || "—"}
           </td>
 

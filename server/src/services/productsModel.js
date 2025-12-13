@@ -79,33 +79,30 @@ const getProductById = async (masp) => {
 const getProduct8 = async () => {
   const [rows] = await connectDB.execute(`
     SELECT 
-      s.masp, s.tensp, s.maloai, s.mansx, s.gia, s.soluongsp, s.ttct,
-      h.hinhanh,
-      lsp.tenloai, nsx.tennsx,
-      km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km,
-      GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
-      GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
-      CASE 
-        WHEN COUNT(cb.mabienthe) = 0 THEN s.gia
-        WHEN MAX(cb.gia) - MIN(cb.gia) <= 6000 AND MIN(cb.gia) >= 72000 AND MAX(cb.gia) <= 78000 
-          THEN CONCAT(FLOOR(MIN(cb.gia) / 10000) * 10000, ' +')
-        ELSE CONCAT('Từ ', MIN(cb.gia), ' đến ', MAX(cb.gia))
-      END AS gia_range,
-      MAX(cb.soluongtonkho) AS max_soluongtonkho
-    FROM sanpham s
-    JOIN loaisanpham lsp ON s.maloai = lsp.maloai
-    JOIN nhasanxuat nsx ON s.mansx = nsx.mansx
-    LEFT JOIN khuyenmai km ON s.masp = km.masp
-    LEFT JOIN cacbienthe cb ON s.masp = cb.masp
-    LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
-    LEFT JOIN (
-      SELECT masp, hinhanh,
-             ROW_NUMBER() OVER (PARTITION BY masp ORDER BY masp) as rn
-      FROM hinhanhsanpham
-    ) h ON s.masp = h.masp AND h.rn = 1
-    WHERE km.masp IS NULL OR (km.thoigianketthuckm > NOW() AND km.thoigianbatdaukm <= NOW())
-    GROUP BY s.masp, s.tensp, s.gia, s.soluongsp, s.ttct, lsp.tenloai, nsx.tennsx, km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km
-    ORDER BY s.masp
+    sp.*, 
+    km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+    lsp.tenloai, nsx.tennsx,
+    (SELECT hinhanh FROM hinhanhsanpham ha WHERE ha.masp = sp.masp LIMIT 1) AS hinhanh,
+    GROUP_CONCAT(DISTINCT cb.mabienthe SEPARATOR ',') AS mabienthe_list,
+    GROUP_CONCAT(DISTINCT tb.thuoc_tinh SEPARATOR ',') AS thuoc_tinh_list,
+    CASE 
+        WHEN COUNT(cb.mabienthe) = 0 THEN sp.gia
+        ELSE MIN(cb.gia)
+    END AS gia_range,
+    CASE 
+        WHEN COUNT(cb.mabienthe) = 0 THEN sp.soluongsp
+        ELSE SUM(cb.soluongtonkho)
+    END AS tongsoluong
+FROM sanpham sp
+JOIN loaisanpham lsp ON sp.maloai = lsp.maloai
+JOIN nhasanxuat nsx ON sp.mansx = nsx.mansx
+LEFT JOIN khuyenmai km ON sp.masp = km.masp
+LEFT JOIN cacbienthe cb ON sp.masp = cb.masp
+LEFT JOIN thuoctinhbienthe tb ON cb.mabienthe = tb.mabienthe
+GROUP BY 
+    sp.masp, sp.tensp, sp.gia, sp.soluongsp, sp.ttct, 
+    km.makm, km.tenkm, km.thoigianbatdaukm, km.thoigianketthuckm, km.km, 
+    lsp.tenloai, nsx.tennsx
     LIMIT 8
   `);
   return rows;

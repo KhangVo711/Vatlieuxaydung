@@ -49,6 +49,9 @@ const getDetailCart = async (madh) => {
 const updateStatus = async (trangthai, madh ) => {
     await connectDB.execute("UPDATE `donhang` SET trangthai = ? WHERE madh = ?", [trangthai, madh]);
 }
+const updateStatusEnd = async (trangthai, trangthaithanhtoan, madh ) => {
+    await connectDB.execute("UPDATE `donhang` SET trangthai = ?, trangthaithanhtoan = ? WHERE madh = ?", [trangthai, trangthaithanhtoan, madh]);
+}
 // // Update quantity
 const updateQuantity = async (masp, mabienthe, madh, isAdd = false) => {
   const query = mabienthe
@@ -180,4 +183,4 @@ GROUP BY
 };
 
 
-export default { insertCart, insertDetailCart, getCart, updateStatus, getDetailCart, updateQuantity, detailProductInOrder, detailOrderOfUser, insertFormOD, updateOrderPaymentStatus, getOrderById };
+export default { insertCart, updateStatusEnd, insertDetailCart, getCart, updateStatus, getDetailCart, updateQuantity, detailProductInOrder, detailOrderOfUser, insertFormOD, updateOrderPaymentStatus, getOrderById };

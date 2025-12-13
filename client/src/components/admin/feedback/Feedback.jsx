@@ -3,6 +3,8 @@ import axios from "axios";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import {Context} from "../../Context.jsx"
 import Cookies from "js-cookie";
+import { ToastContainer , toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Feedback() {
   const [contacts, setContacts] = useState([]);
@@ -36,30 +38,40 @@ const token = Cookies.get(isAdmin ? "admin" : "staff");
   }, []);
 
   const handleSendMail = async () => {
+  if (!subject.trim() || !message.trim()) {
+    toast.warning("Vui lòng nhập đầy đủ chủ đề và nội dung!");
+    return;
+  }
 
   try {
-    await axios.post("http://localhost:5001/send-mail", {
-      email: selectedContact.email,
-      subject,
-      message,
-      maql: isAdmin ? isDataAdmin.maql : null,
-      manv: isStaff ? isDataStaff.manv : null 
-    },
-  {
-      headers: {
-        'Content-Type': 'application/json',   
-        Authorization: `Bearer ${token}`,
+    await axios.post(
+      "http://localhost:5001/send-mail",
+      {
+        email: selectedContact.email,
+        subject,
+        message,
+        maql: isAdmin ? isDataAdmin.maql : null,
+        manv: isStaff ? isDataStaff.manv : null,
       },
-      withCredentials: true,
-    });
-    alert("Gửi mail thành công!");
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+
+    toast.success("Gửi phản hồi thành công");
+
     setShowModal(false);
     setSubject("");
     setMessage("");
   } catch (err) {
-    alert("Gửi mail thất bại!");
+    toast.error("Gửi phản hồi thất bại");
   }
 };
+
 
   if (loading) return <p>Đang tải dữ liệu...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -177,7 +189,18 @@ const token = Cookies.get(isAdmin ? "admin" : "staff");
     </div>
   </div>
 )}
-
+ <ToastContainer
+      position="top-right"
+      autoClose={1500}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+    />
     </div>
   );
 }

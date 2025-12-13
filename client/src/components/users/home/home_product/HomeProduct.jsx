@@ -33,7 +33,7 @@ export default function HomeProduct() {
       try {
         const endpoint = isProductCategory
           ? `http://localhost:5001/getProductOfCategory/${category}`
-          : 'http://localhost:5001/getProduct';
+          : 'http://localhost:5001/getProduct8';
         const response = await axios.get(endpoint);
         setProducts(response.data.product);
       } catch (error) {

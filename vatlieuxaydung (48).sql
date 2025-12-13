@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th12 12, 2025 lúc 01:00 PM
+-- Thời gian đã tạo: Th12 13, 2025 lúc 12:16 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -71,7 +71,7 @@ CREATE TABLE `cacbienthe` (
 --
 
 INSERT INTO `cacbienthe` (`mabienthe`, `masp`, `gia`, `soluongtonkho`) VALUES
-('B-345765', 'TT045673323', 280000, 100),
+('B-345765', 'TT045673323', 280000, 71),
 ('G-567787', 'SN49361763', 5000, 0),
 ('I0972', 'SL23981364', 168000, 0),
 ('I3423', 'SL23981364', 168000, 0),
@@ -80,13 +80,13 @@ INSERT INTO `cacbienthe` (`mabienthe`, `masp`, `gia`, `soluongtonkho`) VALUES
 ('I5362', 'SL23981364', 168000, 0),
 ('l8112', 'SL23981364', 178000, 0),
 ('M-086548', 'SN49361763', 145000, 0),
-('p6127', 'SB052736412', 189000, 100),
+('p6127', 'SB052736412', 189000, 91),
 ('p6182', 'SB052736412', 189000, 100),
-('p7192', 'SB052736412', 189000, 100),
-('R-6372', 'SM75414127', 75000, 100),
-('R-6883', 'SM75414127', 72000, 100),
+('p7192', 'SB052736412', 189000, 94),
+('R-6372', 'SM75414127', 75000, 91),
+('R-6883', 'SM75414127', 72000, 92),
 ('R-9732', 'SM75414127', 78000, 100),
-('S-754325', 'TT045673323', 210000, 100),
+('S-754325', 'TT045673323', 210000, 92),
 ('V-3645', 'VZ092736451', 46000, 0),
 ('V-8945', 'VZ092736451', 54000, 0),
 ('V-9382', 'VZ092736451', 68000, 0),
@@ -196,18 +196,62 @@ CREATE TABLE `chitietdonhang` (
   `thanhtien` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Cấu trúc bảng cho bảng `chitiethoadon`
+-- Đang đổ dữ liệu cho bảng `chitietdonhang`
 --
 
-CREATE TABLE `chitiethoadon` (
-  `ngaylaphd` date NOT NULL,
-  `giolaphd` time NOT NULL,
-  `ghichu` varchar(500) NOT NULL,
-  `mahd` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `chitietdonhang` (`madh`, `masp`, `mabienthe`, `soluongsanpham`, `km`, `dongia`, `thanhtien`) VALUES
+('17656062366864', 'BN65677123', NULL, 2, 0, 600000, 1200000),
+('17656062366864', 'BZ34219876', NULL, 1, 0, 30000, 30000),
+('17656062366864', 'SB052736412', 'p7192', 2, 0, 189000, 378000),
+('17656066281902', 'BT89102384', NULL, 1, 0, 15000, 15000),
+('17656066281902', 'BZ34219876', NULL, 1, 0, 30000, 30000),
+('17656073845792', 'SM15414124', NULL, 2, 0, 225000, 450000),
+('17656073845792', 'TT045673323', 'B-345765', 1, 0, 280000, 280000),
+('17656073845792', 'CR37462789', NULL, 1, 0, 320000, 320000),
+('17656073845792', 'CN76782423', NULL, 1, 0, 265000, 265000),
+('17656073845792', 'BN65677123', NULL, 1, 0, 600000, 600000),
+('17656140268909', 'BN65677123', NULL, 3, 0, 600000, 1800000),
+('17656171227643', 'BT89102384', NULL, 5, 0, 15000, 75000),
+('17656179166600', 'SM75414127', 'R-6883', 1, 0, 72000, 72000),
+('17656179166600', 'BZ34219876', NULL, 1, 0, 30000, 30000),
+('17656179166600', 'SB052736412', 'p6127', 9, 0, 189000, 1701000),
+('17656179166600', 'CN76782423', NULL, 6, 0, 265000, 1590000),
+('17656191310696', 'BN65677123', NULL, 2, 0, 600000, 1200000),
+('17656191310696', 'NH47627821', NULL, 4, 0, 350000, 1400000),
+('17656191310696', 'SM28364812', NULL, 4, 0, 95000, 380000),
+('17656191310696', 'TT045673323', 'S-754325', 8, 0, 210000, 1680000),
+('17656191310696', 'NH87231123', NULL, 3, 0, 350000, 1050000),
+('17656191310696', 'SM15414124', NULL, 4, 0, 225000, 900000),
+('17656191310696', 'ST45632797', NULL, 7, 0, 335000, 2345000),
+('17656194445395', 'NH47627821', NULL, 5, 0, 350000, 1750000),
+('17656194445395', 'SM15414124', NULL, 6, 0, 225000, 1350000),
+('17656194445395', 'ST45632797', NULL, 4, 0, 335000, 1340000),
+('17656194445395', 'SM75414127', 'R-6372', 9, 0, 75000, 675000),
+('17656194445395', 'SM28364812', NULL, 4, 0, 95000, 380000),
+('17656194445395', 'TT045673323', 'B-345765', 3, 0, 280000, 840000),
+('17656194445395', 'SB052736412', 'p7192', 4, 0, 189000, 756000),
+('17656194445395', 'CN76782423', NULL, 3, 0, 265000, 795000),
+('17656194445395', 'SM75414127', 'R-6883', 7, 0, 72000, 504000),
+('17656194445395', 'BN65677123', NULL, 5, 0, 600000, 3000000),
+('17656195085979', 'BN65677123', NULL, 2, 0, 600000, 1200000),
+('17656197081077', 'BN65677123', NULL, 7, 0, 600000, 4200000),
+('17656198307466', 'BN65677123', NULL, 3, 0, 600000, 1800000),
+('17656198307466', 'NH87231123', NULL, 7, 0, 350000, 2450000),
+('17656198307466', 'NH47627821', NULL, 6, 0, 350000, 2100000),
+('17656203533641', 'BN65677123', NULL, 12, 0, 600000, 7200000),
+('17656206551399', 'BN65677123', NULL, 9, 0, 600000, 5400000),
+('17656207390669', 'BN65677123', NULL, 11, 0, 600000, 6600000),
+('17656208399934', 'BN65677123', NULL, 15, 0, 600000, 9000000),
+('17656208604887', 'BN65677123', NULL, 8, 0, 600000, 4800000),
+('17656209944555', 'BN65677123', NULL, 111, 0, 600000, 66600000),
+('17656211227468', 'BN65677123', NULL, 25, 0, 600000, 15000000),
+('17656211227468', 'NH47627821', NULL, 20, 0, 350000, 7000000),
+('17656211227468', 'TT045673323', 'B-345765', 25, 0, 280000, 7000000),
+('17656211227468', 'SM15414124', NULL, 20, 0, 225000, 4500000),
+('17656211227468', 'NH87231123', NULL, 20, 0, 350000, 7000000),
+('17656211227468', 'CN76782423', NULL, 25, 0, 265000, 6625000),
+('17656211227468', 'ST45632797', NULL, 30, 0, 335000, 10050000);
 
 -- --------------------------------------------------------
 
@@ -246,7 +290,8 @@ INSERT INTO `chitietphieunhap` (`mapn`, `masp`, `mabienthe`, `soluongnhap`, `gia
 ('17655405528667', 'SB052736412', 'p6182', 100, 85000, 'Black Rouge'),
 ('17655405528667', 'SB052736412', 'p7192', 100, 85000, 'Black Rouge'),
 ('17655405528667', 'SM75414127', 'R-9732', 100, 35000, '3CE'),
-('17655406058327', 'BN65677123', NULL, 100, 355000, 'Gilaa');
+('17655406058327', 'BN65677123', NULL, 100, 355000, 'Gilaa'),
+('17656202000682', 'BN65677123', NULL, 200, 355000, 'Gilaa');
 
 -- --------------------------------------------------------
 
@@ -267,6 +312,30 @@ CREATE TABLE `donhang` (
   `hinhthucthanhtoan` varchar(255) NOT NULL,
   `trangthaithanhtoan` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `donhang`
+--
+
+INSERT INTO `donhang` (`madh`, `makh`, `ngaydat`, `magiamgia`, `trangthai`, `tonggia`, `madvvc`, `maform`, `quangduong`, `hinhthucthanhtoan`, `trangthaithanhtoan`) VALUES
+('17656062366864', NULL, '2025-08-13 13:10:00', NULL, 'Đã giao hàng', 1637641, 'EXP-787', 'FO17656061628395', 9.88032, 'cod', 'Đã thanh toán'),
+('17656066281902', NULL, '2025-12-13 13:17:00', NULL, 'Đã hủy', 57191, 'EXP-787', 'FO17656064398703', 4.06377, 'qr', 'Chờ thanh toán'),
+('17656073845792', 'KHI5NCFJFF', '2025-09-22 13:29:00', NULL, 'Đã giao hàng', 1941519, 'NHS-146', NULL, 5.89315, 'cod', 'Đã thanh toán'),
+('17656140268909', 'KHQMMV3J60', '2025-09-11 15:20:00', NULL, 'Đã giao hàng', 1818287, 'NHS-146', NULL, 4.06377, 'cod', 'Đã thanh toán'),
+('17656171227643', 'KHQMMV3J60', '2025-09-08 16:12:00', NULL, 'Đã giao hàng', 93287, 'NHS-146', NULL, 4.06377, 'cod', 'Đã thanh toán'),
+('17656179166600', NULL, '2025-09-27 16:25:00', NULL, 'Đã giao hàng', 3397102, 'GHT-812', 'FO17656177485095', 2.05119, 'cod', 'Đã thanh toán'),
+('17656191310696', NULL, '2025-07-16 16:45:00', NULL, 'Đã giao hàng', 8973287, 'NHS-146', 'FO17656190424195', 4.06377, 'cod', 'Đã thanh toán'),
+('17656194445395', NULL, '2025-05-02 16:50:00', NULL, 'Đã giao hàng', 11394697, 'EXP-787', 'FO17656193792591', 1.56568, 'cod', 'Đã thanh toán'),
+('17656195085979', 'KHI5NCFJFF', '2025-08-18 16:51:00', NULL, 'Đã giao hàng', 1217679, 'EXP-787', NULL, 5.89315, 'cod', 'Đã thanh toán'),
+('17656197081077', NULL, '2025-11-14 16:55:00', NULL, 'Đã giao hàng', 4205802, 'EXP-787', 'FO17656196060291', 1.93397, 'cod', 'Đã thanh toán'),
+('17656198307466', NULL, '2025-10-16 16:57:00', NULL, 'Đã giao hàng', 6380000, 'EXP-787', 'FO17656197771058', 104.087, 'cod', 'Đã thanh toán'),
+('17656203533641', 'KHG9543SZ6', '2025-06-11 17:05:00', 'NEW10KHG9543SZ6', 'Đã giao hàng', 6570000, 'EXP-787', NULL, 104.087, 'cod', 'Đã thanh toán'),
+('17656206551399', 'KHG9543SZ6', '2025-04-16 17:10:00', 'NEW05KHG9543SZ6', 'Đã giao hàng', 5160000, 'EXP-787', NULL, 104.087, 'cod', 'Đã thanh toán'),
+('17656207390669', 'KHG9543SZ6', '2025-02-12 17:12:00', 'NEW03KHG9543SZ6', 'Đã giao hàng', 6432000, 'EXP-787', NULL, 104.087, 'cod', 'Đã thanh toán'),
+('17656208399934', 'KHG9543SZ6', '2025-03-11 17:13:00', NULL, 'Đã giao hàng', 9030000, 'EXP-787', NULL, 104.087, 'cod', 'Đã thanh toán'),
+('17656208604887', 'KHG9543SZ6', '2025-01-25 17:14:00', NULL, 'Đã giao hàng', 4830000, 'EXP-787', NULL, 104.087, 'cod', 'Đã thanh toán'),
+('17656209944555', 'KHG9543SZ6', '2023-11-14 17:16:00', NULL, 'Đã giao hàng', 66630000, 'NHS-146', NULL, 104.087, 'cod', 'Đã thanh toán'),
+('17656211227468', 'KHG9543SZ6', '2024-12-11 17:18:00', NULL, 'Đã giao hàng', 57205000, 'EXP-787', NULL, 104.087, 'cod', 'Đã thanh toán');
 
 -- --------------------------------------------------------
 
@@ -304,6 +373,19 @@ CREATE TABLE `formdathang` (
   `email` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `formdathang`
+--
+
+INSERT INTO `formdathang` (`maform`, `tenkh`, `sdt`, `diachi`, `email`) VALUES
+('FO17656061628395', 'Trần Hữu Minh', '0383458632', '543 Nguyễn Chí Thanh, Thới An Đông, Bình Thủy, Cần Thơ, Việt Nam', 'huuminh@gmail.com'),
+('FO17656064398703', 'Nguyễn Thanh Tân', '0984526631', '52 Trần Phú, Cái Khế, Ninh Kiều, Cần Thơ', 'thanhtan@gmail.com'),
+('FO17656177485095', 'Nguyễn Thúy Hồng', '0382142365', '73 Lý Tự Trọng, Ninh Kiều, Cần Thơ', 'thuyhong@gmail.com'),
+('FO17656190424195', 'Trần Trung Nam', '0885478965', '111 Trần Phú, Ninh Kiều, Cần Thơ', 'trungnam@gmail.com'),
+('FO17656193792591', 'Ngô Thanh Vân', '0838964756', '35 Mậu Thân, Ninh Kiều, Cần Thơ', 'thanhvan@gmail.com'),
+('FO17656196060291', 'Nguyễn Minh Hằng', '0896784512', '73 Trần Hưng Đạo, Ninh Kiều, Cần Thơ', 'minhhang@gmail.com'),
+('FO17656197771058', 'Võ Thanh Nhân', '0986354785', 'Châu Đốc, An Giang', 'thanhnhan@gmail.com');
+
 -- --------------------------------------------------------
 
 --
@@ -328,7 +410,10 @@ CREATE TABLE `giamgia` (
 INSERT INTO `giamgia` (`magiamgia`, `makh`, `phantramgiam`, `dieukien`, `soluongconlai`, `mota`, `ngaytao`, `ngayketthuc`) VALUES
 ('NEW10KHQMMV3J60', 'KHQMMV3J60', 10, 500000, 0, 'Giảm 10% cho đơn hàng trên 500.000đ', '2025-11-07 18:03:46', '2025-11-14 18:03:46'),
 ('NEW30KHQMMV3J60', 'KHQMMV3J60', 30, 1200000, 0, 'Giảm 30% cho đơn hàng trên 1.200.000đ', '2025-11-07 18:03:46', '2025-11-14 18:03:46'),
-('NEW50KHQMMV3J60', 'KHQMMV3J60', 50, 2500000, 0, 'Giảm 50% cho đơn hàng trên 2.500.000đ', '2025-11-07 18:03:46', '2025-11-14 18:03:46');
+('NEW50KHQMMV3J60', 'KHQMMV3J60', 50, 2500000, 0, 'Giảm 50% cho đơn hàng trên 2.500.000đ', '2025-11-07 18:03:46', '2025-11-14 18:03:46'),
+('NEW03KHG9543SZ6', 'KHG9543SZ6', 3, 299000, 0, 'Giảm 3% cho đơn hàng trên 299.000đ', '2025-12-13 17:04:20', '2025-12-20 17:04:20'),
+('NEW05KHG9543SZ6', 'KHG9543SZ6', 5, 599000, 0, 'Giảm 5% cho đơn hàng trên 599.000đ', '2025-12-13 17:04:20', '2025-12-20 17:04:20'),
+('NEW10KHG9543SZ6', 'KHG9543SZ6', 10, 1599000, 0, 'Giảm 10% cho đơn hàng trên 1.599.000đ', '2025-12-13 17:04:20', '2025-12-20 17:04:20');
 
 -- --------------------------------------------------------
 
@@ -434,32 +519,6 @@ INSERT INTO `hinhanhsanpham` (`masp`, `hinhanh`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `hoadon`
---
-
-CREATE TABLE `hoadon` (
-  `mahd` varchar(50) NOT NULL,
-  `ngaylap` datetime NOT NULL,
-  `tongtien` float NOT NULL,
-  `giamgia` float NOT NULL,
-  `chiphikhac` float NOT NULL,
-  `matt` varchar(50) NOT NULL,
-  `maql` varchar(50) NOT NULL,
-  `madvvc` varchar(50) NOT NULL,
-  `manv` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `hoso`
---
--- Error reading structure for table vatlieuxaydung.hoso: #1932 - Table &#039;vatlieuxaydung.hoso&#039; doesn&#039;t exist in engine
--- Error reading data for table vatlieuxaydung.hoso: #1064 - You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#039;FROM `vatlieuxaydung`.`hoso`&#039; at line 1
-
--- --------------------------------------------------------
-
---
 -- Cấu trúc bảng cho bảng `khachhang`
 --
 
@@ -478,6 +537,7 @@ CREATE TABLE `khachhang` (
 --
 
 INSERT INTO `khachhang` (`tenkh`, `makh`, `email`, `sdt`, `diachi`, `matkhau`, `anhdaidien`) VALUES
+('Lý Xuân Thảo', 'KHG9543SZ6', 'thaoxuan@gmail.com', '0926521652', 'Châu Đốc, An Giang', '$2b$10$7fmNTkO6jjPeXT5z./ZUQObnsLtEIRmxpcdOuAeGJVxD6OGdHsXnu', NULL),
 ('Võ Huỳnh Minh Khang', 'KHI5NCFJFF', 'vokhang123@gmail.com', '0983251652', '15 Bùi Hữu Nghĩa, Bình Thủy, Cần Thơ', '$2b$10$GSND6KV.mIWXw5/l3NN1QOEQLZR0o8vUYBUbuUxOaVBqjTuKLOBDq', NULL),
 ('Hoàng Minh Kha', 'KHQMMV3J60', 'HoangKha@gmail.com', '0741852963', '52 Trần Phú, phường Cái Khế, quận Ninh Kiều, Cần Thơ', '$2b$10$hcRjC6H0Htky5M0JsqkVIekNGYt1Kn4cLvmDMTWpszjvW4t/F8XBm', NULL);
 
@@ -496,6 +556,16 @@ CREATE TABLE `khuyenmai` (
   `masp` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `khuyenmai`
+--
+
+INSERT INTO `khuyenmai` (`makm`, `tenkm`, `km`, `thoigianbatdaukm`, `thoigianketthuckm`, `masp`) VALUES
+('KM-025', 'Giảm 15%', 15, '2025-12-13 17:21:00', '2026-02-07 17:21:00', 'NH87231123'),
+('KM-056', 'Giảm 5%', 5, '2025-12-13 17:20:00', '2026-01-30 17:20:00', 'BN65677123'),
+('KM-654', 'Giảm 3%', 3, '2025-12-13 17:23:00', '2026-01-30 17:23:00', 'CR37462789'),
+('KM-964', 'Giảm 9%', 9, '2025-12-13 17:22:00', '2026-01-28 17:22:00', 'ST45632797');
+
 -- --------------------------------------------------------
 
 --
@@ -510,6 +580,13 @@ CREATE TABLE `lienhe` (
   `chude` varchar(255) NOT NULL,
   `noidung` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `lienhe`
+--
+
+INSERT INTO `lienhe` (`malienhe`, `hoten`, `email`, `sodienthoai`, `chude`, `noidung`) VALUES
+('FO17656239242595', 'Võ Huỳnh Minh Khang', 'khangvvo0711@gmail.com', '0983251652', 'Sản phẩm lỗi', 'Sản phẩm shop giao có xảy ra lỗi');
 
 -- --------------------------------------------------------
 
@@ -613,6 +690,15 @@ CREATE TABLE `phanhoi` (
   `ngaygui` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `phanhoi`
+--
+
+INSERT INTO `phanhoi` (`maphanhoi`, `malienhe`, `email`, `chude`, `noidung`, `maql`, `manv`, `ngaygui`) VALUES
+(3, 978080, 'khangvvo0711@gmail.com', 'Chăm sóc khách hàng', 'Shop sẽ cố gắng hỗ trợ bạn đổi hàng trong hôm nay.', 'RPA67S', NULL, '2025-12-13 18:08:09'),
+(4, 285095, 'khangvvo0711@gmail.com', 'Lỗi', 'Lỗi', 'RPA67S', NULL, '2025-12-13 18:10:55'),
+(5, 237487, 'khangvvo0711@gmail.com', 'a', 'a', 'RPA67S', NULL, '2025-12-13 18:14:40');
+
 -- --------------------------------------------------------
 
 --
@@ -638,7 +724,8 @@ INSERT INTO `phieunhap` (`mapn`, `tenpn`, `ngaylap`, `maql`, `manv`, `tonggia`) 
 ('17655403218029', 'Chăm sóc cơ thể', '2025-12-12 18:52:00', 'RPA67S', NULL, 46000000),
 ('17655404365465', 'Phụ kiện', '2025-12-12 18:53:00', 'RPA67S', NULL, 1500000),
 ('17655405528667', 'Trang điểm', '2025-12-12 18:55:00', 'RPA67S', NULL, 36000000),
-('17655406058327', 'Thực phẩm chức năng', '2025-12-12 18:56:00', 'RPA67S', NULL, 35500000);
+('17655406058327', 'Thực phẩm chức năng', '2025-12-12 18:56:00', 'RPA67S', NULL, 35500000),
+('17656202000682', 'Bột ngậm', '2025-12-13 17:03:00', 'RPA67S', NULL, 71000000);
 
 -- --------------------------------------------------------
 
@@ -686,20 +773,20 @@ CREATE TABLE `sanpham` (
 --
 
 INSERT INTO `sanpham` (`masp`, `tensp`, `maloai`, `ttct`, `mansx`, `loaibienthe`, `cobienthe`, `gia`, `soluongsp`) VALUES
-('BN65677123', 'Bột Ngậm Hỗ Trợ Trắng Da', 'TP378676', 'Gilaa Glow White Premium Glutathione C kết hợp Glutathione, Vitamin C, Elastin và Cà Chua Trắng giúp dưỡng trắng da toàn thân hiệu quả chỉ sau 28 ngày. Với Glutathione 75% từ Hoa Kỳ, sản phẩm mang lại hiệu quả rõ rệt và an toàn. Công nghệ Melting giúp bột ngậm hấp thụ trực tiếp qua niêm mạc miệng, tối ưu hóa hiệu quả mà không bị phân hủy bởi dạ dày.', 'GL671238', NULL, 0, 600000, 100),
-('BT89102384', 'Bông Makeup', 'PK637124', 'Bông makeup là miếng mút mềm làm từ bọt polyurethane với cấu trúc lỗ khí nhỏ giúp tán mỹ phẩm mịn và đều. Thiết kế dạng giọt nước hoặc đầu vát giúp tiếp cận cả vùng rộng lẫn các góc nhỏ trên khuôn mặt. Sản phẩm được dùng để tán kem nền, che khuyết điểm, contour và giúp lớp trang điểm tự nhiên, bền màu hơn.', 'FC125768', NULL, 0, 15000, 100),
-('BZ34219876', 'Bông tẩy trang', 'PK637124', 'Khám phá Bông Tẩy Trang Asakusa Soft Hygienic Skin Cotton Pads – 100% cotton tự nhiên, siêu mềm mịn, không xơ bông, bảo vệ da nhạy cảm.', 'AS562189', NULL, 0, 30000, 100),
-('CN76782423', 'Kem chống nắng', 'CS874523', 'Kem Chống Nắng hỗ trợ nâng tone tự nhiên Espoir Water Splash Sun Cream SPF50+ PA++++ vừa dưỡng ẩm tốt cho da khô, da bình thường, vừa bảo vệ làn da dưới tác động của ánh nắng có thể sử dụng như lớp kem lót, giúp da thêm rạng rỡ.', 'ES216821', NULL, 0, 265000, 100),
-('CR37462789', 'Sữa rửa mặt CeraVe', 'CS874523', 'Với làn da dầu, nhạy cảm, sữa rửa mặt giúp làm sạch sâu, giúp loại bỏ dầu thừa, bụi bẩn mà không phá vỡ cấu trúc hàng rào bảo vệ tự nhiên của da.', 'CV602871', NULL, 0, 320000, 100),
-('NH47627821', 'Nước hoa Hoa Sen', 'CT368716', 'Nước Hoa Hương Hoa Sen Tesori D\'oriente Lotus Flower And Acacia\'S Milk là dòng nước hoa thuộc nhóm Oriental Floral (Hương hoa cỏ). Sản phẩm được lấy cảm hứng từ hoa sen - loài hoa biểu tượng đầy cuốn hút của văn hóa phương Đông. Loài hoa có sức sống mãnh liệt, vươn lên từ bùn đất, mang trên mình vẻ đẹp hoang sơ và kiêu hãnh cùng hương thơm say đắm, mang lại cảm giác bình yên, an vui, hạnh phúc và sảng khoái.', 'TL842324', NULL, 0, 350000, 100),
-('NH87231123', 'Nước hoa Thanh Long', 'CT368716', 'Nước Hoa Hương Thanh Long Italia Tesori D\'Oriente Dragon Flower là một mùi hương được kết hợp từ hương hạnh nhân ngọt ngào, hương thơm mãnh liệt sang trọng của hoa nhài Sambac, hương thơm quyến rũ, gợi cảm của xạ hương và gỗ đàn hương, hương vani và hổ phách ấm áp, cuốn hút.', 'TL842324', NULL, 0, 350000, 100),
+('BN65677123', 'Bột Ngậm Hỗ Trợ Trắng Da', 'TP378676', 'Gilaa Glow White Premium Glutathione C kết hợp Glutathione, Vitamin C, Elastin và Cà Chua Trắng giúp dưỡng trắng da toàn thân hiệu quả chỉ sau 28 ngày. Với Glutathione 75% từ Hoa Kỳ, sản phẩm mang lại hiệu quả rõ rệt và an toàn. Công nghệ Melting giúp bột ngậm hấp thụ trực tiếp qua niêm mạc miệng, tối ưu hóa hiệu quả mà không bị phân hủy bởi dạ dày.', 'GL671238', NULL, 0, 600000, 84),
+('BT89102384', 'Bông Makeup', 'PK637124', 'Bông makeup là miếng mút mềm làm từ bọt polyurethane với cấu trúc lỗ khí nhỏ giúp tán mỹ phẩm mịn và đều. Thiết kế dạng giọt nước hoặc đầu vát giúp tiếp cận cả vùng rộng lẫn các góc nhỏ trên khuôn mặt. Sản phẩm được dùng để tán kem nền, che khuyết điểm, contour và giúp lớp trang điểm tự nhiên, bền màu hơn.', 'FC125768', NULL, 0, 15000, 95),
+('BZ34219876', 'Bông tẩy trang', 'PK637124', 'Khám phá Bông Tẩy Trang Asakusa Soft Hygienic Skin Cotton Pads – 100% cotton tự nhiên, siêu mềm mịn, không xơ bông, bảo vệ da nhạy cảm.', 'AS562189', NULL, 0, 30000, 98),
+('CN76782423', 'Kem chống nắng', 'CS874523', 'Kem Chống Nắng hỗ trợ nâng tone tự nhiên Espoir Water Splash Sun Cream SPF50+ PA++++ vừa dưỡng ẩm tốt cho da khô, da bình thường, vừa bảo vệ làn da dưới tác động của ánh nắng có thể sử dụng như lớp kem lót, giúp da thêm rạng rỡ.', 'ES216821', NULL, 0, 265000, 65),
+('CR37462789', 'Sữa rửa mặt CeraVe', 'CS874523', 'Với làn da dầu, nhạy cảm, sữa rửa mặt giúp làm sạch sâu, giúp loại bỏ dầu thừa, bụi bẩn mà không phá vỡ cấu trúc hàng rào bảo vệ tự nhiên của da.', 'CV602871', NULL, 0, 320000, 99),
+('NH47627821', 'Nước hoa Hoa Sen', 'CT368716', 'Nước Hoa Hương Hoa Sen Tesori D\'oriente Lotus Flower And Acacia\'S Milk là dòng nước hoa thuộc nhóm Oriental Floral (Hương hoa cỏ). Sản phẩm được lấy cảm hứng từ hoa sen - loài hoa biểu tượng đầy cuốn hút của văn hóa phương Đông. Loài hoa có sức sống mãnh liệt, vươn lên từ bùn đất, mang trên mình vẻ đẹp hoang sơ và kiêu hãnh cùng hương thơm say đắm, mang lại cảm giác bình yên, an vui, hạnh phúc và sảng khoái.', 'TL842324', NULL, 0, 350000, 65),
+('NH87231123', 'Nước hoa Thanh Long', 'CT368716', 'Nước Hoa Hương Thanh Long Italia Tesori D\'Oriente Dragon Flower là một mùi hương được kết hợp từ hương hạnh nhân ngọt ngào, hương thơm mãnh liệt sang trọng của hoa nhài Sambac, hương thơm quyến rũ, gợi cảm của xạ hương và gỗ đàn hương, hương vani và hổ phách ấm áp, cuốn hút.', 'TL842324', NULL, 0, 350000, 70),
 ('SB052736412', 'Son Bóng Black Rouge', 'TD902642', 'Son Bóng Black Rouge với độ bóng cực cao giúp môi căng mọng như jelly cùng lớp phủ màu trong trẻo phù hợp với da ngâm, da sáng và môi khô, môi mỏng, sống động tạo hiệu ứng 3D ấn tượng mang đến một đôi môi căng.', 'BR563283', 'Màu sắc', 1, NULL, NULL),
 ('SL23981364', 'Son Tint Lilybyred', 'TD902642', 'Son Tint Lilybyred có công thức tint nước, lỏng nhẹ cho phép bạn dễ dàng điều chỉnh màu cũng như lượng son thích hợp khi trang điểm cho làn da bình thường, da sáng và các loại môi bình thường, môi thâm và môi dày. Cho đôi môi trong veo mọng nước, son lên môi đều màu, bên ngoài được phủ một lớp màng bóng tăng sự quyến rũ cho phái đẹp.', 'LY837221', 'Màu sắc', 1, NULL, NULL),
-('SM15414124', 'Sữa rửa mặt SVR', 'CS874523', 'Chuyên dùng cho da dầu và da nhiều mụn giúp làm sạch tốt lỗ chân lông', 'SV657632', NULL, 0, 225000, 100),
-('SM28364812', 'Sữa rửa mặt Hadalabo', 'CS874523', 'Làm sạch sâu tốt phù hợp cho da nhạy cảm', 'HL213276', NULL, 0, 95000, 100),
+('SM15414124', 'Sữa rửa mặt SVR', 'CS874523', 'Chuyên dùng cho da dầu và da nhiều mụn giúp làm sạch tốt lỗ chân lông', 'SV657632', NULL, 0, 225000, 68),
+('SM28364812', 'Sữa rửa mặt Hadalabo', 'CS874523', 'Làm sạch sâu tốt phù hợp cho da nhạy cảm', 'HL213276', NULL, 0, 95000, 92),
 ('SM75414127', 'Son kem lì 3CE ', 'TD902642', 'Son kem lì 3CE Velvet Lip là dòng son nổi tiếng từ Hàn Quốc với chất son mềm mịn như nhung, phù hợp với môi khô, da sáng. Son có độ bám màu tầm 4–6 tiếng, mùi dịu nhẹ, dễ chịu.\r\n', 'CE567824', 'Màu sắc', 1, NULL, NULL),
 ('SN49361763', 'Sữa tắm nước hoa', 'CT368716', 'Đặc biệt về mùi hương, Sữa Tắm Nước Hoa Thanh Long Tesori D\'Oriente Dragon Flower Bath Cream có nguyên tắc ba lớp hương cao cấp độc đáo, mà thường chỉ áp dụng để sản xuất nước hoa cao cấp, và có khả năng lưu hương 6 tiếng trên da.', 'TL842324', 'Dung tích', 1, NULL, NULL),
-('ST45632797', 'Sữa tắm thốt nốt', 'CT368716', 'Mang trong mình tinh túy từ thốt nốt An Giang, Gel Tắm Cocoon Palmyra Sugar nhẹ nhàng làm sạch, dưỡng ẩm và nuôi dưỡng làn da mịn màng. Hương thơm ngọt dịu, thuần khiết đánh thức mọi giác quan, như một bản tình ca từ miền Tây nắng gió.', 'CO875434', NULL, 0, 335000, 100),
+('ST45632797', 'Sữa tắm thốt nốt', 'CT368716', 'Mang trong mình tinh túy từ thốt nốt An Giang, Gel Tắm Cocoon Palmyra Sugar nhẹ nhàng làm sạch, dưỡng ẩm và nuôi dưỡng làn da mịn màng. Hương thơm ngọt dịu, thuần khiết đánh thức mọi giác quan, như một bản tình ca từ miền Tây nắng gió.', 'CO875434', NULL, 0, 335000, 59),
 ('TT045673323', 'Nước tẩy trang dạng sữa', 'CS874523', 'Sản phẩm tẩy trang không chỉ làm sạch mà còn nâng niu, bảo vệ làn da, thì Nước Tẩy Trang Dạng Sữa Drceutics Gentle Olive Milky Micellar Water chính là lựa chọn lý tưởng, mang đến bạn một làn da sạch sâu, mềm mịn và tràn đầy sức sống.', 'HJ354107', 'Dung tích', 1, NULL, NULL),
 ('VZ092736451', 'Viên uống Vitamin C', 'TP378676', 'Bổ sung Vitamin C', 'DC456782', 'Số viên', 1, NULL, NULL);
 
@@ -828,12 +915,6 @@ ALTER TABLE `chitietdonhang`
   ADD KEY `mabienthe` (`mabienthe`);
 
 --
--- Chỉ mục cho bảng `chitiethoadon`
---
-ALTER TABLE `chitiethoadon`
-  ADD KEY `mahd` (`mahd`);
-
---
 -- Chỉ mục cho bảng `chitietphieunhap`
 --
 ALTER TABLE `chitietphieunhap`
@@ -882,16 +963,6 @@ ALTER TABLE `giaonhanca`
 --
 ALTER TABLE `hinhanhsanpham`
   ADD KEY `masp` (`masp`);
-
---
--- Chỉ mục cho bảng `hoadon`
---
-ALTER TABLE `hoadon`
-  ADD PRIMARY KEY (`mahd`),
-  ADD KEY `matt` (`matt`),
-  ADD KEY `maql` (`maql`),
-  ADD KEY `madvvc` (`madvvc`),
-  ADD KEY `manv` (`manv`);
 
 --
 -- Chỉ mục cho bảng `khachhang`
@@ -1008,7 +1079,7 @@ ALTER TABLE `chitietchamcong`
 -- AUTO_INCREMENT cho bảng `phanhoi`
 --
 ALTER TABLE `phanhoi`
-  MODIFY `maphanhoi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `maphanhoi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `traloi_binhluan`
@@ -1054,12 +1125,6 @@ ALTER TABLE `chitietdonhang`
   ADD CONSTRAINT `chitietdonhang_ibfk_2` FOREIGN KEY (`mabienthe`) REFERENCES `cacbienthe` (`mabienthe`);
 
 --
--- Các ràng buộc cho bảng `chitiethoadon`
---
-ALTER TABLE `chitiethoadon`
-  ADD CONSTRAINT `chitiethoadon_ibfk_1` FOREIGN KEY (`mahd`) REFERENCES `hoadon` (`mahd`);
-
---
 -- Các ràng buộc cho bảng `chitietphieunhap`
 --
 ALTER TABLE `chitietphieunhap`
@@ -1093,15 +1158,6 @@ ALTER TABLE `giaonhanca`
 --
 ALTER TABLE `hinhanhsanpham`
   ADD CONSTRAINT `hinhanhsanpham_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
-
---
--- Các ràng buộc cho bảng `hoadon`
---
-ALTER TABLE `hoadon`
-  ADD CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`matt`) REFERENCES `thanhtoan` (`matt`),
-  ADD CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`maql`) REFERENCES `quanly` (`maql`),
-  ADD CONSTRAINT `hoadon_ibfk_3` FOREIGN KEY (`madvvc`) REFERENCES `donvivanchuyen` (`madvvc`),
-  ADD CONSTRAINT `hoadon_ibfk_4` FOREIGN KEY (`manv`) REFERENCES `nhanvien` (`manv`);
 
 --
 -- Các ràng buộc cho bảng `khuyenmai`
