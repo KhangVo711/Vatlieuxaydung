@@ -14,7 +14,9 @@ export default function Login() {
     phone: '',
     password: '',
   });
-  // console.log(formData);
+  const [isForgot, setIsForgot] = useState(false);
+const [forgotValue, setForgotValue] = useState('');
+
   const [message, setMessage] = useState('');
   const [colorMsg, setColorMsg] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +29,30 @@ export default function Login() {
       [name]: value
     });
   };
-  console.log(formData);
+  const handleForgotPassword = async (e) => {
+  e.preventDefault();
+
+  if (!forgotValue.trim()) {
+    toast.error("Vui lòng nhập email hoặc số điện thoại!");
+    return;
+  }
+
+  try {
+    const res = await axios.post(
+      "http://localhost:5001/forgot-password",
+      { email: forgotValue },
+      { withCredentials: true }
+    );
+
+    toast.success(res.data.message || "Đã gửi yêu cầu đặt lại mật khẩu!");
+    setIsForgot(false);
+    setForgotValue('');
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message || "Không thể gửi yêu cầu!"
+    );
+  }
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -97,11 +122,12 @@ export default function Login() {
           </div> */}
           <ToastContainer />
           <div className="mt-12 flex flex-col items-center">
-            <h1 className="text-3xl xl:text-4xl font-bold uppercase tracking-wider">Đăng nhập</h1>
+            <h1 className="text-3xl xl:text-4xl font-bold uppercase tracking-wider">{!isForgot ? "Đăng nhập" : "Quên mật khẩu"}</h1>
             <div className="w-full flex-1 mt-10">
               <div className="flex flex-col items-center">
+                {!isForgot && (
                 <button onClick={onClickChangeLogin} className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
-                {!changeLogin ?
+                {!changeLogin  ?
                   <div className="bg-white p-2 rounded-full">
                      
                     <svg className="w-4" viewBox="0 0 533.5 544.3">
@@ -127,17 +153,19 @@ export default function Login() {
                     : ''}
 
                   {!changeLogin ? <span className="ml-2 lg:ml-4">Đăng nhập với Email</span> : <span className="my-1">Đăng nhập với Số điện thoại</span>}
-                </button>
+                </button>)}
               </div>
-
+              
+              {!isForgot && (
               <div className="my-12 border-b text-center">
                 {!changeLogin ? <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
                   Hoặc đăng nhập với số điện thoại
                 </div> : <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
                   Hoặc đăng nhập với email
                 </div>}
-              </div>
+              </div>)}
               {message && <p className={`${colorMsg} text-center text-sm`}>{message}</p>}
+              {!isForgot ? (
               <form className="mx-auto max-w-xs" onSubmit={handleSubmit}>
                 {!changeLogin ? <input
                   className="mt-5 transition ease-in-out duration-300 w-full px-4 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
@@ -175,12 +203,46 @@ export default function Login() {
                     {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
                   </button>
                 </div>
+                <p
+  onClick={() => setIsForgot(true)}
+  className="mt-3 text-sm text-right text-indigo-600 cursor-pointer hover:underline"
+>
+  Quên mật khẩu?
+</p>
 
                 <Button type="submit" className="mt-5 tracking-wide font-semibold bg-pink-400 text-gray-50 w-full py-4 rounded-lg hover:bg-pink-500 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
 
                   <span className="ml-3">Đăng nhập</span>
                 </Button>
               </form>
+              ) : (
+  /* ===== FORM QUÊN MẬT KHẨU ===== */
+  <form className="mx-auto max-w-xs mt-40" onSubmit={handleForgotPassword}>
+   
+
+    <input
+      className="mt-5 w-full px-4 py-4 rounded-lg bg-gray-100 border"
+      type="text"
+      placeholder="Nhập Email tài khoẳn của bạn"
+      value={forgotValue}
+      onChange={(e) => setForgotValue(e.target.value)}
+    />
+
+    <Button
+      type="submit"
+      className="mt-5 tracking-wide font-semibold bg-pink-400 text-gray-50 w-full py-4 rounded-lg hover:bg-pink-500 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+    >
+      Gửi yêu cầu
+    </Button>
+
+    <p
+      onClick={() => setIsForgot(false)}
+      className="mt-4 text-sm text-center text-gray-700 cursor-pointer hover:underline"
+    >
+      Quay lại đăng nhập
+    </p>
+  </form>
+)}
             </div>
             <p className="mt-16 text-xs text-gray-600 text-center">Bạn chưa có tài khoản?</p>
             <Link className="text-sm text-indigo-600 border-b border-indigo-300" to="/register">Đăng kí</Link>

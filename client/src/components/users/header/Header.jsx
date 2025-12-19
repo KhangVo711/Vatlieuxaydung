@@ -929,7 +929,7 @@ console.log("Form Data:", formData);
           </div>
           <button
             type="submit"
-            className="w-full py-2 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="mt-5 tracking-wide font-semibold bg-pink-400 text-gray-50 w-full py-2.5 rounded-lg hover:bg-pink-500 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
           >
             Đồng ý
           </button>

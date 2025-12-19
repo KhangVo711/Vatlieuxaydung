@@ -3,9 +3,20 @@ import bcrypt, { hash } from "bcrypt";
 import userModel from '../services/userModel.js';
 import JWTAction from '../../middleware/jwt.js';
 import jwt from 'jsonwebtoken';
+import transporter from "../configs/mailConfig.js";
 
 
 // ----------------------------------------------------
+
+const generateRandomPassword = (length = 8) => {
+    const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$!";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+};
 
 // Đăng ký tài khoản
 const insertUser = async (req, res) => {
@@ -107,6 +118,8 @@ const getUser = async (req, res) => {
         console.log(payload)
 
         const token = JWTAction.createJWT(payload);
+
+        
         console.log(token);
         res.cookie("jwt", token, { path: "/", httpOnly: false, secure: false, sameSite: 'Lax' });
 
@@ -362,5 +375,53 @@ const uploadAvatar = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
 
-export default { getInf, insertUser, getUser, updateInf, changePassword, loginAdmin, getAllUsers, updateInfoAdmin, changePasswordAdmin, getAdminInfo, uploadAvatar };
+        if (!email) {
+            return res.status(400).json({ message: "Vui lòng nhập email" });
+        }
+
+        const emailRegex =
+            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "Email không hợp lệ" });
+        }
+
+        const user = await userModel.getUserWithEmail(email);
+
+        if (!user) {
+            return res.status(400).json({ message: "Email không tồn tại" });
+        }
+
+        const newPassword = generateRandomPassword(10);
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        await userModel.updatePasswordByEmail(hashedPassword, email);
+
+        await transporter.sendMail({
+            from: `"Hệ thống hỗ trợ" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: "Khôi phục mật khẩu",
+            html: `
+                <h3>Xin chào ${user.tenkh}</h3>
+                <p>Mật khẩu mới của bạn là:</p>
+                <h2 style="color:red">${newPassword}</h2>
+                <p>Vui lòng đăng nhập và đổi mật khẩu ngay.</p>
+            `,
+        });
+
+        return res.status(200).json({
+            message: "Mật khẩu mới đã được gửi về Email của bạn",
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Lỗi server" });
+    }
+};
+
+export default { getInf, insertUser, forgotPassword, getUser, updateInf, changePassword, loginAdmin, getAllUsers, updateInfoAdmin, changePasswordAdmin, getAdminInfo, uploadAvatar };

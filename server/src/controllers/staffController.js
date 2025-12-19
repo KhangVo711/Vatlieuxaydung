@@ -197,7 +197,7 @@ const deleteStaff = async (req, res) => {
     try {
         const { manv } = req.body;
        
-        const staff = await staffModel.getStaff(manv);
+        const staff = await staffModel.getStaffById(manv);
         if (!staff) {
             return res.status(400).json({ message: 'Nhân viên không tồn tại' });
         }

@@ -24,6 +24,8 @@ const initWebRoute = (app) => {
     router.get('/admin/get/:maql', user.getAdminInfo)
     router.post("/admin/update/:maql", user.updateInfoAdmin);
     router.post("/admin/change-password/:maql", user.changePasswordAdmin);
+    router.post("/forgot-password", user.forgotPassword);
+
 
     router.post('/login', user.getUser)
     router.post('/updateInf/:id', auth.authMiddleware, user.updateInf)
@@ -95,6 +97,7 @@ const initWebRoute = (app) => {
     router.get('/staff/get/:manv', staff.getStaffByMail)
     router.post("/staff/update/:manv", staff.updateInfoStaff);
     router.post("/staff/change-password/:manv", staff.changePasswordStaff);
+    
 
     router.post('/addDelivery', auth.authMiddleware, ship.addShip)
     router.get('/getDelivery', ship.getAllShip)

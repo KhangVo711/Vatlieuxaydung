@@ -200,5 +200,14 @@ const getUserById = async (role, id) => {
   return rows[0];
 };
 
-export default {getUser, getAdminById, updateAdminInfo, updateAdminPassword, insertUser, createDefaultDiscounts, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers, updateAvatar, getUserById};
+const updatePasswordByEmail = async (hashedPassword, email) => {
+    const [rows] = await connectDB.execute(
+        'UPDATE khachhang SET matkhau = ? WHERE email = ?',
+        [hashedPassword, email]
+    );
+    return rows;
+};
+
+
+export default {getUser, updatePasswordByEmail, getAdminById, updateAdminInfo, updateAdminPassword, insertUser, createDefaultDiscounts, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers, updateAvatar, getUserById};
 
