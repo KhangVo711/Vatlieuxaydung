@@ -87,33 +87,40 @@ def register():
 
         manv = data["manv"]
         image_base64 = data["image"]
-        print("[REGISTER] Nhận data:", manv, image_base64[:30])
 
         img_rgb, error = process_image(image_base64)
         if error:
             return jsonify({"error": error}), 400
 
-        print("[REGISTER] Bắt đầu trích xuất encodings, Kích thước ảnh:", img_rgb.shape)
-        try:
-            face_encodings = face_recognition.face_encodings(img_rgb, num_jitters=5)
-            print("[REGISTER] Số encodings tìm thấy:", len(face_encodings))
-            if len(face_encodings) == 0:
-                return jsonify({"error": "Không phát hiện khuôn mặt"}), 400
-            if len(face_encodings) > 1:
-                return jsonify({"error": "Ảnh chứa nhiều hơn một khuôn mặt"}), 400
+        face_encodings = face_recognition.face_encodings(img_rgb, num_jitters=5)
 
-            descriptor = face_encodings[0]
-            with open(os.path.join(ENCODE_DIR, f"{manv}.pkl"), "wb") as f:
-                pickle.dump(descriptor, f)
+        if len(face_encodings) == 0:
+            return jsonify({"error": "Không phát hiện khuôn mặt"}), 400
+        if len(face_encodings) > 1:
+            return jsonify({"error": "Ảnh chứa nhiều hơn một khuôn mặt"}), 400
 
-            global ENCODINGS
-            ENCODINGS[manv] = descriptor
+        new_encoding = face_encodings[0]
 
-            print("[REGISTER] Thành công:", manv)
-            return jsonify({"success": True})
-        except Exception as e:
-            print(f"[REGISTER FACE_ENCODE ERROR] {str(e)}")
-            return jsonify({"error": f"Lỗi khi trích xuất encodings: {str(e)}"}), 500
+        known_encodings = load_encodings()
+
+        for existing_manv, existing_encoding in known_encodings.items():
+            matches = face_recognition.compare_faces(
+                [existing_encoding],
+                new_encoding,
+                tolerance=0.5
+            )
+
+            if matches[0]:
+                return jsonify({
+                    "error": f"Khuôn mặt đã được đăng ký cho nhân viên: {existing_manv}"
+                }), 409
+
+        with open(os.path.join(ENCODE_DIR, f"{manv}.pkl"), "wb") as f:
+            pickle.dump(new_encoding, f)
+
+        ENCODINGS[manv] = new_encoding
+
+        return jsonify({"success": True})
 
     except Exception as e:
         print("[REGISTER ERROR]", str(e))

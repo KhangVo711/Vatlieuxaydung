@@ -143,6 +143,11 @@ export default function HeaderUser() {
       setMessage("Đổi mật khẩu thành công!");
       setColorMsg("text-green-600");
       setFormChangePass({ oldPassword: "", newPassword: "", renewPassword: "" });
+
+      setTimeout(() => {
+      setMessage("");
+      setModalChangePass(false);
+    }, 1000);
     } catch (err) {
       console.error(err);
       setMessage("Lỗi khi đổi mật khẩu!");
@@ -376,6 +381,11 @@ export default function HeaderUser() {
       >
         <div className="text-center">
           <h2 className="text-xl font-semibold mb-2">Đổi mật khẩu</h2>
+          {message && (
+  <p className={`${colorMsg} text-center text-sm mb-3`}>
+    {message}
+  </p>
+)}
           <p className="text-gray-500 mb-4">
             {isAdmin ? "Mã quản lý" : "Mã nhân viên"}:{" "}
             <span className="text-gray-700">{id}</span>
