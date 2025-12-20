@@ -162,5 +162,11 @@ const getStaffByMail = async (manv) => {
   return rows[0];
 };
 
+const updateStaffPasswordByEmail = async (password, email) => {
+    const [rows] = await connectDB.execute(
+        "UPDATE nhanvien SET matkhau = ? WHERE emailnv = ?", [password, email]
+    );
+    return rows;
+};
 
-export default {updateStaffInfo, updateStaffPassword, getStaffByMail, addStaff, updateStaff, addStaffToShift, getShifts, deleteShift, updateShift, getStaffByShift, removeAllStaffFromShift, getAllStaff, getAllShifts, addShift, deleteStaff, getStaffByPhone, getStaffByEmail, getStaffById, getShiftById, removeStaffFromShift};
+export default {updateStaffInfo, updateStaffPassword, updateStaffPasswordByEmail, getStaffByMail, addStaff, updateStaff, addStaffToShift, getShifts, deleteShift, updateShift, getStaffByShift, removeAllStaffFromShift, getAllStaff, getAllShifts, addShift, deleteStaff, getStaffByPhone, getStaffByEmail, getStaffById, getShiftById, removeStaffFromShift};

@@ -25,7 +25,8 @@ const initWebRoute = (app) => {
     router.post("/admin/update/:maql", user.updateInfoAdmin);
     router.post("/admin/change-password/:maql", user.changePasswordAdmin);
     router.post("/forgot-password", user.forgotPassword);
-
+router.post("/admin/forgot-password", user.forgotPasswordAdmin);
+router.post("/staff/forgot-password", staff.forgotPasswordStaff);
 
     router.post('/login', user.getUser)
     router.post('/updateInf/:id', auth.authMiddleware, user.updateInf)

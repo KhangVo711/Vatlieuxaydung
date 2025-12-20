@@ -424,4 +424,40 @@ const forgotPassword = async (req, res) => {
     }
 };
 
-export default { getInf, insertUser, forgotPassword, getUser, updateInf, changePassword, loginAdmin, getAllUsers, updateInfoAdmin, changePasswordAdmin, getAdminInfo, uploadAvatar };
+const forgotPasswordAdmin = async (req, res) => {
+    try {
+        const { email } = req.body;
+        console.log(email);
+        if (!email) {
+            return res.status(400).json({ message: "Vui lòng nhập email" });
+        }
+
+        const admin = await userModel.getAdminByEmail(email);
+        if (!admin) {
+            return res.status(400).json({ message: "Email admin không tồn tại" });
+        }
+
+        const newPassword = generateRandomPassword();
+        const hashed = await bcrypt.hash(newPassword, 10);
+
+        await userModel.updateAdminPasswordByEmail(hashed, email);
+
+        await transporter.sendMail({
+            from: `"Hệ thống quản trị" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: "Khôi phục mật khẩu Admin",
+            html: `
+                <p>Xin chào <b>${admin.tenql}</b></p>
+                <p>Mật khẩu mới của bạn:</p>
+                <h2 style="color:red">${newPassword}</h2>
+                <p>Vui lòng đăng nhập và đổi mật khẩu ngay.</p>
+            `
+        });
+
+        res.status(200).json({ message: "Mật khẩu mới đã được gửi về email" });
+    } catch (err) {
+        res.status(500).json({ message: "Lỗi server" });
+    }
+};
+
+export default { getInf, insertUser, forgotPassword, forgotPasswordAdmin, getUser, updateInf, changePassword, loginAdmin, getAllUsers, updateInfoAdmin, changePasswordAdmin, getAdminInfo, uploadAvatar };

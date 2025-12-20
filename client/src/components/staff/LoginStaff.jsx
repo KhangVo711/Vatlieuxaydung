@@ -92,13 +92,49 @@ export default function LoginStaff() {
             progress: undefined,
         });
     };
+const [isForgot, setIsForgot] = useState(false);
+const [forgotEmail, setForgotEmail] = useState("");
+const [forgotMessage, setForgotMessage] = useState("");
+    const handleForgotStaff = async () => {
+    setForgotMessage("");
+
+    if (!forgotEmail.trim()) {
+        setForgotMessage("Vui lòng nhập email!");
+        return;
+    }
+
+    try {
+        const res = await axios.post(
+            "http://localhost:5001/staff/forgot-password",
+            { emailnv: forgotEmail },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
+
+        toast.success(res.data.message);
+        setForgotEmail("");
+
+        setTimeout(() => {
+            setIsForgot(false);
+            setForgotMessage("");
+        }, 2000);
+
+    } catch (err) {
+        setForgotMessage(err.response?.data?.message || "Lỗi gửi mail");
+    }
+};
 
     return (
         <>
         <ToastContainer />
 
         <section className="min-h-screen flex items-center justify-center bg-pink-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+            <div className={`max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg ${isForgot ? "hidden" : ""}`}>
                 <div className="text-center">
                     <Typography 
                         variant="h3" 
@@ -235,11 +271,68 @@ export default function LoginStaff() {
                 </form>
 
                 <div className="text-center">
-                    <a href="#" className="text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200">
-                        Quên mật khẩu?
-                    </a>
+                    <p
+  onClick={() => setIsForgot(true)}
+  className="text-sm text-blue-600 cursor-pointer hover:underline"
+>
+  Quên mật khẩu?
+</p>
                 </div>
             </div>
+            {isForgot && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-white w-full max-w-sm rounded-xl p-6 shadow-xl animate-fade-in">
+      
+      <Typography variant="h5" className="text-center text-3xl uppercase mb-4 font-bold">
+        Quên mật khẩu
+      </Typography>
+
+      <Typography className="text-sm text-gray-600 text-center mb-4">
+        Nhập email nhân viên để đặt lại mật khẩu
+      </Typography>
+
+      <Input
+        type="email"
+        color="pink"
+        size="lg"
+        placeholder="name@mail.com"
+        value={forgotEmail}
+        onChange={(e) => setForgotEmail(e.target.value)}
+        className="mb-3"
+        labelProps={{ className: "hidden" }}
+      />
+
+      {forgotMessage && (
+        <p className="text-sm text-center text-red-500 mb-2">
+          {forgotMessage}
+        </p>
+      )}
+
+      <div className="flex gap-3 mt-4">
+        <Button
+          fullWidth
+          color="pink"
+          onClick={handleForgotStaff}
+        >
+          Gửi email
+        </Button>
+
+        <Button
+          fullWidth
+          variant="outlined"
+          color="gray"
+          onClick={() => {
+            setIsForgot(false);
+            setForgotMessage("");
+          }}
+        >
+          Hủy
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
         </section>
         </>
     );

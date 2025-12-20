@@ -208,6 +208,12 @@ const updatePasswordByEmail = async (hashedPassword, email) => {
     return rows;
 };
 
+const updateAdminPasswordByEmail = async (password, email) => {
+    const [rows] = await connectDB.execute(
+        "UPDATE quanly SET matkhau = ? WHERE email = ?", [password, email]
+    );
+    return rows;
+};
 
-export default {getUser, updatePasswordByEmail, getAdminById, updateAdminInfo, updateAdminPassword, insertUser, createDefaultDiscounts, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers, updateAvatar, getUserById};
+export default {getUser, updatePasswordByEmail, updateAdminPasswordByEmail, getAdminById, updateAdminInfo, updateAdminPassword, insertUser, createDefaultDiscounts, getInf, updateInf, getUserWithEmail, getUserWithPhone, changePassword, getAdminByEmail, getAdminByPhone, getAllUsers, updateAvatar, getUserById};
 

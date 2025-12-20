@@ -3,7 +3,17 @@ import staffModel from "../services/staffModel.js";
 import JWTAction from '../../middleware/jwt.js';
 import jwt from 'jsonwebtoken';
 import bcrypt, { hash } from "bcrypt";
+import transporter from "../configs/mailConfig.js";
 
+
+const generateRandomPassword = (length = 10) => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@#$!";
+    let pass = "";
+    for (let i = 0; i < length; i++) {
+        pass += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return pass;
+};
 
 const addStaff = async (req, res) => {
     try {
@@ -316,4 +326,39 @@ const changePasswordStaff = async (req, res) => {
     res.status(500).json({ message: "Lỗi server" });
   }
 };
-export default { loginStaff, addStaff, getAllStaff, editStaff, getShifts, deleteStaff, getAllShifts, addShift, removeStaffFromShift, updateShiftStaff, updateInfoStaff, getStaffByMail, changePasswordStaff };
+
+const forgotPasswordStaff = async (req, res) => {
+    try {
+        const { emailnv } = req.body;
+        if (!emailnv) {
+            return res.status(400).json({ message: "Vui lòng nhập email" });
+        }
+
+        const staff = await staffModel.getStaffByEmail(emailnv);
+        if (!staff) {
+            return res.status(400).json({ message: "Email nhân viên không tồn tại" });
+        }
+
+        const newPassword = generateRandomPassword();
+        const hashed = await bcrypt.hash(newPassword, 10);
+
+        await staffModel.updateStaffPasswordByEmail(hashed, emailnv);
+
+        await transporter.sendMail({
+            from: `"Hệ thống nhân sự" <${process.env.EMAIL_USER}>`,
+            to: emailnv,
+            subject: "Khôi phục mật khẩu Nhân viên",
+            html: `
+                <p>Xin chào <b>${staff.tennv}</b></p>
+                <p>Mật khẩu mới của bạn:</p>
+                <h2 style="color:red">${newPassword}</h2>
+                <p>Vui lòng đăng nhập và đổi mật khẩu ngay.</p>
+            `
+        });
+
+        res.status(200).json({ message: "Mật khẩu mới đã được gửi về email" });
+    } catch (err) {
+        res.status(500).json({ message: "Lỗi server" });
+    }
+};
+export default { loginStaff, addStaff, forgotPasswordStaff, getAllStaff, editStaff, getShifts, deleteStaff, getAllShifts, addShift, removeStaffFromShift, updateShiftStaff, updateInfoStaff, getStaffByMail, changePasswordStaff };
