@@ -6,7 +6,7 @@ const getTotalProductsSold = async () => {
       COALESCE(SUM(ctdh.soluongsanpham), 0) AS total_products_sold
     FROM chitietdonhang ctdh
     INNER JOIN donhang dh ON ctdh.madh = dh.madh
-    WHERE dh.trangthai IN ('Đã xác nhận', 'Đang giao hàng', 'Đã giao hàng')
+    WHERE dh.trangthai = "Đã giao hàng"
   `);
   return rows[0].total_products_sold || 0;
 };
@@ -22,7 +22,7 @@ const getReTract = async () => {
 FROM donhang dh
 INNER JOIN khachhang kh ON dh.makh = kh.makh
 INNER JOIN chitietdonhang ctdh ON dh.madh = ctdh.madh
-WHERE dh.trangthai IN ('Đã xác nhận', 'Đang giao hàng', 'Đã giao hàng')
+WHERE dh.trangthai = "Đã giao hàng"
 GROUP BY dh.madh, kh.tenkh, dh.tonggia, dh.ngaydat
 ORDER BY dh.ngaydat DESC
 LIMIT 4;
@@ -49,7 +49,7 @@ const getDailyRevenue = async () => {
             SUM(tonggia) AS total_revenue
         FROM donhang
         WHERE DATE(ngaydat) BETWEEN ? AND ?
-          AND trangthai IN ('Đã xác nhận', 'Đang giao hàng', 'Đã giao hàng')
+          AND trangthai = "Đã giao hàng" 
         GROUP BY DAYNAME(ngaydat), DAYOFWEEK(ngaydat)
         ORDER BY DAYOFWEEK(ngaydat)
     `, [startDate, endDate]);
@@ -98,7 +98,7 @@ const getDailyProductSales = async () => {
         INNER JOIN chitietdonhang ctdh 
             ON dh.madh = ctdh.madh
         WHERE DATE(dh.ngaydat) BETWEEN ? AND ?
-          AND dh.trangthai IN ('Đã xác nhận', 'Đang giao hàng', 'Đã giao hàng')
+          AND dh.trangthai = "Đã giao hàng"
         GROUP BY DAYNAME(dh.ngaydat), DAYOFWEEK(dh.ngaydat)
         ORDER BY DAYOFWEEK(dh.ngaydat)
     `, [startDate, endDate]);
@@ -142,7 +142,7 @@ const getMonthlyRevenue = async () => {
             MONTH(ngaydat) AS month,
             SUM(tonggia + 0) AS total_revenue
         FROM donhang
-        WHERE trangthai IN ('Đã xác nhận', 'Đang giao hàng', 'Đã giao hàng') 
+        WHERE trangthai = "Đã giao hàng" 
             AND YEAR(ngaydat) = YEAR(CURDATE())
         GROUP BY MONTH(ngaydat)
         ORDER BY MONTH(ngaydat)
@@ -170,7 +170,7 @@ const getRevenueByYear = async () => {
             YEAR(ngaydat) AS year,
             SUM(tonggia + 0) AS total_revenue
         FROM donhang
-        WHERE trangthai IN ('Đã xác nhận', 'Đang giao hàng', 'Đã giao hàng')
+        WHERE trangthai = "Đã giao hàng"
         GROUP BY YEAR(ngaydat)
         ORDER BY YEAR(ngaydat)
     `);
